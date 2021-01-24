@@ -1,0 +1,24 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/ >
+<script src="scripts/jquery/jquery-3.2.1.js"></script>
+<script src="scripts/jquery/jquery.datetimepicker.full.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#datetimepicker').datetimepicker(
+     {allowTimes: ['14:00', '15:00', '17:30', '19:30'],
+      disabledWeekDays: [0, 1, 2, 3, 4, 5],
+      format: "m/d/Y H:i",
+      lastInit: true,
+      mask: true,
+      yearStart: "2005"}
+   );
+});
+</script>
+</head>
+<body>
+<form>
+<input id="datetimepicker" type="text">
+</form>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script src="scripts/jquery/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.charts.load('current', {'packages':['corechart']});
+      // Set a callback to run when the Google Visualization API is loaded.
+      //google.charts.setOnLoadCallback(buildJson("dataTblEarnings(\\Championship\\)"));
+      google.charts.setOnLoadCallback(buildJson);
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+/*      function drawChart() {
+       // Create the data table.
+       var data = new google.visualization.DataTable();
+       data.addColumn('string', 'Topping');
+       data.addColumn('number', 'Slices');
+       data.addRows([
+        ['Mushrooms', 3],
+        ['Onions', 1],
+        ['Olives', 1], 
+        ['Zucchini', 1],
+        ['Pepperoni', 2]
+       ]);
+      }
+ // Set chart options
+      //var options = {'title':'How Much Pizza I Ate Last Night', 'width':400, 'height':300};
+      var options = {'title':'Earnings (Championship)', 'width':400, 'height':300};
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+}*/
+      
+      function buildJson() {
+        // Callback that creates and populates a data table, 
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        var data = new google.visualization.DataTable();
+      	data.addColumn('string', 'Place');
+      	data.addColumn('number', 'Finishes');
+        var rowCount = -1;
+      	$("#dataTblFinishes tr").each(function () {
+      		data.addRow();
+      		rowCount++;
+      		var cellCount = -1;
+      		//$("#dataTblFinishes td").each(function () {
+      		$(this).find("td").each(function () {
+      			cellCount++;
+      			if (1 >= cellCount) {
+       			 data.setCell(rowCount, cellCount, $(this).text().replace(/[$,]/g, ''));
+       			 console.log(rowCount, cellCount, $(this).text().replace(/[$,]/g, ''));
+      			}
+      		});
+      	});
+        var options = {'title':'Finishes', 'is3D':true, 'width':900, 'height':500};
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+<!--Div that will hold the pie chart-->
+    <div id="chart_div" style="width:400; height:300"></div>
+<table border="0" cellpadding="0" cellspacing="0" class="display" id="dataTblFinishes" width="15%">
+<caption></caption>     <thead>
+      <tr>
+       <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Place</th>
+       <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Finishes</th>
+       <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Pct</th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td class=" number">1</td>
+       <td class=" number">18</td>
+       <td class=" number">7.26%</td>
+     </tr>
+      <tr>
+       <td class=" number">2</td>
+       <td class=" number">14</td>
+       <td class=" number">5.65%</td>
+     </tr>
+      <tr>
+       <td class=" number">3</td>
+       <td class=" number">20</td>
+       <td class=" number">8.06%</td>
+     </tr>
+      <tr>
+       <td class=" number">4</td>
+       <td class=" number">20</td>
+       <td class=" number">8.06%</td>
+     </tr>
+      <tr>
+       <td class=" number">5</td>
+       <td class=" number">14</td>
+       <td class=" number">5.65%</td>
+     </tr>
+      <tr>
+       <td class=" number">6</td>
+       <td class=" number">13</td>
+       <td class=" number">5.24%</td>
+     </tr>
+      <tr>
+       <td class=" number">7</td>
+       <td class=" number">12</td>
+       <td class=" number">4.84%</td>
+     </tr>
+      <tr>
+       <td class=" number">8</td>
+       <td class=" number">13</td>
+       <td class=" number">5.24%</td>
+     </tr>
+      <tr>
+       <td class=" number">9</td>
+       <td class=" number">11</td>
+       <td class=" number">4.44%</td>
+     </tr>
+      <tr>
+       <td class=" number">10</td>
+       <td class=" number">13</td>
+       <td class=" number">5.24%</td>
+     </tr>
+      <tr>
+       <td class=" number">11</td>
+       <td class=" number">9</td>
+       <td class=" number">3.63%</td>
+     </tr>
+      <tr>
+       <td class=" number">12</td>
+       <td class=" number">15</td>
+       <td class=" number">6.05%</td>
+     </tr>
+      <tr>
+       <td class=" number">13</td>
+       <td class=" number">11</td>
+       <td class=" number">4.44%</td>
+     </tr>
+      <tr>
+       <td class=" number">14</td>
+       <td class=" number">8</td>
+       <td class=" number">3.23%</td>
+     </tr>
+      <tr>
+       <td class=" number">15</td>
+       <td class=" number">7</td>
+       <td class=" number">2.82%</td>
+     </tr>
+      <tr>
+       <td class=" number">16</td>
+       <td class=" number">5</td>
+       <td class=" number">2.02%</td>
+     </tr>
+      <tr>
+       <td class=" number">17</td>
+       <td class=" number">7</td>
+       <td class=" number">2.82%</td>
+     </tr>
+      <tr>
+       <td class=" number">18</td>
+       <td class=" number">7</td>
+       <td class=" number">2.82%</td>
+     </tr>
+      <tr>
+       <td class=" number">19</td>
+       <td class=" number">3</td>
+       <td class=" number">1.21%</td>
+     </tr>
+      <tr>
+       <td class=" number">20</td>
+       <td class=" number">5</td>
+       <td class=" number">2.02%</td>
+     </tr>
+      <tr>
+       <td class=" number">21</td>
+       <td class=" number">4</td>
+       <td class=" number">1.61%</td>
+     </tr>
+      <tr>
+       <td class=" number">22</td>
+       <td class=" number">5</td>
+       <td class=" number">2.02%</td>
+     </tr>
+      <tr>
+       <td class=" number">23</td>
+       <td class=" number">1</td>
+       <td class=" number">0.40%</td>
+     </tr>
+      <tr>
+       <td class=" number">24</td>
+       <td class=" number">4</td>
+       <td class=" number">1.61%</td>
+     </tr>
+      <tr>
+       <td class=" number">25</td>
+       <td class=" number">1</td>
+       <td class=" number">0.40%</td>
+     </tr>
+      <tr>
+       <td class=" number">26</td>
+       <td class=" number">2</td>
+       <td class=" number">0.81%</td>
+     </tr>
+      <tr>
+       <td class=" number">27</td>
+       <td class=" number">1</td>
+       <td class=" number">0.40%</td>
+     </tr>
+      <tr>
+       <td class=" number">28</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">29</td>
+       <td class=" number">1</td>
+       <td class=" number">0.40%</td>
+     </tr>
+      <tr>
+       <td class=" number">30</td>
+       <td class=" number">2</td>
+       <td class=" number">0.81%</td>
+     </tr>
+      <tr>
+       <td class=" number">31</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">32</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">33</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">34</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">35</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">36</td>
+       <td class=" number">0</td>
+       <td class=" number">0.00%</td>
+     </tr>
+      <tr>
+       <td class=" number">99</td>
+       <td class=" number">1</td>
+       <td class=" number">0.40%</td>
+     </tr>
+     </tbody>
+    </table>
+  </body>
+</html>

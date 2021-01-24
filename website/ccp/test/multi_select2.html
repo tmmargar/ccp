@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<title>Multi Select Test</title>
+<link rel="stylesheet" type="text/css" href="css/slimselect.css"/>
+<style>
+#home-content .samples .single,
+#home-content .samples .multi {
+ display: flex;
+ /*flex: 1 1 50%;*/
+ width: 400px;
+}
+</style>
+<script src="scripts/jquery/jquery.js" type="text/javascript"></script>
+<script src="scripts/slimselect.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var selectSingle = new SlimSelect({
+		    select: '#userSingle'
+		})
+	    var selectMulti = new SlimSelect({
+	        select: '#userMulti'
+	    })
+		var selected = selectMulti.selected();
+		console.log(selected);
+		selectMulti.setData([
+			  {text: 'New User 1', value: 'user1@yyy.zzz'},
+			  {text: 'New User 2', value: 'user2@yyy.zzz'}
+			])
+	});
+</script>
+</head>
+<body>
+<form id="frmMultiSelect" method="GET" name="frmMultiSelect">
+<input name="hdnTest" type="hidden" value="zzz" />
+<select id="dummy" name="dummy">
+ <option valu="asd">TTT</option>
+</select>
+<div id="home-content" class="content">
+ <div class="samples">
+  <div class="single">Single
+   <select id="userSingle">
+    <option value="zxc@yyy.zzz">ZXC</option>
+    <option value="vbn@yyy.zzz">VBN</option>
+    <option value="lkj@yyy.zzz">LKJ</option>
+   </select>
+  </div>
+  <div class="multi">Multi
+   <select id="userMulti" multiple>
+    <option value="abc@yyy.zzz">ABC</option>
+    <option value="def@yyy.zzz">DEF</option>
+    <option value="ghi@yyy.zzz">GHI</option>
+   </select>
+  </div>
+ </div>
+</div>
+<input type="submit" />
+</form>
+</body>
+</html>

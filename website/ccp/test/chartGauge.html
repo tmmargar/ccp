@@ -1,0 +1,300 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script src="scripts/jquery/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.charts.load('current', {'packages':['corechart']});
+      // Set a callback to run when the Google Visualization API is loaded.
+      //google.charts.setOnLoadCallback(buildJson("dataTblEarnings(\\Championship\\)"));
+      google.charts.setOnLoadCallback(buildJson);
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+/*      function drawChart() {
+       // Create the data table.
+       var data = new google.visualization.DataTable();
+       data.addColumn('string', 'Topping');
+       data.addColumn('number', 'Slices');
+       data.addRows([
+        ['Mushrooms', 3],
+        ['Onions', 1],
+        ['Olives', 1], 
+        ['Zucchini', 1],
+        ['Pepperoni', 2]
+       ]);
+      }
+ // Set chart options
+      //var options = {'title':'How Much Pizza I Ate Last Night', 'width':400, 'height':300};
+      var options = {'title':'Earnings (Championship)', 'width':400, 'height':300};
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+}*/
+      
+      function buildJson() {
+        // Callback that creates and populates a data table, 
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        var data = new google.visualization.DataTable();
+      	data.addColumn('string', 'Name');
+      	data.addColumn('number', 'Earnings');
+        var rowCount = -1;
+      	$("#dataTblEarnings\\(Championship\\) tr").each(function () {
+      		data.addRow();
+      		rowCount++;
+      		var cellCount = -1;
+      		//$("#dataTblEarnings\\(Championship\\) td").each(function () {
+      		$(this).find("td").each(function () {
+      			cellCount++;
+      			data.setCell(rowCount, cellCount, $(this).text().replace(/[$,]/g, ''));
+      			console.log(rowCount, cellCount, $(this).text().replace(/[$,]/g, ''));
+      		});
+      	});
+        var options = {'title':'Earnings (Championship)', 'width':700, 'height':300};
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+<!--Div that will hold the pie chart-->
+    <div id="chart_div" style="width:400; height:300"></div>
+    <table border="0" cellpadding="0" cellspacing="0" class="display" id="dataTblEarnings(Championship)" width="35%">
+     <thead>
+      <tr>
+       <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Name</th>
+       <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Earns</th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td>Joe Villarosa</td>
+       <td class=" number positive">$4,594</td>
+     </tr>
+      <tr>
+       <td>Todd Margarita</td>
+       <td class=" number positive">$3,043</td>
+     </tr>
+      <tr>
+       <td>Pam Ennis</td>
+       <td class=" number positive">$3,042</td>
+     </tr>
+      <tr>
+       <td>George Abuamsha</td>
+       <td class=" number positive">$3,019</td>
+     </tr>
+      <tr>
+       <td>Brent Micallef</td>
+       <td class=" number positive">$2,911</td>
+     </tr>
+      <tr>
+       <td>Sanjay Kuchipudi</td>
+       <td class=" number positive">$2,899</td>
+     </tr>
+      <tr>
+       <td>Francine Gottler</td>
+       <td class=" number positive">$2,854</td>
+     </tr>
+      <tr>
+       <td>David Wojtanowski</td>
+       <td class=" number positive">$2,393</td>
+     </tr>
+      <tr>
+       <td>Kent Hurlburt</td>
+       <td class=" number positive">$2,228</td>
+     </tr>
+      <tr>
+       <td>Mark Forster</td>
+       <td class=" number positive">$2,022</td>
+     </tr>
+      <tr>
+       <td>Tony Abuamsha</td>
+       <td class=" number positive">$1,936</td>
+     </tr>
+      <tr>
+       <td>Eric Nemeth</td>
+       <td class=" number positive">$1,609</td>
+     </tr>
+      <tr>
+       <td>Jim Lee</td>
+       <td class=" number positive">$1,399</td>
+     </tr>
+      <tr>
+       <td>Brent Johnston</td>
+       <td class=" number positive">$1,356</td>
+     </tr>
+      <tr>
+       <td>Chuck Perrone</td>
+       <td class=" number positive">$1,349</td>
+     </tr>
+      <tr>
+       <td>Jason Nantais</td>
+       <td class=" number positive">$1,322</td>
+     </tr>
+      <tr>
+       <td>David Brock</td>
+       <td class=" number positive">$1,321</td>
+     </tr>
+      <tr>
+       <td>Tom Murray</td>
+       <td class=" number positive">$1,157</td>
+     </tr>
+      <tr>
+       <td>Tim Wilson</td>
+       <td class=" number positive">$1,155</td>
+     </tr>
+      <tr>
+       <td>Greg Lang</td>
+       <td class=" number positive">$1,071</td>
+     </tr>
+      <tr>
+       <td>Matthew Modrzejewski</td>
+       <td class=" number positive">$1,050</td>
+     </tr>
+      <tr>
+       <td>Mark Kirby</td>
+       <td class=" number positive">$1,033</td>
+     </tr>
+      <tr>
+       <td>Greg Wiland</td>
+       <td class=" number positive">$1,022</td>
+     </tr>
+      <tr>
+       <td>Eric Pritzl</td>
+       <td class=" number positive">$1,008</td>
+     </tr>
+      <tr>
+       <td>Jeff Brautigan</td>
+       <td class=" number positive">$995</td>
+     </tr>
+      <tr>
+       <td>Jeffrey Merritt</td>
+       <td class=" number positive">$560</td>
+     </tr>
+      <tr>
+       <td>Tammy Larson</td>
+       <td class=" number positive">$496</td>
+     </tr>
+      <tr>
+       <td>Dan McClung</td>
+       <td class=" number positive">$493</td>
+     </tr>
+      <tr>
+       <td>John Gordon</td>
+       <td class=" number positive">$423</td>
+     </tr>
+      <tr>
+       <td>Randy Nelson</td>
+       <td class=" number positive">$404</td>
+     </tr>
+      <tr>
+       <td>Dustin Fern</td>
+       <td class=" number positive">$358</td>
+     </tr>
+      <tr>
+       <td>Barry Fletcher</td>
+       <td class=" number positive">$358</td>
+     </tr>
+      <tr>
+       <td>Mark Ahern</td>
+       <td class=" number positive">$342</td>
+     </tr>
+      <tr>
+       <td>Mike Moore</td>
+       <td class=" number positive">$286</td>
+     </tr>
+      <tr>
+       <td>Dave Codd</td>
+       <td class=" number positive">$280</td>
+     </tr>
+      <tr>
+       <td>David Hatch</td>
+       <td class=" number positive">$264</td>
+     </tr>
+      <tr>
+       <td>Dean Miller</td>
+       <td class=" number positive">$215</td>
+     </tr>
+      <tr>
+       <td>Dex Wiles</td>
+       <td class=" number positive">$212</td>
+     </tr>
+      <tr>
+       <td>John Safranski</td>
+       <td class=" number positive">$171</td>
+     </tr>
+      <tr>
+       <td>Steve Cummings</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Brandy Dahl</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Matt Keffler</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Adam Kline</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Jason Kline</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Mark Larson</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Gregory McKay</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Lisa Moore</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Michelle Nemeth</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Dan Nickols</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Judi Nickols</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Jon Quigley</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Dan Sultana</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>April Turnbull</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Raymond Turnbull</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>David Weishaar</td>
+       <td class=" number positive">$0</td>
+     </tr>
+      <tr>
+       <td>Matthew Wolfe</td>
+       <td class=" number positive">$0</td>
+     </tr>
+     </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>jQuery UI Dialog - Modal message</title>
+  <style type="text/css">
+   @import url("css/jquery-ui.css");
+   @import url("css/display.css");
+   @import url("css/dataTable.css");
+ div {
+   margin: 0 auto;
+   text-align: center;
+   width: 100%;
+ }
+ div#widget1 {
+  float: left;
+  height: 200px;
+  margin: 0 auto;
+  overflow: auto;
+  width: 25%;
+ }
+ div.title {
+   font-weight: bold;
+ }
+ div#widget1,
+ div#widget2,
+ div#widget3,
+ div#widget4,
+ div#widget5,
+ div#widget6,
+ div#widget7,
+ div#widget8,
+ div#widget9,
+ div#widget10,
+ div#widget11,
+ div#widget12 {
+  float: left;
+  height: 200px;
+  margin: 0 auto;
+  overflow: auto;
+  width: 25%;
+ }
+ div#widget1{
+   border: solid 2px blue;
+ }
+  </style>
+  <script src="scripts/jquery/jquery-3.2.1.js"></script>
+  <script src="scripts/jquery/jquery-ui.js"></script>
+  <script src="scripts/scripts.js" type="text/javascript"></script>
+  <script src="scripts/top5.js" type="text/javascript"></script>
+  <script>
+  $(function() {
+    $("#dialog-message").dialog({height: 300, modal: true, position: {my: "left top", at: "center top", of: "#widget4"}, width: 200});
+  });
+  </script>
+</head>
+<body>
+ <div id="widgetContainer">
+ <div id="widget1">w1</div>
+ <div id="widget2">w2</div>
+ <div id="widget3">w3</div>
+ <div id="widget4">w4</div>
+ <div id="widget5">w5</div>
+ <div id="dialog-message" title="Download complete">
+  <div>
+    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+    Your files have downloaded successfully into the My Downloads folder.
+  </div>
+  <div>
+    Currently using <b>36% of your storage space</b>.
+  </div>
+ </div>
+ </body>
+</html>

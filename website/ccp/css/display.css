@@ -1,0 +1,140 @@
+@import url(https://fonts.googleapis.com/css?family=Lora:400,700);
+nav {
+ font-size: .8em;
+}
+#main-menu {
+ float: left;
+}
+#modeDisplay {
+  color: #32cd32;
+}
+/*#messages {*/
+.messages {
+  color: green;
+}
+#errors, #errorsPersist, .errors {
+  color: red;
+}
+.number {text-align: right;}
+.positive {color:#009900; font-weight:bold;}
+.negative {color:#FF0000; font-weight:bold;}
+/*.errors {border-color: red;}*/
+.errors {border: 1px solid red !important;}
+p {
+  margin: 0;
+}
+h1 {
+  margin: 1px;
+}
+.center {
+ text-align:center;
+}
+.hide {
+ display: none;
+}
+.hidden {
+ visibility: hidden;
+}
+fieldset {border:0;}
+/*.ui-dialog .ui-dialog-titlebar {
+  font-size: .7em;
+  padding: .4em 0;
+}*/
+table.override30 {
+  margin: 0;
+  width: 30%;
+}
+table.override40 {
+  margin: 0;
+  width: 40%;
+}
+table.override50 {
+  margin: 0;
+  width: 50%;
+}
+table.override60 {
+  margin: 0;
+  width: 60%;
+}
+table.override70 {
+  margin: 0;
+  width: 70%;
+}
+table.override90 {
+  margin: 0;
+  width: 90%;
+}
+#resize_wrapper {
+  /*position: absolute;*/
+  top: 5em;
+  left: 1em;
+  right: 1em;
+  bottom: 1em;
+}
+/*table.dataTable.display tbody tr.inactive,
+table.dataTable.display tbody tr.inactive > .sorting_1,
+table.dataTable.display tbody tr.inactive > .sorting_2 {
+ background-color: #ffe6e6;
+}*/
+.highlight {
+  background-color: yellow !important;
+}
+div.label {
+  flex: 15%;
+  padding-bottom: 5px;
+  /* unsetting to override bootstrap */
+  color: unset;
+  font-size: unset;
+  font-weight: unset;
+  padding: unset;
+}
+div.input, div.textarea {
+  flex: 85%;
+  padding-bottom: 5px;
+}
+.form_content {
+  display: flex;
+  flex-wrap: wrap;
+}
+caption {
+ text-align: left;
+}
+/* everything below is for sticky footer */
+html, body {
+  height: 100%;
+}
+/*body {
+  display: flex;
+  flex-direction: column;
+}
+div#content {
+  flex: 1 0 auto;
+}*/
+/*nav {*/
+div#leftContent {
+  float: left;
+  width: 6.5%;
+}
+div#seasonInfo {
+  text-align: center;
+}
+div#content {
+  float: left;
+  width: 93.5%;
+}
+.footer {
+  /*flex-shrink: 0;
+  padding: 10px;*/
+  /*position: fixed;
+  left: 0;
+  bottom: 0;*/
+  clear: both;
+  width: 100%;
+  text-align: center;
+}
+td {
+  text-align: center;
+}
+.textAlignUnset {
+ text-align: unset;
+}

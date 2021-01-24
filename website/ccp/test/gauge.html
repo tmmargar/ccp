@@ -1,0 +1,41 @@
+<html>
+ <head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['gauge']});
+    google.charts.setOnLoadCallback(drawGauge);
+    var gaugeOptions = {min: 0, max: 20, yellowFrom: 5, yellowTo: 10, redFrom: 0, redTo: 5, majorTicks: ["0", "5", "10", "15", "20"], minorTicks: 5, greenFrom: 10, greenTo: 20};
+    var gaugeOptions2 = {min: 0, max: 8, yellowFrom: 0, yellowTo: 4, redFrom: 4, redTo: 8, majorTicks: ["0", "2", "4", "6", "8"], minorTicks: 2};
+    //var gauge;
+
+    function drawGauge() {
+      gaugeData = new google.visualization.DataTable();
+      gaugeData.addColumn('number', 'Played');
+      //gaugeData.addColumn('number', 'Needed');
+      gaugeData.addRows(1);
+      gaugeData.setCell(0, 0, 7);
+      //gaugeData.setCell(0, 1, 3);
+      gaugeData2 = new google.visualization.DataTable();
+      gaugeData2.addColumn('number', 'Needed');
+      gaugeData2.addRows(1);
+      gaugeData2.setCell(0, 0, 3);
+      var gauge = new google.visualization.Gauge(document.getElementById('gauge_div'));
+      gauge.draw(gaugeData, gaugeOptions);
+      var gauge2 = new google.visualization.Gauge(document.getElementById('gauge_div2'));
+      gauge2.draw(gaugeData2, gaugeOptions2);
+    }
+    function changeTemp(dir) {
+      //gaugeData.setValue(0, 0, gaugeData.getValue(0, 0) + dir * 25);
+      //gaugeData.setValue(0, 1, gaugeData.getValue(0, 1) + dir * 20);
+      gaugeData.setValue(0, 0, gaugeData.getValue(0, 0) + dir);
+      gauge.draw(gaugeData, gaugeOptions);
+    }
+  </script>
+ </head>
+ <body>
+  <div id="gauge_div" style="float:left;width:560px; height: 280px;"></div>
+  <div id="gauge_div2" style="float:left;width:560px; height: 280px;"></div>
+  <input type="button" value="Go Faster" onclick="changeTemp(1)" />
+  <input type="button" value="Slow down" onclick="changeTemp(-1)" />
+ </body>
+</html>
