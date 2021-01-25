@@ -20,6 +20,7 @@
  <script src="scripts/jquery/jquery.datetimepicker.full.min.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery.smartmenus.js" type="text/javascript"></script>
  <script src="scripts/scripts.js" type="text/javascript"></script>
+ <script src="scripts/urlSearchParams.js" type="text/javascript"></script>
  {block name=script}{/block}
 </head>
 <body>
