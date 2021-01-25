@@ -136,6 +136,12 @@ class DatabaseResult extends Root {
   public function getNemesisForUser($params) {
     return $this->getData("nemesisForUser", $params, null, true, null, false);
   }
+  public function getNotification($params, $returnQuery) {
+    return $this->getData("notificationSelectAll", $params, null, $returnQuery, null, false);
+  }
+  public function getNotificationById($params) {
+    return $this->getData("notificationSelectOneById", $params, null, false, null, false);
+  }
   public function getPayoutsAll($params) {
     return $this->getData("payoutSelectAll", null, null, $params[0], null, false);
   }
@@ -403,6 +409,9 @@ class DatabaseResult extends Root {
   public function deleteGroupPayout($params) {
     return $this->deleteData("groupPayoutDelete", $params);
   }
+  public function deleteNotification($params) {
+    return $this->deleteData("notificationDelete", $params);
+  }
   public function deletePayout($params) {
     return $this->deleteData("payoutDelete", $params);
   }
@@ -448,6 +457,9 @@ class DatabaseResult extends Root {
   public function insertLocation($params) {
     return $this->insertData("locationInsert", $params);
   }
+  public function insertNotification($params) {
+    return $this->insertData("notificationInsert", $params);
+  }
   public function insertPayout($params) {
     return $this->insertData("payoutInsert", $params);
   }
@@ -483,6 +495,9 @@ class DatabaseResult extends Root {
   }
   public function updateLocation($params) {
     return $this->updateData("locationUpdate", $params);
+  }
+  public function updateNotification($params) {
+    return $this->updateData("notificationUpdate", $params);
   }
   public function updatePayout($params) {
     return $this->updateData("payoutUpdate", $params);
@@ -1078,6 +1093,22 @@ class DatabaseResult extends Root {
             "WHERE r.playerId = " . $params[0] .
             " GROUP BY r.knockedOutBy " .
             "ORDER BY kOs DESC, " . $this->buildOrderByName(null);
+          break;
+        case "notificationSelectAll":
+        case "notificationSelectOneById":
+          $query =
+            "SELECT id, description, startDate AS 'start date', endDate AS 'end date' " .
+            "FROM poker_notification ";
+          if ("notificationSelectOneById" == $dataName) {
+            $query .= " WHERE id = " . $params[0];
+          } else if ("notificationSelectAll" == $dataName) {
+            if (isset($params[0])) {
+              $query .= " WHERE '" . $params[0] . "' BETWEEN startDate AND endDate ";
+            }
+            if (isset($orderBy)) {
+              $query .= $orderBy;
+            }
+          }
           break;
           // TODO: dummy figure out how to fix
         case "payoutSelectAll" :
@@ -2399,6 +2430,13 @@ class DatabaseResult extends Root {
                   array_push($resultList, $row["active"]);
                   array_push($resultList, $row["numKOs"]);
                   break;
+                case "notificationSelectAll":
+                case "notificationSelectOneById":
+                  $startDateTime = new DateTime($this->isDebug(), null, $row["start date"]);
+                  $endDateTime = new DateTime($this->isDebug(), null, $row["end date"]);
+                  $notification = new Notification($this->isDebug(), $row["id"], $row["description"], $startDateTime, $endDateTime);
+                  array_push($resultList, $notification);
+                  break;
 //                 case "payoutSelectAll":
 //                 case "payoutSelectAllById":
 // //                   $payouts = $this->getPayouts(null, $row["id"], false);
@@ -2993,7 +3031,12 @@ class DatabaseResult extends Root {
             "DELETE FROM poker_location " .
             "WHERE locationId IN (" . $params[0] . ")";
           break;
-        case "payoutDelete":
+        case "notificationDelete":
+          $query =
+            "DELETE FROM poker_notification " .
+            "WHERE id IN (" . $params[0] . ")";
+        break;
+          case "payoutDelete":
           $query =
             "DELETE FROM poker_payout " .
             "WHERE payoutId IN (" . $params[0] . ")";
@@ -3081,6 +3124,9 @@ class DatabaseResult extends Root {
         case "locationInsert":
           $query = "INSERT INTO poker_location(locationId, locationName, playerId, address, city, state, zipCode, phone, active) " . "SELECT IFNULL(MAX(locationId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", '" . $params[2] . "', '" . $params[3] . "', UPPER('" . $params[4] . "'), " . $params[5] . ", " . $params[6] . ", '" . ($params[7] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' FROM poker_location";
           break;
+        case "notificationInsert":
+          $query = "INSERT INTO poker_notification(id, description, startDate, endDate) " . "SELECT IFNULL(MAX(id), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "' FROM poker_notification";
+          break;
         case "payoutInsert":
           $query = "INSERT INTO poker_payout(payoutId, payoutName, bonusPoints, minPlayers, maxPlayers) " . "SELECT IFNULL(MAX(payoutId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", " . $params[2] . ", " . $params[3] . " FROM poker_payout";
           break;
@@ -3166,6 +3212,14 @@ class DatabaseResult extends Root {
             ", phone = " . $params[6] .
             ", active = '" . ($params[7] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' " .
             "WHERE locationId = " . $params[8];
+          break;
+        case "notificationUpdate":
+          $query =
+            "UPDATE poker_notification " .
+            "SET description = " . (strlen(trim($params[1])) == 0 ? "null" : "'" . $params[1] . "'") .
+            ", startDate = '" . $params[2] .
+            "', endDate = '" . $params[3] .
+            "' WHERE id = " . $params[0];
           break;
         case "payoutUpdate":
           $query =

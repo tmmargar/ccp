@@ -24,9 +24,13 @@ $outputChange =
   "   <ul>\n" .
   "    <li>Added payouts</li>\n" .
   "    <li>Added seasons</li>\n" .
+  "    <li>Added special types (for tournaments)</li>\n" .
   "   </ul>\n" .
   "  </li>\n" .
   "  <li>Changed menu and moved to left</li>\n" .
+  "  <li>Updated all user ids to be sequential</li>\n" .
+  "  <li>Added foreign keys to appropriate tables</li>\n" .
+  "  <li>Added notification header for system messages</li>\n" .
   " </ul>\n" .
   "</section>\n" .
   "<section class=\"version\" id=\"1.0.0\">" .

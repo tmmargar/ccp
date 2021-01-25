@@ -9,12 +9,15 @@ class DateTime extends Base {
 //   public static $DATE_END_SEASON   = "-11-30";
   private static $DATE_FORMAT_CURRENT_YEAR = "Y";
   private static $DATE_FORMAT_DATABASE_DEFAULT = "Y-m-d";
+  private static $DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT = "Y-m-d H:i:s";
   private static $DATE_FORMAT_DISPLAY_DEFAULT = "M d, Y";
   private static $DATE_FORMAT_DISPLAY_LONG = "l, F d, Y";
   private static $DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
   private static $DATE_FORMAT_PICKER_DISPLAY_DEFAULT = "m/d/Y";
+  private static $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT = "m/d/Y H:i";
   private static $TIME_FORMAT_DATABASE_DEFAULT = "H:i:s";
   private static $TIME_FORMAT_DISPLAY_AMPM = "H:i";
+  private static $TIME_FORMAT_NOW = "Ymd H:i:s";
 
   private $time;
   private $timeZone; // \DateTimeZone
@@ -30,7 +33,7 @@ class DateTime extends Base {
     $this->timeZone = $timeZone;
     if ("now" == $time) {
       $temp = new \DateTime();
-      $time = $temp->format("Ymd H:i:s");
+      $time = $temp->format(self::$TIME_FORMAT_NOW);
     }
     $this->time = null == $time ? null : new \DateTime($time, $this->timeZone);
   }
@@ -43,6 +46,10 @@ class DateTime extends Base {
     return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DATABASE_DEFAULT);
   }
 
+  public function getDatabaseDateTimeFormat() {
+    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT);
+  }
+
   public function getDatabaseTimeFormat() {
     return null == $this->time ? null : $this->time->format(self::$TIME_FORMAT_DATABASE_DEFAULT);
   }
@@ -53,6 +60,10 @@ class DateTime extends Base {
 
   public function getDisplayDatePickerFormat() {
     return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_DISPLAY_DEFAULT);
+  }
+
+  public function getDisplayDateTimePickerFormat() {
+    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
   }
 
   public function getDisplayFormat() {

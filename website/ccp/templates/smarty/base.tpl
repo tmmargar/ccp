@@ -24,6 +24,9 @@
 </head>
 <body>
  {block name=navigation}{$navigation}{/block}
+ <div id="contentTop">
+  {block name=contentTop}{$contentTop}{/block}
+ </div>
  <div id="content">
   {block name=content}{$content}{/block}
  </div>
