@@ -2,6 +2,9 @@
 nav {
  font-size: .8em;
 }
+#main-nav ul {
+ width: 100%;
+}
 #main-menu {
  float: left;
 }

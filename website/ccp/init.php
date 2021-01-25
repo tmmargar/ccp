@@ -24,19 +24,19 @@ if (strpos($_SERVER["SCRIPT_NAME"], "auto") !== false || strpos($_SERVER["SCRIPT
     die();
   }
 }
+$outputTop = "";
 if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false) {
   require_once "navigation.php";
-}
-$outputTop = "";
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
-$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
-$params = array($now->getDatabaseDateTimeFormat());
-$resultList = $databaseResult->getNotification($params, false);
-foreach ($resultList as $notification) {
-  if ("" != $outputTop) {
-    $outputTop .= "<br>";
+  $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+  // $databaseResult = new DatabaseResult(true);
+  $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
+  $params = array($now->getDatabaseDateTimeFormat());
+  $resultList = $databaseResult->getNotification($params, false);
+  foreach ($resultList as $notification) {
+    if ("" != $outputTop) {
+      $outputTop .= "<br>";
+    }
+    $outputTop .= "***" . $notification->getDescription() . "***";
   }
-  $outputTop .= "***" . $notification->getDescription() . "***";
 }
 $smarty->assign("contentTop", $outputTop);

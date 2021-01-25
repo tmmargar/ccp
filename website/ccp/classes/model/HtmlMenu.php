@@ -19,7 +19,7 @@ class HtmlMenu extends HtmlBase {
     $output .= "  </ul>\n";
     $output .= " </nav>\n";
     $output .= " <div id=\"seasonInfo\">\n";
-    $output .= "<strong>Season Info</strong>\n";
+    $output .= "<strong>Season Info</strong>\n<br />\n";
     $output .= SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDisplayFormat();
     $output .= "<br />|<br />\n";
     $output .= SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDisplayFormat();
