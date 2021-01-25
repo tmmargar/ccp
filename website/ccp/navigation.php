@@ -140,6 +140,7 @@ $levels = array($htmlLinkHome, $htmlLinkEvents, $htmlLinkChampionship, $htmlMenu
 if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 0) {
   $htmlMenuReportAdministration = new HtmlMenu(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, "Administration");
   $htmlMenuReportGames = new HtmlMenu(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, "Games");
+  $htmlLinkNotifications = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageNotification.php", null, null, null, -1, "Notifcations", null);
   $htmlLinkSeasons = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageSeason.php", null, null, null, -1, "Seasons", null);
   $htmlLinkTournaments = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageTournament.php", null, null, null, -1, "Tournaments", null);
   $htmlLinkRegistration = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageRegistration.php", null, null, null, -1, "Registration", null);
@@ -147,7 +148,7 @@ if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 0) {
   $htmlLinkResultsDuring = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageResultsDuring.php", null, null, null, -1, "Results - during", null);
   $htmlLinkResults = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageResults.php", null, null, null, -1, "Results", null);
   $htmlLinkSpecialType = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageSpecialType.php", null, null, null, -1, "Special type", null);
-  $htmlLinkGamesArray = array($htmlLinkSeasons, $htmlLinkTournaments, $htmlLinkRegistration, $htmlLinkBuyins, $htmlLinkResultsDuring, $htmlLinkResults, $htmlLinkSpecialType);
+  $htmlLinkGamesArray = array($htmlLinkNotifications, $htmlLinkSeasons, $htmlLinkTournaments, $htmlLinkRegistration, $htmlLinkBuyins, $htmlLinkResultsDuring, $htmlLinkResults, $htmlLinkSpecialType);
   $htmlMenuReportGames->setItems($htmlLinkGamesArray);
   $htmlMenuReportUsers = new HtmlMenu(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, "Users");
   $htmlLinkLocations = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "manageLocation.php", null, null, null, -1, "Locations", null);

@@ -1,7 +1,5 @@
 <?php
 namespace ccp;
-use ccp\classes\utility\SessionUtility;
-
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Home");
 $style =
