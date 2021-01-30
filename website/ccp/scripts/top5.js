@@ -7,12 +7,6 @@ $(document).ready(function() {
   inputLocal.rebuildTableForDialog("LocationsHosted");
   inputLocal.initializeDataTable();
 });
-$(document).on("click", "#dataTbl tr", function(event) {
-  // override scripts.js to remove selected row class that highlights row
-  if ($(this).hasClass("row_selected")) {
-    $(this).removeClass("row_selected");
-  }
-});
 var inputLocal = {
   initializeDataTable : function() {
     $(".reportId").each(function(index) {
@@ -144,20 +138,6 @@ var inputLocal = {
           "scrollCollapse": true,
           "searching": false
         });
-//      } else if ("locationsHostedCount" == reportId) {
-//        $("#dataTblLocationsHosted").DataTable({
-//          "columns" : [null, {
-//            "type" : "name",
-//          }, null, null, null, {
-//            "type" : "number",
-//          }, null, null, {
-//            "type" : "number",
-//          }],
-//          "order" : [ [8, "desc" ], [1, "asc" ] ],
-//          "paging": false,
-//          "scrollCollapse": true,
-//          "searching": false
-//        });
       }
     });
     $("table[id^='dataTblRank']").each(function(index) {
@@ -187,9 +167,6 @@ var inputLocal = {
             "orderSequence": [ "desc", "asc" ], 
             "type" : "number"
           }],
-  //        "columnDefs": [
-  //          { "orderSequence": [ "desc", "asc", ], "targets": [ 3 ] }
-  //        ],
           "order" : [ [0, "asc" ] ],
           "paging": false,
           "scrollCollapse": true,
@@ -236,25 +213,18 @@ var inputLocal = {
     }
   },
   showFullListNemesis : function(title, positionParent) {
-//    input.showDialog("Nemesis", 400, title, ['middle','bottom']);
     input.showDialog("Nemesis", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   showFullListBully : function(title, positionParent) {
-//    input.showDialog("Bully", 400, title, ['middle','bottom']);
     input.showDialog("Bully", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   showFullListLocationsHosted : function(title, positionParent) {
-//    input.showDialogWithWidth("LocationsHosted", 400, title, 650, ['middle','bottom']);
     input.showDialogWithWidth("LocationsHosted", 400, title, 650, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   // position is [100,100]
   showFullList : function(title, height, width, positionParent) {
-    //inputLocal.resetDialog(title);
     var re = /\s/gi;
-//    input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, ['middle','bottom']);
     input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
-//    $("#dialogRankAll" + title.replace(re, "")).css("display", "");
-//    $("#dialogRankAll" + title.replace(re, "")).dialog();
   },
   resetDialog : function(title) {
     var re = /\s/gi;

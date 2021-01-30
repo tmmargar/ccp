@@ -303,7 +303,7 @@ var inputLocal = {
     input.validateLength($("#tournamentRake_"), 1, false);
   },
   postProcessing : function() {
-    $("input[id^='tournamentDescription_']").focus();
+    //$("input[id^='tournamentDescription_']").focus();
   },
   initializeTimePickerStart : function() {
     $(".timePickerStart").datetimepicker({

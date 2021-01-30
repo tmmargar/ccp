@@ -14,9 +14,6 @@ $(document).on("click", "#dataTbl tr", function(event) {
     $("#modify").prop("disabled", true);
     $("#delete").prop("disabled", true);
   }
-  /*if ($(".selected").length > 1) {
-    $(this).removeClass("selected");
-  }*/
 });
 $(document).on("click", "#create", function(event) {
   input.setFormValues([ "mode", "groupIds" ], [ "create", "" ]);

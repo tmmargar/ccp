@@ -121,7 +121,6 @@ var inputLocal = {
     input.validateLength($("#seasonEndDate_"), 1, false);
   },
   postProcessing : function() {
-    //$("input[id^='seasonDescription_']").focus();
     $("#dataTbl tr").each(function(index) {
       var cell = $(this).find("td:eq(4)");
       $(this).addClass(cell.text() == "0" ? "inactive" : "");

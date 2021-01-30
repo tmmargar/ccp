@@ -16,7 +16,6 @@ var inputLocal = {
     }
   },
   setDefaults : function() {
-//    $("#subject").focus();
   }
 };
 $(document).on("blur click keyup paste", "#subject", function(event) {
