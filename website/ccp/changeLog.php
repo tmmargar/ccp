@@ -15,9 +15,9 @@ $outputChange =
   "    <li>(Language) PHP 7.4</li>\n" .
   "    <li>(Email Library) PHP Mailer 6.2</li>\n" .
   "    <li>(Templating) Smarty 3.1</li>\n" .
-  "    <li>(JavaScript framework) JQuery 3.3.1</li>\n" .
+  "    <li>(JavaScript framework) JQuery 3.5.1</li>\n" .
   "    <li>(JavaScript framework) JQuery UI 1.12.1</li>\n" .
-  "    <li>(JavaScript framework) Datatables 1.10.18</li>\n" .
+  "    <li>(JavaScript framework) Datatables 1.10.23</li>\n" .
   "   </ul>\n" .
   "  </li>\n" .
   "  <li>Administrators ONLY\n" .

@@ -7,12 +7,6 @@ $(document).ready(function() {
 $(document).on("change", "#tournamentId", function(event) {
   inputLocal.enableView();
 });
-$(document).on("click", "#dataTbl tr", function(event) {
-  // override scripts.js to remove selected row class that highlights row
-  if ($(this).hasClass("selected")) {
-    $(this).removeClass("selected");
-  }
-});
 $(document).on("click", "#buyinCheckAll", function(event) {
   inputLocal.toggleCheckboxes("buyin");
   inputLocal.postProcessing();

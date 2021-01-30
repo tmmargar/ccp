@@ -7,8 +7,10 @@ use ccp\classes\utility\SessionUtility;
 require_once "autoload.php";
 // TODO: NOT SURE WHERE TO PUT THIS
 date_default_timezone_set(Constant::$NAME_TIME_ZONE);
-if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false) {
+if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false) {
   require_once "initSmarty.php";
+}
+if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false) {
   SessionUtility::startSession();
   // if no session and not login or password reset pages capture page to redirect after login
   if (!SessionUtility::existsSecurity() && strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false && strpos($_SERVER["SCRIPT_NAME"], "signup.php") === false) {

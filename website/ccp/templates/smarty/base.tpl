@@ -15,7 +15,7 @@
  {block name=style}{/block}
  <script src="scripts/jquery/jquery.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery-ui.js" type="text/javascript"></script>
- <script src="scripts/jquery/jquery-migrate-3.0.0.js"></script>
+ <script src="scripts/jquery/jquery-migrate.js"></script>
  <script src="scripts/jquery/datatables.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery.datetimepicker.full.min.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery.smartmenus.js" type="text/javascript"></script>

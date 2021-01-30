@@ -19,10 +19,12 @@ var inputLocal = {
   },
   setDefaults : function() {
   	if ($("#username").length > 0) {
-      $("#username").focus();
+      //$("#username").focus();
+      $("#username").trigger("focus");
   	}
   	if ($("#password").length > 0) {
-  		$("#password").focus();
+  		//$("#password").focus();
+  		$("#password").trigger("focus");
   	}
   },
   validatePassword : function(event) {

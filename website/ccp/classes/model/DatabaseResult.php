@@ -974,6 +974,7 @@ class DatabaseResult extends Root {
           break;
         case "groupPayoutSelectAll":
         case "groupPayoutSelectAllById":
+          // TODO: dummy figure out how to fix
           $query =
             "SELECT gp.groupId AS id, g.groupName AS 'group name', gp.payoutId AS 'payout id', p.payoutName AS 'payout name' " .
             "FROM poker_group_payout gp INNER JOIN poker_group g ON gp.groupId = g.groupId " .
@@ -2064,8 +2065,8 @@ class DatabaseResult extends Root {
           $query =
             "SELECT pta.playerId, CONCAT(u.first_name, ' ', u.last_name) AS name " .
 //             "FROM poker_tournament_absence pta INNER JOIN poker_tournament pt ON pta.tournamentId = pt.tournamentId AND tournamentDesc LIKE '%" . Constant::$DESCRIPTION_CHAMPIONSHIP . "%' AND YEAR(tournamentDate) = " . $params[0] .
-            "FROM poker_tournament_absence pta INNER JOIN poker_tournament pt ON pta.tournamentId = pt.tournamentId AND st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' AND YEAR(tournamentDate) = " . $params[0] .
-            " LEFT JOIN poker_special_type st ON pt.specialTypeId = st.typeId" .
+            "FROM poker_tournament_absence pta INNER JOIN poker_tournament pt ON pta.tournamentId = pt.tournamentId AND YEAR(tournamentDate) = " . $params[0] .
+            " LEFT JOIN poker_special_type st ON pt.specialTypeId = st.typeId AND st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "'" .
             " INNER JOIN poker_user u ON pta.playerId = u.id";
           break;
         case "userPaidByTournamentId":
@@ -2362,11 +2363,13 @@ class DatabaseResult extends Root {
                   $group->setId((int) $row["id"]);
                   $group->setName($row["group name"]);
                   $groupPayout->setGroup($group);
-                  $payout = new Payout();
-                  $payout->setId($row["payout id"]);
-                  $payout->setName($row["payout name"]);
-                  $payouts = array($payout);
-                  $groupPayout->setPayouts($payouts);
+//                   $payout = new Payout();
+//                   $payout->setId($row["payout id"]);
+//                   $payout->setName($row["payout name"]);
+//                   $payouts = array($payout);
+//                   $groupPayout->setPayouts($payouts);
+                  $aryPayouts = $this->getPayouts($params[0], $dataName == "groupPayoutSelectAllById" ? $params[1] : null, $dataName == "groupPayoutSelectAllById" ? true : false);
+                  $groupPayout->setPayouts($aryPayouts);
                   array_push($resultList, $groupPayout);
                   break;
                 case "groupSelectNameList":
@@ -2744,13 +2747,13 @@ class DatabaseResult extends Root {
                   $tournament->setAddonAmount((int) $row["amt "]);
                   $tournament->setAddonChipCount((int) $row["chips "]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
-                    $group = new Group();
+                    $groupPayout = new GroupPayout();
                     $group = new Group();
                     $group->setId((int) $row["groupId"]);
                     $group->setName($row["name"]);
-                    $group->setGroup($group);
-                    $group->setPayouts($this->getPayouts($row["groupId"], null, true));
-                    $tournament->setGroup($group);
+                    $groupPayout->setGroup($group);
+                    $groupPayout->setPayouts($this->getPayouts($row["groupId"], null, true));
+                    $tournament->setGroupPayout($groupPayout);
                   }
                   $tournament->setRake((float) ($row["rake"] * 100));
                   // $tournament->setDirections($row["map"]);

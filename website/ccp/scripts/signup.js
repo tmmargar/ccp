@@ -23,9 +23,6 @@ var inputLocal = {
       $("#signUp").prop("disabled", false);
     }
   },
-//  setDefaults : function() {
-//    $("#name").focus();
-//  }
 };
 $(document).on("click keyup paste", "#name", function(event) {
   input.validateLength($("#name"), 1, true);

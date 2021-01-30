@@ -9,7 +9,6 @@ $(document).on("click", "#dataTbl tr", function(event) {
   }
 });
 /*$(document).on("click", "#selectAll", function(event) {
-  //var selectizes = $("#user").selectize(); // Selectize plugin initialization
   var selectizes = $(".selectized").selectize(); // Selectize plugin initialization
   var selectize = selectizes[0].selectize; // Get selectize instance
   selectize.setValue(Object.keys(selectize.options)); // Set all selectize options using setValue() method
@@ -18,11 +17,9 @@ $(document).on("click", "#dataTbl tr", function(event) {
   return false;
 });
 $(document).on("click", "#deselectAll", function(event) {
-  //var selectizes = $("#user").selectize(); // Selectize plugin initialization
   var selectizes = $(".selectized").selectize(); // Selectize plugin initialization
   var selectize = selectizes[0].selectize; // Get selectize instance
   selectize.clear(false);
-  //selectize.setValue(-1, false);
   event.preventDefault();
   event.stopPropagation();
   return false;
@@ -146,14 +143,15 @@ var input = {
   validateLength : function(jQueryObj, length, focus, msg) {
     var result = "";
     if (jQueryObj.length > 0) {
-      if ($.trim(jQueryObj.val()).length < length) {
+      if (jQueryObj.val().trim().length < length) {
         if (msg) {
           display.showErrors([msg]);
           result = msg;
         }
         jQueryObj.addClass("errors");
         if (focus) {
-          jQueryObj.focus();
+          //jQueryObj.focus();
+          jQueryObj.trigger("focus");
         }
       } else {
         display.clearErrorsAndMessages();
@@ -247,7 +245,6 @@ var input = {
   },
   showDialogWithWidth : function(name, heightVal, titleVal, widthVal, positionVal) {
     $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal, position: positionVal });
-//    $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal});
   },
   ucwords : function(str) {
     return (str + '').replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function ($1) {
@@ -255,7 +252,6 @@ var input = {
     });
   },
   startsWith : function(data, input) {
-    //return (data.substring(0, input.length) === input);
     return (data.slice(0, input.length) == input);
   },
   invalid : function(jQueryObj) {
@@ -297,8 +293,6 @@ var input = {
     var selectizes = $("#" + objId).selectize(); // Selectize plugin initialization
     var selectize = selectizes[0].selectize; // Get selectize instance
     selectize.setValue(Object.keys(selectize.options)); // Set all selectize options using setValue() method
-    event.preventDefault();
-    event.stopPropagation();
     return false;
   },
   deselectAllSelectize : function(objId) {
@@ -306,8 +300,6 @@ var input = {
     var selectize = selectizes[0].selectize; // Get selectize instance
     selectize.clear(false);
     //selectize.setValue(-1, false);
-    event.preventDefault();
-    event.stopPropagation();
     return false;
   },
   countChecked : function(prefix) {
@@ -483,8 +475,7 @@ $.extend({
   getQueryString: function() {
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
+    for(var i = 0; i < hashes.length; i++) {
       hash = hashes[i].split('=');
       vars.push(hash[0]);
       vars[hash[0]] = hash[1];
@@ -520,7 +511,8 @@ $.extend({
       }
       if (code == "KeyA") {
         self.setValue(Object.keys(self.options)); // Set all selectize options using setValue() method
-        self.focus();
+        //self.focus();
+        self.trigger("focus");
       } else {
         self.clear();
       }
@@ -550,38 +542,6 @@ $.extend({
     }
   })();
 });*/
-/*(function($) {
-  $.fn.listenForChange = function(options) {
-    settings = $.extend({
-      interval: 200 // in microseconds
-    }, options);
-    var jquery_object = this;
-    var current_focus = null;
-    jquery_object.filter(":input").add(":input", jquery_object).focus( function() {current_focus = this;}).blur( function() {current_focus = null;});
-    setInterval(function() {
-      // allow
-      jquery_object.filter(":input").add(":input", jquery_object).each(function() {
-        // set data cache on element to input value if not yet set
-        if ($(this).data('change_listener') == undefined) {
-          $(this).data('change_listener', $(this).val());
-          return;
-        }
-        // return if the value matches the cache
-        if ($(this).data('change_listener') == $(this).val()) {
-          return;
-        }
-        // ignore if element is in focus (since change event will fire on blur)
-        if (this == current_focus) {
-          return;
-        }
-        // if we make it here, manually fire the change event and set the new value
-        $(this).trigger('change');
-        $(this).data('change_listener', $(this).val());
-      });
-    }, settings.interval);
-    return this;
-  };
-})(jQuery);*/
 $(function() {
   $("#main-menu").smartmenus({
     subMenusSubOffsetX: 1,

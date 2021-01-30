@@ -10,14 +10,11 @@ $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("heading", "Championship Seating");
 $smarty->assign("style", "");
 $output = "";
-$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-// $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_START_SEASON);
-// $startDate = $dateTime->getDatabaseFormat();
-// $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_END_SEASON);
-// $endDate = $dateTime->getDatabaseFormat();
+$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null,"now");
 $startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
 $endDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+// $databaseResult = new DatabaseResult(true);
 $params = array($startDate, $endDate);
 $resultList = $databaseResult->getPrizePoolForSeason($params, false);
 if (0 < count($resultList)) {
@@ -194,8 +191,7 @@ if (0 < $count) {
   $output .= "    <div style='float: left; width: 125px;'><strong><i>Position<br />(% of total)</i></strong></div>\n";
   $output .= "    <div style='float: left; width: 125px;'><strong><i>Payout</i></strong></div>\n";
   $output .= "    <div style='clear: both;'></div>\n";
-  $params = array(
-    1);
+  $params = array(1, 1);
   $resultList = $databaseResult->getGroupPayoutById($params);
   if (0 < count($resultList)) {
     $ctr = 0;

@@ -1,6 +1,5 @@
 $(document).ready(function() {
-  var dataTableId = reportsInputLocal.initializeDataTable();
-  //reportsInputLocal.postProcessing(dataTableId);
+  reportsInputLocal.initializeDataTable();
 });
 $(document).on("change", "#year", function(event) {
   var queryString = input.getQueryStringNamed();
@@ -44,7 +43,7 @@ var reportsInputLocal = {
               "orderSequence": [ "desc", "asc" ],
             }, {
               "type" : "name"
-            }, { // hide active column
+            }, {
               "searchable": false,
               "visible": false
             }],
@@ -244,18 +243,6 @@ var reportsInputLocal = {
             "searching": false
           });
         }
-//      } else if (reportId == "allUsersInfo") {
-//        dataTableId = "dataTblInfo";
-//        if ($("#" + dataTableId).length > 0) {
-//          $("#" + dataTableId).DataTable({
-//            "bFilter": false,
-//            "bInfo": false,
-//            "bPaginate": false,
-//            "bDestroy": true,
-//            "bRetrieve": true,
-//            "bSort": false
-//          });
-//        }
       } else if (reportId == "locationsHostedCount") {
         $("#dataTblLocationsHostedCount").DataTable({
           "columns" : [null, {
@@ -275,16 +262,10 @@ var reportsInputLocal = {
         });
       } else if (reportId == "championship") {
         const params = new URLSearchParams(window.location.search);
-        /*for (const param of params) {
-          console.log(param);
-        }*/
-        //console.log(params.get("sort"));
         var aryParam = params.get("sort").split(",");
-        //console.log(aryParam);
         var aryNew = [];
         aryParam.forEach(function(item, index, array) {
           var aryItem = item.split(" ");
-          //console.log(aryItem);
           aryNew[index] = params.get("group") ? parseInt(aryItem) - 1 : aryItem;
         });
         var aryCols = [];
@@ -306,7 +287,6 @@ var reportsInputLocal = {
 	        },
 	        dataSrc: aryNew[0][0]
 	     };
-        //console.log(aryNew);
         $("#dataTblChampionship").DataTable({
           "columns" : aryCols,
           "order" : aryNew,
