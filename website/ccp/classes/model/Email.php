@@ -1,9 +1,9 @@
 <?php
 namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
-use ccp\classes\common\PHPMailer\SMTP;
 use Exception;
-class Email {
+class Email extends Root {
+  private static $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
   private $fromName; // array
   private $fromEmail; // array
   private $toName; // array
@@ -18,9 +18,6 @@ class Email {
   private $localEmail;
 
   function __construct() {
-//     if ($_SERVER["SERVER_NAME"] == "localhost") {
-//       $this->setLocal(true);
-//     }
     $this->setLocal(Constant::FLAG_LOCAL());
   }
 //   private $test = false;
@@ -38,7 +35,7 @@ class Email {
     if ($this->isLocal()) {
       $this->setLocalEmail($toEmail);
       foreach ($toEmail as $key => $value) {
-        $toEmail[$key] = "me@localhost.com";
+        $toEmail[$key] = self::$EMAIL_ADDRESS_LOCAL;
       }
       unset($value);
       $this->setLocalEmail($toEmail);
@@ -70,9 +67,6 @@ class Email {
   public function getLocalEmail() {
     return $this->localEmail;
   }
-//   public function isTest() {
-//     return $this->test;
-//   }
   public function setFromName($fromName) {
     if (is_array($fromName)) {
       $this->fromName = $fromName;
@@ -115,7 +109,6 @@ class Email {
         $this->setBody("<br>CC to " . print_r($ccEmail, true) . "\n\n" . $this->getBody());
         $ccEmail = array($this->localEmail);
       }
-//       $this->ccEmail = $ccEmail;
     } else {
       throw new Exception($ccEmail . " is not a valid array of cc emails");
     }
@@ -151,7 +144,8 @@ class Email {
     $this->localEmail = $localEmail;
   }
   public function toString() {
-    $output = "fromName = '";
+    $output = parent::__toString();
+    $output .= ", fromName = '";
     $output .= print_r($this->getFromName(), true);
     $output .= "', fromEmail = '";
     $output .= print_r($this->getFromEmail(), true);
@@ -184,9 +178,7 @@ class Email {
   // each body line < 70 characters and separated with \n
   public function sendEmail() {
     $mail = new PHPMailer(true);
-//     $mail = new PHPMailer\PHPMailer\PHPMailer();
-//     $mail->SMTPDebug = false;//1;
-    $mail->SMTPDebug = false; //SMTP::DEBUG_SERVER;
+    $mail->SMTPDebug = $this->isDebug(); //SMTP::DEBUG_SERVER;
     $mail->isSMTP();
     //$mail->SMTPOptions = array('ssl' => array('verify_peer' => false,'verify_peer_name' => false,'allow_self_signed' => true));
     $mail->Host = Constant::SERVER_EMAIL();
@@ -227,7 +219,6 @@ class Email {
       } else {
         $subject = "registration successful for the tournament on ";
       }
-//       $subject .= DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime());
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
       $this->setSubject($subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
@@ -245,7 +236,6 @@ class Email {
           $body .= "(you were moved from the wait list to registered) ";
         }
       }
-//       $body .= "for the tournament on " . DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime()) . " with additional details below:<br />";
       $body .= "for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . " with additional details below:<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getAddress() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
@@ -255,7 +245,6 @@ class Email {
         $this->setCcName(array($ccUser->getName()));
         $this->setCcEmail(array($ccUser->getEmail()));
       }
-      //sendEmail("CCP Staff", "staff@chipchairprayer.com", $this->toName, $this->toEmail, $this->subject, $this->body, $this->local, $this->test
       $result .= $this->sendEmail();
     }
     return $result;
@@ -267,7 +256,6 @@ class Email {
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
       $subject = " registration is open reminder for the tournament on ";
-//       $subject .= DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime());
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
       $this->setSubject($subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
@@ -286,7 +274,6 @@ class Email {
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
       $body .= "&nbsp;&nbsp;If you need to register for this tournament, please <a href=\"" . $url . "\">click here</a>";
       $this->setBody($body);
-      //sendEmail("CCP Staff", "staff@chipchairprayer.com", $this->toName, $this->toEmail, $this->subject, $this->body, $this->local, $this->test);
       $result .= $this->sendEmail();
     }
     return $result;
@@ -298,17 +285,14 @@ class Email {
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
       $subject = "registration cancelled for the tournament on ";
-//       $subject .= DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime());
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
       $this->setSubject($subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-//       $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime())  . " with additional details below:<br />";
       $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat()  . " with additional details below:<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getAddress() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
       $body .= "&nbsp;&nbsp;If you need to re-register for this tournament, please <a href=\"" . $url . "\">click here</a>";
       $this->setBody($body);
-      //sendEmail("CCP Staff", "staff@chipchairprayer.com", $this->toName, $this->toEmail, $this->subject, $this->body, $this->local, $this->test);
       $result .= $this->sendEmail();
     }
     return $result;
@@ -378,7 +362,7 @@ class Email {
     return $result;
   }
   // array of username, email, selector and validator
-  public function sendPasswordResetEmail(User $ccUser = null, Array $info, Array $selectorAndToken) {
+  public function sendPasswordResetRequestEmail(User $ccUser = null, Array $info, Array $selectorAndToken) {
       $result = "";
       for ($idx = 0; $idx < count($this->fromName); $idx++) {
           $subject = "password reset request";
@@ -386,6 +370,23 @@ class Email {
           $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
           $url = Constant::PATH() . "resetPassword.php?mode=resetPassword&username=" . $info[0] . "&email=" . $info[1] . "&selector=" . $selectorAndToken[0] . "&validator=" . $selectorAndToken[1];
           $body .= "&nbsp;&nbsp;Your request has been received. Please <a href=\"" . $url . "\">click here</a> to reset your password.";
+          $this->setBody($body);
+          if (isset($ccUser)) {
+              $this->setCcName(array($ccUser->getName()));
+              $this->setCcEmail(array($ccUser->getEmail()));
+          }
+          $result .= $this->sendEmail();
+      }
+      return $result;
+  }
+  public function sendPasswordResetSuccessfulEmail(User $ccUser = null) {
+      $result = "";
+      for ($idx = 0; $idx < count($this->fromName); $idx++) {
+          $subject = "password reset successfully";
+          $this->setSubject($subject);
+          $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
+          $url = Constant::PATH() . "login.php";
+          $body .= "&nbsp;&nbsp;Your password was changed successfully. Please <a href=\"" . $url . "\">click here</a> to login.";
           $this->setBody($body);
           if (isset($ccUser)) {
               $this->setCcName(array($ccUser->getName()));
