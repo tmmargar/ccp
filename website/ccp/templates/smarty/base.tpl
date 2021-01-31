@@ -4,14 +4,16 @@
  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>{block name=title}Default Title{/block}</title>
- <style type="text/css">
-  @import url("css/jquery-ui.css");
-  @import url("css/jquery.datetimepicker.css");
-  @import url("css/datatables.css");
-  @import url("css/display.css");
-  @import url("css/sm-core-css.css");
-  @import url("css/sm-blue.css");
- </style>
+ <link href="images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+ <link href="images/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32">
+ <link href="images/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16">
+ <link href="images/site.webmanifest" rel="manifest">
+ <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+ <link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
+ <link href="css/datatables.css" rel="stylesheet" type="text/css">
+ <link href="css/display.css" rel="stylesheet" type="text/css">
+ <link href="css/sm-core-css.css" rel="stylesheet" type="text/css">
+ <link href="css/sm-blue.css" rel="stylesheet" type="text/css">
  {block name=style}{/block}
  <script src="scripts/jquery/jquery.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery-ui.js" type="text/javascript"></script>

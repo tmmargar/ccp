@@ -4,8 +4,6 @@
 {block name=script}<script src="scripts/reports.js" type="text/javascript"></script>{/block}
 {block name=content}
  <form action="{$action}" method="post" id="{$formName}" name="{$formName}">
-  <fieldset>
-  {$content}
-  </fieldset>
+  <fieldset>{$content}</fieldset>
  </form>
 {/block}
