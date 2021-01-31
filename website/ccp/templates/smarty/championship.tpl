@@ -5,8 +5,6 @@
 {block name=content}
  <h1>{$heading}</h1>
  <form action="{$action}" method="post" id="{$formName}" name="{$formName}">
-  <fieldset>
-  {$content}
-  </fieldset>
+  <fieldset>{$content}</fieldset>
  </form>
 {/block}

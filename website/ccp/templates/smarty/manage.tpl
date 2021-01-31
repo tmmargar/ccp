@@ -4,18 +4,14 @@
 {block name=script}{$script}{/block}
 {block name=content}
  <h1>{$heading}</h1>
- <div id="info" style="display:none">
-  <span id="errors" style="display: none"></span>
+ <div class="hide" id="info">
+  <span class="hide" id="errors"></span>
   <br />
-  <span id="messages" style="display: none"></span>
+  <span class="hide" id="messages"></span>
  </div>
  <span id="modeDisplay">Mode: {$mode}</span>
  <br />
  <form action="{$action}" method="post" id="{$formName}" name="{$formName}">
-  <fieldset>
-   <div id="resize_wrapper">
-    {$content}
-   </div>
-  </fieldset>
+  <fieldset>{$content}</fieldset>
  </form>
 {/block}
