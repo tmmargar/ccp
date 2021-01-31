@@ -67,13 +67,6 @@ table.override90 {
   margin: 0;
   width: 90%;
 }
-#resize_wrapper {
-  /*position: absolute;*/
-  top: 5em;
-  left: 1em;
-  right: 1em;
-  bottom: 1em;
-}
 /*table.dataTable.display tbody tr.inactive,
 table.dataTable.display tbody tr.inactive > .sorting_1,
 table.dataTable.display tbody tr.inactive > .sorting_2 {
@@ -83,7 +76,7 @@ table.dataTable.display tbody tr.inactive > .sorting_2 {
   background-color: yellow !important;
 }
 div.label {
-  flex: 15%;
+  flex: 20%;
   padding-bottom: 5px;
   /* unsetting to override bootstrap */
   color: unset;
@@ -92,7 +85,7 @@ div.label {
   padding: unset;
 }
 div.input, div.textarea {
-  flex: 85%;
+  flex: 80%;
   padding-bottom: 5px;
 }
 .form_content {
