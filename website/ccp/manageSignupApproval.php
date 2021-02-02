@@ -14,11 +14,13 @@ define("SAVE_TEXT", "Save");
 $output = "";
 $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : "";
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+// $databaseResult = new DatabaseResult(true);
 if (Constant::$MODE_SAVE_PREFIX == $mode) {
   $user = array();
   $emailAddress = array();
   $approval = array();
   $rejection = array();
+  print_r($_POST);
   foreach ($_POST as $key => $value) {
     $userId = count(explode("_", $key)) > 1 ? explode("_", $key)[1] : "";
     if (strpos($key, 'user') !== false) {
@@ -40,16 +42,8 @@ if (Constant::$MODE_SAVE_PREFIX == $mode) {
     $params[9] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
     $output .= "<span id=\"messages\">Successfully approved " . $value . "</span>\n";
-    // send email to user
-    $email = new Email();
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setToEmail(array($emailAddress[$key]));
-    $email->setToName(array($value));
-    $ccUser = new User();
-    $ccUser->setEmail(Constant::EMAIL_STAFF());
-    $ccUser->setName(Constant::$NAME_STAFF);
-    $output .= $email->sendApprovedEmail($ccUser);
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
+    $output .= $email->sendApprovedEmail();
   }
   foreach ($rejection as $key => $value) {
     $params[0] = $key;
@@ -57,16 +51,8 @@ if (Constant::$MODE_SAVE_PREFIX == $mode) {
     $params[11] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
     $output .= (! empty($output) ? "<br />\n" : "") . "<span id=\"messages\">Successfully rejected " . $value . "</span>\n";
-    // send email to user
-    $email = new Email();
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setToEmail(array($emailAddress[$key]));
-    $email->setToName(array($value));
-    $ccUser = new User();
-    $ccUser->setEmail(Constant::EMAIL_STAFF());
-    $ccUser->setName(Constant::$NAME_STAFF);
-    $output .= $email->sendRejectedEmail($ccUser);
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
+    $output .= $email->sendRejectedEmail();
   }
 }
 $query = $databaseResult->getUsersForApproval();

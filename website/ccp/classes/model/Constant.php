@@ -100,6 +100,7 @@ class Constant {
   public static $MODE_SAVE_MODIFY                      = "savemodify";
   public static $MODE_SAVE_PREFIX                      = "save";
   public static $MODE_SAVE_VIEW                        = "saveview";
+  public static $MODE_SEND_EMAIL                       = "sendEmail";
   public static $MODE_SIGNUP                           = "signup";
   public static $NAME_STAFF                            = "CCP Staff";
   public static $MODE_VIEW                             = "view";

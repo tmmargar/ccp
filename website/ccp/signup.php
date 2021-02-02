@@ -37,33 +37,39 @@ if (Constant::$MODE_SIGNUP == $mode) {
       $failMessage = "Email <strong><u>" . $emailAddress . "</u></strong> already exists. Please choose another.";
       $classEmail = "errors";
     } else {
-      // first_name, last_name, username, password, email, registration_date
       $nameValues = explode(" ", $name);
       $params = array(null, $nameValues[0], $nameValues[1], $username, $password, $emailAddress, 0, null, null, null, null, null, null, null, null, null, null, null, null);
       $databaseResult->insertUser($params);
-      // send email to user
-      $email = new Email();
-      $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-      $email->setFromName(array(Constant::$NAME_STAFF));
-      $email->setToEmail(array($emailAddress));
-      $email->setToName(array($name));
-      $ccUser = new User();
-      $ccUser->setEmail(Constant::EMAIL_STAFF());
-      $ccUser->setName(Constant::$NAME_STAFF);
-      $output .= $email->sendSignUpEmail($ccUser);
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($name), array($emailAddress), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null);
+      $output .= $email->sendSignUpEmail();
       // send email to staff for approval
-      $email = new Email();
-      $email->setFromEmail(array($emailAddress));
-      $email->setFromName(array($name));
-      $email->setToEmail(array(Constant::EMAIL_STAFF()));
-      $email->setToName(array(Constant::$NAME_STAFF));
-      $output .= $email->sendSignUpApprovalEmail($ccUser);
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array($name), array($emailAddress), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null);
+      $output .= $email->sendSignUpApprovalEmail();
     }
   }
 }
 $smarty->assign("title", "Chip Chair and a Prayer New User Sign Up");
 // $smarty->assign("script", "<script src=\"scripts/signup.js\" type=\"text/javascript\"></script>");
-$style = "<style type=\"text/css\">\n" . "div.label, div.input {\n" . "  height: 17px;\n" . "  line-height: 17px;\n" . "  margin: 5px;\n" . "}\n" . "div.label {\n" . "  float: left;\n" . "  width: 100px;\n" . "}\n" . "div.input {\n" . "  float: left;\n" . "  margin: 0;\n" . "}\n" . "div.clear {\n" . "  clear: both;\n" . "  height: 0;\n" . "  line-height: 0;\n" . "}\n" . "</style>\n";
+$style =
+  "<style type=\"text/css\">\n" .
+  "div.label, div.input {\n" .
+  "  height: 17px;\n" .
+  "  line-height: 17px;\n" .
+  "  margin: 5px;\n" . "}\n" .
+  "div.label {\n" .
+  "  float: left;\n" .
+  "  width: 100px;\n" .
+  "}\n" .
+  "div.input {\n" .
+  "  float: left;\n" .
+  "  margin: 0;\n" .
+  "}\n" .
+  "div.clear {\n" .
+  "  clear: both;\n" .
+  "  height: 0;\n" .
+  "  line-height: 0;\n" .
+  "}\n" .
+  "</style>\n";
 $smarty->assign("style", $style);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmSignup");

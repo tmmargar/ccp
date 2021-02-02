@@ -38,6 +38,7 @@ $tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_F
 $tournamentDate = "CURRENT_DATE";
 $tournamentDateMax = "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)";
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+// $databaseResult = new DatabaseResult(true);
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $ary = explode(Constant::$DELIMITER_DEFAULT, $tournamentPlayerIds);
   $aryStatus = explode(Constant::$DELIMITER_DEFAULT, $tournamentPlayerStatus);
@@ -103,11 +104,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $tournament = $resultList[0];
       $tournamentAddress = $tournament->getLocation()->getUser()->getAddress();
       $waitListCount = ($tournament->getMaxPlayers() - $tournament->getRegisteredCount()) < 0 ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
-      $email = new Email();
-      $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-      $email->setFromName(array(Constant::$NAME_STAFF));
-      $email->setToEmail(array($userEmail));
-      $email->setToName(array($userName));
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($userName), array($userEmail), null, null, null, null, null, null);
       $emailAddress = new Address();
       $emailAddress->setAddress($tournamentAddress->getAddress());
       $emailAddress->setCity($tournamentAddress->getCity());
@@ -117,10 +114,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $emailTournament->setDate($tournament->getDate());
       $emailTournament->setStartTime($tournament->getStartTime());
       $emailTournament->setId($tournament->getId());
-      if ("registering" == $state) {
-        $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
-      } else if ("cancelling" == $state) {
+      if ("cancelling" == $state) {
         $output .= $email->sendCancelledEmail($emailAddress, $emailTournament);
+      } else {
+        $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
       }
     }
     $ctr ++;
@@ -129,9 +126,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $cnt = 0;
     // send email to people moved from wait list to registered
     while ($cnt < count($emailInfo)) {
-      $email = new Email();
-      $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-      $email->setFromName(array(Constant::$NAME_STAFF));
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($emailInfo[$cnt][0]), array($emailInfo[$cnt][1]), null, null, null, null, null, null);
       $emailAddress = new Address();
       $emailAddress->setAddress($tournamentAddress->getAddress());
       $emailAddress->setCity($tournamentAddress->getCity());
@@ -141,8 +136,6 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $emailTournament->setDate($tournament->getDate());
       $emailTournament->setStartTime($tournament->getStartTime());
       $emailTournament->setId($tournament->getId());
-      $email->setToEmail(array($emailInfo[$cnt][1]));
-      $email->setToName(array($emailInfo[$cnt][0]));
       $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99);
       $cnt ++;
     }

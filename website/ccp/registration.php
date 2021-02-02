@@ -38,12 +38,13 @@ if (! isset($tournamentId) || "" == $tournamentId) {
 } else {
   $userId = (isset($_POST[USER_ID_PARAMETER_NAME]) ? $_POST[USER_ID_PARAMETER_NAME] : isset($_GET[USER_ID_PARAMETER_NAME])) ? $_GET[USER_ID_PARAMETER_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
   $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
-  $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+  $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
 //   $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_START_SEASON);
 //   $startDate = $dateTime->getDatabaseFormat();
 //   $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_END_SEASON);
 //   $endDate = $dateTime->getDatabaseFormat();
   $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+//   $databaseResult = new DatabaseResult(true);
   $output = "";
   $registerText = Constant::$TEXT_REGISTER;
   $registered = false;
@@ -76,28 +77,24 @@ if (! isset($tournamentId) || "" == $tournamentId) {
       $databaseResult->updateRegistrationCancel($params);
       $waitListEmail = true;
     }
-    $mode = "sendEmail";
+    $mode = Constant::$MODE_SEND_EMAIL;
     $output .= "Thank you for " . $state . ". <a href=\"registrationList.php\">Click here</a> to register for more tournaments.<br>";
   }
-  if ($mode == Constant::$MODE_VIEW || $mode == "sendEmail") {
+  if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_SEND_EMAIL) {
     $params = array($tournamentId);
     $resultList = $databaseResult->getTournamentById($params);
     if (0 < count($resultList)) {
       $tournament = $resultList[0];
       $tournamentAddress = $tournament->getLocation()->getUser()->getAddress();
       $waitListCount = ($tournament->getRegisteredCount() > $tournament->getMaxPlayers()) ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
-      if ($mode == "sendEmail" ) {
+      if ($mode == Constant::$MODE_SEND_EMAIL) {
         // if set means email notification required and need location information from view query
         if (isset($state)) {
           $params = array($userId);
           $resultList = $databaseResult->getUserById($params);
           if (0 < count($resultList)) {
             $user = $resultList[0];
-            $email = new Email();
-            $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-            $email->setFromName(array(Constant::$NAME_STAFF));
-            $email->setToEmail(array($user->getEmail()));
-            $email->setToName(array($user->getName()));
+            $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
             $emailAddress = new Address();
             $emailAddress->setAddress($tournamentAddress->getAddress());
             $emailAddress->setCity($tournamentAddress->getCity());
@@ -107,10 +104,10 @@ if (! isset($tournamentId) || "" == $tournamentId) {
             $emailTournament->setDate($tournament->getDate());
             $emailTournament->setStartTime($tournament->getStartTime());
             $emailTournament->setId($tournament->getId());
-            if ("registering" == $state) {
-              $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
-            } else if ("cancelling" == $state) {
+            if ("cancelling" == $state) {
               $output .= $email->sendCancelledEmail($emailAddress, $emailTournament);
+            } else {
+              $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
             }
           }
           if (isset($waitListEmail)) {
@@ -120,11 +117,7 @@ if (! isset($tournamentId) || "" == $tournamentId) {
             if (0 < count($resultList)) {
               $waitListName = $resultList[0];
               $waitListEmail = $resultList[1];
-              $email = new Email();
-              $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-              $email->setFromName(array(Constant::$NAME_STAFF));
-              $email->setToEmail(array($waitListEmail));
-              $email->setToName(array($waitListName));
+              $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($waitListName), array($waitListEmail), null, null, null, null, null, null);
               $emailAddress = new Address();
               $emailAddress->setAddress($tournamentAddress->getAddress());
               $emailAddress->setCity($tournamentAddress->getCity());
@@ -136,11 +129,7 @@ if (! isset($tournamentId) || "" == $tournamentId) {
               $emailTournament->setId($tournament->getId());
               $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99);
               // send email to CCP staff
-              $email = new Email();
-              $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-              $email->setFromName(array(Constant::$NAME_STAFF));
-              $email->setToEmail(array(Constant::EMAIL_STAFF()));
-              $email->setToName(array(Constant::$NAME_STAFF));
+              $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null, null, null);
               $emailAddress = new Address();
               $emailAddress->setAddress($tournamentAddress->getAddress());
               $emailAddress->setCity($tournamentAddress->getCity());
@@ -173,12 +162,6 @@ if (! isset($tournamentId) || "" == $tournamentId) {
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $output .= "  <br />\n";
         $output .= "  <div style=\"float: left; width: 175px;\">Date &amp; Time:</div>\n";
-        $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
-        $registrationCloseDate = $dateTime->getDatabaseFormat();
-        $tournamentDateClone = clone $tournament->getDate();
-        $registrationOpenDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentDateClone->getDatabaseFormat() . " 12:00:00");
-        $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
-        $registrationOpenDate->getTime()->sub($interval);
         $output .= "  <div style=\"float: left;\">" . $tournament->getDate()->getDisplayLongFormat() . " " . $tournament->getStartTime()->getDisplayAmPmFormat() . "</div>\n";
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $output .= "  <div style=\"float: left; width: 175px;\">Map:</div>\n";
@@ -193,7 +176,13 @@ if (! isset($tournamentId) || "" == $tournamentId) {
         } else {
           $maxPlayers = $tournament->getMaxPlayers();
         }
-        if ($now->getDatabaseFormat() < $registrationCloseDate) {
+        $dateTimeRegistrationClose = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
+//         $registrationCloseDate = $dateTimeRegistrationClose->getDatabaseFormat();
+        $tournamentDateClone = clone $tournament->getDate();
+        $registrationOpenDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentDateClone->getDatabaseFormat() . " 12:00:00");
+        $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
+        $registrationOpenDate->getTime()->sub($interval);
+        if ($now->getDatabaseFormat() < $dateTimeRegistrationClose->getDatabaseFormat()) {
           $registeredCount = ($tournament->getRegisteredCount() <= $maxPlayers) ? ($maxPlayers - $tournament->getRegisteredCount()) : 0;
         } else {
           $registeredCount = 0;
@@ -205,8 +194,8 @@ if (! isset($tournamentId) || "" == $tournamentId) {
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $output .= "  <div style=\"float: left; width: 175px;\">Registration deadline:</div>\n";
 //        $output .= "  <div style=\"float: left;\">" . DateTimeUtility::getDateAndTimeDisplayLongFormat($registrationCloseDate) . "</div>\n";
-        $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $registrationCloseDate);
-        $output .= "  <div style=\"float: left;\">" . $dateTime->getDisplayLongTimeFormat() . "</div>\n";
+//         $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $registrationCloseDate);
+        $output .= "  <div style=\"float: left;\">" . $dateTimeRegistrationClose->getDisplayLongTimeFormat() . "</div>\n";
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $params = array($tournamentId, $userId);
         $resultList = $databaseResult->getFoodByTournamentIdAndPlayerId($params);
@@ -221,7 +210,7 @@ if (! isset($tournamentId) || "" == $tournamentId) {
           $output .= "  <div style=\"float: left; width: 175px;\">Dish to pass:</div>\n";
           $output .= "  <div style=\"float: left;\">";
           $food = $resultList[2];
-          if (($now->getDatabaseFormat() >= $registrationOpenDate->getDatabaseFormat()) && ($now->getDatabaseFormat() <= $registrationCloseDate)) {
+          if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
               $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_FOOD, null, true, null, null, null, false, FOOD_FIELD_NAME, null, FOOD_FIELD_NAME, null, null, false, null, null, 50, null, FormControl::$TYPE_INPUT_TEXTBOX, $food, null);
               $output .= $textBoxName->getHtml();
           } else {
@@ -264,7 +253,7 @@ if (! isset($tournamentId) || "" == $tournamentId) {
           $numPlayed = $resultList[0];
         }
         // check in registration range and not full
-        if (($now->getDatabaseFormat() >= $registrationOpenDate->getDatabaseFormat()) && ($now->getDatabaseFormat() <= $registrationCloseDate)) {
+        if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
           if ($tournament->getDescription() == "Championship" && 10 > $numPlayed) {
             $output .= "You are not allowed to register for the Championship because you only played " . $numPlayed . " tournaments and did not meet the " . Constant::$COUNT_TOURNAMENT_QUALIFY_CHAMPIONSHIP . " tournament minimum to qualify";
           } else {

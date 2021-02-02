@@ -28,19 +28,13 @@ if (count($resultList2) == 0) {
     foreach ($resultList2 as $tournament) {
       $locationUser = $tournament->getLocation()->getUser();
       $tournamentAddress = $locationUser->getAddress();
-      $email = new Email();
-      $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-      $email->setFromName(array(Constant::$NAME_STAFF));
-      $email->setToEmail(array($user->getEmail()));
-      $email->setToName(array($user->getName()));
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
       $emailAddress = new Address();
       $emailAddress->setAddress($tournamentAddress->getAddress());
       $emailAddress->setCity($tournamentAddress->getCity());
-      // $emailAddress->setId();
       $emailAddress->setState($tournamentAddress->getState());
       $emailAddress->setZip($tournamentAddress->getZip());
-//       echo "<br>" . $email->toString();
-      $output .= isset($mode) ? "<br>" : "\r";
+      $output .= isset($mode) ? "" : "\r";
       $output .= $email->sendReminderEmail($emailAddress, $tournament, 0);
       $output .= isset($mode) ? "" : "\r";
     }
@@ -58,18 +52,13 @@ if (count($resultList2) == 0) {
     foreach ($resultList2 as $tournament) {
       $locationUser = $tournament->getLocation()->getUser();
       $tournamentAddress = $locationUser->getAddress();
-      $email = new Email();
-      $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-      $email->setFromName(array(Constant::$NAME_STAFF));
-      $email->setToEmail(array($user->getEmail()));
-      $email->setToName(array($user->getName()));
+      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
       $emailAddress = new Address();
       $emailAddress->setAddress($tournamentAddress->getAddress());
       $emailAddress->setCity($tournamentAddress->getCity());
-      // $emailAddress->setId();
       $emailAddress->setState($tournamentAddress->getState());
       $emailAddress->setZip($tournamentAddress->getZip());
-      $output .= isset($mode) ? "<br>" : "\r";
+      $output .= isset($mode) ? "" : "\r";
       $output .= $email->sendReminderEmail($emailAddress, $tournament, 0);
       $output .= isset($mode) ? "" : "\r";
     }

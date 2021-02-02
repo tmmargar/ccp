@@ -2,7 +2,7 @@
 namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
 use Exception;
-class Email extends Root {
+class Email extends Base {
   private static $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
   private $fromName; // array
   private $fromEmail; // array
@@ -17,10 +17,25 @@ class Email extends Root {
   private $local = false;
   private $localEmail;
 
-  function __construct() {
-    $this->setLocal(Constant::FLAG_LOCAL());
+  public function __construct11($debug, $fromName, $fromEmail, $toName, $toEmail, $ccName, $ccEmail, $bccName, $bccEmail, $subject, $body) {
+    parent::__construct2($debug, null);
+    $this->fromName = $fromName;
+    $this->fromEmail = $fromEmail;
+    $this->toName = $toName;
+    $this->toEmail = $toEmail;
+    $this->ccName = $ccName;
+    $this->ccEmail = $ccEmail;
+    $this->bccName = $bccName;
+    $this->bccEmail = $bccEmail;
+    $this->subject = $subject;
+    $this->body = $body;
+    $this->local = Constant::FLAG_LOCAL();
   }
-//   private $test = false;
+  // deprecated and remove once all code is updated
+//   public function __construct() {
+//     echo "<BR>BAD";
+//     $this->setLocal(Constant::FLAG_LOCAL());
+//   }
   public function getFromName() {
     return $this->fromName;
   }
@@ -143,32 +158,32 @@ class Email extends Root {
   public function setLocalEmail($localEmail) {
     $this->localEmail = $localEmail;
   }
-  public function toString() {
+  public function __toString() {
     $output = parent::__toString();
-    $output .= ", fromName = '";
-    $output .= print_r($this->getFromName(), true);
-    $output .= "', fromEmail = '";
-    $output .= print_r($this->getFromEmail(), true);
-    $output .= "', toName = '";
-    $output .= print_r($this->getToName(), true);
-    $output .= "', toEmail = '";
-    $output .= print_r($this->getToEmail(), true);
-    $output .= "', ccName = '";
-    $output .= print_r($this->getCcName(), true);
-    $output .= "', ccEmail = '";
-    $output .= print_r($this->getCcEmail(), true);
-    $output .= "', bccName = '";
-    $output .= print_r($this->getBccName(), true);
-    $output .= "', bccEmail = '";
-    $output .= print_r($this->getBccEmail(), true);
-    $output .= "', subject = '";
-    $output .= $this->getSubject();
+    $output .= " fromName = ";
+    $output .= print_r($this->fromName, true);
+    $output .= ", fromEmail = ";
+    $output .= print_r($this->fromEmail, true);
+    $output .= ", toName = ";
+    $output .= print_r($this->toName, true);
+    $output .= ", toEmail = ";
+    $output .= print_r($this->toEmail, true);
+    $output .= ", ccName = ";
+    $output .= print_r($this->ccName, true);
+    $output .= ", ccEmail = ";
+    $output .= print_r($this->ccEmail, true);
+    $output .= ", bccName = ";
+    $output .= print_r($this->bccName, true);
+    $output .= ", bccEmail = ";
+    $output .= print_r($this->bccEmail, true);
+    $output .= ", subject = '";
+    $output .= $this->subject;
     $output .= "', body = '";
-    $output .= $this->getBody();
+    $output .= $this->body;
     $output .= "', local = ";
-    $output .= var_export($this->isLocal(), true);
+    $output .= var_export($this->local, true);
     $output .= ", localEmail = '";
-    $output .= $this->getLocalEmail();
+    $output .= $this->localEmail;
     $output .= "'";
     return $output;
   }
@@ -194,22 +209,21 @@ class Email extends Root {
       }
       $mail->Subject = $this->getSubject();
       $mail->Body = $this->getBody();
-      $message = "";
+      $message = "<br>";
         if(!$mail->send()) {
           $message .= "<span id=\"errors\">Message could not be sent to " . $this->getToName()[$idx] . " due to " . $mail->ErrorInfo . "</span>";
         } else {
           $message .= "<span class=\"messages\">Message has been sent to " . $this->getToName()[$idx] . " at " . $this->getToEmail()[$idx];
           if (isset($this->getCcEmail()[$idx]) && isset($this->getCcName()[$idx])) {
             $message .= " and cc to " . $this->getCcName()[$idx] . " at " . $this->getCcEmail()[$idx];
-            }
-            $message .= "</span><br>";
-          //}
+          }
+          $message .= "</span>";
         }
     }
     return $message;
   }
 
-  public function sendRegisteredEmail(Address $address, Tournament $tournament, $waitList, User $ccUser = null, $autoRegister = null) {
+  public function sendRegisteredEmail(Address $address, Tournament $tournament, $waitList, $autoRegister = null) {
     $result = "";
     $url = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
@@ -217,7 +231,7 @@ class Email extends Root {
       if (isset($autoRegister)) {
         $subject = "Auto registration of " . $autoRegister . " was successful for the tournament on ";
       } else {
-        $subject = "registration successful for the tournament on ";
+        $subject = "registration (update) successful for the tournament on ";
       }
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
       $this->setSubject($subject);
@@ -228,7 +242,7 @@ class Email extends Root {
         if (isset($autoRegister)) {
           $body .= "&nbsp;&nbsp;Auto registration of " . $autoRegister . " was successful ";
         } else {
-          $body .= "&nbsp;&nbsp;Your registration was successful ";
+          $body .= "&nbsp;&nbsp;Your registration (update) was successful ";
         }
         if ($waitList > 0) {
           $body .= "(you were added to the wait list) ";
@@ -241,10 +255,6 @@ class Email extends Root {
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
       $body .= "&nbsp;&nbsp;If you need to cancel your registration for this tournament, please <a href=\"" . $url . "\">click here</a>";
       $this->setBody($body);
-      if (isset($ccUser)) {
-        $this->setCcName(array($ccUser->getName()));
-        $this->setCcEmail(array($ccUser->getEmail()));
-      }
       $result .= $this->sendEmail();
     }
     return $result;
@@ -297,7 +307,7 @@ class Email extends Root {
     }
     return $result;
   }
-  public function sendSignUpEmail(User $ccUser = null) {
+  public function sendSignUpEmail() {
     $result = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $subject = "sign up request sent for approval";
@@ -305,15 +315,11 @@ class Email extends Root {
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
       $body .= "&nbsp;&nbsp;Your sign up request was sent for approval. Once it has been approved or rejected you will receive an email with further instructions.";
       $this->setBody($body);
-      if (isset($ccUser)) {
-        $this->setCcName(array($ccUser->getName()));
-        $this->setCcEmail(array($ccUser->getEmail()));
-      }
       $result .= $this->sendEmail();
     }
     return $result;
   }
-  public function sendSignUpApprovalEmail(User $ccUser = null) {
+  public function sendSignUpApprovalEmail() {
     $result = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $subject = "sign up request needs approval";
@@ -321,15 +327,11 @@ class Email extends Root {
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
       $body .= "&nbsp;&nbsp;" . $this->fromName[$idx]  . " sign up request requires your approval. Please <a href=\"" . (Constant::PATH()) . "manageSignupApproval.php\">click here</a> to go to the approval screen.";
       $this->setBody($body);
-      if (isset($ccUser)) {
-        $this->setCcName(array($ccUser->getName()));
-        $this->setCcEmail(array($ccUser->getEmail()));
-      }
       $result .= $this->sendEmail();
     }
     return $result;
   }
-  public function sendApprovedEmail(User $ccUser = null) {
+  public function sendApprovedEmail() {
     $result = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $subject = "sign up request approved";
@@ -337,15 +339,11 @@ class Email extends Root {
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
       $body .= "&nbsp;&nbsp;Your request has been approved. Please <a href=\"" . (Constant::PATH()) . "\">click here</a> to login.";
       $this->setBody($body);
-      if (isset($ccUser)) {
-        $this->setCcName(array($ccUser->getName()));
-        $this->setCcEmail(array($ccUser->getEmail()));
-      }
       $result .= $this->sendEmail();
     }
     return $result;
   }
-  public function sendRejectedEmail(User $ccUser = null) {
+  public function sendRejectedEmail() {
     $result = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
       $subject = "sign up request rejected";
@@ -353,16 +351,12 @@ class Email extends Root {
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
       $body .= "&nbsp;&nbsp;Your request has been rejected.";
       $this->setBody($body);
-      if (isset($ccUser)) {
-        $this->setCcName(array($ccUser->getName()));
-        $this->setCcEmail(array($ccUser->getEmail()));
-      }
       $result .= $this->sendEmail();
     }
     return $result;
   }
   // array of username, email, selector and validator
-  public function sendPasswordResetRequestEmail(User $ccUser = null, Array $info, Array $selectorAndToken) {
+  public function sendPasswordResetRequestEmail(Array $info, Array $selectorAndToken) {
       $result = "";
       for ($idx = 0; $idx < count($this->fromName); $idx++) {
           $subject = "password reset request";
@@ -371,15 +365,11 @@ class Email extends Root {
           $url = Constant::PATH() . "resetPassword.php?mode=resetPassword&username=" . $info[0] . "&email=" . $info[1] . "&selector=" . $selectorAndToken[0] . "&validator=" . $selectorAndToken[1];
           $body .= "&nbsp;&nbsp;Your request has been received. Please <a href=\"" . $url . "\">click here</a> to reset your password.";
           $this->setBody($body);
-          if (isset($ccUser)) {
-              $this->setCcName(array($ccUser->getName()));
-              $this->setCcEmail(array($ccUser->getEmail()));
-          }
           $result .= $this->sendEmail();
       }
       return $result;
   }
-  public function sendPasswordResetSuccessfulEmail(User $ccUser = null) {
+  public function sendPasswordResetSuccessfulEmail() {
       $result = "";
       for ($idx = 0; $idx < count($this->fromName); $idx++) {
           $subject = "password reset successfully";
@@ -388,10 +378,6 @@ class Email extends Root {
           $url = Constant::PATH() . "login.php";
           $body .= "&nbsp;&nbsp;Your password was changed successfully. Please <a href=\"" . $url . "\">click here</a> to login.";
           $this->setBody($body);
-          if (isset($ccUser)) {
-              $this->setCcName(array($ccUser->getName()));
-              $this->setCcEmail(array($ccUser->getEmail()));
-          }
           $result .= $this->sendEmail();
       }
       return $result;

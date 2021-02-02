@@ -18,7 +18,7 @@ class SpecialType extends Base {
 
   public function __toString() {
     $output = parent::__toString();
-    $output .= "', description = '";
+    $output .= ", description = '";
     $output .= $this->getDescription();
     $output .= "'";
     return $output;

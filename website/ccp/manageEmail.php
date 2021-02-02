@@ -18,15 +18,8 @@ if (Constant::$MODE_EMAIL == $mode) {
   $subject = isset($_POST[SUBJECT_FIELD_NAME]) ? $_POST[SUBJECT_FIELD_NAME] : "";
   $body = isset($_POST[BODY_FIELD_NAME]) ? $_POST[BODY_FIELD_NAME] : "";
   foreach ($to as $toEach) {
-    // echo "<br>" . $toEach . " -> " . explode(":", $toEach)[1] ; die();
     $toArray = explode(":", $toEach);
-    $email = new Email();
-    $email->setBody($body);
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setSubject($subject);
-    $email->setToEmail(array($toArray[1]));
-    $email->setToName(array($toArray[0]));
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::EMAIL_STAFF()), array(Constant::NAME_STAFF), array($toArray[0]), array($toArray[1]), null, null, null, null, $subject, $body);
     $output .= $email->sendEmail();
   }
 //   $output .= "<span class=\"messages\">Successfully sent emails to " . count($to) . "</span>\n";
@@ -40,14 +33,7 @@ if (count($resultList) == 0) {
 } else {
   $script =
     "<script src=\"scripts/selectize.js\" type=\"text/javascript\"></script>\n" .
-    "<script src=\"scripts/manageEmail.js\" type=\"text/javascript\"></script>\n" .
-    "<script type=\"text/javascript\">\n" .
-    "$(document).ready(function() {\n" .
-    "  $(document).on(\"click\", \"#selectAll\", function(event) {\n" .
-  "    return input.selectAllSelectize(\"" . TO_FIELD_NAME . "\");\n" .
-  "  });\n" . "  $(document).on(\"click\", \"#deselectAll\", function(event) {\n" .
-  "    return input.deselectAllSelectize(\"" . TO_FIELD_NAME . "\");\n" .
-  "  });\n";
+    "<script type=\"text/javascript\">\n";
   $option = "{\n";
   foreach ($resultList as $user) {
     if ($option != "{\n") {
@@ -57,53 +43,23 @@ if (count($resultList) == 0) {
   }
   $option .= "}";
   $script .=
-    "  var selectValues = " . $option . ";\n" .
-    "  var options = [];\n" .
-    "  $.each(selectValues, function(key, value) {\n" .
-    "    options.push($(\"<option>\", {value : key + \":\" + value}).text(key));\n" .
-    "  });\n" .
-    "  $(\"#" . TO_FIELD_NAME . "\").append(options);\n" .
-    "  var selectizeArray = $(\"#" . TO_FIELD_NAME . "\").selectize({\n" .
-    "    valueField: \"email\",\n" . "    labelField: \"name\",\n" .
-    "    searchField: [\"name\", \"email\"],\n" . "    plugins: {\n" .
-    "      \"drag_drop\": {},\n" . "      \"remove_button\": {},\n" .
-    "      \"set_all\": {\"id\": \"" . TO_FIELD_NAME . "\"}\n" .
-    "    },\n" .
-    "    render: {\n" .
-    "      item: function(item, escape) {\n" .
-    "        return \"<div>\" + (item.name ? \"<span class='name'>\" + escape(item.name) + \"</span>\" : \"\") + (item.email ? \"<span class='email'> &lt;\" + escape(item.email) + \"&gt;</span>\" : \"\") + \"</div>\";\n" .
-    "      },\n" .
-    "      option: function(item, escape) {\n" .
-    "        var label = item.name || item.email;\n" .
-  // " var caption = item.name ? item.email : null;\n" .
-  "        var caption = item.name ? item.email.split(':')[1] : null;\n" .
-  "        return \"<div><span class='label'>\" + escape(label) + \"</span>\" + (caption ? \"<span class='caption'> &lt;\" + escape(caption) + \"&gt;</span>\" : \"\") + \"</div>\";\n" .
-  "      }\n" .
-  "    }\n" .
-  "  });\n" .
-  "});\n" .
-  "</script>\n";
+    "  const selectUsers = " . $option . ";\n" .
+    "</script>\n" .
+    "<script src=\"scripts/manageEmail.js\" type=\"text/javascript\"></script>\n";
 }
 $smarty->assign("script", $script);
 $smarty->assign("heading", "Manage Email");
 $style =
+  "<link href=\"css/selectize.default.css\" rel=\"stylesheet\" type=\"text/css\">\n" .
   "<style type=\"text/css\">\n" .
-  "  @import url(\"css/selectize.default.css\");\n" .
-  ".form_content {\n" .
-  "  width: 1000px;\n" .
-  "}\n" .
-"</style>\n";
+  " .form_content {\n" .
+  "  width: 45%;\n" .
+  " }\n" .
+  "</style>\n";
 $smarty->assign("style", $style);
 $smarty->assign("mode", $mode);
-// $smarty->assign("navigation", "");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("formName", "frmLogin");
-// if (isset($failMessage)) {
-// $output .=
-// "<script type=\"text/javascript\">\n" .
-// " display.showErrors([ \"" . $failMessage . "\" ]);\n" .
-// "</script>\n";
-// }
 $output .= "<div class=\"form_content\">\n";
 $output .= " <div class=\"label\">To:</div>\n";
 $output .= " <div class=\"input\">\n";
@@ -111,7 +67,6 @@ $selectTo = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME
 $output .= $selectTo->getHtml();
 $output .= "  </select>\n";
 $output .= " </div>\n";
-// $output .= "<div class=\"clear\"></div>\n";
 $output .= " <div class=\"label\">Subject:</div>\n";
 $output .= " <div class=\"input\">\n";
 $textBoxEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SUBJECT, null, false, null, null, null, false, SUBJECT_FIELD_NAME, 100, SUBJECT_FIELD_NAME, null, null, false, null, null, 30, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
