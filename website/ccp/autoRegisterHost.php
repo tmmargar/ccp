@@ -37,37 +37,22 @@ if (count($resultList) == 0) {
       $output .= isset($mode) ? "</span>" : "\r";
     }
     $tournamentAddress = $user->getAddress();
-    $email = new Email();
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setToEmail(array($user->getEmail()));
-    $email->setToName(array($user->getName()));
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
     $emailAddress = new Address();
     $emailAddress->setAddress($tournamentAddress->getAddress());
     $emailAddress->setCity($tournamentAddress->getCity());
-    // $emailAddress->setId();
     $emailAddress->setState($tournamentAddress->getState());
     $emailAddress->setZip($tournamentAddress->getZip());
-    // $ccUser = new User();
-    // $ccUser->setName(Constant::$NAME_STAFF);
-    // $ccUser->setEmail(Constant::EMAIL_STAFF());
-    // echo "<br>" . $email->sendRegisteredEmail($emailAddress, $tournament, 0, $ccUser);
     $output .= isset($mode) ? "<br>" : "\r";
     $output .= $email->sendRegisteredEmail($emailAddress, $tournament, 0);
     $output .= isset($mode) ? "" : "\r";
-    $email = new Email();
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setToEmail(array(Constant::EMAIL_STAFF()));
-    $email->setToName(array(Constant::$NAME_STAFF));
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null, null, null);
     $emailAddress = new Address();
     $emailAddress->setAddress($tournamentAddress->getAddress());
     $emailAddress->setCity($tournamentAddress->getCity());
-    // $emailAddress->setId();
     $emailAddress->setState($tournamentAddress->getState());
     $emailAddress->setZip($tournamentAddress->getZip());
-//     $output .= isset($mode) ? "<br>" : "\r";
-    $output .= $email->sendRegisteredEmail($emailAddress, $tournament, 0, null, $user->getName());
+    $output .= $email->sendRegisteredEmail($emailAddress, $tournament, 0, $user->getName());
     $output .= isset($mode) ? "" : "\r";
   }
 }

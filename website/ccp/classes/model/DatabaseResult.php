@@ -1957,11 +1957,7 @@ class DatabaseResult extends Root {
             "FROM poker_user p LEFT JOIN (SELECT r2.tournamentId, r2.playerId, r2.registerOrder, t.maxPlayers " .
             "                                   FROM poker_result r2 " .
             "                                   INNER JOIN poker_tournament t ON r2.tournamentId = t.tournamentId AND r2.statusCode IN ('" . Constant::$CODE_STATUS_REGISTERED . "', '" . Constant::$CODE_STATUS_PAID . "') AND r2.tournamentId = " . $params[0] . ") r ON p.id = r.playerId " .
-            "WHERE CONCAT(p.first_name, ' ', p.last_name) NOT LIKE '%test%' " .
-            "AND CONCAT(p.first_name, ' ', p.last_name) NOT LIKE '%CCP%' " .
-            "AND CONCAT(p.first_name, ' ', p.last_name) NOT LIKE '%lapdog%' " .
-            "AND p.username NOT LIKE '%admin%' " .
-            "AND p.active = 1";
+            "WHERE p.active = 1";
           break;
         case "tournamentSelectAllDuring":
           $query =
@@ -2734,7 +2730,7 @@ class DatabaseResult extends Root {
                   $dateTime = new DateTime($this->isDebug(), null, $row["end"]);
                   $tournament->setEndTime($dateTime);
                   $tournament->setBuyinAmount((int) $row["buyin"]);
-                  if (null != $tournament->getSpecialType() && strpos($tournament->getSpecialType()->getDescription(), Constant::$DESCRIPTION_CHAMPIONSHIP) === false) {
+                  if (strpos($row["std"], Constant::$DESCRIPTION_CHAMPIONSHIP) === false) {
                     $tournament->setMaxPlayers((int) $row["max players"]);
                   } else {
                     $databaseResult = new DatabaseResult($this->isDebug());
@@ -3347,7 +3343,7 @@ class DatabaseResult extends Root {
             }
             $query .= " email = '" . $params[5] . "'";
           }
-          if (in_array($params[6], $validValues)) {
+          if (!empty($params[6]) && in_array($params[6], $validValues)) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5])) {
               $query .= ", ";
             }
@@ -3384,7 +3380,7 @@ class DatabaseResult extends Root {
             }
             $query .= " rejection_userid = " . $params[11];
           }
-          if (in_array($params[12], $validValues)) {
+          if (!empty($params[12]) && in_array($params[12], $validValues)) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11])) {
               $query .= ", ";
             }

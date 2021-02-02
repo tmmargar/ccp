@@ -100,7 +100,8 @@ class DateTime extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= ", time = ";
-    $output .= null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_DEFAULT);
+//     $output .= null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_DEFAULT);
+    $output .= null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
     $output .= ", timeZone = ";
     $output .= null == $this->timeZone ? null : $this->timeZone->getName();
     return $output;

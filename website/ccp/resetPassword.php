@@ -29,6 +29,7 @@ $username = isset($_POST[USERNAME_FIELD_NAME]) ? $_POST[USERNAME_FIELD_NAME] : (
 $password = isset($_POST[PASSWORD_FIELD_NAME]) ? $_POST[PASSWORD_FIELD_NAME] : "";
 $output = "";
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+//   $databaseResult->setDebug(true);
 if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
   $params = array($username, $emailAddress, time());
   $resultList = $databaseResult->updateUserReset($params);
@@ -36,16 +37,8 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
     $output .= "Username <strong><u>" . $username . "</u></strong> and email <strong><u>" . $emailAddress . "</u></strong> are not a valid combination. Please try again.";
     $mode = "";
   } else {
-    // send email to user
-    $email = new Email();
-    $email->setFromEmail(array(Constant::EMAIL_STAFF()));
-    $email->setFromName(array(Constant::$NAME_STAFF));
-    $email->setToEmail(array($emailAddress));
-    $email->setToName(array($username));
-    $ccUser = new User();
-    $ccUser->setEmail(Constant::EMAIL_STAFF());
-    $ccUser->setName(Constant::$NAME_STAFF);
-    $output .= $email->sendPasswordResetEmail($ccUser, $params, $resultList);
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($username), array($emailAddress), null, null, null, null, null, null);
+    $output .= $email->sendPasswordResetRequestEmail($params, $resultList);
     $output .= "<br>You will be redirected to the login page in 5 seconds";
     header("refresh:5;url=login.php");
   }
@@ -80,19 +73,20 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
     }
   }
 } else if (Constant::$MODE_RESET_PASSWORD_CONFIRM == $mode) {
-//   $databaseResult->setDebug(true);
   $params = array($username, $emailAddress, $password);
   $resultList = $databaseResult->updateUserChangePassword($params);
-  if (0 == count($resultList)) {
+  if (0 == $resultList) {
     $output .= "Unable to change password for username <strong><u>" . $username . "</u></strong> and email <strong><u>" . $emailAddress . "</u></strong>. Please try again.";
     $mode = "";
   } else {
-    // destroy existing session
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($username), array($emailAddress), null, null, null, null, null, null);
+    $output .= $email->sendPasswordResetSuccessfulEmail();
+    $output .= "<br>You will be redirected to the login page in 5 seconds";
     session_destroy();
-    // redirect to login
-    header("Location:login.php");
+    header("refresh:5;url=login.php");
   }
-} else if ("" == $mode) {
+}
+if ("" == $mode) {
   $output .= "<div class=\"label\">Username:</div>\n";
   $output .= "<div class=\"input\">\n";
   $textBoxUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_USERNAME, "username", true, null, null, null, false, USERNAME_FIELD_NAME, 30, USERNAME_FIELD_NAME, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
