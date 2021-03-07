@@ -1263,3 +1263,6 @@ div.dataTables_wrapper span.select-item {
 .dataTable, .dataTables_filter, .dataTables_info {
   font-size: .75em;
 }
+.dataTables_scrollFoot {
+  display: none;
+}
