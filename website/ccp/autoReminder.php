@@ -7,22 +7,15 @@ use ccp\classes\model\DateTime;
 use ccp\classes\model\Email;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
-$output = "";
-$mode  = isset($_GET[Constant::$FIELD_NAME_MODE]) ? $_GET[Constant::$FIELD_NAME_MODE] : null;
-// php cgi is older and does not support what is needed so just using plain constructor
-// $now = DateTimeUtility::createDate(null, null);
 $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
-$output .= "###Run at " . $now->getDatabaseFormat() . "###";
-$output .= isset($mode) ? "" : "\r";
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+$output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+$output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->getDisplayLongTimeFormat() . "###\");\n" : "\r";
 $days = 14;
 $params = array($days);
 $resultList = $databaseResult->getUsersForEmailNotifications($params);
 $resultList2 = $databaseResult->getTournamentsForEmailNotifications($params);
 if (count($resultList2) == 0) {
-  $output .= isset($mode) ? "<br>" : "\r";
-  $output .= "No tournaments needing auto email notification for registration open (" . $days . " days before)";
-  $output .= isset($mode) ? "" : "\r";
+  $output .= isset($mode) ? "  aryMessages.push(\"No tournaments needing auto email notification for registration open (" . $days . " days before)\");\n" : "\r";
 } else {
   foreach ($resultList as $user) {
     foreach ($resultList2 as $tournament) {
@@ -34,9 +27,7 @@ if (count($resultList2) == 0) {
       $emailAddress->setCity($tournamentAddress->getCity());
       $emailAddress->setState($tournamentAddress->getState());
       $emailAddress->setZip($tournamentAddress->getZip());
-      $output .= isset($mode) ? "" : "\r";
-      $output .= $email->sendReminderEmail($emailAddress, $tournament, 0);
-      $output .= isset($mode) ? "" : "\r";
+      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail($emailAddress, $tournament, 0) . "\");\n" : "\r";
     }
   }
 }
@@ -45,8 +36,7 @@ $params = array($days);
 $resultList = $databaseResult->getUsersForEmailNotifications($params);
 $resultList2 = $databaseResult->getTournamentsForEmailNotifications($params);
 if (count($resultList2) == 0) {
-  $output .= isset($mode) ? "<br>" : "\r";
-  $output .=  "No tournaments needing auto email notification for registration open (" . $days . " days before)<br />\r";
+  $output .= isset($mode) ? "  aryMessages.push(\"No tournaments needing auto email notification for registration open (" . $days . " days before)\");\n" : "\r";
 } else {
   foreach ($resultList as $user) {
     foreach ($resultList2 as $tournament) {
@@ -58,17 +48,14 @@ if (count($resultList2) == 0) {
       $emailAddress->setCity($tournamentAddress->getCity());
       $emailAddress->setState($tournamentAddress->getState());
       $emailAddress->setZip($tournamentAddress->getZip());
-      $output .= isset($mode) ? "" : "\r";
-      $output .= $email->sendReminderEmail($emailAddress, $tournament, 0);
-      $output .= isset($mode) ? "" : "\r";
+      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail($emailAddress, $tournament, 0) . "\");\n" : "\r";
     }
   }
 }
+$output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 if (isset($_GET[Constant::$FIELD_NAME_MODE])) {
   $smarty->assign("title", "Chip Chair and a Prayer Auto Reminder");
-//   $smarty->assign("style", $style);
-//   $smarty->assign("script", "<script src=\"scripts/manageBuyins.js\" type=\"text/javascript\"></script>\n");
-  $smarty->assign("heading", "Chip Chair and a Prayer Auto Reminder");
+  $smarty->assign("heading", "Auto Reminder");
   $smarty->assign("mode", Constant::$MODE_VIEW);
   $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
   $smarty->assign("formName", "frmAutoReminder");

@@ -26,7 +26,7 @@ $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isse
 $output = "";
 $output .= " <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-// $year = $now->getCurrentYearFormat();
+// $year = $now->getYearFormat();
 // $startDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $year . DateTime::$DATE_START_SEASON);
 // $endDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $year . DateTime::$DATE_END_SEASON);
 $startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();

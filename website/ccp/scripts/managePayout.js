@@ -1,164 +1,54 @@
+"use strict";
 $(document).ready(function() {
-  inputLocal.initializeDataTable();
-  inputLocal.setDefaults();
-  inputLocal.initialValidation();
-  inputLocal.postProcessing();
-  inputLocal.enableSave();
-  inputLocal.enableReset();
+  input.initialize();
 });
-$(document).on("click", "#dataTbl tr", function(event) {
-  if ($(this).hasClass("selected")) {
-    $("#modify").prop("disabled", false);
-    $("#delete").prop("disabled", false);
-  } else {
-    $("#modify").prop("disabled", true);
-    $("#delete").prop("disabled", true);
-  }
-  /*if ($(".selected").length > 1) {
-    $(this).removeClass("selected");
-  }*/
-});
-$(document).on("click", "#create", function(event) {
-  input.setFormValues([ "mode", "payoutIds" ], [ "create", "" ]);
-});
-$(document).on("click", "#modify", function(event) {
-  var selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
-  if (selectedRows.length == 0) {
-    display.showErrors([ "You must select a row to modify" ]);
-    event.preventDefault();
-    event.stopPropagation();
-  } else if (selectedRows.length > 1) {
-    display.showErrors([ "You must select only 1 row to modify" ]);
-    event.preventDefault();
-    event.stopPropagation();
-  } else {
-    inputLocal.setPayoutIds(selectedRows);
-    input.setFormValues([ "mode" ], [ "modify" ]);
-  }
-});
-$(document).on("click", "#delete", function(event) {
-  var selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
-  if (selectedRows.length == 0) {
-    display.showErrors([ "You must select a row to delete" ]);
-    event.preventDefault();
-    event.stopPropagation();
-  } else {
-    inputLocal.setPayoutIds(selectedRows);
-    input.setFormValues([ "mode" ], [ "delete" ]);
-  }
-});
-$(document).on("click", "#confirmDelete", function(event) {
-  input.setFormValues([ "mode" ], [ "confirm" ]);
-});
-$(document).on("click", "#cancel", function(event) {
-  input.setFormValues([ "mode" ], [ "view" ]);
-});
-$(document).on("click", "#save", function(event) {
-  $("input[id^='place_']").each(function(index) {
-    $(this).prop("disabled", false);
-  });
-  input.setFormValues(["mode"], ["save" + $("#mode").val()]);
-});
-$(document).on("click", "#reset", function(event) {
-  //input.setFormValues([ "mode", "payoutIds" ], [ $("#mode").val(), $("#payoutIds").val() ]);
-  input.setFormValues([ "mode" ], [ $("#mode").val() ]);
-});
-$(document).on("click keyup paste", 'input[id^="payoutName_"]', function(event) {
-  input.validateLength($("#payoutName_"), 1, true);
-  inputLocal.enableSave();
-  inputLocal.enableReset();
+$(document).on("click keyup paste", 'input[id^="payoutName_"], input[id^="bonusPoints_"], input[id^="minPlayers_"], input[id^="maxPlayers_"]', function(event) {
+  input.validateLength($(this), 1, false);
+  input.enable("save", inputLocal.enableSave);
 });
 $(document).on("click keyup paste", 'input[id^="percentage_"]', function(event) {
   inputLocal.calculateTotal(this.id);
-  inputLocal.enableSave();
+  input.enable("save", inputLocal.enableSave);
 });
 $(document).on("click", "#addRow", function(event) {
   inputLocal.addRow("inputs");
+  inputLocal.enableButtons();
 });
 $(document).on("click", "#removeRow", function(event) {
   inputLocal.removeRow("inputs");
+  inputLocal.enableButtons();
 });
-var inputLocal = {
-  enableSave : function() {
-    var id = $("#payoutIds").val();
-    if ($("#payoutName_" + id).length > 0) {
-      if ($("#payoutName_" + id).val().length == 0 || $("#percentageTotal").val() != 100) {
-        $("#save").prop("disabled", true);
-      } else {
-        $("#save").prop("disabled", false);
-      }
-    }
+const inputLocal = {
+  enableSave : function(id) {
+    return $("#payoutName_" + id).val().length == 0 || $("#percentageTotal").val() != 100;
   },
-  enableReset : function() {
-    var id = $("#payoutIds").val();
-    if ($("#payoutName_" + id).length > 0) {
-      if ($("#payoutName_" + id).val().length != 0) {
-        $("#reset").prop("disabled", false);
-      } else {
-        $("#reset").prop("disabled", true);
-      }
-    }
+  enableButtons : function() {
+    $("#addRow").prop("disabled", !$("#inputs tr").length == 2);
+    $("#removeRow").prop("disabled", $("#inputs tr").length == 2);
   },
-  setPayoutIds : function(selectedRows) {
-    var payoutIds = "";
-    for (var idx = 0; idx < selectedRows.length; idx++) {
-      payoutIds += $(selectedRows[idx]).children("td:first").html() + ", ";
-    }
-    payoutIds = payoutIds.substring(0, payoutIds.length - 2);
-    $("#payoutIds").val(payoutIds);
+  setIds : function(selectedRow) {
+    return $(selectedRow).children("td").first().html();
   },
   initializeDataTable : function() {
-    var aryRowGroup = {
+    const aryRowGroup = {
       startRender: null,
       endRender: function ( rows, group, level ) {
-        var bonusPoints = undefined == rows.data().pluck(2)[0] ? 0 : rows.data().pluck(2)[0];
-        var minPlayers = undefined == rows.data().pluck(3)[0] ? 0 : rows.data().pluck(3)[0];
-        var maxPlayers = undefined == rows.data().pluck(4)[0] ? 0 : rows.data().pluck(4)[0];
+        const bonusPoints = undefined == rows.data().pluck(2)[0] ? 0 : rows.data().pluck(2)[0];
+        const minPlayers = undefined == rows.data().pluck(3)[0] ? 0 : rows.data().pluck(3)[0];
+        const maxPlayers = undefined == rows.data().pluck(4)[0] ? 0 : rows.data().pluck(4)[0];
         return $('<tr/>').append('<td colspan="4">Payout for ' + group + ' has bonus points ' + bonusPoints + ', min players ' + minPlayers + ' and max players ' + maxPlayers + '</td>\n');
       },
       dataSrc: 1
     };
-    $("#dataTbl").DataTable({
-      "autoWidth" : false,
-      "columns" : [{
-    	  "orderSequence": [ "desc", "asc" ],
-          "width" : "9%"
-      }, {
-        "width" : "26%"
-      }, {
-        "width" : "14%",
-        "visible": false
-      }, {
-        "width" : "14%",
-        "visible": false
-      }, {
-        "width" : "14%",
-        "visible": false
-      }, {
-        "width" : "11%"
-      }, {
-        "type" : "percentage",
-        "width" : "12%"
-      }, {
-        "searchable": false,
-        "visible": false
-      }],
-      "order" : [ [ 1, "asc" ], [ 5, "asc" ] ],
-      "paging": false,
-      "scrollCollapse": true,
-      "searching": false,
-      "rowGroup": aryRowGroup
-    });
+    dataTable.initialize("dataTbl", [{"orderSequence": [ "desc", "asc" ], "width" : "9%" }, { "width" : "26%" }, { "width" : "14%", "visible": false }, { "width" : "14%", "visible": false }, { "width" : "14%", "visible": false }, { "width" : "11%" }, { "type" : "percentage", "width" : "12%" }, { "searchable": false, "visible": false }], [ [ 1, "asc" ], [ 5, "asc" ] ], true, aryRowGroup);
   },
-  setDefaults : function() {
-  },
-  initialValidation : function() {
+  validate : function() {
     input.validateLength($("#payoutName_"), 1, false);
-  },
-  postProcessing : function() {
+    inputLocal.enableButtons();
+    $("#inputs tr:nth-last-child(2)").prop("id", "lastRow");
   },
   calculateTotal : function(objId) {
-    var total = 0;
+    let total = 0;
     $("input[id^='percentage_']").each(function(index) {
       if ($(this).val() == "") {
         $(this).val(0);
@@ -177,9 +67,9 @@ var inputLocal = {
     }
   },
   addRow : function(objId) {
-    var newId;
+    let newId;
     // clone last row and adjust index by 1
-    var newRow = $("#" + objId + " tr:nth-last-child(2)").clone();
+    const newRow = $("#" + objId + " tr:nth-last-child(2)").clone();
     newRow.find(":input").each(function(index) {
       $(this).attr({
         "disabled": function(_, disabled) {
@@ -190,12 +80,12 @@ var inputLocal = {
           }
         },
         "id": function(_, id) {
-          var idVal = id.split("_");
+          const idVal = id.split("_");
           newId = (parseInt(idVal[2]) + 1);
           return idVal[0] + "_" + idVal[1] + "_" + newId;
         },
         "name": function(_, name) {
-          var nameVal = name.split("_");
+          const nameVal = name.split("_");
           return nameVal[0] + "_" + nameVal[1] + "_" + (parseInt(nameVal[2]) + 1);
         }
       });
@@ -216,5 +106,16 @@ var inputLocal = {
   removeRow : function(objId) {
     $("#" + objId + " tr:nth-last-child(2)").remove();
     inputLocal.calculateTotal();
+  },
+  save : function() {
+    $("input[id^='place_']").each(function(index) {
+      $(this).prop("disabled", false);
+    });
+    return true;
+  },
+  reset : function() {
+    $("#inputs tr").slice($("#inputs tr").index($("#lastRow")) + 1, $("#inputs tr").last().index()).each(function(index) {
+      $(this).remove();
+    });
   }
 };

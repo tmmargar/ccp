@@ -3,18 +3,14 @@ namespace ccp;
 use ccp\classes\model\Base;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
-use ccp\classes\model\DateTime;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
 use ccp\classes\model\FormSelect;
 use ccp\classes\model\HtmlTable;
-use ccp\classes\utility\HtmlUtility;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("TOURNAMENT_ID_FIELD_LABEL", "Tournament id");
 define("TOURNAMENT_ID_FIELD_NAME", "tournamentId");
-define("SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME", "tournamentPlayerIds");
-define("HIDDEN_ROW_FIELD_NAME", "rowPlayerId");
 define("HIDDEN_ROW_STATUS_FIELD_NAME", "statusName");
 define("HIDDEN_ROW_BUYIN_PAID_FIELD_NAME", "buyinPaid");
 define("HIDDEN_ROW_REBUY_PAID_FIELD_NAME", "rebuyPaid");
@@ -30,7 +26,7 @@ $style =
   "<style type=\"text/css\">\n" .
   ".label {\n" .
   "  float: left;\n" .
-  "  width: 130px;\n" .
+  "  width: 150px;\n" .
   "  text-align: right;\n" .
   "}\n" .
   ".value {\n" .
@@ -42,40 +38,29 @@ $style =
   "  float: left;\n" .
   "  padding-left: 5px;\n" .
   "  text-align: right;\n" .
-  "  width: 160px;\n" .
+  "  width: 120px;\n" .
   "}\n" .
   "p {\n" .
   "  margin: 0;\n" .
-  "  padding: 0\n" .
+  "  padding: 0;\n" .
   "}\n" .
   "</style>\n";
-$smarty->assign("title", "Chip Chair and a Prayer Manage Buyins");
+$smarty->assign("title", "Manage Buyins");
 $smarty->assign("style", $style);
-$smarty->assign("script", "<script src=\"scripts/manageBuyins.js\" type=\"text/javascript\"></script>\n");
 $smarty->assign("heading", "Manage Buyins");
-$mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
-$smarty->assign("mode", $mode);
-$smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
-$smarty->assign("formName", "frmManageBuyins");
-$output = "";
-if (isset($_POST[TOURNAMENT_ID_FIELD_NAME])) {
-  $tournamentId = $_POST[TOURNAMENT_ID_FIELD_NAME];
-} else {
-  $tournamentId = DEFAULT_VALUE_TOURNAMENT_ID;
-}
-$tournamentDate = "CURRENT_DATE";
-$tournamentDateMax = "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)";
+$tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID;
 $bountyAPaid = isset($_POST["bountyA"]) ? $_POST["bountyA"] : "";
 $bountyBPaid = isset($_POST["bountyB"]) ? $_POST["bountyB"] : "";
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
 if (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
-  $aryPlayers = explode(Constant::$DELIMITER_DEFAULT, $_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME]);
+  $aryPlayers = explode(Constant::$DELIMITER_DEFAULT, $_POST[SELECTED_ROWS_FIELD_NAME]);
   $aryBuyins = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_BUYIN_PAID_FIELD_NAME]);
   $aryRebuys = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_REBUY_PAID_FIELD_NAME]);
   $aryRebuyCounts = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_REBUY_COUNT_FIELD_NAME]);
   $aryAddons = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_ADDON_PAID_FIELD_NAME]);
   $aryBountyAs = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_BOUNTY_A_PAID_FIELD_NAME]);
   $aryBountyBs = explode(Constant::$DELIMITER_DEFAULT, $_POST[HIDDEN_ROW_BOUNTY_B_PAID_FIELD_NAME]);
+  $output .= "<script type=\"text/javascript\">\n aryErrors = [];\n";
   for ($index = 0; $index < count($aryPlayers); $index ++) {
     if ($aryBuyins[$index] == Constant::$TEXT_TRUE) {
       $statusCode = Constant::$CODE_STATUS_PAID;
@@ -99,37 +84,38 @@ if (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode
     $params = array($statusCode, $buyinPaid, $rebuyPaid, $addonPaid, $rebuyCount, $tournamentId, $aryPlayers[$index]);
     $rowCount = $databaseResult->updateBuyins($params);
     if (!is_numeric($rowCount)) {
-      $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     $params = array($tournamentId, $aryPlayers[$index], 1);
     $rowCount = $databaseResult->deleteBounty($params);
     if (!is_numeric($rowCount)) {
-      $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     if ($aryBountyAs[$index] == Constant::$TEXT_TRUE) {
       $params = array($tournamentId, $aryPlayers[$index], 1);
       $rowCount = $databaseResult->insertBounty($params);
       if (!is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+        $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
       }
     }
     $params = array($tournamentId, $aryPlayers[$index], 2);
     $rowCount = $databaseResult->deleteBounty($params);
     if (!is_numeric($rowCount)) {
-      $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     if (count($aryBountyBs) > 1 && $aryBountyBs[$index] == Constant::$TEXT_TRUE) {
       $params = array($tournamentId, $aryPlayers[$index], 2);
       $rowCount = $databaseResult->insertBounty($params);
       if (!is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+        $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
       }
     }
   }
+  $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n</script>\n";
   $mode = Constant::$MODE_VIEW;
 }
 if ($mode == Constant::$MODE_VIEW) {
-  $params = array($tournamentDate, $tournamentDateMax);
+  $params = array("CURRENT_DATE", "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)");
   $resultList = $databaseResult->getTournamentForBuyins($params);
   if (count($resultList) > 0) {
     $output .= "    " . TOURNAMENT_ID_FIELD_LABEL . ": \n    ";
@@ -166,19 +152,13 @@ if ($mode == Constant::$MODE_VIEW) {
         $total[$tournament->getId()] = ($totalBuyin[$tournament->getId()][0] * $totalBuyin[$tournament->getId()][1]) + ($totalRebuy[$tournament->getId()][1] * $totalRebuy[$tournament->getId()][2]) + ($totalAddon[$tournament->getId()][0] * $totalAddon[$tournament->getId()][1]);
       } else {
         $championshipFlag[$tournament->getId()] = true;
-//         $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-//         $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_START_SEASON);
-//         $startDate = $dateTime->getDatabaseFormat();
-//         $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_END_SEASON);
-//         $endDate = $dateTime->getDatabaseFormat();
-//         $params = array($startDate, $endDate);
         $params = array(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat());
         $resultListNested = $databaseResult->getPrizePoolForSeason($params, false);
         if (0 < count($resultListNested)) {
           $total[$tournament->getId()] = str_replace(",", "", number_format($resultListNested[0], 0));
         }
       }
-      $rake[$tournament->getId()] = $total[$tournament->getId()] * $tournament->getRakeForCalculation();
+      $rake[$tournament->getId()] = ceil($total[$tournament->getId()] * $tournament->getRakeForCalculation());
       $rakePercent[$tournament->getId()] = $tournament->getRakeForCalculation();
       $tournamentPayouts = $tournament->getGroupPayout()->getPayouts();
       $payouts[$tournament->getId()] = $tournamentPayouts;
@@ -186,7 +166,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= "    </select>\n";
     $buttonView = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_VIEW, null, false, null, null, null, false, Constant::$TEXT_VIEW, null, Constant::$TEXT_VIEW, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_VIEW, null);
     $output .= $buttonView->getHtml();
-    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME, null, SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
+    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
     $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_BUYIN_PAID_FIELD_NAME, null, HIDDEN_ROW_BUYIN_PAID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
@@ -245,7 +225,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= $temp;
     $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
     if ("" != $temp) {
-      $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, false, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, "inputLocal.buildData('" . Constant::$ID_TABLE_DATA . "', '" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_MODIFY . "');", null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
+      $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, false, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, "inputLocal.buildData('" . Constant::$ID_TABLE_DATA . "', '" . Constant::$MODE_MODIFY . "');", null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
       $output .= "    <div style=\"float: left;\">" . $buttonSave->getHtml() . "</div>\n";
     }
     $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
@@ -280,7 +260,7 @@ if ($mode == Constant::$MODE_VIEW) {
         $output .= "    <div style=\"clear: both;\"></div>\n";
       }
       $output .= "    <div class=\"label\">Total paid out:</div>\n";
-      $output .= "    <div class=\"positive value\">$" . ($total[$tournamentId] - $rake[$tournamentId]) . "</div>\n";
+      $output .= "    <div class=\"positive value\">$" . ceil($total[$tournamentId] - $rake[$tournamentId]) . "</div>\n";
       if (! $championshipFlag[$tournamentId]) {
         $output .= "    <div class=\"valueAfter\">($" . $total[$tournamentId] . " - $" . $rake[$tournamentId] . ")</div>\n";
       }
@@ -306,8 +286,8 @@ if ($mode == Constant::$MODE_VIEW) {
       if ($structures != "") {
         foreach ($structures as $structure) {
           $output .= "    <div class=\"label" . ($ctr == count($resultList) - 1 ? "Height" : "") . "\">Place " . $structure->getPlace() . " (" . ($structure->getPercentage() * 100) . "%):</div>\n";
-          $output .= "    <div class=\"positive value\">$" . - number_format((($total[$tournamentId] - $rake[$tournamentId]) * $structure->getPercentage()), 0, ".", "") . "</div>\n";
-          $output .= "    <div class=\"valueAfter\">(" . ($structure->getPercentage() * 100) . "% x $" . - ($total[$tournamentId] - $rake[$tournamentId]) . ")</div>\n";
+          $output .= "    <div class=\"positive value\">$" . number_format((($total[$tournamentId] - $rake[$tournamentId]) * $structure->getPercentage()), 0, ".", "") . "</div>\n";
+          $output .= "    <div class=\"valueAfter\">(" . ($structure->getPercentage() * 100) . "% x $" . ($total[$tournamentId] - $rake[$tournamentId]) . ")</div>\n";
           $output .= "    <div style=\"clear: both;\"></div>\n";
           $ctr ++;
         }

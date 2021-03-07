@@ -3894,8 +3894,8 @@
         return function(e) {
           original.apply(this, arguments);
           var html = 
-            "Ctrl + shift + a to select all<br>\n" +
-            "Ctrl + shift + d to de-select all<br>\n" +
+//            "Ctrl + shift + a to select all<br>\n" +
+//            "Ctrl + shift + d to de-select all<br>\n" +
             "<a href=\"javascript:void(0);\" id=\"selectAll\">Select all</a>\n" +
             "<a href=\"javascript:void(0);\" id=\"deselectAll\">De-select all</a>\n";
           $("#" + options.id).before(html);

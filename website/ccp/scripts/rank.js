@@ -1,3 +1,4 @@
+"use strict";
 $(document).ready(function() {
   inputLocal.initializeDataTable();
   inputLocal.setDefaults();
@@ -22,7 +23,7 @@ $(document).on("click", "#create", function(event) {
   input.setFormValues([ "mode", "locationIds" ], [ "create", "" ]);
 });
 $(document).on("click", "#modify", function(event) {
-  var selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
+  const selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
   if (selectedRows.length == 0) {
     display.showErrors([ "You must select a row to modify" ]);
     event.preventDefault();
@@ -37,7 +38,7 @@ $(document).on("click", "#modify", function(event) {
   }
 });
 $(document).on("click", "#delete", function(event) {
-  var selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
+  const selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
   if (selectedRows.length == 0) {
     display.showErrors([ "You must select a row to delete" ]);
     event.preventDefault();
@@ -99,9 +100,9 @@ $(document).on("click keyup paste", 'input[id^="phone_"]', function(event) {
   inputLocal.enableSave();
   inputLocal.enableReset();
 });
-var inputLocal = {
+const inputLocal = {
   enableSave : function() {
-    var id = $("#locationIds").val();
+    const id = $("#locationIds").val();
     if ($("#locationName_" + id).length > 0) {
       // if name, player, address, city, state, zip or phone are empty then disable save button otherwise enable save button
       if (($("#locationName_" + id).val().length == 0) || ($("#playerId_" + id).val() == "") || ($("#address_" + id).val().length == 0)
@@ -113,7 +114,7 @@ var inputLocal = {
     }
   },
   enableReset : function() {
-    var id = $("#locationIds").val();
+    const id = $("#locationIds").val();
     if ($("#locationName_" + id).length > 0) {
       // if name, player, address, city, state, zip or phone are not empty then enable save button otherwise disable save button
       if (($("#locationName_" + id).val().length != 0) || ($("#playerId_" + id).val() != "") || ($("#address_" + id).val().length != 0)
@@ -125,8 +126,8 @@ var inputLocal = {
     }
   },
   setLocationIds : function(selectedRows) {
-    var locationIds = "";
-    for (var idx = 0; idx < selectedRows.length; idx++) {
+    let locationIds = "";
+    for (let idx = 0; idx < selectedRows.length; idx++) {
       locationIds += $(selectedRows[idx]).children("td:first").html() + ", ";
     }
     locationIds = locationIds.substring(0, locationIds.length - 2);
@@ -170,20 +171,20 @@ var inputLocal = {
       "searching": false,
       preDrawCallback: function () {
         api = this.api();
-        var arr = api.columns(6).data()[0];  //get array of column 6 (zip)
+        const arr = api.columns(6).data()[0];  //get array of column 6 (zip)
         console.log(arr);
-        var sorted = arr.slice().sort(function(a,b){return b-a;});
-        var ranks = arr.slice().map(function(v){ return sorted.indexOf(v)+1; });
+        const sorted = arr.slice().sort(function(a,b){return b-a;});
+        const ranks = arr.slice().map(function(v){ return sorted.indexOf(v)+1; });
         //console.log(sorted);
         //console.log(ranks);
         // interate through each row
         api.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
-          var data = this.data();
+          const data = this.data();
           console.log(data[0], data[6], ranks[arr.indexOf(data[6])]);
           data[9] = ranks[arr.indexOf(data[6])];  //set the rank column = the array index of the zip in the ranked array
         } );
         api.rows().invalidate();
-        //var table = $('#dataTbl').DataTable();
+        //const table = $('#dataTbl').DataTable();
         //table.draw();
       }
     });
@@ -208,22 +209,4 @@ var inputLocal = {
 //    $("#dataTbl").find("td:nth-child(2)").addClass("highlighted");
 //    $("#dataTbl").find("td:nth-child(3)").addClass("highlighted");
   }
-};
-jQuery.fn.dataTableExt.oSort["locationName-asc"] = function(val1, val2) {
-  return display.sort(val1, val2, " - ", "asc");
-};
-jQuery.fn.dataTableExt.oSort["locationName-desc"] = function(val1, val2) {
-  return display.sort(val1, val2, " - ", "desc");
-};
-jQuery.fn.dataTableExt.oSort["host-asc"] = function(val1, val2) {
-  return display.sort(val1, val2, " ", "asc");
-};
-jQuery.fn.dataTableExt.oSort["host-desc"] = function(val1, val2) {
-  return display.sort(val1, val2, " ", "desc");
-};
-jQuery.fn.dataTableExt.oSort["address-asc"] = function(val1, val2) {
-  return display.sort(val1, val2, " ", "asc");
-};
-jQuery.fn.dataTableExt.oSort["address-desc"] = function(val1, val2) {
-  return display.sort(val1, val2, " ", "desc");
 };

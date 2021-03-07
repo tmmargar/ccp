@@ -1,14 +1,23 @@
+"use script";
 $(document).ready(function() {
-  // use delay to pick up auto complete population so button is enabled
-  setTimeout(function(){input.validateLength($("#username"), 1, false);}, 500); // 1/2 second
-  setTimeout(function(){input.validateLength($("#email"), 1, false);}, 500); // 1/2 second
-  setTimeout(function(){inputLocal.enableSendRequest();}, 500); // 1/2 second
-  setTimeout(function(){inputLocal.validatePassword();}, 500); // 1/2 second
-  inputLocal.setDefaults();
+  //inputLocal.validate();
+  inputLocal.enableSendRequest();
 });
-var inputLocal = {
+$(document).on("click keyup paste", "#username, #email", function(event) {
+  inputLocal.validate();
+});
+$(document).on("click", "#sendRequest", function(event) {
+  $("#mode").val("resetPasswordRequest");
+});
+$(document).on("keyup paste", "#password, #confirmPassword", function(event) {
+  inputLocal.validatePassword(event);
+});
+$(document).on("click", "#resetPassword", function(event) {
+  inputLocal.validatePassword(event);
+  $("#mode").val("resetPasswordConfirm");
+});
+const inputLocal = {
 	enableSendRequest : function() {
-    // if username or email are empty then disable email button otherwise enable email button
     if ($("#username").length > 0) {
     	if (($("#username").val().length == 0) || ($("#email").val().length == 0)) {
 	      $("#sendRequest").prop("disabled", true);
@@ -17,15 +26,10 @@ var inputLocal = {
 	    }
     }
   },
-  setDefaults : function() {
-  	if ($("#username").length > 0) {
-      //$("#username").focus();
-      $("#username").trigger("focus");
-  	}
-  	if ($("#password").length > 0) {
-  		//$("#password").focus();
-  		$("#password").trigger("focus");
-  	}
+  validate : function() {
+    input.validateLength($("#username"), 1, false);
+    input.validateLength($("#email"), 1, false);
+    inputLocal.enableSendRequest();
   },
   validatePassword : function(event) {
   	if ($("#password").length > 0) {
@@ -43,26 +47,3 @@ var inputLocal = {
   	}
   }
 };
-$(document).on("click keyup paste", "#username", function(event) {
-  input.validateLength($("#username"), 1, true);
-  input.validateLength($("#email"), 1, false);
-  inputLocal.enableSendRequest();
-});
-$(document).on("click keyup paste", "#email", function(event) {
-  input.validateLength($("#username"), 1, false);
-  input.validateLength($("#email"), 1, true);
-  inputLocal.enableSendRequest();
-});
-$(document).on("click", "#sendRequest", function(event) {
-  input.setFormValues(["mode"], ["resetPasswordRequest"]);
-});
-$(document).on("keyup paste", "#password", function(event) {
-	inputLocal.validatePassword(event);
-});
-$(document).on("keyup paste", "#confirmPassword", function(event) {
-	inputLocal.validatePassword(event);
-});
-$(document).on("click", "#resetPassword", function(event) {
-	inputLocal.validatePassword(event);
-	input.setFormValues(["mode"], ["resetPasswordConfirm"]);
-});

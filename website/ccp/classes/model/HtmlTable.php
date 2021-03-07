@@ -205,10 +205,13 @@ class HtmlTable extends HtmlBase {
                     $dateTime = new DateTime($this->isDebug(), null, $temp);
                     $temp = $dateTime->getDisplayFormat();
                     break;
+                  case "datetime":
+                    $dateTime = new DateTime($this->isDebug(), null, $temp);
+                    $temp = $dateTime->getDisplayTimeFormat();
+                    break;
                   case "time":
                     $dateTime = new DateTime($this->isDebug(), null, $temp);
                     $temp = $dateTime->getDisplayAmPmFormat();
-//                     $class .= " time";
                     array_push($class, "time");
                     break;
                   case "currency":

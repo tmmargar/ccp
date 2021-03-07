@@ -6,18 +6,20 @@ use ccp\classes\model\Login;
 use ccp\classes\model\Security;
 use ccp\classes\model\User;
 use ccp\classes\utility\SessionUtility;
+use tidy;
 require_once "init.php";
 define("NAME_FIELD_USERNAME", "username");
 define("NAME_FIELD_PASSWORD", "password");
 define("NAME_FIELD_REMEMBER_ME", "rememberMe");
 define("NAME_FIELD_LOGIN", "login");
 $smarty->assign("title", "Chip Chair and a Prayer Login");
+$smarty->assign("heading", "Login");
 $style =
-  "<style type=\"text/css\">\n" .
-  ".form_content {\n" .
-  "  width: 500px;\n" .
-  "}\n" .
-"</style>\n";
+  "<style type=\"text/css\">" .
+  ".form_content {" .
+  "  width: 30%;" .
+  "}" .
+"</style>";
 $smarty->assign("style", $style);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmLogin");
@@ -35,35 +37,46 @@ if (Constant::$MODE_LOGIN == $mode) {
     exit();
   } else {
     $output .=
-      "<script type=\"text/javascript\">\n" .
-      "  display.showErrors([ \"Login failed. Please try again\" ]);\n" .
-      "</script>\n";
+      "<script type=\"text/javascript\">" .
+      "  display.showErrors([ \"Login failed. Please try again\" ]);" .
+      "</script>";
   }
 }
-$output .= "<div class=\"form_content\">\n";
-$output .= " <div class=\"label\">Username:</div>\n";
-$output .= " <div class=\"input\">\n";
+$output .= "<div class=\"form_content\">";
+$output .= " <div class=\"label\">Username:</div>";
+$output .= " <div class=\"input\">";
 $textBoxUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_USERNAME, "username", true, null, null, null, false, NAME_FIELD_USERNAME, 30, NAME_FIELD_USERNAME, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
 $output .= $textBoxUsername->getHtml();
-$output .= " </div>\n";
-$output .= " <div class=\"label\">\nPassword:\n</div>\n";
-$output .= " <div class=\"input\">\n";
+$output .= " </div>";
+$output .= " <div class=\"label\">Password:</div>";
+$output .= " <div class=\"input\">";
 $textBoxPassword = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PASSWORD, "current-password", false, null, null, null, false, NAME_FIELD_PASSWORD, null, NAME_FIELD_PASSWORD, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_PASSWORD, null, null);
 $output .= $textBoxPassword->getHtml();
-$output .= " </div>\n";
-// $output .= "<div class=\"label\">Remember Me:\n</div>\n";
-// $output .= "<div class=\"input\">\n";
+$output .= " </div>";
+// $output .= "<div class=\"label\">Remember Me:</div>";
+// $output .= "<div class=\"input\">";
 // $output .= HtmlUtility::buildCheckbox(false, false, false, null, false, Base::build(NAME_FIELD_REMEMBER_ME, null), Base::build(NAME_FIELD_REMEMBER_ME, null), null, null);
-// $output .= "</div>\n";
-// $output .= "<div class=\"clear\"></div>\n";
-$output .= " <div class=\"label\">&nbsp;</div>\n";
-$output .= " <div class=\"input\">\n";
+// $output .= "</div>";
+// $output .= "<div class=\"clear\"></div>";
+$output .= " <div class=\"label\">&nbsp;</div>";
+$output .= " <div class=\"input\">";
 $buttonLogin = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_LOGIN, null, false, null, null, null, true, NAME_FIELD_LOGIN, null, NAME_FIELD_LOGIN, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, ucwords(NAME_FIELD_LOGIN), null);
 $output .= $buttonLogin->getHtml();
-$output .= "&nbsp;&nbsp;<a href=\"resetPassword.php\">Forgot Password</a>\n";
-$output .= "&nbsp;&nbsp;<a href=\"signup.php\">New User</a>\n";
-$output .= " </div>\n";
+$output .= "&nbsp;&nbsp;<a href=\"resetPassword.php\">Forgot Password</a>";
+$output .= "&nbsp;&nbsp;<a href=\"signup.php\">New User</a>";
+$output .= " </div>";
 $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
 $output .= $hiddenMode->getHtml();
+$output .= "</div>";
+// $configTidy = [ "clean" => true, "coerce-endtags" => true, "doctype" => "omit", "drop-proprietary-attributes" => true, "indent" => true, "indent-spaces" => 1, "output-html" => true, "show-body-only" => true, "sort-attributes" => "alpha", "wrap" => 0 ];
+// $outputTidy = new tidy;
+// $outputTidy->parseString($output, $configTidy, "utf8");
+// $outputTidy->cleanRepair();
 $smarty->assign("content", $output);
-$smarty->display("login.tpl");
+// $smarty->assign("content", $outputTidy);
+//$smarty->display("login.tpl");
+$outputTemplate = $smarty->fetch("login.tpl");
+$outputTidy = new tidy;
+$outputTidy->parseString($outputTemplate, $configTidy, "utf8");
+$outputTidy->cleanRepair();
+echo $outputTidy;

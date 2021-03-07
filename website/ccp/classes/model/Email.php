@@ -209,15 +209,14 @@ class Email extends Base {
       }
       $mail->Subject = $this->getSubject();
       $mail->Body = $this->getBody();
-      $message = "<br>";
+      $message = "";
         if(!$mail->send()) {
-          $message .= "<span id=\"errors\">Message could not be sent to " . $this->getToName()[$idx] . " due to " . $mail->ErrorInfo . "</span>";
+          $message .= "Message could not be sent to " . $this->getToName()[$idx] . " due to " . $mail->ErrorInfo;
         } else {
-          $message .= "<span class=\"messages\">Message has been sent to " . $this->getToName()[$idx] . " at " . $this->getToEmail()[$idx];
+          $message .= "Message has been sent to " . $this->getToName()[$idx] . " at " . $this->getToEmail()[$idx];
           if (isset($this->getCcEmail()[$idx]) && isset($this->getCcName()[$idx])) {
             $message .= " and cc to " . $this->getCcName()[$idx] . " at " . $this->getCcEmail()[$idx];
           }
-          $message .= "</span>";
         }
     }
     return $message;

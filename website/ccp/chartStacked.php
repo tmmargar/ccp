@@ -31,8 +31,8 @@ $output .= " <script type=\"text/javascript\" src=\"https://www.gstatic.com/char
 try {
   $databaseResult = new DatabaseResult();
   $databaseResult->setDebug(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-//   $startDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . Constant::$DATE_START_SEASON, null);
-//   $endDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . Constant::$DATE_END_SEASON, null);
+//   $startDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getYearFormat() . Constant::$DATE_START_SEASON, null);
+//   $endDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getYearFormat() . Constant::$DATE_END_SEASON, null);
   $startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
   $endDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $params = array($startDate, $endDate, null, false);

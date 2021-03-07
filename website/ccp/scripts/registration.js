@@ -1,3 +1,4 @@
+"use strict";
 $(document).ready(function() {
   input.validateLength($("#food"), 1, true)
 });

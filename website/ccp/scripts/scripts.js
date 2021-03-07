@@ -1,156 +1,196 @@
-$(document).on("change", "select[name='dataTbl_length']", function(event) {
-  inputLocal.postProcessing();
+"use script";
+const firstYear = 2006;
+const maskDate = "__/__/____";
+const maskDateTime = "__/__/____ __:__";
+// set cursor to end by changing value and then putting back
+$(document).on("focus", "form", function(event) {
+  const value = $("#" + event.target.id).val();
+  $("#" + event.target.id).val("");
+  $("#" + event.target.id).val(value);
 });
 $(document).on("click", "#dataTbl tr", function(event) {
-  if ($(this).hasClass("selected")) {
+  $("#modify").prop("disabled", $(this).hasClass("selected"));
+  $("#delete").prop("disabled", $(this).hasClass("selected"));
+  const selected = $(this).hasClass("selected");
+  // if 1 row is already selected
+  if (selected || $("#dataTbl tr.selected").length == 1) {
     $(this).removeClass("selected");
   } else {
     $(this).addClass("selected");
   }
+  try {
+    inputLocal.tableRowClick(this, selected);
+  } catch(error) {
+    // ignore function does not exist
+    if (!error.message.includes("is not a function")) {
+      throw error;
+    }
+  }
 });
-/*$(document).on("click", "#selectAll", function(event) {
-  var selectizes = $(".selectized").selectize(); // Selectize plugin initialization
-  var selectize = selectizes[0].selectize; // Get selectize instance
-  selectize.setValue(Object.keys(selectize.options)); // Set all selectize options using setValue() method
+$(document).on("click", "#create", function(event) {
+  $("#mode").val(this.value.toLowerCase());
+  $("#ids").val("");
+});
+$(document).on("click", "#modify", function(event) {
+  let result = true;
+  try {
+    result = inputLocal.modify(this);
+  } catch(error) {
+    // ignore function does not exist
+    if (!error.message.includes("is not a function")) {
+      throw error;
+    }
+  }
+  if (result) {
+    const selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
+    if (selectedRows.length == 0) {
+      display.showErrors([ "You must select a row to modify" ]);
+      event.preventDefault();
+      event.stopPropagation();
+    } else if (selectedRows.length > 1) {
+      display.showErrors([ "You must select only 1 row to modify" ]);
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      $("#mode").val(this.value.toLowerCase());
+      input.setIds(selectedRows);
+    }
+  } else {
+    $("#mode").val(this.value.toLowerCase());
+  }
+});
+$(document).on("click", "#delete", function(event) {
+  let result = true;
+  try {
+    result = inputLocal.delete(this);
+  } catch(error) {
+    // ignore function does not exist
+    if (!error.message.includes("is not a function")) {
+      throw error;
+    }
+  }
+  if (result) {
+    const selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
+    if (selectedRows.length == 0) {
+      display.showErrors([ "You must select a row to delete" ]);
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      $("#mode").val(this.value.toLowerCase());
+      input.setIds(selectedRows);
+    }
+  } else {
+    $("#mode").val(this.value.toLowerCase());
+  }
+});
+$(document).on("click", "#confirmDelete", function(event) {
+  $("#mode").val("confirm");
+});
+$(document).on("click", "#save", function(event) {
+  let result = true;
+  try {
+    result = inputLocal.save(event);
+  } catch(error) {
+    // ignore function does not exist
+    if (!error.message.includes("is not a function")) {
+      throw error;
+    }
+  }
+  if (result) {
+    $("#mode").val("save" + $("#mode").val());
+  }
+});
+$(document).on("click", "#resetButton", function(event) {
+  $("input, select, textarea").each(function(index) {
+    $(this).removeClass("errors");
+  });
+  $("select option").each(function(index) {
+    $(this).prop("disabled", false);
+  });
+  $("#errors").text("");
+  $("#messages").text("");
+  input.initialize();
+  try {
+    inputLocal.reset();
+  } catch(error) {
+    // ignore function does not exist
+    if (!error.message.includes("is not a function")) {
+      throw error;
+    }
+  }
   event.preventDefault();
   event.stopPropagation();
   return false;
 });
-$(document).on("click", "#deselectAll", function(event) {
-  var selectizes = $(".selectized").selectize(); // Selectize plugin initialization
-  var selectize = selectizes[0].selectize; // Get selectize instance
-  selectize.clear(false);
-  event.preventDefault();
-  event.stopPropagation();
-  return false;
-});*/
-var input = {
+$(document).on("change", "#tournamentId", function(event) {
+  input.enableView();
+});
+$(function() {
+  const form = document.getElementById("frmManage");
+  //const resetBtn = form.querySelector("button[type=reset]");
+  const resetBtn = document.getElementById("resetButton");
+  if (null != resetBtn) {
+    resetBtn.addEventListener("click", function overrideReset(e) {
+        e.preventDefault();
+        return new Promise((resolve, reject) => resolve(form.reset())).then(() => {
+          try {
+            inputLocal.validate();
+          } catch(error) {
+            // ignore function does not exist
+            if (!error.message.includes("is not a function")) {
+              throw error;
+            }
+          }
+        });
+    });
+  }
+});
+$(document).on("click", "#cancel", function(event) {
+  $("#mode").val("view");
+});
+const input = {
   validateNumberOnly : function(jQueryObj, e, storeValue) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^\d+$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
+    input.validateCommon(jQueryObj, e, /^-?\d+$/g, null, storeValue);
+  },
+  validateNumberOnlyGreaterZero : function(jQueryObj, e) {
+    input.validateCommon(jQueryObj, e, /^[1-9]\d*$/g);
+  },
+  validateNumberOnlyLessThanEqualToValue : function(jQueryObj, value, e) {
+    input.validateCommon(jQueryObj, e, /^\d+$/g, jQueryObj.val() > value);
+  },
+  validateCurrencyOnly : function(jQueryObj, e) {
+    input.validateCommon(jQueryObj, e, /^\$?\d*$/g);
+  },
+  validateCurrencyOnlyGreaterZero : function(jQueryObj, e) {
+    input.validateCommon(jQueryObj, e, /^\$?[1-9]*\d*$/g);
+  },
+  validatePercentOnly : function(jQueryObj, e) {
+    input.validateCommon(jQueryObj, e, /^[0-9]?[0-9]%?$/g);
+  },
+  validateLetterOnly : function(jQueryObj, e) {
+    input.validateCommon(jQueryObj, e, /^[a-zA-Z]+$/g);
+  },
+  validateCommon : function(jQueryObj, e, pattern, condition = false, storeValue = true) {
+    if ((jQueryObj.val() != "") && (!pattern.test(jQueryObj.val()) || condition)) {
       jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
       e.preventDefault();
-      // stop event propagation
       e.stopPropagation();
     } else {
       if (storeValue) {
-        // store value
         jQueryObj.data("previousValue", jQueryObj.val());
       }
     }
   },
-  validateNumberOnlyGreaterZero : function(jQueryObj, e) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^[1-9]\d*$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
-  validateNumberOnlyLessThanEqualToValue : function(jQueryObj, value, e) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^\d+$/g;
-    // if not blank and (not a digit or greater than/equal to value provided)
-    if ((jQueryObj.val() != "") && (!pattern.test(jQueryObj.val()) || (jQueryObj.val() > value))) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
-  validateCurrencyOnly : function(jQueryObj, e) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^-?\$?\d*$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
-  validateCurrencyOnlyGreaterZero : function(jQueryObj, e) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^\$?[1-9][0-9]*$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
-  validatePercentOnly : function(jQueryObj, e) {
-    // regular expression to only contain digits (^ means start and $ means end)
-    var pattern = /^[0-9]?[0-9]%?$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
-  validateLetterOnly : function(jQueryObj, e) {
-    // regular expression to only contain letters (^ means start and $ means
-    // end)
-    var pattern = /^[a-zA-Z ]+$/g;
-    // if not blank and not a digit
-    if ((jQueryObj.val() != "") && !pattern.test(jQueryObj.val())) {
-      // restore previous value
-      jQueryObj.val(jQueryObj.data("previousValue"));
-      // prevent default behavior
-      e.preventDefault();
-      // stop event propagation
-      e.stopPropagation();
-    } else {
-      // store value
-      jQueryObj.data("previousValue", jQueryObj.val());
-    }
-  },
   validateLength : function(jQueryObj, length, focus, msg) {
-    var result = "";
+    let result = "";
     if (jQueryObj.length > 0) {
-      if (jQueryObj.val().trim().length < length) {
+      if (null == jQueryObj.val() || jQueryObj.val().trim().length < length || maskDate == jQueryObj.val().trim() || maskDateTime == jQueryObj.val().trim()) {
         if (msg) {
           display.showErrors([msg]);
           result = msg;
         }
         jQueryObj.addClass("errors");
         if (focus) {
-          //jQueryObj.focus();
           jQueryObj.trigger("focus");
         }
       } else {
@@ -162,13 +202,7 @@ var input = {
   },
   selectAllToggle : function(inputName, selectAllId) {
     // if at least 1 checkbox and all are checked
-    if (($('input[id^="' + inputName + '"]').length > 0) && ($('input[id^="' + inputName + '"]').length == $('input[id^="' + inputName + '"]:checked').length)) {
-      // check select all
-      $("#" + selectAllId).prop("checked", true);
-    } else {
-      // uncheck select all
-      $("#" + selectAllId).prop("checked", false);
-    }
+    $("#" + selectAllId).prop("checked", ($('input[id^="' + inputName + '"]').length > 0) && ($('input[id^="' + inputName + '"]').length == $('input[id^="' + inputName + '"]:checked').length));
   },
   checkboxToggleAll : function(inputId, checked) {
     // check all inputs starting with same name
@@ -180,8 +214,8 @@ var input = {
   },
   setFormValues : function(aryName, aryValue) {
     if (aryName) {
-      for (var x = 0; x < aryName.length; x++) {
-        var obj = $("#" + aryName[x]);
+      for (let x = 0; x < aryName.length; x++) {
+        const obj = $("#" + aryName[x]);
         if (obj.length > 0) {
           if ("checkbox" == obj.attr("type")) {
             obj.prop("checked", aryValue[x]);
@@ -193,52 +227,16 @@ var input = {
     }
   },
   changeState : function(checkId, aryChangeId) {
-    for (var index=0; index < aryChangeId.length; index++) {
-      var objCheck = $("#" + checkId);
-      var objChange = $("#" + aryChangeId[index]);
-      if (objCheck.prop("checked")) {
-        objChange.prop("disabled", false);
-      } else {
-        objChange.prop("disabled", true);
-      }
+    const objCheck = $("#" + checkId);
+    //for (let index=0; index < aryChangeId.length; index++) {
+    for (let changeId of aryChangeId) {
+      //const objChange = $("#" + aryChangeId[index]);
+      const objChange = $("#" + changeId);
+      objChange.prop("disabled", !objCheck.prop("checked"));
       if (!objCheck.checked) {
         objChange.prop("checked", false);
       }
     }
-  },
-  getQueryStringIndexed : function() {
-    var result = [];
-    var queryString = document.URL.split('?')[1];
-    if (queryString != undefined) {
-      queryString = queryString.split('&');
-      for (var i=0; i < queryString.length; i++) {
-          var hash = queryString[i].split('=');
-          result.push(hash[1]);
-          result[i] = [i, hash[1]];
-      }
-    }
-    return result;
-  },
-  getQueryStringNamed : function() {
-    var result = [];
-    var queryString = document.URL.split('?')[1];
-    if (queryString != undefined) {
-      queryString = queryString.split('&');
-      for (var i=0; i < queryString.length; i++) {
-          var hash = queryString[i].split('=');
-          result.push(hash[1]);
-          result[i] = [hash[0], hash[1]];
-      }
-    }
-    return result;
-  },
-  buildQueryStringNamed : function() {
-    var result = [];
-    var queryString = input.getQueryStringNamed();
-    for (var i=0; i < queryString.length; i++) {
-        result[i] = queryString[i].join("=");
-    }
-    return result;
   },
   showDialog : function(name, heightVal, titleVal, positionVal) {
     $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, position: positionVal });
@@ -258,13 +256,12 @@ var input = {
     jQueryObj.addClass("errors");
   },
   toggleCheckboxes : function(id, idAll) {
-    var disabled = false;
+    let disabled = false;
     // for each checkbox
     $("input[id^='" + id + "_']").each(function(index) {
       // if enabled then set checked state to same as check all checkbox
       if (!$(this).prop("disabled")) {
-        var checked = $("#" + idAll + "CheckAll").prop("checked");
-        $(this).prop("checked", checked);
+        $(this).prop("checked", $("#" + idAll + "CheckAll").prop("checked"));
       } else {
         disabled = true;
       }
@@ -276,11 +273,7 @@ var input = {
   },
   toggleCheckAll : function(id, idAll) {
     // if all checkboxes are checked then mark check all checkbox
-    if ($("input[id^='" + id + "_']:checked").length == $("input[id^='" + id + "_']").length) {
-      $("#" + idAll + "CheckAll").prop("checked", true);
-    } else {
-      $("#" + idAll + "CheckAll").prop("checked", false);
-    }
+    $("#" + idAll + "CheckAll").prop("checked", $("input[id^='" + id + "_']:checked").length == $("input[id^='" + id + "_']").length);
   },
   showHideToggle : function(aryId) {
     // does not work for IE 
@@ -290,20 +283,20 @@ var input = {
   	});
   },
   selectAllSelectize: function(objId) {
-    var selectizes = $("#" + objId).selectize(); // Selectize plugin initialization
-    var selectize = selectizes[0].selectize; // Get selectize instance
+    const selectizes = $("#" + objId).selectize(); // Selectize plugin initialization
+    const selectize = selectizes[0].selectize; // Get selectize instance
     selectize.setValue(Object.keys(selectize.options)); // Set all selectize options using setValue() method
     return false;
   },
   deselectAllSelectize : function(objId) {
-    var selectizes = $("#" + objId).selectize(); // Selectize plugin initialization
-    var selectize = selectizes[0].selectize; // Get selectize instance
+    const selectizes = $("#" + objId).selectize(); // Selectize plugin initialization
+    const selectize = selectizes[0].selectize; // Get selectize instance
     selectize.clear(false);
     //selectize.setValue(-1, false);
     return false;
   },
   countChecked : function(prefix) {
-    var count = 0;
+    let count = 0;
     $("input[id^='" + prefix + "_']").each(function(index) {
       if (this.checked) {
         count++;
@@ -314,237 +307,267 @@ var input = {
     } else {
       $("#" + prefix + "CheckAllCount").text(" (" + count + ")");
     }
-  }
-};
-var display = {
-    showErrorsPersist : function(aryErrors) {
-      var output = "Errors:<br />";
-      for ( var idx = 0; idx < aryErrors.length; idx++) {
-        if (idx > 0) {
-          output += "<br />";
-        }
-        output += aryErrors[idx];
-      }
-      $("#infoPersist").show();
-      $("#errorsPersist").html(output);
-      $("#errorsPersist").show();
-    },
-    showErrors : function(aryErrors) {
-      var output = "Errors:<br />";
-      for ( var idx = 0; idx < aryErrors.length; idx++) {
-        if (idx > 0) {
-          output += "<br />";
-        }
-        output += aryErrors[idx];
-      }
-      $("#info").show();
-      $("#errors").html(output);
-      $("#errors").show();
-    },
-    showMessages : function(aryMessages) {
-      var output = "Messages:<br />";
-      for ( var idx = 0; idx < aryMessages.length; idx++) {
-        output += aryMessages[idx];
-      }
-      $("#info").show();
-      $("#messages").html(output);
-      $("#messages").show();
-    },
-    clearErrorsAndMessages : function() {
-      // clear and hide errors and messages
-      $("#errors").html("");
-      $("#messages").html("");
-      $("#errors").hide();
-      $("#messages").hide();
-      $("#info").hide();
-    },
-    sort : function(val1, val2, delimiter, direction) {
-      var aryVal1 = val1.split(delimiter);
-      var aryVal2 = val2.split(delimiter);
-      var result = 0;
-      if (("asc" == direction) || ("ascending" == direction)) {
-        result = (aryVal1[1] < aryVal2[1]) ? -1 : ((aryVal1[1] > aryVal2[1]) ? 1 : 0);
-        if (0 == result) {
-          result = (aryVal1[0] < aryVal2[0]) ? -1 : ((aryVal1[0] > aryVal2[0]) ? 1 : 0);
-        }
-      } else {
-        result = (aryVal1[1] < aryVal2[1]) ? 1 : ((aryVal1[1] > aryVal2[1]) ? -1 : 0);
-        if (0 == result) {
-          result = (aryVal1[0] < aryVal2[0]) ? 1 : ((aryVal1[0] > aryVal2[0]) ? -1 : 0);
-        }
-      }
-      return result;
-    },
-    sortDate : function(val1, val2, direction) {
-      var result = 0;
-      if (("asc" == direction) || ("ascending" == direction)) {
-        result = new Date(val1) - new Date(val2);
-      } else {
-        result = new Date(val2) - new Date(val1);
-      }
-      return result;
-    },
-    sortNumber : function(val1, val2, delimiter, direction) {
-      var val1Temp = val1.replace(",", "");
-      var val2Temp = val2.replace(",", "");
-      var aryVal1 = val1Temp.split(delimiter);
-      var aryVal2 = val2Temp.split(delimiter);
-      var result = 0;
-      if (("asc" == direction) || ("ascending" == direction)) {
-        result = (parseFloat(aryVal1[0]) < parseFloat(aryVal2[0])) ? -1 : ((parseFloat(aryVal1[0]) > parseFloat(aryVal2[0])) ? 1 : 0);
-      } else {
-        result = (parseFloat(aryVal1[0]) < parseFloat(aryVal2[0])) ? 1 : ((parseFloat(aryVal1[0]) > parseFloat(aryVal2[0])) ? -1 : 0);
-      }
-      return result;
-    },
-    sortCurrency : function(val1, val2, delimiter, direction) {
-      var val1Temp = val1.substring(1, val1.length);
-      var val2Temp = val2.substring(1, val2.length);
-      return display.sortNumber(val1Temp, val2Temp, delimiter, direction);
-    },
-    sortPercentage : function(val1, val2, delimiter, direction) {
-      var val1Temp = val1.substring(0, val1.length - 1);
-      var val2Temp = val2.substring(0, val2.length - 1);
-      return display.sortNumber(val1Temp, val2Temp, delimiter, direction);
-    },
-    formatPhone : function(str) {
-      //Filter only numbers from the input
-    	cleaned = ('' + str).replace(/\D/g, '');
-    	//Check if the input is of correct
-    	match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    	if (match) {
-    	  //Remove the matched extension code
-    	  //Change this to format for any country code.
-    	  intlCode = (match[1] ? '+1 ' : '')
-    	  return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
-    	}
-    	return null;
-    }
-};
-var dataTable = {
-  getSelectedRows : function(objTable) {
-    var aReturn = new Array();
-    var aTrs = objTable.fnGetNodes();
-    for (var i = 0; i < aTrs.length; i++) {
-      if ($(aTrs[i]).hasClass("selected")) {
-        aReturn.push(aTrs[i]);
-      }
-    }
-    return aReturn;
-  }
-};
-if ($.fn.dataTableExt !== undefined) {
-  jQuery.fn.dataTableExt.oSort["name-asc"] = function(val1, val2) {
-    return display.sort(val1, val2, " ", "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["name-desc"] = function(val1, val2) {
-    return display.sort(val1, val2, " ", "desc");
-  };
-  jQuery.fn.dataTableExt.oSort["number-asc"] = function(val1, val2) {
-    return display.sortNumber(val1, val2, " ", "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["number-desc"] = function(val1, val2) {
-    return display.sortNumber(val1, val2, " ", "desc");
-  };
-  jQuery.fn.dataTableExt.oSort["currency-asc"] = function(val1, val2) {
-    return display.sortCurrency(val1, val2, " ", "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["currency-desc"] = function(val1, val2) {
-    return display.sortCurrency(val1, val2, " ", "desc");
-  };
-  jQuery.fn.dataTableExt.oSort["percentage-asc"] = function(val1, val2) {
-    return display.sortPercentage(val1, val2, " ", "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["percentage-desc"] = function(val1, val2) {
-    return display.sortPercentage(val1, val2, " ", "desc");
-  };
-  jQuery.fn.dataTableExt.oSort["date-asc"]  = function(val1, val2) {
-    return display.sortDate(val1, val2, "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["date-desc"] = function(val1, val2) {
-    return display.sortDate(val1, val2, "desc");
-  };
-  jQuery.fn.dataTableExt.oSort["time-asc"]  = function(val1, val2) {
-    return display.sort(val1, val2, ":", "asc");
-  };
-  jQuery.fn.dataTableExt.oSort["time-desc"] = function(val1, val2) {
-    return display.sort(val1, val2, ":", "desc");
-  };
-}
-$.extend({
-  getQueryString: function() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++) {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
-    }
-    return vars;
   },
-  getQueryStringByName: function(name) {
-    return $.getQueryString()[name];
-  }
-});
-/*Selectize.define('set_all', function(options) {
-  let self = this;
-  this.setup = (function(e) {
-    const original = self.setup;
-    return function(e) {
-      original.apply(this, arguments);
-      var html = 
-        "Ctrl + shift + a to select all<br>\n" +
-        "Ctrl + shift + d to de-select all<br>\n" +
-        "<a href=\"javascript:void(0);\" id=\"selectAll\">Select all</a>\n" +
-        "<a href=\"javascript:void(0);\" id=\"deselectAll\">De-select all</a>\n";
-      $("#" + options.id).before(html);
-      //$(this).before(html);
-    };
-  })();
-  this.onKeyUp = (function(e) {
-    const original = self.onKeyUp;
-    return function(e) {
-      original.apply(this, arguments);
-      const code = e.originalEvent.code;
-      if (!(e.ctrlKey == true && e.shiftKey == true && (code == "KeyA" || code == "KeyD"))) {
-        return;
-      }
-      if (code == "KeyA") {
-        self.setValue(Object.keys(self.options)); // Set all selectize options using setValue() method
-        //self.focus();
-        self.trigger("focus");
-      } else {
-        self.clear();
-      }
-    };
-  })();
-  this.onChange = (function(e) {
-	const original = self.onChange;
-    return function(e) {
-      original.apply(this, arguments);
-      // accessing items on selectize submits form so cannot use
-      if (Object.keys($("#" + options.id).selectize()[0].selectize.options).length == $("#" + options.id).selectize()[0].selectize.items.length) { // if not all selected
-        //$("#selectAll").text("De-select all");
-        $("#selectAll").hide();
-        $("#deselectAll").show();
-      } else {
-        //$("#selectAll").text("Select all");
-    	if ($("#" + options.id).selectize()[0].selectize.items.length == 0) {
-          $("#deselectAll").hide();
-    	}
-        $("#selectAll").show();
-      }
-      if ($("#" + options.id).selectize()[0].selectize.items.length > 0) {
-        $(".selectize-input").removeClass("errors");
-      } else {
-        $(".selectize-input").addClass("errors");
+  setIds : function(selectedRows) {
+    let ids = "";
+    for (let selectedRow of selectedRows) {
+      ids += inputLocal.setIds(selectedRow) + ", ";
+    }
+    ids = ids.substring(0, ids.length - 2);
+    $("#ids").val(ids);
+  },
+  enable : function(objId, functionName) {
+    if ($("#" + objId).length > 0 &&  $("#ids").length > 0) {
+      const aryId = $("#ids").val().split(", ");
+      for (let id of aryId) {
+        $("#" + objId).prop("disabled", functionName.call(this, id));
       }
     }
-  })();
-});*/
+  },
+  initialize : function(positionFixId) {
+    try {
+      inputLocal.initializeDataTable();
+    } catch(error) {
+      // ignore function does not exist
+      if (!error.message.includes("is not a function")) {
+        throw error;
+      }
+    }
+    try {
+      inputLocal.setDefaults();
+    } catch(error) {
+      // ignore function does not exist
+      if (!error.message.includes("is not a function")) {
+        throw error;
+      }
+    }
+    try {
+      inputLocal.validate();
+    } catch(error) {
+      // ignore function does not exist
+      if (!error.message.includes("is not a function")) {
+        throw error;
+      }
+    }
+    try {
+      input.enable("save", inputLocal.enableSave);
+    } catch(error) {
+      // ignore function does not exist
+      if (!error.message.includes("is not a function")) {
+        throw error;
+      }
+    }
+    try {
+      inputLocal.postProcessing();
+    } catch(error) {
+      // ignore function does not exist
+      if (!error.message.includes("is not a function")) {
+        throw error;
+      }
+    }
+    if (positionFixId != undefined) {
+      try {
+        input.cursorPositionFix(positionFixId);
+      } catch(error) {
+        // ignore function does not exist
+        if (!error.message.includes("is not a function")) {
+          throw error;
+        }
+      }
+    }
+  },
+  cursorPositionFix : function(positionFixId) {
+    const id = $("#ids").val();
+    $("#" + positionFixId + id).setCursorPosition($("#" + positionFixId + id).val().length);
+  },
+  initializeTimePicker : function(format = "m/d/Y H:i", timePicker = true, disabledWeekDays = [], allowTimes = []) {
+    const aryFormatOriginal = format.split(" ");
+    let timeFormat = "h:i";
+    if (aryFormatOriginal.length > 1) {
+      timeFormat = aryFormatOriginal.slice(1).join(" ");
+    }
+    //$(".timePicker").datetimepicker({allowTimes: allowTimes, disabledWeekDays: disabledWeekDays, format: format, formatDate: aryFormatOriginal[0], formatTime: timeFormat, lazyInit: true, mask: maskDateTime, timepicker: timePicker, validateOnBlur: false, yearStart: firstYear});
+    $(".timePicker").datetimepicker({allowTimes: allowTimes, disabledWeekDays: disabledWeekDays, format: format, formatDate: aryFormatOriginal[0], formatTime: timeFormat, lazyInit: true, timepicker: timePicker, validateOnBlur: false, yearStart: firstYear});
+  },
+  insertSelectedAfter : function(text, objIdSelected, objIdAfter) {
+    if ($("#selectedTournamentText").length == 0) {
+      $("<p id=\"selectedTournamentText\">" + text + " selected: " + $("#" + objIdSelected + " :selected").text() + "</p>").insertAfter($("#" + objIdAfter));
+    }
+  },
+  toggleCheckAll : function(name) {
+    // if all checkboxes are checked then mark check all checkbox
+    $("#" + name + "CheckAll").prop("checked", $("input[id^='" + name + "_']:checked").length == $("input[id^='" + name + "_']").length);
+  },
+  toggleCheckboxes : function(name) {
+    $("input[id^='" + name + "_']").each(function(index) {
+      // if enabled then set checked state to same as check all checkbox
+      if (!$(this).prop("disabled")) {
+        $(this).prop("checked", $("#" + name + "CheckAll").prop("checked"));
+      }
+    });
+  },
+  enableView : function() {
+    $("#view").prop("disabled", $("#tournamentId").val() == -1);
+  }
+};
+const display = {
+  showErrors : function(aryErrors) {
+    let output = "Errors:<br />";
+    //for (let idx = 0; idx < aryErrors.length; idx++) {
+    for (let err of aryErrors) {
+      //if (idx > 0) {
+      if (output.length > 13) {
+        output += "<br />";
+      }
+      //output += aryErrors[idx];
+      output += err;
+    }
+    $("#info").show();
+    $("#errors").html(output);
+    $("#errors").show();
+  },
+  showMessages : function(aryMessages) {
+    let output = "Messages:<br />";
+    //for (let idx = 0; idx < aryMessages.length; idx++) {
+    for (let msg of aryMessages) {
+      //if (idx > 0) {
+      if (output.length > 15) {
+        output += "<br />";
+      }
+      //output += aryMessages[idx];
+      output += msg;
+    }
+    $("#info").show();
+    $("#messages").html(output);
+    $("#messages").show();
+  },
+  clearErrorsAndMessages : function() {
+    // clear and hide errors and messages
+    $("#errors").html("");
+    $("#messages").html("");
+    $("#errors").hide();
+    $("#messages").hide();
+    $("#info").hide();
+  },
+  sort : function(val1, val2, delimiter, direction) {
+    const aryVal1 = val1.split(delimiter);
+    const aryVal2 = val2.split(delimiter);
+    let result = 0;
+    if (("asc" == direction) || ("ascending" == direction)) {
+      result = (aryVal1[1] < aryVal2[1]) ? -1 : ((aryVal1[1] > aryVal2[1]) ? 1 : 0);
+      if (0 == result) {
+        result = (aryVal1[0] < aryVal2[0]) ? -1 : ((aryVal1[0] > aryVal2[0]) ? 1 : 0);
+      }
+    } else {
+      result = (aryVal1[1] < aryVal2[1]) ? 1 : ((aryVal1[1] > aryVal2[1]) ? -1 : 0);
+      if (0 == result) {
+        result = (aryVal1[0] < aryVal2[0]) ? 1 : ((aryVal1[0] > aryVal2[0]) ? -1 : 0);
+      }
+    }
+    return result;
+  },
+  sortDate : function(val1, val2, direction) {
+    let result = 0;
+    if (("asc" == direction) || ("ascending" == direction)) {
+      result = new Date(val1) - new Date(val2);
+    } else {
+      result = new Date(val2) - new Date(val1);
+    }
+    return result;
+  },
+  sortNumber : function(val1, val2, delimiter, direction) {
+    const val1Temp = val1.replace(",", "");
+    const val2Temp = val2.replace(",", "");
+    const aryVal1 = val1Temp.split(delimiter);
+    const aryVal2 = val2Temp.split(delimiter);
+    let result = 0;
+    if (("asc" == direction) || ("ascending" == direction)) {
+      result = (parseFloat(aryVal1[0]) < parseFloat(aryVal2[0])) ? -1 : ((parseFloat(aryVal1[0]) > parseFloat(aryVal2[0])) ? 1 : 0);
+    } else {
+      result = (parseFloat(aryVal1[0]) < parseFloat(aryVal2[0])) ? 1 : ((parseFloat(aryVal1[0]) > parseFloat(aryVal2[0])) ? -1 : 0);
+    }
+    return result;
+  },
+  sortCurrency : function(val1, val2, delimiter, direction) {
+    const val1Temp = val1.substring(1, val1.length);
+    const val2Temp = val2.substring(1, val2.length);
+    return display.sortNumber(val1Temp, val2Temp, delimiter, direction);
+  },
+  sortPercentage : function(val1, val2, delimiter, direction) {
+    const val1Temp = val1.substring(0, val1.length - 1);
+    const val2Temp = val2.substring(0, val2.length - 1);
+    return display.sortNumber(val1Temp, val2Temp, delimiter, direction);
+  },
+  formatPhone : function(str) {
+    //Filter only numbers from the input
+  	cleaned = ('' + str).replace(/\D/g, '');
+  	//Check if the input is of correct
+  	match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  	if (match) {
+  	  //Remove the matched extension code
+  	  //Change this to format for any country code.
+  	  intlCode = (match[1] ? '+1 ' : '')
+  	  return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('')
+  	}
+  	return null;
+  }
+};
+const dataTable = {
+  getRowsData : function(objTableApi) {
+    return objTableApi.rows().data();
+  },
+  getSelectedRows : function(objTableJquery) {
+    return objTableJquery.$("tr.selected");
+  },
+  getSelectedRowsData : function(objTableApi) {
+    return objTableApi.rows(".selected").data();
+  },
+  initialize : function(tableId, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "300px", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
+    $("#" + tableId).DataTable({ "autoWidth": autoWidth, "columns": aryColumns, "destroy": true, "order": aryOrder, "paging": paging, "rowGroup": aryRowGroup, "scrollY": scrollY, "scrollResize": scrollResize, "scrollCollapse": scrollCollapse, "searching": searching });
+  },
+  displayActive : function(tableId, index) {
+    $("#" + tableId + " tr").each(function(idx) {
+      const cell = $(this).find("td").eq(index);
+      $(this).addClass(cell.text() == "0" || cell.text() == "N" ? "inactive" : "");
+      cell.text(cell.text() == "1" || cell.text() == "Y" ? "Yes" : "No");
+    });
+  },
+  displayHighlight : function(tableId, index) {
+    $("#" + tableId + " tr").each(function(idx) {
+      const cell = $(this).find("td").eq(index);
+      cell.addClass(cell.text() == "1" ? "highlight" : "");
+      cell.text(cell.text() == "1" ? "Yes" : "No");
+    });
+  }
+};
 $(function() {
-  $("#main-menu").smartmenus({
-    subMenusSubOffsetX: 1,
-    subMenusSubOffsetY: -8
-  });
+  $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
 });
+$.fn.setCursorPosition = function(pos) {
+  this.each(function(index, elem) {
+    if (elem.setSelectionRange) {
+      elem.setSelectionRange(pos, pos);
+    } else if (elem.createTextRange) {
+      var range = elem.createTextRange();
+      range.collapse(true);
+      range.moveEnd('character', pos);
+      range.moveStart('character', pos);
+      range.select();
+    }
+  });
+  return this;
+};
+$.fn.selectRange = function(start, end) {
+    return this.each(function() {
+        if (this.setSelectionRange) {
+            this.focus();
+            this.setSelectionRange(start, end);
+        } else if (this.createTextRange) {
+            var range = this.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        }
+    });
+};
