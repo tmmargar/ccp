@@ -38,8 +38,11 @@ $style =
   " div#widget3 {\n" .
   "  height: 215px;\n" .
   " }\n" .
+  " div#widget5Wrapper  {\n" .
+  "  overflow: hidden;\n" .
+  " }\n" .
   " div#widget5  {\n" .
-  "  height: 80px;\n" .
+  "  height: 60px;\n" .
   " }\n" .
   " div#widget7 {\n" .
   "  font-size: 1.5em;\n" .
