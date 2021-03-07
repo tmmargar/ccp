@@ -35,7 +35,7 @@ if (0 < count($resultList)) {
 $countWinners = isset($aryWinners) ? count($aryWinners) : 0;
 $aryAbsentIds = array();
 $aryAbsentNames = array();
-$params = array($now->getCurrentYearFormat());
+$params = array($now->getYearFormat());
 $resultList = $databaseResult->getUserAbsencesByTournamentId($params);
 $ctr = - 1;
 foreach ($resultList as $values) {

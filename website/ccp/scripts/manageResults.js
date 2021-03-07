@@ -1,85 +1,22 @@
+"use strict";
 $(document).ready(function() {
-  inputLocal.initializeDataTable();
-  inputLocal.setDefaults();
-  inputLocal.initialValidation();
-  inputLocal.postProcessing();
-  inputLocal.enableButtons();
-});
-$(document).on("click", "#dataTbl tr", function(event) {
-  if ($(this).hasClass("selected")) {
-    $(this).removeClass("selected");
-  }
-});
-$(document).on("click", "#inputs tr", function(event) {
-  if ($(this).hasClass("selected")) {
-    $(this).removeClass("selected");
-  }
-});
-$(document).on("click", "#create", function(event) {
-  input.setFormValues([ "mode", "tournamentId" ], [ "create", "" ]);
-});
-$(document).on("click", "#modify", function(event) {
-  inputLocal.setTournamentPlayerIds();
-  input.setFormValues([ "mode" ], [ "modify" ]);
-});
-$(document).on("click", "#delete", function(event) {
-  inputLocal.setTournamentPlayerIds();
-  input.setFormValues([ "mode" ], [ "delete" ]);
-});
-$(document).on("click", "#confirmDelete", function(event) {
-  input.setFormValues([ "mode" ], [ "confirm" ]);
-});
-$(document).on("click", "#cancel", function(event) {
-  input.setFormValues([ "mode" ], [ "view" ]);
-});
-$(document).on("click", "#save", function(e) {
-  inputLocal.customValidationSave("inputs", e);
-  $("input[id^='tournamentRebuy_']").each(function(index) {
-    $(this).prop("disabled", false);
-  });
-  $("input[id^='tournamentRebuyCount_']").each(function(index) {
-    $(this).prop("disabled", false);
-  });
-  $("input[id^='tournamentAddon_']").each(function(index) {
-    $(this).prop("disabled", false);
-  });
-  $("input[id^='tournamentPlace_']").each(function(index) {
-    $(this).prop("disabled", false);
-  });
-});
-$(document).on("click", "#reset", function(event) {
-  input.setFormValues([ "mode" ], [ $("#mode").val() ]);
+  input.initialize();
 });
 $(document).on("change", "#tournamentId", function(event) {
   inputLocal.setTournamentDetails(this.value);
   input.validateLength($("#" + this.id), 1, true);
   inputLocal.enableButtons();
 });
-$(document).on("change", "#BountyA", function(event) {
-  var bountyAValue = $(this).val();
-  var previousValue = $(this).data("previousValue");
-  $("#BountyB").find("option").each(function(index2) {
-    if ($("#BountyA").val() != "" && bountyAValue == $(this).val()) {
+$(document).on("change", "#bountyA, #bountyB", function(event) {
+  const id = $(this).prop("id");
+  const idOther = (id == "bountyA") ? "bountyB" : "bountyA";
+  const bountyValue = $(this).val();
+  const previousValue = $(this).data("previousValue");
+  $("#" + idOther).find("option").each(function(index2) {
+    if ($("#" + id).val() != "" && bountyValue == $(this).val()) {
       $(this).prop("disabled", true);
-      if ($("#BountyB").val() == $(this).val()) {
-        $("#BountyB").val("");            
-      }
-    }
-    // have to enable previous disabled player
-    if ($(this).prop("index") == previousValue) {
-      $(this).prop("disabled", false);
-    }
-  });
-  $(this).data("previousValue", this.selectedIndex);
-});
-$(document).on("change", "#BountyB", function(event) {
-  var bountyBValue = $(this).val();
-  var previousValue = $(this).data("previousValue");
-  $("#BountyA").find("option").each(function(index2) {
-    if ($("#BountyB").val() != "" && bountyBValue == $(this).val()) {
-      $(this).prop("disabled", true);
-      if ($("#BountyA").val() == $(this).val()) {
-        $("#BountyA").val("");            
+      if ($("#" + idOther).val() == $(this).val()) {
+        $("#" + idOther).val("");            
       }
     }
     // have to enable previous disabled player
@@ -90,14 +27,14 @@ $(document).on("change", "#BountyB", function(event) {
   $(this).data("previousValue", this.selectedIndex);
 });
 $(document).on("change", "select[id^='tournamentPlayerId_']", function(event) {
-  var aryPlayerId = this.id.split("_");
+  const aryPlayerId = this.id.split("_");
   inputLocal.customValidation(this.id, '::', aryPlayerId[1]);
   input.validateLength($(this), 1, false);
-  var playerValue = $(this).val();
-  var previousValue = $(this).data("previousValue");
+  const playerValue = $(this).val();
+  const previousValue = $(this).data("previousValue");
   // can only select player once
   $("select[id^='tournamentPlayerId_']").each(function(index) {
-    var aryPlayerId2 = this.id.split("_");
+    const aryPlayerId2 = this.id.split("_");
     if (aryPlayerId[1] != aryPlayerId2[1]) {
       $(this).find("option").each(function(index2) {
         if ("" != playerValue) {
@@ -113,7 +50,7 @@ $(document).on("change", "select[id^='tournamentPlayerId_']", function(event) {
     }
   });
   // cannot knockout yourself
-  $("#tournamentKnockoutBy_" + aryPlayerId[1] + " option").each(function(index2) {
+  /*$("#tournamentKnockoutBy_" + aryPlayerId[1] + " option").each(function(index2) {
     if ("" != playerValue && playerValue == $(this).val()) {
       $(this).prop("disabled", true);
 //      $(this).val("");
@@ -123,43 +60,46 @@ $(document).on("change", "select[id^='tournamentPlayerId_']", function(event) {
     if ($(this).prop("index") == previousValue) {
       $(this).prop("disabled", false);
     }
+  });*/
+  $("#tournamentKnockoutBy_" + aryPlayerId[1]).each(function(index2) {
+    const obj = $(this);
+    const value = obj.val();
+    $(this).find("option").each(function(index2) {
+      if (playerValue == $(this).val()) {
+        $(this).prop("disabled", true);
+        if (value == $(this).val()) {
+          obj.val("");
+          obj.trigger("change");
+        }
+      }
+      // have to enable previous disabled player
+      if ($(this).prop("index") == previousValue) {
+        $(this).prop("disabled", false);
+      }
+    });
   });
   $(this).data("previousValue", this.selectedIndex);
   input.validateLength($(this), 1, false);
   inputLocal.enableButtons();
 });
 $(document).on("click", "input[id^='tournamentRebuy_']", function(event) {
-  var id = this.id.split("_");
-//  if ($(this).prop("checked")) {
-//    if ($("#tournamentRebuyCount_" + id[1]).val() == 0) {
-//      $("#tournamentRebuyCount_" + id[1]).val(1);
-//    }
-//  } else {
-//    $("#tournamentRebuyCount_" + id[1]).val(0);
-//  }
+  const id = this.id.split("_");
   $("#tournamentRebuyCount_" + id[1]).prop("disabled", !$(this).prop("checked"));
   $("#tournamentRebuyCount_" + id[1]).val(($(this).prop("checked") ? 1 : 0));
 });
 $(document).on("keyup paste", "input[id^='tournamentRebuyCount_']", function(event) {
   input.validateNumberOnlyLessThanEqualToValue($(this), $("#maxRebuys").val(), event);
-  var id = this.id.split("_");
-//  if ((this.value.length > 0) && (this.value != 0)) {
-//    $("#tournamentRebuy_" + id[1]).prop("checked", true);
-//  } else {
-//    $("#tournamentRebuy_" + id[1]).prop("checked", false);
-//  }
+  const id = this.id.split("_");
   input.validateNumberOnly($(this), event, false);
   if ($(this).val() == "") {
     $(this).val($(this).data("previousValue"));
   } else {
-//    var id = $(this).attr("id");
-//    var values = id.split("_");
     $(this).prop("disabled", ($(this).val() == 0));
     $("#tournamentRebuy_" + id[1]).prop("checked", !($(this).val() == 0));
   }
 });
 $(document).on("change", "select[id^='tournamentKnockoutBy_']", function(event) {
-  var id = this.id.split("_");
+  const id = this.id.split("_");
   if (1 < $("#tournamentPlace_" + id[1]).val()) {
     input.validateLength($(this), 1, false);
   }
@@ -173,153 +113,95 @@ $(document).on("click", "#removeRow", function(event) {
   inputLocal.removeRow("inputs");
   inputLocal.enableButtons();
 });
-var inputLocal = {
+const inputLocal = {
   enableButtons : function() {
     // if no tournament selected disable view, modify and delete buttons otherwise enable them
-    if ($("#tournamentId").val() == "") {
-      $("#view").prop("disabled", true);
+    const result = $("#tournamentId").val() == "0";
+    $("#view").prop("disabled", result);
+    $("#delete").prop("disabled", result);
+    $("#go").prop("disabled", result);
+    if (result) {
       $("#modify").prop("disabled", true);
-      $("#delete").prop("disabled", true);
-      $("#go").prop("disabled", true);
     } else {
-      $("#view").prop("disabled", false);
-      var text = $("#tournamentId :selected").text();
-      var position = text.lastIndexOf("/") + 1;
-      if (text.substring(position, position + 1) == 0) {
-        $("#modify").prop("disabled", true);
-      } else {
-        $("#modify").prop("disabled", false);
-      }
-      $("#delete").prop("disabled", false);
-      $("#go").prop("disabled", false);
+      const text = $("#tournamentId :selected").text();
+      const position = text.lastIndexOf("/") + 1;
+      $("#modify").prop("disabled", text.substring(position, position + 1) == 0);
     }
     // if last row place is 1 then disable add row otherwise enable it
-    if ($("#inputs tr:last").find("input[id^='tournamentPlace_']").val() == 1) {
-      $("#addRow").prop("disabled", true);
-    } else {
-      $("#addRow").prop("disabled", false);
-    }
+    $("#addRow").prop("disabled", $("#inputs tr").last().find("input[id^='tournamentPlace_']").val() == 1);
     // if only 2 rows (header + 1 data) then disable remove row otherwise enable it
-    if ($("#inputs tr").length == 2) {
-      $("#removeRow").prop("disabled", true);
-    } else {
-      $("#removeRow").prop("disabled", false);
-    }
-    var disabled = false;
+    $("#removeRow").prop("disabled", $("#inputs tr").length == 2);
+    let disabled = false;
     $("select[id^='tournamentPlayerId_']").each(function(index) {
       if ("" == this.value) {
         disabled = true;
       }
     });
-    $("select[id^='tournamentKnockoutBy_']").each(function(index) {
-      var id = this.id.split("_");
-      if (1 < $("#tournamentPlace_" + id[1]).val()) {
-        if ("" == this.value) {
-          disabled = true;
+    if (!disabled) {
+      $("select[id^='tournamentKnockoutBy_']").each(function(index) {
+        const id = this.id.split("_");
+        if (1 < $("#tournamentPlace_" + id[1]).val()) {
+          if ("" == this.value) {
+            disabled = true;
+          }
         }
-      }
-    });
-    if (disabled) {
-      $("#save").prop("disabled", true);
-    } else {
-      $("#save").prop("disabled", false);
+      });
     }
+    $("#save").prop("disabled", disabled);
+    return disabled;
+  },
+  enableSave : function() {
+    return inputLocal.enableButtons();
   },
   setTournamentPlayerIds : function() {
-    var tournamentPlayerIds = "";
-    // all rows except header
-    var selectedRows = $("#dataTbl tr:gt(0)");
-    for (var idx = 0; idx < selectedRows.length; idx++) {
-      tournamentPlayerIds += $($("#dataTbl").dataTable().fnGetData(idx, 6)).val() + ", ";
+    let tournamentPlayerIds = "";
+    const rows = dataTable.getRowsData($("#dataTbl").DataTable());
+    for (let idx = 0; idx < rows.length; idx++) {
+      tournamentPlayerIds += $(rows[idx][6]).val() + ", ";
     }
     tournamentPlayerIds = tournamentPlayerIds.substring(0, tournamentPlayerIds.length - 2);
-    $("#tournamentPlayerIds").val(tournamentPlayerIds);
+    $("#ids").val(tournamentPlayerIds);
 
   },
   initializeDataTable : function() {
     if ($("#mode").val() == "view" || $("#mode").val() == "delete") {
-      $("#dataTbl").DataTable({
-        "autoWidth": false,
-        "columns" : [ {
-          "type" : "name",
-          "width" : "30%"
-        }, {
-          "width" : "10%"
-        }, {
-          "width" : "10%"
-        }, {
-          "width" : "10%"
-        }, {
-          "width" : "10%"
-        }, {
-          "type" : "name",
-          "width" : "30%"
-        }, {
-          "searchable": false,
-          "visible": false
-        } ],
-        "order" : [ [ 4, "asc" ] ],
-        "paging": false,
-        "scrollCollapse": true,
-        "searching": false
-      });
+      dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "30%" }, { "width" : "10%" }, { "width" : "10%" }, { "width" : "10%" }, { "width" : "10%" }, { "type" : "name", "width" : "30%" }, { "searchable": false, "visible": false } ], [ [ 4, "asc" ] ]);
     } else if ($("#mode").val() == "create" || $("#mode").val() == "modify") {
-      $("#inputs").dataTable({
-        "paging": false,
-        "scrollCollapse": true,
-        "searching": false
-      });
+      dataTable.initialize("inputs", null, [], false);
     }
   },
   setDefaults : function() {
     inputLocal.setTournamentDetails($("#tournamentId").val());
-    var obj;
-    if ($("#go").length > 0) {
-      obj = $("#go");
-    } else {
-      obj = $("#create");
-    }
-    $("<p>Tournament selected: " + $("#tournamentId :selected").text() + "</p>").insertAfter(obj);
+    input.insertSelectedAfter("Tournament", "tournamentId", $("#go").length > 0 ? "go" : "create");
   },
-  initialValidation : function() {
+  validate : function() {
     input.validateLength($("#tournamentId"), 1, false);
     input.validateLength($("#tournamentPlayerId_1"), 1, false);
     input.validateLength($("#tournamentKnockoutBy_1"), 1, false);
+    inputLocal.enableButtons();
   },
   postProcessing : function() {
     $("input[id^='tournamentRebuy_']").each(function(index) {
-      if ($("#maxRebuys").val() == 0) {
-        $(this).prop("disabled", true);
-      } else {
-        $(this).prop("disabled", false);
-      }
+      $(this).prop("disabled", $("#maxRebuys").val() == 0);
       if ($("#mode").val() == "create") {
         $(this).prop("checked", false);
       }
     });
     $("input[id^='tournamentRebuyCount_']").each(function(index) {
-      if ($("#maxRebuys").val() == 0) {
-        $(this).prop("disabled", true);
-      } else {
-        $(this).prop("disabled", false);
-      }
+      $(this).prop("disabled", $("#maxRebuys").val() == 0);
       if ($("#mode").val() == "create") {
         this.value = "0";
       }
     });
     $("input[id^='tournamentAddon_']").each(function(index) {
-      if ($("#addonAmount").val() == 0) {
-        $(this).prop("disabled", true);
-      } else {
-        $(this).prop("disabled", false);
-      }
+      $(this).prop("disabled", $("#addonAmount").val() == 0);
       if ($("#mode").val() == "create") {
         $(this).prop("checked", false);
       }
     });
     $("select[id^='tournamentPlayerId_']").each(function(index) {
-      var aryPlayerId = this.id.split("_");
-      var playerValue = $(this).val();
+      const aryPlayerId = this.id.split("_");
+      const playerValue = $(this).val();
       if ("" != playerValue) {
         // cannot knockout yourself
         $("#tournamentKnockoutBy_" + aryPlayerId[1] + " option").each(function(index2) {
@@ -330,7 +212,7 @@ var inputLocal = {
       }
       // can only select player once
       $("select[id^='tournamentPlayerId_']").each(function(index3) {
-        var aryPlayerId2 = this.id.split("_");
+        const aryPlayerId2 = this.id.split("_");
         if (aryPlayerId[1] != aryPlayerId2[1]) {
           $(this).find("option").each(function(index4) {
             if (playerValue == $(this).val()) {
@@ -341,7 +223,7 @@ var inputLocal = {
       });
       // can only select knockout once
       $("select[id^='tournamentKnockoutBy_']").each(function(index5) {
-        var aryKnockoutId = this.id.split("_");
+        const aryKnockoutId = this.id.split("_");
         if (parseInt(aryPlayerId[1]) < parseInt(aryKnockoutId[1])) {
           $(this).find("option").each(function(index6) {
             if (playerValue == $(this).val()) {
@@ -355,8 +237,8 @@ var inputLocal = {
       $(this).data("previousValue", this.selectedIndex);
     });
     $("input[id^='tournamentRebuy_']").each(function(index) {
-      var id = $(this).attr("id");
-      var values = id.split("_");
+      const id = $(this).attr("id");
+      const values = id.split("_");
       $("#tournamentRebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
     });
     $("input[id^='tournamentRebuyCount_']").each(function(index) {
@@ -366,7 +248,7 @@ var inputLocal = {
   customValidation : function(objId, delim, index) {
     // player value is id, rebuyPaid, rebuyCount, addonPaid (100::N::0::N)
     // id::rebuy count::addon amount (100:1:0)
-    var values = $("#" + objId).val().split(delim);
+    const values = $("#" + objId).val().split(delim);
     if (values[1] == "Y") {
       $("#" + "tournamentRebuy_" + index).prop("checked", true);
       $("#" + "tournamentRebuyCount_" + index).prop("disabled", false);
@@ -375,8 +257,8 @@ var inputLocal = {
       $("#" + "tournamentRebuy_" + index).prop("checked", false);
       $("#" + "tournamentRebuyCount_" + index).val(0);
       if ($("#tournamentId :selected").val().split("::")[1] == 0) {
-	    $("#" + "tournamentRebuy_" + index).prop("disabled", true);
-	    $("#" + "tournamentRebuyCount_" + index).prop("disabled", true);
+  	    $("#" + "tournamentRebuy_" + index).prop("disabled", true);
+  	    $("#" + "tournamentRebuyCount_" + index).prop("disabled", true);
       }
     }
     if (values[3] == "Y") {
@@ -389,11 +271,11 @@ var inputLocal = {
     }
   },
   addRow : function(objId) {
-    var newId;
+    let newId;
     // if last row place > 1
-    if ($("#" + objId + " tr:last input[id^='tournamentPlace_']").val() > 1) {
+    if ($("#" + objId + " tr").last().find("input[id^='tournamentPlace_']").val() > 1) {
       // clone last row and adjust index by 1
-      var newRow = $("#" + objId + " tr:last").clone();
+      const newRow = $("#" + objId + " tr").last().clone();
       newRow.toggleClass("odd even");
       newRow.find(":input").each(function(index) {
         $(this).attr({
@@ -404,12 +286,12 @@ var inputLocal = {
             return disabled;
           },
           "id": function(_, id) {
-            var idVal = id.split("_");
+            const idVal = id.split("_");
             newId = (parseInt(idVal[1]) + 1);
             return idVal[0] + "_" + newId;
           },
           "name": function(_, name) {
-            var nameVal = name.split("_");
+            const nameVal = name.split("_");
             return nameVal[0] + "_" + (parseInt(nameVal[1]) + 1);
           }
         });
@@ -428,17 +310,22 @@ var inputLocal = {
           }
         });
       }).end().appendTo("#" + objId);
+      // need this in order for selected value to display properly on new row
+      newRow.find("select").each(function(index) {
+        $(this).addClass("errors");
+        $(this).find("option").eq(0).prop("selected", true);
+      });
       // disable previous row player
-      var index = $("#tournamentPlayerId_" + (newId - 1)).prop("selectedIndex");
+      const index = $("#tournamentPlayerId_" + (newId - 1)).prop("selectedIndex");
       // if not first item which is None
       if (0 < index) {
-        $("#tournamentPlayerId_" + newId + " option:eq(" + index + ")").prop("disabled", true);
+        $("#tournamentPlayerId_" + newId + " option").eq(" + index + ").prop("disabled", true);
       }
       // disable all players if last row (1st place)
-      var obj = $("#" + objId + " tr:last select[id^='tournamentKnockoutBy_']");
+      const obj = $("#" + objId + " tr").last().find("select[id^='tournamentKnockoutBy_']");
       // should only be 1
-      var id = obj[0].id;
-      var idValues = id.split("_");
+      const id = obj[0].id;
+      const idValues = id.split("_");
       if (1 == $("#tournamentPlace_" + idValues[1]).val()) {
     		obj.find("option").each(function(index) {
           if (index > 0) {
@@ -448,22 +335,21 @@ var inputLocal = {
     		obj.removeClass("errors");
   		}
     }
-    //input.validateLength($("#" + objId), 1, false);
   },
   removeRow : function(objId) {
     // enable player selected in row being removed
-    var idx = $("#" + objId + " tr:last select[id^='tournamentPlayerId_']")[0].selectedIndex;
+    const idx = $("#" + objId + " tr").last().find("select[id^='tournamentPlayerId_']")[0].selectedIndex;
     // subtract 1 for zero index and 1 for previous row
-    $("#tournamentPlayerId_" + ($("#" + objId + " tr").length - 2) + " option:eq(" + idx + ")").prop("disabled", false);
-    $("#" + objId + " tr:last").remove();
+    $("#tournamentPlayerId_" + ($("#" + objId + " tr").length - 2) + " option").eq(" + idx + ").prop("disabled", false);
+    $("#" + objId + " tr").last().remove();
   },
   customValidationSave : function(objId, e) {
-    var objMode = $("#mode");
-    var objPlayers = $("#tournamentPlayerIds");
+    const objMode = $("#mode");
+    const objPlayers = $("#ids");
     objPlayers.val("");
-    for (var x=1; x <= $("#" + objId).find("tr").length - 1; x++) {
-      var objPlayer = $("#tournamentPlayerId_" + x);
-      var playerId = objPlayer.val().split('::')[0];
+    for (let x=1; x <= $("#" + objId).find("tr").length - 1; x++) {
+      const objPlayer = $("#tournamentPlayerId_" + x);
+      const playerId = objPlayer.val().split('::')[0];
       if (("create" == objMode.val()) || ("modify" == objMode.val())) {
         if (0 < objPlayers.val().length) {
           objPlayers.val(objPlayers.val() + ", ");
@@ -471,16 +357,34 @@ var inputLocal = {
         objPlayers.val(objPlayers.val() + playerId);
       }
     }
-    input.setFormValues(["mode"], ["save" + $("#mode").val()]);
+    $("#mode").val("save" + $("#mode").val());
   },
   setTournamentDetails : function(value) {
     // id::rebuy count::addon amount (100:1:0)
     if (value != undefined) {
-      var aryId = value.split("::");
+      const aryId = value.split("::");
       if (aryId.length > 1) {
         $("#maxRebuys").val(aryId[1]);
         $("#addonAmount").val(aryId[2]);
       }
     }
+  },
+  tableRowClick : function(obj) {
+    $(obj).removeClass("selected");
+  },
+  modify : function(event) {
+    inputLocal.setTournamentPlayerIds();
+    return false;
+  },
+  delete : function(event) {
+    inputLocal.setTournamentPlayerIds();
+    return false;
+  },
+  save : function(event) {
+    inputLocal.setTournamentPlayerIds();
+    inputLocal.customValidationSave("inputs", event);
+    $("input[id^='tournamentRebuy_'], input[id^='tournamentRebuyCount_'], input[id^='tournamentAddon_'], input[id^='tournamentPlace_']").each(function(index) {
+      $(this).prop("disabled", false);
+    });
   }
 };

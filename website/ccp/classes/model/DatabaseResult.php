@@ -517,6 +517,9 @@ class DatabaseResult extends Root {
   public function updateResultByTournamentIdAndPlace($params) {
     return $this->updateData("resultUpdateByTournamentIdAndPlace", $params);
   }
+  public function updateResultByTournamentId($params) {
+    return $this->updateData("resultUpdateByTournamentId", $params);
+  }
   public function updateSeason($params) {
     return $this->updateData("seasonUpdate", $params);
   }
@@ -1050,7 +1053,7 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectAll":
           $query =
-            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, l.phone, l.active, u.active AS userActive " .
+            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, l.phone, l.active, u.active AS userActive, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
             "FROM poker_location l " .
             "INNER JOIN poker_user u ON l.playerId = u.id ";
           if ($params[1]) {
@@ -1267,7 +1270,8 @@ class DatabaseResult extends Root {
             if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " AND place = 0";
             }
-            if ("resultSelectPaidByTournamentId" == $dataName || "resultSelectPaidNotEnteredByTournamentId" == $dataName) {
+            //if ("resultSelectPaidByTournamentId" == $dataName || "resultSelectPaidNotEnteredByTournamentId" == $dataName) {
+            if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " ORDER BY " . $this->buildOrderByName("u");
             }
           }
@@ -2416,6 +2420,9 @@ class DatabaseResult extends Root {
                   if ("locationSelectAllCount" == $dataName) {
                     $location->setCount((int) $row["count"]);
                   }
+                  if ("locationSelectAll" == $dataName) {
+                    $location->setTournamentCount($row["trnys"]);
+                  }
                   array_push($resultList, $location);
                   break;
                 case "locationSelectMaxId":
@@ -3275,6 +3282,18 @@ class DatabaseResult extends Root {
             ", knockedoutBy = " . $params[5] .
             " WHERE tournamentId = " . $params[6]; // . " AND place < " . $params[6];
           break;
+        case "resultUpdateByTournamentId":
+          $query =
+            "UPDATE poker_result SET " .
+            (isset($params[0]) ? "rebuyCount = '" . $params[0] . "'" : "") .
+            (isset($params[0]) && (isset($params[1]) || isset($params[2]) || isset($params[3])) ? ", " : "") .
+            (isset($params[1]) ? "rebuyPaid = '" . $params[1] . "'" : "") .
+            (isset($params[1]) && (isset($params[2]) || isset($params[3])) ? ", " : "") .
+            (isset($params[2]) ? " addonPaid = '" . $params[2] . "'" : "") .
+            (isset($params[2]) && (isset($params[3])) ? ", " : "") .
+            (isset($params[3]) ? " addonFlag = '" . $params[3] . "' " : "") .
+            " WHERE tournamentId = " . $params[4];
+          break;
         case "seasonUpdate":
           $query =
             "UPDATE poker_season " .
@@ -3417,7 +3436,7 @@ class DatabaseResult extends Root {
           break;
         case "specialTypeUpdate":
           $query =
-            "UPDATE poker_special_type" .
+            "UPDATE poker_special_type " .
             "SET typeDescription = " . (strlen(trim($params[1])) == 0 ? "null" : "'" . $params[1] . "'") .
             " WHERE typeId = " . $params[0];
           break;

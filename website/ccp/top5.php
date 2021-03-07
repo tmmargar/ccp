@@ -43,7 +43,7 @@ if (!defined("TOURNAMENTS_PLAYED_FOR_USER")) {define("TOURNAMENTS_PLAYED_FOR_USE
 if (!defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER")) {define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForUser");}
 if (!defined("TOURNAMENTS_PLAYED_FIRST_FOR_USER")) {define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForUser");}
 $smarty->assign("title", "Chip Chair and a Prayer Top 5");
-$mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
+$smarty->assign("heading", "");
 if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : "";
 }
@@ -177,11 +177,7 @@ switch ($reportId) {
 if (!isset($reportId) || "" == $reportId) {
   $output .= "Unable to identify report to view";
 } else {
-//   $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-//   $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_START_SEASON);
-//   $startDate = $dateTime->getDatabaseFormat();
-//   $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $now->getCurrentYearFormat() . DateTime::$DATE_END_SEASON);
-//   $endDate = $dateTime->getDatabaseFormat();
+  // change to get for season
   $startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
   $endDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $width = "100%";

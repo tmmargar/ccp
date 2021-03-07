@@ -7,6 +7,7 @@ class Location extends Base {
   private $active;
   private $map; // blob map pdf
   private $mapName; // name of file
+  private $tournamentCount; // # of tournaments
   public function buildMapUrl() {
     return "<a href =\"" . Constant::PATH_MAP() . "/" . $this->getMapName() . "\">Map</a>\n";
   }
@@ -27,6 +28,9 @@ class Location extends Base {
   }
   public function getMapName() {
     return $this->mapName;
+  }
+  public function getTournamentCount() {
+    return $this->tournamentCount;
   }
   public function setName($name) {
     $this->name = $name;
@@ -50,6 +54,9 @@ class Location extends Base {
   public function setMapName($mapName) {
     $this->mapName = $mapName;
   }
+  public function setTournamentCount($tournamentCount) {
+    $this->tournamentCount = $tournamentCount;
+  }
   public function getLink() {
 //     return HtmlUtility::buildLink("manageLocation.php", "modify", $this->getId(), $this->getName());
     $link = new HtmlLink(null, null, $this->isDebug(), "manageLocation.php", null, array("userId", "mode"),  array($this->getId(). "modify"), -1, $this->getName(), null);
@@ -69,7 +76,8 @@ class Location extends Base {
     $output .= $this->getMap();
     $output .= "', mapName = '";
     $output .= $this->getMapName();
-    $output .= "'";
+    $output .= "', tournamentCount = ";
+    $output .= $this->getTournamentCount();
     return $output;
   }
 }

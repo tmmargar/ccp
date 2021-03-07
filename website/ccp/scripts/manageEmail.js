@@ -1,35 +1,60 @@
+"use strict";
 $(document).ready(function() {
-  // use delay to pick up auto complete population so button is enabled
-  setTimeout(function(){input.validateLength($(".selectize-input"), 1, false);}, 500); // 1/2 second
-  setTimeout(function(){input.validateLength($("#subject"), 1, false);}, 500); // 1/2 second
-  setTimeout(function(){input.validateLength($("#body"), 1, false);}, 500); // 1/2 second
-  setTimeout(function(){inputLocal.enableEmail();}, 500); // 1/2 second
-  inputLocal.setDefaults();
-});
-var inputLocal = {
-  enableEmail : function() {
-    // if username or password are empty then disable login button otherwise enable login button
-    if (($("#subject").val().length == 0) || ($("#body").val().length == 0)) {
-      $("#email").prop("disabled", true);
-    } else {
-      $("#email").prop("disabled", false);
-    }
-  },
-  setDefaults : function() {
-  }
-};
-$(document).on("blur click keyup paste", "#subject", function(event) {
-  input.validateLength($(".selectize-input"), 1, false);
-  input.validateLength($("#subject"), 1, true);
-  input.validateLength($("#body"), 1, false);
+  // selectUsers set in php
+  inputLocal.initializeSelectize(selectUsers);
+  inputLocal.validate();
   inputLocal.enableEmail();
 });
-$(document).on("blur click keyup paste", "#body", function(event) {
-  input.validateLength($(".selectize-input"), 1, false);
-  input.validateLength($("#subject"), 1, false);
-  input.validateLength($("#body"), 1, true);
+$(document).on("click", "#selectAll", function(event) {
+  return input.selectAllSelectize("to");
+});
+$(document).on("click", "#deselectAll", function(event) {
+  return input.deselectAllSelectize("to");
+});
+$(document).on("blur click keyup paste", "#subject, #body", function(event) {
+  inputLocal.validate();
   inputLocal.enableEmail();
 });
 $(document).on("click", "#email", function(event) {
-  input.setFormValues([ "mode" ], [ "email" ]);
+  $("#mode").val(this.value.toLowerCase());
 });
+const inputLocal = {
+  enableEmail : function() {
+    $("#email").prop("disabled", ($("#subject").val().length == 0) || ($("#body").val().length == 0));
+  },
+  initializeSelectize : function(selectValues) {
+    let options = [];
+    $.each(selectValues, function(key, value) {
+      options.push($("<option>", {value : key + ":" + value}).text(key));
+    });
+    $("#to").append(options);
+    $("#to").selectize({
+      valueField: "email",
+      labelField: "name",
+      searchField: ["name", "email"],
+      plugins: {
+        "drag_drop": {},
+        "remove_button": {},
+        "set_all": {"id": "to"}
+      },
+      render: {
+        item: function(item, escape) {
+          return "<div>" + (item.name ? "<span class='name'>" + escape(item.name) + "</span>" : "") + (item.email ? "<span class='email'> &lt;" + escape(item.email) + "&gt;</span>" : "") + "</div>";
+        },
+        option: function(item, escape) {
+          const label = item.name || item.email;
+          const caption = item.name ? item.email.split(':')[1] : null;
+          return "<div><span class='label'>" + escape(label) + "</span>" + (caption ? "<span class='caption'> &lt;" + escape(caption) + "&gt;</span>" : "") + "</div>";
+        }
+      }
+    });
+  },
+  validate : function() {
+    input.validateLength($(".selectize-input"), 1, false);
+    input.validateLength($("#subject"), 1, false);
+    input.validateLength($("#body"), 1, false);
+  },
+  reset : function() {
+    input.deselectAllSelectize("to");
+  }
+};

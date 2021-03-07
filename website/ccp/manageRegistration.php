@@ -14,66 +14,51 @@ use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("TOURNAMENT_FIELD_LABEL", "Tournament");
 define("TOURNAMENT_ID_FIELD_NAME", "tournamentId");
-define("SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME", "tournamentPlayerIds");
 define("SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME", "tournamentPlayerStatus");
 define("SELECT_COLUMN_PREFIX_FIELD_NAME", "select");
 define("TOURNAMENT_PLAYER_ID_FIELD_NAME", "tournamentPlayerId");
-define("DEFAULT_VALUE_TOURNAMENT_PLAYER_IDS", "");
-define("DEFAULT_VALUE_TOURNAMENT_PLAYER_STATUS", "");
 define("DEFAULT_VALUE_TOURNAMENT_ID", "-1");
 define("REGISTER_TEXT", "Register");
 define("UNREGISTER_TEXT", "Un-register");
-$smarty->assign("title", "Chip Chair and a Prayer Manage Registration");
-$smarty->assign("script", "<script src=\"scripts/manageRegistration.js\" type=\"text/javascript\"></script>\n");
+$smarty->assign("title", "Manage Registration");
 $smarty->assign("heading", "Manage Registration");
-$smarty->assign("style", "");
-$mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
-$smarty->assign("mode", $mode);
-$smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
-$smarty->assign("formName", "frmManageRegistration");
-$output = "";
-$tournamentPlayerIds = isset($_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME]) ? $_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME] : $tournamentPlayerIds = DEFAULT_VALUE_TOURNAMENT_PLAYER_IDS;
-$tournamentPlayerStatus = isset($_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME]) ? $tournamentPlayerStatus = $_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_PLAYER_STATUS;
 $tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID;
-$tournamentDate = "CURRENT_DATE";
-$tournamentDateMax = "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)";
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
+$tournamentPlayerStatus = isset($_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME]) ? $tournamentPlayerStatus = $_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
-  $ary = explode(Constant::$DELIMITER_DEFAULT, $tournamentPlayerIds);
+  $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
   $aryStatus = explode(Constant::$DELIMITER_DEFAULT, $tournamentPlayerStatus);
   $runOnce = true;
   // get number of registered to determine max number of wait list to process
   $valuesCount = array_count_values($aryStatus);
   $numRows = array_key_exists(Constant::$NAME_STATUS_REGISTERED, $valuesCount) ? $valuesCount[Constant::$NAME_STATUS_REGISTERED] : 0;
-  $ctr = 0;
-  while ($ctr < count($ary)) {
-    $params = array($ary[$ctr]);
+  $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+  foreach ($ary as $index => $id) {
+    $params = array($id);
     $resultList = $databaseResult->getUserById($params);
     if (count($resultList) > 0) {
       $cnt = 0;
       $userName = $resultList[0]->getName();
       $userEmail = $resultList[0]->getEmail();
     }
-    if ($aryStatus[$ctr] == Constant::$NAME_STATUS_NOT_REGISTERED) {
-      $params = array($tournamentId, $ary[$ctr], "null");
+    if ($aryStatus[$index] == Constant::$NAME_STATUS_NOT_REGISTERED) {
+      $params = array($tournamentId, $id, "null");
       $rowCount = $databaseResult->insertRegistration($params);
-      if (! is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      if (!is_numeric($rowCount)) {
+        $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
       $state = "registering";
     } else {
-      $params = array($tournamentId, $ary[$ctr]);
+      $params = array($tournamentId, $id);
       $resultList = $databaseResult->getResultByTournamentIdAndPlayerId($params);
       $registerOrder = $resultList[0]->getRegisterOrder();
       // same parameter list
       $rowCount = $databaseResult->deleteRegistration($params);
-      if (! is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      if (!is_numeric($rowCount)) {
+        $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
       $state = "cancelling";
     }
-    if ($aryStatus[$ctr] != Constant::$NAME_STATUS_NOT_REGISTERED) {
+    if ($aryStatus[$index] != Constant::$NAME_STATUS_NOT_REGISTERED) {
       if ($runOnce) {
         $params = array($tournamentId, $registerOrder, $numRows);
         $resultList = $databaseResult->getRegistrationWaitList($params);
@@ -93,8 +78,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       }
       $params = array($tournamentId, $registerOrder);
       $rowCount = $databaseResult->updateRegistrationCancel($params);
-      if (! is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      if (!is_numeric($rowCount)) {
+        $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
     }
     // for email ONLY
@@ -115,12 +100,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $emailTournament->setStartTime($tournament->getStartTime());
       $emailTournament->setId($tournament->getId());
       if ("cancelling" == $state) {
-        $output .= $email->sendCancelledEmail($emailAddress, $emailTournament);
+        $message = $email->sendCancelledEmail($emailAddress, $emailTournament);
       } else {
-        $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
+        $message = $email->sendRegisteredEmail($emailAddress, $emailTournament, $waitListCount);
       }
+      $output .= "aryMessages.push(\"" . $message . "\");\n";
     }
-    $ctr ++;
   }
   if (isset($emailInfo)) {
     $cnt = 0;
@@ -136,15 +121,16 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $emailTournament->setDate($tournament->getDate());
       $emailTournament->setStartTime($tournament->getStartTime());
       $emailTournament->setId($tournament->getId());
-      $output .= $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99);
-      $cnt ++;
+      $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99) . "\");\n";
+      $cnt++;
     }
   }
-  $tournamentPlayerIds = DEFAULT_VALUE_TOURNAMENT_PLAYER_IDS;
+  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+  $ids = DEFAULT_VALUE_BLANK;
   $mode = Constant::$MODE_VIEW;
 }
 if ($mode == Constant::$MODE_VIEW) {
-  $params = array($tournamentDate, $tournamentDateMax);
+  $params = array("CURRENT_DATE", "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)");
   $resultList = $databaseResult->getTournamentForRegistration($params);
   if (count($resultList) > 0) {
     $output .= "    " . TOURNAMENT_FIELD_LABEL . ": \n    ";
@@ -152,9 +138,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= $selectTournament->getHtml();
     $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
-    $cnt = 0;
-    while ($cnt < count($resultList)) {
-      $tournament = $resultList[$cnt];
+    foreach ($resultList as $tournament) {
       $optionText = $tournament->getDate()->getDisplayDatePickerFormat();
       $optionText .= "@" . $tournament->getStartTime()->getDisplayAmPmFormat();
       $optionText .= " (" . $tournament->getLocation()->getName() . ")";
@@ -169,14 +153,13 @@ if ($mode == Constant::$MODE_VIEW) {
       $optionText .= "/" . $tournament->getEnteredCount() . " entered)";
       $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $tournamentId, null, $optionText, $tournament->getId());
       $output .= $option->getHtml();
-      $cnt ++;
     }
     $output .= "    </select>\n";
     $buttonView = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_VIEW, null, false, null, null, null, false, Constant::$TEXT_VIEW, null, Constant::$TEXT_VIEW, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_VIEW, null);
     $output .= $buttonView->getHtml();
     $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
     $output .= $hiddenMode->getHtml();
-    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME, null, SELECTED_ROWS_TOURNAMENT_PLAYER_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $tournamentPlayerIds, null);
+    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
     $hiddenSelectedRowsPlayerStatus = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME, null, SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $tournamentPlayerStatus, null);
     $output .= $hiddenSelectedRowsPlayerStatus->getHtml();
@@ -191,7 +174,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $caption = "When clicking Register / un-register button above it will act on all rows selected and appropriately register or un-register them";
     $colFormats = array(array(3, "right", 0));
     $hideColIndexes = array(0);
-    $htmlTable = new HtmlTable($caption, array("override30"), null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, TOURNAMENT_PLAYER_ID_FIELD_NAME, $hideColIndexes, null, null, null, true, $query, $tournamentPlayerIds, null, "30%");
+    $htmlTable = new HtmlTable($caption, array("override30"), null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, TOURNAMENT_PLAYER_ID_FIELD_NAME, $hideColIndexes, null, null, null, true, $query, $ids, null, "30%");
     $output .= $htmlTable->getHtml();
   }
 }

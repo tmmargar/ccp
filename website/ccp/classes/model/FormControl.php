@@ -25,7 +25,7 @@ class FormControl extends FormBase {
   private $type;
   private $wrap;
   public function __construct21($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap) {
-    parent::__construct7($debug, $class, $disabled, $id, $name, $suffix, $value);
+    parent::__construct7($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
     $this->accessKey = $accessKey;
     $this->autoComplete = $autoComplete;
     $this->autoFocus = $autoFocus;
@@ -73,7 +73,7 @@ class FormControl extends FormBase {
       (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") .
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
       " type=\"" . $this->type . "\"" .
-      ("" != $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+      ("" !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
       (self::$TYPE_INPUT_TEXTAREA == $this->type ? "></textarea>\n" : " />\n");

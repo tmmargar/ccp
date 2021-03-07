@@ -2,7 +2,6 @@
 namespace ccp;
 use ccp\classes\model\Base;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
@@ -13,8 +12,8 @@ require_once "init.php";
 define("REPORT_ID_PARAM_NAME", "reportId");
 define("USER_ID_PARAM_NAME", "userId");
 define("TOURNAMENT_ID_PARAM_NAME", "tournamentId");
-define("YEAR_PARAM_NAME", "year");
-define("YEAR_SELECTION_PARAM_NAME", "yearSelection");
+define("SEASON_PARAM_NAME", "season");
+define("SEASON_SELECTION_PARAM_NAME", "seasonSelection");
 define("REPORT_ID_TOURNAMENT_RESULTS", "results");
 define("REPORT_ID_TOTAL_POINTS", "pointsTotal");
 define("REPORT_ID_EARNINGS", "earnings");
@@ -28,8 +27,12 @@ define("REPORT_ID_LOCATIONS_HOSTED_COUNT", "locationsHostedCount");
 define("REPORT_ID_CHAMPIONSHIP", "championship");
 define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
+define("SEASON_START_DATE_PARAM_NAME", "seasonStartDate");
+define("SEASON_END_DATE_PARAM_NAME", "seasonEndDate");
 define("ALL_USERS_INFO", "allUsersInfo");
 define("REPORT_ID_FIELD_NAME", "reportId");
+define("SEASON_START_DATE_FIELD_NAME", "seasonStartDate");
+define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
 $output = "";
 if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : null;
@@ -38,31 +41,33 @@ $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isse
 if (!isset($tournamentId)) {
   $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : null;
 }
-if (!isset($yearSelection)) {
-  $yearSelection = (isset($_POST[YEAR_SELECTION_PARAM_NAME]) ? $_POST[YEAR_SELECTION_PARAM_NAME] : isset($_GET[YEAR_SELECTION_PARAM_NAME])) ? $_GET[YEAR_SELECTION_PARAM_NAME] : null;
+if (!isset($seasonSelection)) {
+  $seasonSelection = (isset($_POST[SEASON_SELECTION_PARAM_NAME]) ? $_POST[SEASON_SELECTION_PARAM_NAME] : isset($_GET[SEASON_SELECTION_PARAM_NAME])) ? $_GET[SEASON_SELECTION_PARAM_NAME] : "hide";
 }
-if (!isset($yearSelection)) {
-  $yearSelection = "hide";
+if (!isset($seasonId)) {
+  $seasonTemp = (isset($_POST[SEASON_PARAM_NAME]) ? $_POST[SEASON_PARAM_NAME] : isset($_GET[SEASON_PARAM_NAME])) ? $_GET[SEASON_PARAM_NAME] : null;
+  $arySeason = explode("::", $seasonTemp);
+  $seasonId = $arySeason[0];
+  if (count($arySeason) > 1) {
+    $seasonStartDate = $arySeason[1];
+    $seasonEndDate = $arySeason[2];
+  } else {
+    $seasonStartDate = null;
+    $seasonEndDate = null;
+  }
 }
-if (!isset($year)) {
-  $year = (isset($_POST[YEAR_PARAM_NAME]) ? $_POST[YEAR_PARAM_NAME] : isset($_GET[YEAR_PARAM_NAME])) ? $_GET[YEAR_PARAM_NAME] : null;
-}
-// if (!isset($year)) {
-//   $now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
-//   $year = $now->getCurrentYearFormat();
-// }
-if ("ALL" == $year) {
+if ("ALL" == $seasonId) {
   $startDate = null;
   $endDate = null;
+  $year = $seasonId;
 } else {
-// TODO: change to lookup season start and end date
-  $startDate = isset($year) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $year . "-01-01") : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE);
-  $endDate = isset($year) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $year . "-12-31") : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE);
-  $year = $startDate->getCurrentYearFormat();
+  $startDate = isset($seasonStartDate) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $seasonStartDate) : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE);
+  $endDate = isset($seasonEndDate) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $seasonEndDate) : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE);
+  $year = $startDate->getYearFormat();
 }
-// $sort = isset($_POST[SORT_ID_PARAM_NAME]) ? $_POST[SORT_ID_PARAM_NAME] : isset($_GET[SORT_ID_PARAM_NAME]) ? $_GET[SORT_ID_PARAM_NAME] : null;
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
 $style = " <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n";
+$smarty->assign("heading", "");
 $smarty->assign("style", $style);
 $smarty->assign("formName", "frmReports");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
@@ -114,8 +119,6 @@ if (!isset($reportId)) {
       $output = "No value provided for report id";
   }
   $smarty->assign("title", "Chip Chair and a Prayer " . $title . " Report");
-  $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-//   $databaseResult = new DatabaseResult(true);
   $classNames = null;
   $caption = null;
   $colFormats = null;
@@ -132,27 +135,6 @@ if (!isset($reportId)) {
   switch ($reportId) {
     case REPORT_ID_TOURNAMENT_RESULTS:
       $prizePool = null;
-//       $aryChampionships = $databaseResult->getTournamentChampionships();
-//       $aryChampionships = $databaseResult->getSeasonChampionships();
-//       $ctr = 0;
-//       while ($ctr < count($aryChampionships)) {
-//         $aryChampionshipIds[$ctr] = $aryChampionships[$ctr][0];
-//         $aryChampionshipYears[$ctr] = $aryChampionships[$ctr][1];
-//         if ($tournamentId == $aryChampionshipIds[$ctr]) {
-//           $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $aryChampionshipYears[$ctr] . DateTime::$DATE_START_SEASON);
-//           $startDateChampionship = $dateTime->getDatabaseFormat();
-//           $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $aryChampionshipYears[$ctr] . DateTime::$DATE_END_SEASON);
-//           $endDateChampionship = $dateTime->getDatabaseFormat();
-//           $params = array($startDateChampionship, $endDateChampionship);
-//           $params = array(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat());
-//           $resultList = $databaseResult->getPrizePoolForSeason($params, false);
-//           if (0 < count($resultList)) {
-//             $prizePool = $resultList[0];
-//             break;
-//           }
-//         }
-//         $ctr ++;
-//       }
       $params = array($tournamentId, Constant::$DESCRIPTION_CHAMPIONSHIP);
       $resultList = $databaseResult->getSeasonByIdAndDesc($params);
       if (0 < count($resultList)) {
@@ -202,7 +184,7 @@ if (!isset($reportId)) {
       $width = "35%";
       break;
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
-      $params = array("ALL" == $year ? null : $year);
+      $params = array("ALL" == $seasonId ? null : $year);
       $query = $databaseResult->getEarningsTotalForChampionship($params);
       $colFormats = array(array(2, "currency", 0));
       $hideColIndexes = array(0);
@@ -271,26 +253,33 @@ if (!isset($reportId)) {
       $width = "30%";
       break;
   }
-  if ("show" == $yearSelection) {
-    $output .= "<div class=\"center\" style=\"width: " . $width . ";\">\n";
-    $selectYear = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_YEAR, null, false, Base::build("year", null), false, Base::build("year", null), null, false, 1, null, null);
-    $output .= $selectYear->getHtml();
+  if ("show" == $seasonSelection) {
+    $output .= "<div>\n";
+    $selectSeason = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SEASON, null, false, Base::build("season", null), false, Base::build("season", null), null, false, 1, null, null);
+    $output .= "Season: " . $selectSeason->getHtml();
     $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, "", null, "Overall", "ALL");
     $output .= $option->getHtml();
-    $resultList = $databaseResult->getTournamentYearsPlayed(null);
+    $params = array(null, false);
+    $resultList = $databaseResult->getSeason($params);
     if (0 < count($resultList)) {
       $ctr = 0;
       while ($ctr < count($resultList)) {
-        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $year == $resultList[$ctr] ? $resultList[$ctr] : "", null, $resultList[$ctr], $resultList[$ctr]);
+        $seasonText = $resultList[$ctr]->getDescription() . " (" . $resultList[$ctr]->getStartDate()->getDisplayFormat() . " - " . $resultList[$ctr]->getEndDate()->getDisplayFormat() . ")";
+        $seasonValue = $resultList[$ctr]->getId() . "::" . $resultList[$ctr]->getStartDate()->getDatabaseFormat() . "::" . $resultList[$ctr]->getEndDate()->getDatabaseFormat();
+        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $year == $resultList[$ctr]->getStartDate()->getYearFormat() || $year == $resultList[$ctr]->getEndDate()->getYearFormat() ? $seasonValue : "", null, $seasonText, $seasonValue);
         $output .= $option->getHtml();
-        $ctr ++;
+        $ctr++;
       }
     }
     $output .= "</select>\n";
+    $hiddenSeasonStartDate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SEASON_START_DATE_FIELD_NAME, null, SEASON_START_DATE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $seasonStartDate, null);
+    $output .= $hiddenSeasonStartDate->getHtml();
+    $hiddenSeasonEndDate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SEASON_END_DATE_FIELD_NAME, null, SEASON_END_DATE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $seasonEndDate, null);
+    $output .= $hiddenSeasonEndDate->getHtml();
     $output .= "</div>\n";
   }
-    $htmlTable = new HtmlTable($caption, $classNames, $colSpan, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $delimiter, $foreignKeys, $headerRow, $hiddenAdditional, $hiddenId, $hideColIndexes, $html, null, null, $showNote, $query, $selectedColumnVals, str_replace(" ", "", ucwords($title)), $width);
-    $outputTable = $htmlTable->getHtml();
+  $htmlTable = new HtmlTable($caption, $classNames, $colSpan, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $delimiter, $foreignKeys, $headerRow, $hiddenAdditional, $hiddenId, $hideColIndexes, $html, null, null, $showNote, $query, $selectedColumnVals, str_replace(" ", "", ucwords($title)), $width);
+  $outputTable = $htmlTable->getHtml();
   if (REPORT_ID_TOURNAMENT_RESULTS == $reportId && $outputTable == "") {
     $output .= "<br>No results because not yet entered/played";
   } else {

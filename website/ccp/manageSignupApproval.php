@@ -1,38 +1,32 @@
 <?php
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\Email;
 use ccp\classes\model\FormControl;
-use ccp\classes\model\User;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("APPROVE_FIELD_NAME", "approve");
 define("REJECT_FIELD_NAME", "reject");
 define("SAVE_FIELD_NAME", "save");
 define("SAVE_TEXT", "Save");
-$output = "";
-$mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : "";
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
-if (Constant::$MODE_SAVE_PREFIX == $mode) {
+if (Constant::$MODE_SAVE_VIEW == $mode) {
   $user = array();
   $emailAddress = array();
   $approval = array();
   $rejection = array();
-  print_r($_POST);
   foreach ($_POST as $key => $value) {
     $userId = count(explode("_", $key)) > 1 ? explode("_", $key)[1] : "";
-    if (strpos($key, 'user') !== false) {
+    if (strpos($key, 'user_') !== false) {
       $user[$userId] = $value;
-    } else if (strpos($key, 'email') !== false) {
+    } else if (strpos($key, 'email_') !== false) {
       $emailAddress[$userId] = $value;
-    } else if (strpos($key, 'approveUser') !== false) {
+    } else if (strpos($key, 'approveUser_') !== false) {
       $approval[$userId] = $user[$userId];
-    } else if (strpos($key, 'rejectUser') !== false) {
+    } else if (strpos($key, 'rejectUser_') !== false) {
       $rejection[$userId] = $user[$userId];
     }
   }
+  $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
   // update approval date or rejection date and set active flag
   $params = array();
   //id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
@@ -41,19 +35,20 @@ if (Constant::$MODE_SAVE_PREFIX == $mode) {
     $params[8] = "CURRENT_TIMESTAMP";
     $params[9] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
-    $output .= "<span id=\"messages\">Successfully approved " . $value . "</span>\n";
+    $output .= "  aryMessages.push(\"Successfully approved " . $value . "\");\n";
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
-    $output .= $email->sendApprovedEmail();
+    $output .= "  aryMessages.push(\"" . $email->sendApprovedEmail() . "\");\n";
   }
   foreach ($rejection as $key => $value) {
     $params[0] = $key;
     $params[10] = "CURRENT_TIMESTAMP";
     $params[11] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
-    $output .= (! empty($output) ? "<br />\n" : "") . "<span id=\"messages\">Successfully rejected " . $value . "</span>\n";
+    $output .= "  aryMessages.push(\"Successfully rejected " . $value . "\");\n";
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
-    $output .= $email->sendRejectedEmail();
+    $output .= "  aryMessages.push(\"" . $email->sendRejectedEmail() . "\");\n";
   }
+  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 }
 $query = $databaseResult->getUsersForApproval();
 $result = $databaseResult->getConnection()->query($query);
@@ -97,7 +92,6 @@ if (0 < $result->rowCount()) {
   $output .= "<br />\nNo users require approval";
 }
 $smarty->assign("title", "Chip Chair and a Prayer User Approval");
-// $smarty->assign("script", "<script src=\"scripts/manageSignupApproval.js\" type=\"text/javascript\"></script>");
 $style =
   "<style type=\"text/css\">\n" .
   "div.label, div.input {\n" .

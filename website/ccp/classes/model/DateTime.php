@@ -5,9 +5,7 @@ use DateTimeZone;
 
 class DateTime extends Base {
   public static $YEAR_FIRST_SEASON = 2005;
-//   public static $DATE_START_SEASON = "-01-01";
-//   public static $DATE_END_SEASON   = "-11-30";
-  private static $DATE_FORMAT_CURRENT_YEAR = "Y";
+  private static $DATE_FORMAT_YEAR = "Y";
   private static $DATE_FORMAT_DATABASE_DEFAULT = "Y-m-d";
   private static $DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT = "Y-m-d H:i:s";
   private static $DATE_FORMAT_DISPLAY_DEFAULT = "M d, Y";
@@ -15,6 +13,7 @@ class DateTime extends Base {
   private static $DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
   private static $DATE_FORMAT_PICKER_DISPLAY_DEFAULT = "m/d/Y";
   private static $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT = "m/d/Y H:i";
+  private static $DATE_FORMAT_TIME_DISPLAY_DEFAULT = "M d, Y h:i A";
   private static $TIME_FORMAT_DATABASE_DEFAULT = "H:i:s";
   private static $TIME_FORMAT_DISPLAY_AMPM = "H:i";
   private static $TIME_FORMAT_NOW = "Ymd H:i:s";
@@ -36,10 +35,6 @@ class DateTime extends Base {
       $time = $temp->format(self::$TIME_FORMAT_NOW);
     }
     $this->time = null == $time ? null : new \DateTime($time, $this->timeZone);
-  }
-
-  public function getCurrentYearFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_CURRENT_YEAR);
   }
 
   public function getDatabaseFormat() {
@@ -82,12 +77,20 @@ class DateTime extends Base {
     return null == $this->time ? null :  $this->time->format(self::$DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN);
   }
 
+  public function getDisplayTimeFormat() {
+    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_TIME_DISPLAY_DEFAULT);
+  }
+
   public function getTime() {
     return $this->time;
   }
 
   public function getTimeZone() {
     return $this->timeZone;
+  }
+
+  public function getYearFormat() {
+    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_YEAR);
   }
 
   public function setTime($time) {

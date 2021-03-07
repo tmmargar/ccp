@@ -17,55 +17,21 @@ define("TOURNAMENT_PLACE_FIELD_NAME", "tournamentPlace");
 define("TOURNAMENT_KNOCKOUT_BY_FIELD_NAME", "tournamentKnockoutBy");
 define("TOURNAMENT_PLAYER_NAME_FIELD_NAME", "tournamentPlayerName");
 define("TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME", "tournamentKnockoutByName");
-define("DEFAULT_VALUE_TOURNAMENT_PLAYER_ID", "");
-$smarty->assign("title", "Chip Chair and a Prayer Manage Results During");
-$smarty->assign("script", "<script src=\"scripts/manageResultsDuring.js\" type=\"text/javascript\"></script>\n");
+$smarty->assign("title", "Manage Results During");
 $smarty->assign("heading", "Manage Results During");
-$smarty->assign("style", "");
-$mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
-$smarty->assign("mode", $mode);
-$smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
-$smarty->assign("formName", "frmManageResultsDuring");
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-$output = "";
 if ($mode == Constant::$MODE_SAVE_VIEW) {
-  if (isset($_POST[TOURNAMENT_ID_FIELD_NAME])) {
-    $tournamentId = $_POST[TOURNAMENT_ID_FIELD_NAME];
-  }
-  if (isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME])) {
-    $playerId = $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME];
-  }
-  if (isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"])) {
-    $playerIdTemp = $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"];
-  }
-  if (isset($_POST[TOURNAMENT_PLACE_FIELD_NAME])) {
-    $place = $_POST[TOURNAMENT_PLACE_FIELD_NAME];
-  }
-  if (isset($_POST[TOURNAMENT_KNOCKOUT_BY_FIELD_NAME])) {
-    $knockoutId = $_POST[TOURNAMENT_KNOCKOUT_BY_FIELD_NAME];
-  }
-  if (isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME])) {
-    $playerName = $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME];
-  }
-  if (isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"])) {
-    $playerNameTemp = $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"];
-  }
-  if (isset($_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME])) {
-    $knockoutName = $_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME];
-  }
-  if (isset($_POST["bountyA"])) {
-    $bountyA = $_POST["bountyA"];
-  }
-  if (isset($_POST["bountyAName"])) {
-    $bountyAName = $_POST["bountyAName"];
-  }
-  if (isset($_POST["bountyB"])) {
-    $bountyB = $_POST["bountyB"];
-  }
-  if (isset($_POST["bountyBName"])) {
-    $bountyBName = $_POST["bountyBName"];
-  }
-  $output .= "<span id=\"mode\">\n<strong>\n";
+  $tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $playerId = isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $playerIdTemp = isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"]) ? $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"] : DEFAULT_VALUE_BLANK;
+  $place = isset($_POST[TOURNAMENT_PLACE_FIELD_NAME]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $knockoutId = isset($_POST[TOURNAMENT_KNOCKOUT_BY_FIELD_NAME]) ? $_POST[TOURNAMENT_KNOCKOUT_BY_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $playerName = isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME]) ? $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $playerNameTemp = isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"]) ? $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"] : DEFAULT_VALUE_BLANK;
+  $knockoutName = isset($_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME]) ? $_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+  $bountyA = isset($_POST["bountyA"]) ? $_POST["bountyA"] : null;
+  $bountyAName = isset($_POST["bountyAName"]) ? $_POST["bountyAName"] : null;
+  $bountyB = isset($_POST["bountyB"]) ? $_POST["bountyB"] : null;
+  $bountyBName = isset($_POST["bountyBName"]) ? $_POST["bountyBName"] : null;
   if (isset($bountyA)) {
     $params = array($tournamentId, 1, $bountyA);
     $databaseResult->insertTournamentBounty($params);
@@ -86,7 +52,7 @@ if ($mode == Constant::$MODE_SAVE_VIEW) {
     if (2 == $place) {
       $params = array(Constant::$CODE_STATUS_FINISHED, 1, "null", $tournamentId, $playerIdTemp);
       $databaseResult->updateResultDuring($params);
-      $output .= " and " . $playerNameTemp . " finished #1";
+      $output .= " <br /> " . $playerNameTemp . " finished #1";
     }
   }
   $output .= "</strong>\n</span>\n<br />\n";
@@ -124,16 +90,6 @@ if (count($resultList) > 0) {
     $output .= "    <div style=\"float: left; width: 150px;\">Last player entered:</div>\n";
     $output .= "    <div style=\"float: left;\">" . ($place > 0 ? $lastEnteredName : "None") . "</div>\n";
     $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    // $params = array($tournamentId);
-    // $resultList5 = $databaseResult->getTournamentBountyByTournamentId($params);
-    // if (count($resultList5) > 0) {
-    // $bountyPlayerName = $resultList5[0]->getUser()->getName();
-    // }
-    // if ($bountyPlayerName == "N/A") {
-    // $endDateTemp = clone($resultList[1]);
-    // $endDateTemp->modify('-1 day');
-    // $output .= buildBounties($mode, $databaseResult, $startDate, $endDateTemp, $tournamentId, "");
-    // } else {
     $totalPlayers = $resultList[4];
     if ($place == 0) {
       $place = $totalPlayers;
@@ -156,7 +112,7 @@ if (count($resultList) > 0) {
       $output .= "    <div style=\"float: left;\">\n";
       $selectPlayer = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PLAYER_ID, null, false, TOURNAMENT_PLAYER_ID_FIELD_NAME, false, TOURNAMENT_PLAYER_ID_FIELD_NAME, null, false, 1, null, null);
       $output .= $selectPlayer->getHtml();
-      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, DEFAULT_VALUE_TOURNAMENT_PLAYER_ID, null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_PLAYER_ID);
+      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, DEFAULT_VALUE_BLANK, null, Constant::$TEXT_NONE, DEFAULT_VALUE_BLANK);
       $output .= $option->getHtml();
       $index = 0;
       while ($index < count($aryPlayerInfo)) {
@@ -171,7 +127,7 @@ if (count($resultList) > 0) {
       $output .= "    <div style=\"float: left;\">\n";
       $selectPlayer = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_KNOCKOUT_ID, null, false, TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, false, TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, null, false, 1, null, null);
       $output .= $selectPlayer->getHtml();
-      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, DEFAULT_VALUE_TOURNAMENT_PLAYER_ID, null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_PLAYER_ID);
+      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, DEFAULT_VALUE_BLANK, null, Constant::$TEXT_NONE, DEFAULT_VALUE_BLANK);
       $output .= $option->getHtml();
       $index = 0;
       while ($index < count($aryPlayerInfo)) {
@@ -204,6 +160,8 @@ if (count($resultList) > 0) {
     $output .= $hiddenMode->getHtml();
     $hiddenTournamentId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_ID_FIELD_NAME, null, TOURNAMENT_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $tournamentId, null);
     $output .= $hiddenTournamentId->getHtml();
+  } else {
+    $output .= "No tournaments found without results for today\n";
   }
 } else {
   $output .= "No tournaments found with paid buyins for today\n";

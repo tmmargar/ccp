@@ -1,180 +1,42 @@
+"use strict";
 $(document).ready(function() {
-  inputLocal.setDefaults();
-  inputLocal.initialValidation();
-  inputLocal.postProcessing();
   inputLocal.rebuildTableForDialog("Nemesis");
   inputLocal.rebuildTableForDialog("Bully");
   inputLocal.rebuildTableForDialog("LocationsHosted");
   inputLocal.initializeDataTable();
 });
-var inputLocal = {
+const inputLocal = {
   initializeDataTable : function() {
     $(".reportId").each(function(index) {
-      var reportId = $(this).val();
+      const reportId = $(this).val();
       if ("pointsTotalForSeason" == reportId || "pointsAverageForSeason" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "type" : "name",
-            "width": "70%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "30%"
-          }],
-          "order" : [ [ 1, "desc"], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
       } else if ("earningsTotalForSeason" == reportId || "earningsAverageForSeason" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "type" : "name",
-            "width": "70%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "type" : "currency",
-            "width": "30%"
-          }],
-          "order" : [ [ 1, "desc"], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency", "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
       } else if ("knockoutsTotalForSeason" == reportId || "knockoutsAverageForSeason" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "type" : "name",
-            "width": "75%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "25%"
-          }],
-          "order" : [ [ 1, "desc"], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "75%" }, { "orderSequence": [ "desc", "asc" ], "width": "25%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
       } else if ("winnersForSeason" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "type" : "name",
-            "width": "70%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "30%"
-          }],
-          "order" : [ [ 1, "desc"], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
       } else if ("finishesForUser" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "width": "30%"
-          }, {
-            "orderSequence": [ "desc", "asc" ], "width": "40%"
-          }, {
-            "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%"
-          }],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%" }], [], false);
       } else if ("tournamentsPlayedByTypeForUser" == reportId) {
-        $("#dataTbl" + input.ucwords(reportId)).DataTable({
-          "autoWidth": false,
-          "columns" : [{
-            "width": "25%"
-          }, {
-            "width": "25%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "17%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "18%"
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "width": "15%"
-          }],
-          "order" : [ [4, "desc" ], [1, "asc" ], [0, "asc" ], [2, "desc" ], [3, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "25%" }, { "width": "25%" }, { "orderSequence": [ "desc", "asc" ], "width": "17%" }, { "orderSequence": [ "desc", "asc" ], "width": "18%" }, { "orderSequence": [ "desc", "asc" ], "width": "15%" }], [ [4, "desc" ], [1, "asc" ], [0, "asc" ], [2, "desc" ], [3, "asc" ] ], false);
       } else if ("nemesisForUser" == reportId) {
-        //$("#dataTblNemesis").DataTable({
-        $("table[id*='Nemesis']").DataTable({
-          "columns" : [{
-            "type" : "name",
-          }, {
-            "orderSequence": [ "desc", "asc" ], 
-            "type" : "number"
-          }],
-          "info": false,
-          "order" : [ [1, "desc" ], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTblNemesis", [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false);
       } else if ("bullyForUser" == reportId) {
-        //$("#dataTblBully").DataTable({
-        $("table[id*='Bully']").DataTable({
-          "columns" : [{
-            "type" : "name",
-          }, {
-            "orderSequence": [ "desc", "asc" ],
-            "type" : "number"
-          }],
-          "info": false,
-          "order" : [ [1, "desc" ], [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize("dataTblBully", [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false);
       }
     });
     $("table[id^='dataTblRank']").each(function(index) {
-      var tableId = $(this).prop("id");
+      const tableId = $(this).prop("id");
       if ("dataTblRankTournamentsPlayed" == tableId) {
-        $(this).DataTable({
-          "columns" : [null, {
-            "type" : "name",
-          }, {
-            "orderSequence": [ "desc", "asc" ], 
-            "type" : "number"
-          }],
-          "order" : [ [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [0, "asc" ] ], false, false, "");
       } else {
-        var reportId = $($(this).parents()[0]).siblings(".reportId").val();
-        $(this).DataTable({
-          "columns" : [null, {
-            "type" : "name",
-          }, {
-            "orderSequence": [ "desc", "asc" ], 
-            "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number"
-          }, {
-            "orderSequence": [ "desc", "asc" ], 
-            "type" : "number"
-          }],
-          "order" : [ [0, "asc" ] ],
-          "paging": false,
-          "scrollCollapse": true,
-          "searching": false
-        });
+        const reportId = $(this).siblings(".reportId").val();
+        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number" }, { "orderSequence": [ "desc", "asc" ],  "type" : "number" }], [ [0, "asc" ] ], false, false, "");
       }
     });
-    var previousValue = "";
+    let previousValue = "";
     // for ranking tables only
     $("table[id^='dataTblRank'] tr td:first-child").each(function(index) {
       // if values matches previous then do not show rank since same as previous row
@@ -185,20 +47,15 @@ var inputLocal = {
       }
     });
   },
-  setDefaults : function() {
-  },
-  initialValidation : function() {
-  },
-  postProcessing : function() {
-  },
   rebuildTableForDialog : function(name) {
-    if ($.getQueryStringByName("navigation") != "Y") {
+    const queryString = new URLSearchParams(window.location.search);
+    if (queryString.get("navigation") != "Y") {
       // if dialog exists
       if ($("#dialog" + name).length > 0) {
         // header row + 5 data rows
         if ($("#dataTbl" + name + " tr").length > 6) {
           // clone table and change id
-          var table = $("#dataTbl" + name).clone();
+          const table = $("#dataTbl" + name).clone();
           table.attr("id", "dataTblAll" + name);
           table.attr("width", "100%");
           table.css("width", "100%");
@@ -223,12 +80,12 @@ var inputLocal = {
   },
   // position is [100,100]
   showFullList : function(title, height, width, positionParent) {
-    var re = /\s/gi;
+    const re = /\s/gi;
     input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   resetDialog : function(title) {
-    var re = /\s/gi;
-    var objTable = $("#dataTblRank" + title.replace(re, "")).DataTable();
+    const re = /\s/gi;
+    const objTable = $("#dataTblRank" + title.replace(re, "")).DataTable();
     objTable.order([[0,"asc"]]).draw();
   }
 };

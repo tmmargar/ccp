@@ -8,6 +8,7 @@ use DateInterval;
 require_once "init.php";
 define("LIMIT_COUNT_PARAMETER_NAME", "limitCount");
 $smarty->assign("title", "Chip Chair and a Prayer Events");
+$smarty->assign("heading", "");
 if (! isset($limitCount)) {
   $limitCount = (isset($_POST[LIMIT_COUNT_PARAMETER_NAME]) ? $_POST[LIMIT_COUNT_PARAMETER_NAME] : isset($_GET[LIMIT_COUNT_PARAMETER_NAME])) ? $_GET[LIMIT_COUNT_PARAMETER_NAME] : null;
 }

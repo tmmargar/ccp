@@ -1,0 +1,17 @@
+<html>
+<head>
+<link href="css/flatpickr.min.css" rel="stylesheet" type="text/css">
+<script src="scripts/jquery/jquery.js" type="text/javascript"></script>
+<script src="scripts/jquery/flatpickr.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".dateTime").flatpickr({appendTo: document.getElementById("wrapper"), dateFormat: "m/d/Y h:i K", disable: [function(date) {return (date.getDay() === 0 || date.getDay() === 1 || date.getDay() === 2 || date.getDay() === 3 || date.getDay() === 4 || date.getDay() === 5)}], enableTime: true});
+});
+</script>
+</head>
+<body>
+<div id="wrapper" style="height: 300px;">
+<input class="dateTime" type="text" />
+</div>
+</body>
+</html>

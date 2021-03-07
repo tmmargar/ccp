@@ -17,12 +17,13 @@ if (Constant::$MODE_EMAIL == $mode) {
   $to = isset($_POST[TO_FIELD_NAME]) ? $_POST[TO_FIELD_NAME] : "";
   $subject = isset($_POST[SUBJECT_FIELD_NAME]) ? $_POST[SUBJECT_FIELD_NAME] : "";
   $body = isset($_POST[BODY_FIELD_NAME]) ? $_POST[BODY_FIELD_NAME] : "";
+  $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
   foreach ($to as $toEach) {
     $toArray = explode(":", $toEach);
-    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::EMAIL_STAFF()), array(Constant::NAME_STAFF), array($toArray[0]), array($toArray[1]), null, null, null, null, $subject, $body);
-    $output .= $email->sendEmail();
+    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($toArray[0]), array($toArray[1]), null, null, null, null, $subject, $body);
+    $output .= "  aryMessages.push(\"" . $email->sendEmail() . "\");\n";
   }
-//   $output .= "<span class=\"messages\">Successfully sent emails to " . count($to) . "</span>\n";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 }
 $smarty->assign("title", "Chip Chair and a Prayer Email");
 $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
@@ -81,6 +82,8 @@ $output .= " <div class=\"label\">&nbsp;</div>\n";
 $output .= " <div class=\"input\">\n";
 $buttonEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_EMAIL, null, false, null, null, null, false, EMAIL_FIELD_NAME, null, EMAIL_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, ucwords(EMAIL_FIELD_NAME), null);
 $output .= $buttonEmail->getHtml();
+$buttonReset = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RESET, null, false, null, null, null, false, Constant::$TEXT_RESET, null, Constant::$TEXT_RESET, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_RESET, Constant::$TEXT_RESET, null);
+$output .= $buttonReset->getHtml();
 $output .= " </div>\n";
 $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
 $output .= $hiddenMode->getHtml();

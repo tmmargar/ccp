@@ -52,6 +52,7 @@ class Constant {
   public static $ACCESSKEY_RESET                       = "r";
   public static $ACCESSKEY_REMOVE_ROW                  = "m";
   public static $ACCESSKEY_SAVE                        = "s";
+  public static $ACCESSKEY_SEASON                      = "s";
   public static $ACCESSKEY_SIGN_UP                     = "s";
   public static $ACCESSKEY_SPECIAL_TYPE                = "s";
   public static $ACCESSKEY_START_TIME                  = "s";
@@ -63,7 +64,6 @@ class Constant {
   public static $ACCESSKEY_UNREGISTER                  = "u";
   public static $ACCESSKEY_USERNAME                    = "u";
   public static $ACCESSKEY_VIEW                        = "v";
-  public static $ACCESSKEY_YEAR                        = "y";
   public static $ACCESSKEY_ZIP                         = "z";
   public static $CODE_STATUS_FINISHED                  = "F";
   public static $CODE_STATUS_PAID                      ="P";

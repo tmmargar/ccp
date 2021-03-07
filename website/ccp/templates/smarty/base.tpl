@@ -19,9 +19,10 @@
  <script src="scripts/jquery/jquery-ui.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery-migrate.js"></script>
  <script src="scripts/jquery/datatables.js" type="text/javascript"></script>
- <script src="scripts/jquery/jquery.datetimepicker.full.min.js" type="text/javascript"></script>
+ <script src="scripts/jquery/jquery.datetimepicker.full.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery.smartmenus.js" type="text/javascript"></script>
  <script src="scripts/scripts.js" type="text/javascript"></script>
+ <script src="scripts/dataTablesLocal.js" type="text/javascript"></script>
  <script src="scripts/urlSearchParams.js" type="text/javascript"></script>
  {block name=script}{/block}
 </head>
@@ -31,6 +32,11 @@
   {block name=contentTop}{$contentTop}{/block}
  </div>
  <div id="content">
+  <h1>{$heading}</h1>
+  <div class="hide" id="info">
+   <div class="hide" id="errors"></div>
+   <div class="hide" id="messages"></div>
+  </div>
   {block name=content}{$content}{/block}
  </div>
  {block name=footer}<footer class="footer"><a href="changeLog.php">Change Log</a></footer>{/block}
