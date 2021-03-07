@@ -212,20 +212,6 @@ const input = {
     // check all inputs starting with same name
     $("#" + inputId).prop("checked", checked);
   },
-  setFormValues : function(aryName, aryValue) {
-    if (aryName) {
-      for (let x = 0; x < aryName.length; x++) {
-        const obj = $("#" + aryName[x]);
-        if (obj.length > 0) {
-          if ("checkbox" == obj.attr("type")) {
-            obj.prop("checked", aryValue[x]);
-          } else {
-            obj.val(aryValue[x]);
-          }
-        }
-      }
-    }
-  },
   changeState : function(checkId, aryChangeId) {
     const objCheck = $("#" + checkId);
     //for (let index=0; index < aryChangeId.length; index++) {
