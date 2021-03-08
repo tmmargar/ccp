@@ -11,6 +11,9 @@ const inputLocal = {
     const idTemp = id.split("::")[0];
     return $("#groupId_" + idTemp).val().length == 0 || $("#payoutId_" + idTemp).val().length == 0;
   },
+  initializeDataTable : function() {
+    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "searchable": false, "visible": false }], [[ 1, "asc" ], [ 3, "asc" ]]);
+  },
   setIds : function(selectedRow) {
     const htmlGroup = $(selectedRow).children("td:eq(0)").html();
     let positionStart = htmlGroup.indexOf("groupId=");
@@ -20,8 +23,8 @@ const inputLocal = {
     const payoutId = htmlPayout.substring(positionStart + 9, htmlPayout.indexOf("&", positionStart));
     return groupId + "::" + payoutId;
   },
-  initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "searchable": false, "visible": false }], [[ 1, "asc" ], [ 3, "asc" ]]);
+  tableRowClick : function(obj) {
+    $(obj).removeClass("selected");
   },
   validate : function() {
     input.validateLength($("#groupId_"), 1, false);

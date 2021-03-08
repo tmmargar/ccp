@@ -2,7 +2,6 @@
 $(document).ready(function() {
   reportsInputLocal.initializeDataTable();
 });
-//$(document).on("change", "#year", function(event) {
 $(document).on("change", "#season", function(event) {
   const queryString = new URLSearchParams(window.location.search);
   let action = [];

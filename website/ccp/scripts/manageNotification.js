@@ -14,14 +14,14 @@ const inputLocal = {
   enableSave : function(id) {
     return (($("#notificationDescription_" + id).val() == "") || ($("#notificationStartDate_" + id).val().length == 0) || ($("#notificationEndDate_" + id).val().length == 0) || maskDateTime == $("#notificationStartDate_" + id).val() || maskDateTime == $("#notificationEndDate_" + id).val());
   },
-  setIds : function(selectedRow) {
-    return $(selectedRow).children("td").first().html();
-  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "width": "50%" }, { "width": "20%" }, { "width": "20%" }, { "orderable": false, "visible": false }], [[2, "desc"], [3, "desc"]]);
   },
   setDefaults : function() {
     input.initializeTimePicker();
+  },
+  setIds : function(selectedRow) {
+    return $(selectedRow).children("td").first().html();
   },
   validate : function() {
     input.validateLength($("input[id^='notificationDescription_']"), 1, false);

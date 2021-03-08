@@ -10,11 +10,7 @@ $(document).on("click", "#login", function(event) {
 });
 const inputLocal = {
   enableLogin : function() {
-    if (($("#username").val().length == 0) || ($("#password").val().length == 0)) {
-      $("#login").prop("disabled", true);
-    } else {
-      $("#login").prop("disabled", false);
-    }
+    $("#login").prop("disabled", $("#username").val().length == 0 || $("#password").val().length == 0);
   },
   validate : function() {
     input.validateLength($("#username"), 1, false);

@@ -17,6 +17,15 @@ $(document).on("click", "#register", function(event) {
   }
 });
 const inputLocal = {
+  initializeDataTable : function() {
+    dataTable.initialize("dataTbl", [{ "type" : "name" }, null, { "type" : "registerOrder" }, {"searchable": false, "visible": false } ], [ [ 1, "desc" ], [ 2, "asc" ], [ 0, "asc" ] ]);
+  },
+  postProcessing : function() {
+    input.enableView();
+  },
+  setDefaults : function() {
+    input.insertSelectedAfter("Tournament", "tournamentId", "view");
+  },
   setPlayerIds : function() {
     let playerIds = "";
     let statuses = "";
@@ -28,15 +37,6 @@ const inputLocal = {
     }
     $("#ids").val(playerIds.substring(0, playerIds.length - 2));
     $("#tournamentPlayerStatus").val(statuses.substring(0, statuses.length - 2));
-  },
-  initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "type" : "name" }, null, { "type" : "registerOrder" }, {"searchable": false, "visible": false } ], [ [ 1, "desc" ], [ 2, "asc" ], [ 0, "asc" ] ]);
-  },
-  setDefaults : function() {
-    input.insertSelectedAfter("Tournament", "tournamentId", "view");
-  },
-  postProcessing : function() {
-    input.enableView();
   },
   tableRowClick : function(row, selected) {
     if (!selected) {

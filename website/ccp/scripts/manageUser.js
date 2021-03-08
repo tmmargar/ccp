@@ -10,11 +10,15 @@ const inputLocal = {
   enableSave : function(id) {
   	return ($("#firstName_" + id).val().length == 0) || ($("#lastName_" + id).val().length == 0) || ($("#username_" + id).val().length == 0) || ($("#mode").val() == "create" && $("#password_" + id).val().length == 0) || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email_" + id).val()));
   },
-  setIds : function(selectedRow) {
-    return $(selectedRow).children("td").first().html();
-  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "4%" }, { "type" : "name", "width" : "11%" }, { "width" : "10%" }, { "width" : "15%" }, { "width" : "4%" }, { "width" : "8%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "4%" }, { "searchable": false, "visible": false }], [ [ 10, "desc" ], [ 1, "asc" ] ], false, false, "375px");
+  },
+  postProcessing : function() {
+    dataTable.displayHighlight("dataTbl", 4);
+    dataTable.displayActive("dataTbl", 10);
+  },
+  setIds : function(selectedRow) {
+    return $(selectedRow).children("td").first().html();
   },
   validate : function() {
     input.validateLength($("#firstName_"), 1, false);
@@ -22,9 +26,5 @@ const inputLocal = {
     input.validateLength($("#username_"), 1, false);
     input.validateLength($("#password_"), 1, false);
     input.validateLength($("#email_"), 1, false);
-  },
-  postProcessing : function() {
-  	dataTable.displayHighlight("dataTbl", 4);
-    dataTable.displayActive("dataTbl", 10);
   }
 };
