@@ -73,14 +73,6 @@ $(document).on("change", "#tournamentKnockoutBy", function(event) {
   inputLocal.enableButtons();
 });
 const inputLocal = {
-  enableButtons : function() {
-    $("#save").prop("disabled", ($("#bountyA").length > 0 && (($("#bountyA").val() == "") || ($("#bountyB").val() == ""))) || ($("#tournamentPlayerId").length > 0 && (($("#tournamentPlayerId").val() == "") || ($("#tournamentKnockoutBy").val() == ""))));
-  },
-  validate : function() {
-    input.validateLength($("#tournamentPlayerId"), 1, false);
-    input.validateLength($("#tournamentKnockoutBy"), 1, false);
-    inputLocal.enableButtons();
-  },
   customValidation : function(e) {
     $("#bountyAName").val($("#bountyA :selected").text());
     $("#bountyBName").val($("#bountyB :selected").text());
@@ -95,11 +87,19 @@ const inputLocal = {
     }
     $("#mode").val("save" + $("#mode").val());
   },
+  enableButtons : function() {
+    $("#save").prop("disabled", ($("#bountyA").length > 0 && (($("#bountyA").val() == "") || ($("#bountyB").val() == ""))) || ($("#tournamentPlayerId").length > 0 && (($("#tournamentPlayerId").val() == "") || ($("#tournamentKnockoutBy").val() == ""))));
+  },
   reset : function() {
     $("#tournamentKnockoutBy option").each(function(index2) {
       $(this).prop("disabled", false);
     });
     $("#tournamentPlayerId").val("");
     $("#tournamentKnockoutBy").val("");
+  },
+  validate : function() {
+    input.validateLength($("#tournamentPlayerId"), 1, false);
+    input.validateLength($("#tournamentKnockoutBy"), 1, false);
+    inputLocal.enableButtons();
   }
 };

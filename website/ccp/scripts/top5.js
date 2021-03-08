@@ -18,13 +18,13 @@ const inputLocal = {
       } else if ("winnersForSeason" == reportId) {
         dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
       } else if ("finishesForUser" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%" }], [], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%" }], [], false, false, "200px");
       } else if ("tournamentsPlayedByTypeForUser" == reportId) {
         dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "25%" }, { "width": "25%" }, { "orderSequence": [ "desc", "asc" ], "width": "17%" }, { "orderSequence": [ "desc", "asc" ], "width": "18%" }, { "orderSequence": [ "desc", "asc" ], "width": "15%" }], [ [4, "desc" ], [1, "asc" ], [0, "asc" ], [2, "desc" ], [3, "asc" ] ], false);
       } else if ("nemesisForUser" == reportId) {
-        dataTable.initialize("dataTblNemesis", [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false);
+        dataTable.initializeBySelector("table[id*='Nemesis']", [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "");
       } else if ("bullyForUser" == reportId) {
-        dataTable.initialize("dataTblBully", [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false);
+        dataTable.initializeBySelector("table[id*='Bully']", [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "");
       }
     });
     $("table[id^='dataTblRank']").each(function(index) {
@@ -69,8 +69,15 @@ const inputLocal = {
       }
     }
   },
-  showFullListNemesis : function(title, positionParent) {
-    input.showDialog("Nemesis", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
+  resetDialog : function(title) {
+    const re = /\s/gi;
+    const objTable = $("#dataTblRank" + title.replace(re, "")).DataTable();
+    objTable.order([[0,"asc"]]).draw();
+  },
+  // position is [100,100]
+  showFullList : function(title, height, width, positionParent) {
+    const re = /\s/gi;
+    input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   showFullListBully : function(title, positionParent) {
     input.showDialog("Bully", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
@@ -78,14 +85,7 @@ const inputLocal = {
   showFullListLocationsHosted : function(title, positionParent) {
     input.showDialogWithWidth("LocationsHosted", 400, title, 650, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
-  // position is [100,100]
-  showFullList : function(title, height, width, positionParent) {
-    const re = /\s/gi;
-    input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
-  },
-  resetDialog : function(title) {
-    const re = /\s/gi;
-    const objTable = $("#dataTblRank" + title.replace(re, "")).DataTable();
-    objTable.order([[0,"asc"]]).draw();
+  showFullListNemesis : function(title, positionParent) {
+    input.showDialog("Nemesis", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   }
 };

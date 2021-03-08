@@ -10,11 +10,11 @@ const inputLocal = {
   enableSave : function(id) {
     return $("#groupName_" + id).val().length == 0;
   },
-  setIds : function(selectedRow) {
-    return $(selectedRow).children("td").first().html();
-  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "30%" }, { "width" : "70%" }, { "searchable": false, "visible": false }], [[ 1, "asc" ]]);
+  },
+  setIds : function(selectedRow) {
+    return $(selectedRow).children("td").first().html();
   },
   validate : function() {
     input.validateLength($("#groupName_"), 1, false);

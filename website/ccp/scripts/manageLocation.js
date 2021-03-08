@@ -30,11 +30,17 @@ const inputLocal = {
   enableSave : function(id) {
     return ($("#locationName_" + id).val().length == 0) || ($("#playerId_" + id).val() == "") || ($("#address_" + id).val().length == 0) || ($("#city_" + id).val().length == 0) || ($("#states_" + id).val() == "") || ($("#zipCode_" + id).val().length < 5) || ($("#phone_" + id).val().length < 10);
   },
-  setIds : function(selectedRow) {
-    return $(selectedRow).children("td").first().html();
-  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{"orderSequence": [ "desc", "asc" ], "width" : "2%" }, { "type" : "locationName", "width" : "19%" }, { "type" : "host", "width" : "15%" }, { "searchable": false, "type" : "address", "width" : "21%" }, { "searchable": false, "width" : "11%" }, { "searchable": false, "width" : "5%" }, { "searchable": false, "width" : "4%" }, { "render" : function (data, type, row, meta) { return display.formatPhone(data); }, "width" : "9%" }, { "width" : "7%" }, { "width" : "7%" }, { "searchable": false, "visible": false }], [ [ 8, "desc" ], [ 2, "asc" ] ]);
+  },
+  postProcessing : function() {
+    dataTable.displayActive("dataTbl", 8);
+  },
+  save : function(event) {
+    $("select[id^='states_']").each(function(index) {
+      $(this).prop("disabled", false);
+    });
+    return true;
   },
   setDefaults : function() {
     if ($("#mode").val() == "create") {
@@ -44,6 +50,12 @@ const inputLocal = {
       $(this).prop("disabled", true);
     });
   },
+  setIds : function(selectedRow) {
+    return $(selectedRow).children("td").first().html();
+  },
+  tableRowClick : function(obj) {
+    $("#delete").prop("disabled", !($(obj).find("td").eq(9).text() == 0));
+  },
   validate : function() {
     input.validateLength($("#locationName_"), 1, false);
     input.validateLength($("#playerId_"), 1, false);
@@ -51,17 +63,5 @@ const inputLocal = {
     input.validateLength($("#city_"), 1, false);
     input.validateLength($("#zipCode_"), 1, false);
     input.validateLength($("#phone_"), 1, false);
-  },
-  postProcessing : function() {
-  	dataTable.displayActive("dataTbl", 8);
-  },
-  save : function(event) {
-    $("select[id^='states_']").each(function(index) {
-      $(this).prop("disabled", false);
-    });
-    return true;
-  },
-  tableRowClick : function(obj) {
-    $("#delete").prop("disabled", !($(obj).find("td").eq(9).text() == 0));
   }
 };

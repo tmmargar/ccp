@@ -22,6 +22,7 @@
  <script src="scripts/jquery/jquery.datetimepicker.full.js" type="text/javascript"></script>
  <script src="scripts/jquery/jquery.smartmenus.js" type="text/javascript"></script>
  <script src="scripts/scripts.js" type="text/javascript"></script>
+ <script src="scripts/jqueryLocal.js" type="text/javascript"></script>
  <script src="scripts/dataTablesLocal.js" type="text/javascript"></script>
  <script src="scripts/urlSearchParams.js" type="text/javascript"></script>
  {block name=script}{/block}

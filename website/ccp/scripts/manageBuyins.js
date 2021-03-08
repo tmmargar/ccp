@@ -55,11 +55,65 @@ $(document).on("click", "input[id^='bountyB_']", function(event) {
   input.countChecked("bountyB");
 });
 const inputLocal = {
+  buildData : function(objTableId, mode) {
+    const objPlayers = $("#ids");
+    const objAllPaid = $("#buyinPaid");
+    const objAllRebuy = $("#rebuyPaid");
+    const objAllRebuyCount = $("#rebuyCount");
+    const objAllAddon = $("#addonPaid");
+    const objAllBountyA = $("#bountyA");
+    const objAllBountyB = $("#bountyB");
+    objPlayers.val("");
+    objAllPaid.val("");
+    objAllRebuy.val("");
+    objAllRebuyCount.val("");
+    objAllAddon.val("");
+    objAllBountyA.val("");
+    objAllBountyB.val("");
+    // if mode is create or modify then build list of player ids for paid, rebuy, addon, bounty A and bounty B
+    if (("create" == mode) || ("modify" == mode)) {
+      // for each table row except header
+      $("#" + objTableId + " tr").slice("1").each(function(index) {
+        const aryInput = $("#dataTbl").DataTable().row(this).data();
+        for (let idx = 0; idx < aryInput.length; idx++) {
+          const playerId = $(aryInput[aryInput.length - 1]).val();
+          objAllPaid.val(objAllPaid.val() + (0 < objAllPaid.val().length ? ", " : "") + $("#buyin_" + playerId).prop("checked"));
+          objAllRebuy.val(objAllRebuy.val() + (0 < objAllRebuy.val().length ? ", " : "") + $("#rebuy_" + playerId).prop("checked"));
+          objAllRebuyCount.val(objAllRebuyCount.val() + (0 < objAllRebuyCount.val().length ? ", " : "") + $("#rebuyCount_" + playerId).val());
+          objAllAddon.val(objAllAddon.val() + (0 < objAllAddon.val().length ? ", " : "") +$("#addon_" + playerId).prop("checked"));
+          objAllBountyA.val(objAllBountyA.val() + (0 < objAllBountyA.val().length ? ", " : "") + $("#bountyA_" + playerId).prop("checked"));
+          objAllBountyB.val(objAllBountyB.val() + (0 < objAllBountyB.val().length ? ", " : "") + $("#bountyB_" + playerId).prop("checked"));
+          objPlayers.val(objPlayers.val() + (0 < objPlayers.val().length ? ", " : "") + playerId);
+        }
+      });
+    }
+    $("#mode").val(mode);
+  },
+  disableCheckboxAll : function(hasFlag, name, countNotCheckedPaid) {
+    // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
+    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
+      // if checkbox count is same as count passed in then disable check all checkbox
+      $("#" + name + "CheckAll").prop("disabled", $('input[id^="' + name + '_"]').length == countNotCheckedPaid);
+    }
+  },
+  disableCheckboxes : function(hasFlag, obj, name, id) {
+    // if need to check flag and flag is set or no need to check flag then enable/disable appropriately (rebuy flag is 0 for no rebuy, addon is blank for no addon) 
+    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
+      $("#" + name + "_" + id).prop("disabled", !$(obj).prop("checked"));
+    }
+  },
+  enableSave : function() {
+    return false;
+  }
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
   },
-  setDefaults : function() {
-    input.insertSelectedAfter("Tournament", "tournamentId", "view");
+  markCheckboxes : function(hasFlag, obj, name, id) {
+    // if need to check flag and flag is set or no need to check flag then mark checkbox and check check all checkbox appropriately
+    if ((hasFlag && $("#" + name + "Flag").val() != "0") || !hasFlag) {
+      $("#" + name + "CheckAll").prop("checked", $(obj).prop("checked"));
+      $("#" + name + "_" + id).prop("checked", $(obj).prop("checked"));
+    }
   },
   postProcessing : function() {
     let countNotCheckedPaid = 0;
@@ -103,26 +157,6 @@ const inputLocal = {
     input.countChecked("bountyA");
     input.countChecked("bountyB");
   },
-  disableCheckboxes : function(hasFlag, obj, name, id) {
-    // if need to check flag and flag is set or no need to check flag then enable/disable appropriately (rebuy flag is 0 for no rebuy, addon is blank for no addon) 
-    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
-      $("#" + name + "_" + id).prop("disabled", !$(obj).prop("checked"));
-    }
-  },
-  markCheckboxes : function(hasFlag, obj, name, id) {
-    // if need to check flag and flag is set or no need to check flag then mark checkbox and check check all checkbox appropriately
-    if ((hasFlag && $("#" + name + "Flag").val() != "0") || !hasFlag) {
-      $("#" + name + "CheckAll").prop("checked", $(obj).prop("checked"));
-      $("#" + name + "_" + id).prop("checked", $(obj).prop("checked"));
-    }
-  },
-  disableCheckboxAll : function(hasFlag, name, countNotCheckedPaid) {
-    // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
-    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
-      // if checkbox count is same as count passed in then disable check all checkbox
-      $("#" + name + "CheckAll").prop("disabled", $('input[id^="' + name + '_"]').length == countNotCheckedPaid);
-    }
-  },
   processAllCheckAll : function(countNotCheckedPaid) {
     input.toggleCheckAll("buyin");
     input.toggleCheckAll("rebuy");
@@ -133,6 +167,12 @@ const inputLocal = {
     inputLocal.disableCheckboxAll(true, "addon", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(false, "bountyA", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(false, "bountyB", countNotCheckedPaid);
+  },
+  setDefaults : function() {
+    input.insertSelectedAfter("Tournament", "tournamentId", "view");
+  },
+  tableRowClick : function(obj) {
+    $(obj).removeClass("selected");
   },
   toggleRebuy : function(checked) {
     let disabled = false;
@@ -156,45 +196,5 @@ const inputLocal = {
     if (disabled) {
       $("#" + name + "CheckAll").prop("checked", false);
     }
-  },
-  buildData : function(objTableId, mode) {
-    const objPlayers = $("#ids");
-    const objAllPaid = $("#buyinPaid");
-    const objAllRebuy = $("#rebuyPaid");
-    const objAllRebuyCount = $("#rebuyCount");
-    const objAllAddon = $("#addonPaid");
-    const objAllBountyA = $("#bountyA");
-    const objAllBountyB = $("#bountyB");
-    objPlayers.val("");
-    objAllPaid.val("");
-    objAllRebuy.val("");
-    objAllRebuyCount.val("");
-    objAllAddon.val("");
-    objAllBountyA.val("");
-    objAllBountyB.val("");
-    // if mode is create or modify then build list of player ids for paid, rebuy, addon, bounty A and bounty B
-    if (("create" == mode) || ("modify" == mode)) {
-      // for each table row except header
-      $("#" + objTableId + " tr").slice("1").each(function(index) {
-        const aryInput = $("#dataTbl").DataTable().row(this).data();
-        for (let idx = 0; idx < aryInput.length; idx++) {
-          const playerId = $(aryInput[aryInput.length - 1]).val();
-          objAllPaid.val(objAllPaid.val() + (0 < objAllPaid.val().length ? ", " : "") + $("#buyin_" + playerId).prop("checked"));
-          objAllRebuy.val(objAllRebuy.val() + (0 < objAllRebuy.val().length ? ", " : "") + $("#rebuy_" + playerId).prop("checked"));
-          objAllRebuyCount.val(objAllRebuyCount.val() + (0 < objAllRebuyCount.val().length ? ", " : "") + $("#rebuyCount_" + playerId).val());
-          objAllAddon.val(objAllAddon.val() + (0 < objAllAddon.val().length ? ", " : "") +$("#addon_" + playerId).prop("checked"));
-          objAllBountyA.val(objAllBountyA.val() + (0 < objAllBountyA.val().length ? ", " : "") + $("#bountyA_" + playerId).prop("checked"));
-          objAllBountyB.val(objAllBountyB.val() + (0 < objAllBountyB.val().length ? ", " : "") + $("#bountyB_" + playerId).prop("checked"));
-          objPlayers.val(objPlayers.val() + (0 < objPlayers.val().length ? ", " : "") + playerId);
-        }
-      });
-    }
-    $("#mode").val(mode);
-  },
-  tableRowClick : function(obj) {
-    $(obj).removeClass("selected");
-  },
-  enableSave : function() {
-    return false;
   }
 };

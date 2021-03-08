@@ -48,10 +48,10 @@ $(document).on("click", "input[id^='rejectUser_']", function(event) {
   input.countChecked("rejectUser");
 });
 const inputLocal = {
-  initializeTable : function() {
-    dataTable.initialize("dataTblSignupApproval", [ { "type" : "name" }, null, null, null, { "type" : "name" }, { "sortable": false }, { "sortable": false } ]);
-  },
   enableSave : function() {
     $("#save").prop("disabled", $("input[id^='approveUser_']:checked").length == 0 && $("input[id^='rejectUser_']:checked").length == 0);
+  },
+  initializeTable : function() {
+    dataTable.initialize("dataTblSignupApproval", [ { "type" : "name" }, null, null, null, { "type" : "name" }, { "sortable": false }, { "sortable": false } ]);
   }
 };
