@@ -12,7 +12,7 @@ $(document).on("change keyup paste", "input[id^='notificationStartDate_'], input
 });
 const inputLocal = {
   enableSave : function(id) {
-    return (($("#notificationDescription_" + id).val() == "") || ($("#notificationStartDate_" + id).val().length == 0) || ($("#notificationEndDate_" + id).val().length == 0) || maskDateTime == $("#notificationStartDate_" + id).val() || maskDateTime == $("#notificationEndDate_" + id).val());
+    return (($("#notificationDescription_" + id).val() == "") || ($("#notificationStartDate_" + id).val().length == 0) || ($("#notificationEndDate_" + id).val().length == 0) || input.maskDateTime == $("#notificationStartDate_" + id).val() || input.maskDateTime == $("#notificationEndDate_" + id).val());
   },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "width": "50%" }, { "width": "20%" }, { "width": "20%" }, { "orderable": false, "visible": false }], [[2, "desc"], [3, "desc"]]);

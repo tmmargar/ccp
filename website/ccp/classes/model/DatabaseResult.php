@@ -549,12 +549,14 @@ class DatabaseResult extends Root {
       $username = "root";
       $password = "toor";
       $port = 3308;
+      $databaseName = "chipch5_stats";
     } else {
       $username = "chipch5_app";
       $password = "app_chipch5";
       $port = 3006;
+      $databaseName = "chipch5_stats_new";
     }
-    $database = new Database($this->isDebug(), "localhost", $username, $password, "chipch5_stats", $port);
+    $database = new Database($this->isDebug(), "localhost", $username, $password, $databaseName, $port);
     return $database;
   }
   private function initializeConnection() {
