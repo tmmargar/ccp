@@ -15,7 +15,7 @@ const inputLocal = {
     return (($("#seasonDescription_" + id).val() == "") || ($("#seasonStartDate_" + id).val().length == 0) || ($("#seasonEndDate_" + id).val().length == 0));
   },
   initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "5%" }, { "width": "30%" }, { "width": "30%" }, { "width": "30%" }, { "width": "5%" }, { "orderable": false, "visible": false }], [[ 4, "desc"]], true, false, "250px");
+    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "5%" }, { "width": "30%" }, { "width": "30%" }, { "width": "30%" }, { "width": "5%" }, { "orderable": false, "visible": false }], [[4, "desc"], [2, "desc"]], true, false, "250px");
   },
   postProcessing : function() {
     dataTable.displayActive("dataTbl", 4);

@@ -40,6 +40,7 @@ $outputChange =
   "  </li>\n" .
   "  <li>Administrators ONLY\n" .
   "   <ul>\n" .
+  "    <li>Added notifications</li>\n" .
   "    <li>Added payouts</li>\n" .
   "    <li>Added seasons</li>\n" .
   "    <li>Added special types (for tournaments)</li>\n" .

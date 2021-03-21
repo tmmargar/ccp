@@ -28,8 +28,7 @@ class Security extends Base {
     }
   }
   private function loginSuccess() {
-//     $databaseResult = new DatabaseResult($this->isDebug());
-    $databaseResult = new DatabaseResult(true);
+    $databaseResult = new DatabaseResult($this->isDebug());
     $params = array($this->login->getUsername());
     $resultList = $databaseResult->getUserByUsername($params);
     if (0 < count($resultList)) {
