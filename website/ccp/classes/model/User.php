@@ -4,6 +4,7 @@ class User extends Base {
   private $firstName;
   private $lastName;
   private $email;
+  private $phone;
   private $username;
   private $password;
   private $administrator; // boolean 0 is false non 0 is true
@@ -55,6 +56,9 @@ class User extends Base {
   }
   public function getEmail() {
     return $this->email;
+  }
+  public function getPhone() {
+    return $this->phone;
   }
   public function getUsername() {
     return $this->username;
@@ -125,6 +129,10 @@ class User extends Base {
   public function setEmail($email) {
     // TODO: validate
     $this->email = $email;
+  }
+  public function setPhone($phone) {
+    // fix validation to handle leading zero
+    $this->phone = $phone;
   }
   public function setUsername($username) {
     $this->username = $username;
@@ -205,7 +213,9 @@ class User extends Base {
     $output .= $this->getLastName();
     $output .= "', email = '";
     $output .= $this->getEmail();
-    $output .= "', username = '";
+    $output .= "', phone = ";
+    $output .= $this->getPhone();
+    $output .= ", username = '";
     $output .= $this->getUsername();
     $output .= "', password = '";
     $output .= $this->getPassword();

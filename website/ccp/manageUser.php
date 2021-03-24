@@ -13,6 +13,7 @@ define("LAST_NAME_FIELD_LABEL", "Last name");
 define("USERNAME_FIELD_LABEL", "Username");
 define("PASSWORD_FIELD_LABEL", "Password");
 define("EMAIL_FIELD_LABEL", "Email");
+define("PHONE_FIELD_LABEL", "Phone");
 define("ADMINISTRATOR_FIELD_LABEL", "Administrator");
 define("ACTIVE_FIELD_LABEL", "Active");
 define("REGISTRATION_DATE_FIELD_LABEL", "Registration Date");
@@ -26,6 +27,7 @@ define("LAST_NAME_FIELD_NAME", "lastName");
 define("USERNAME_FIELD_NAME", "username");
 define("PASSWORD_FIELD_NAME", "password");
 define("EMAIL_FIELD_NAME", "email");
+define("PHONE_FIELD_NAME", "phone");
 define("ADMINISTRATOR_FIELD_NAME", "administrator");
 define("ACTIVE_FIELD_NAME", "active");
 define("REGISTRATION_DATE_FIELD_NAME", "registrationDate");
@@ -86,6 +88,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . EMAIL_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
       $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_EMAIL, null, false, null, null, null, false, EMAIL_FIELD_NAME . "_" . $id, 100, EMAIL_FIELD_NAME . "_" . $id, null, null, false, null, null, 100, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getEmail() : ""), null);
+      $output .= $textBoxName->getHtml();
+      $output .= "    </div>\n";
+      $output .= "    <div style=\"clear: both;\"></div>\n";
+      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+      $output .= "    <div style=\"float: left;\">\n     ";
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TELEPHONE, ((count($resultList) > 0) ? $resultList[$ctr]->getPhone() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -164,18 +172,19 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $username = isset($_POST[USERNAME_FIELD_NAME . "_" . $id]) ? $_POST[USERNAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $password = isset($_POST[PASSWORD_FIELD_NAME . "_" . $id]) ? $_POST[PASSWORD_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $email = isset($_POST[EMAIL_FIELD_NAME . "_" . $id]) ? $_POST[EMAIL_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? preg_replace("/[^0-9]/", "", $_POST[PHONE_FIELD_NAME . "_" . $id]) : DEFAULT_VALUE_BLANK;
     $administrator = isset($_POST[ADMINISTRATOR_FIELD_NAME . "_" . $id]) ? $_POST[ADMINISTRATOR_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_ADMINISTRATOR;
     $active = isset($_POST[ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_ACTIVE;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       // $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTime::createFromFormat(DateTimeUtility::$DATE_FORMAT_PICKER_DISPLAY_DEFAULT, "12/25/2019")), SessionUtility::getValue("userid"), null, null, "1", null, null, null, null, null, null);
 //       $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTimeUtility::createDate(null, null)), SessionUtility::getValue("userid"), null, null, $active == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, null);
       $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-      $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, isset($active) ? $active : 0, null, null, null);
+      $params = array(null, $firstName, $lastName, $username, $password, $email, $phone, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, isset($active) ? $active : 0, null, null, null);
       $databaseResult->insertUser($params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       // $userId = (isset($_POST[USER_ID_FIELD_NAME . "_" . $id])) ? $_POST[USER_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $tempUserId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $params = array($tempUserId, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, isset($active) ? $active : 0, null, null, null, null, null, null);
+      $params = array($tempUserId, $firstName, $lastName, $username, $password, $email, $phone, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, isset($active) ? $active : 0, null, null, null, null, null, null);
       $databaseResult->updateUser($params);
     }
     $ctr++;
