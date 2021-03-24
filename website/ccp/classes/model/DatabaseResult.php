@@ -2090,7 +2090,7 @@ class DatabaseResult extends Root {
         case "userSelectOneByUsername":
         case "userSelectOneByEmail":
           $query =
-            "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, u.username, u.password, u.email, u.administrator AS admin, u.registration_date AS 'Reg Date', u.approval_date AS 'App Date', u.approval_userid AS 'App User', CONCAT(ua.first_name, ' ', ua.last_name) AS 'App Name', u.rejection_date AS 'Reject Date', u.rejection_userid AS 'Reject User', CONCAT(ur.first_name, ' ', ur.last_name) AS 'Reject Name', u.active " .
+            "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, u.username, u.password, u.email, u.phone, u.administrator AS admin, u.registration_date AS 'Reg Date', u.approval_date AS 'App Date', u.approval_userid AS 'App User', CONCAT(ua.first_name, ' ', ua.last_name) AS 'App Name', u.rejection_date AS 'Reject Date', u.rejection_userid AS 'Reject User', CONCAT(ur.first_name, ' ', ur.last_name) AS 'Reject Name', u.active " .
             "FROM poker_user u " .
             "LEFT JOIN poker_user ua ON u.approval_userid = ua.id " .
             "LEFT JOIN poker_user ur ON u.rejection_userid = ur.id";
@@ -2886,14 +2886,15 @@ class DatabaseResult extends Root {
                   $user->setUsername($row[2]);
                   $user->setPassword($row[3]);
                   $user->setEmail($row[4]);
-                  $user->setAdministrator($row[5]);
-                  $user->setRegistrationDate($row[6]);
-                  $user->setApprovalDate($row[7]);
-                  $user->setApprovalUserid($row[8]);
-                  $user->setApprovalName($row[9]);
-                  $user->setRejectionDate($row[10]);
-                  $user->setRejectionUserid($row[11]);
-                  $user->setRejectionName($row[12]);
+                  $user->setPhone($row[5]);
+                  $user->setAdministrator($row[6]);
+                  $user->setRegistrationDate($row[7]);
+                  $user->setApprovalDate($row[8]);
+                  $user->setApprovalUserid($row[9]);
+                  $user->setApprovalName($row[10]);
+                  $user->setRejectionDate($row[11]);
+                  $user->setRejectionUserid($row[12]);
+                  $user->setRejectionName($row[13]);
                   $user->setActive($row[13]);
                   // $user->setResetSelector($row["reset_selector"]);
                   // $user->setResetToken($row["reset_token"]);
@@ -3158,9 +3159,9 @@ class DatabaseResult extends Root {
           break;
         case "userInsert":
 //           $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires) " .
-          $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, selector, token, expires) " .
+          $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, selector, token, expires) " .
           // "SELECT MAX(id) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', '" . password_hash($params[3], PASSWORD_DEFAULT) . "', '" . $params[4] . "', 0, CURRENT_TIMESTAMP, null, null, null, null, 0, null, null, null, null, null, null FROM poker_user";
-            "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . (isset($params[6]) ? $params[6] : "0") . ", " . (isset($params[7]) ? null : "CURRENT_TIMESTAMP") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "null") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "null") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? $params[11] : "null") . ", " . (isset($params[12]) ? $params[12] : "0") . ", " . (isset($params[13]) ? $params[13] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
+            "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . $params[6] . ", " . (isset($params[7]) ? $params[7] : "0") . ", " . (isset($params[8]) ? null : "CURRENT_TIMESTAMP") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "null") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? "'" . $params[11] . "'" : "null") . ", " . (isset($params[12]) ? $params[12] : "null") . ", " . (isset($params[13]) ? $params[13] : "0") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
           break;
       }
       if ($this->isDebug()) {
@@ -3329,7 +3330,7 @@ class DatabaseResult extends Root {
           case "userUpdate":
           $validValues = array(0, 1);
           $query = "UPDATE poker_user " .
-          // id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
+          // id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
           "SET";
           if (! empty($params[0])) {
             $query .= " id = " . $params[0];
@@ -3364,45 +3365,50 @@ class DatabaseResult extends Root {
             }
             $query .= " email = '" . $params[5] . "'";
           }
-          if (!empty($params[6]) && in_array($params[6], $validValues)) {
+          if (!empty($params[6])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5])) {
               $query .= ", ";
             }
-            $query .= " administrator = '" . $params[6] . "'";
+            $query .= " phone = " . $params[6];
           }
-          if (! empty($params[7])) {
+          if (! empty($params[7]) && in_array($params[7], $validValues)) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6])) {
               $query .= ", ";
             }
-            $query .= " registration_date = '" . $params[8] . "'";
+            $query .= " administrator = '" . $params[7] . "'";
           }
           if (! empty($params[8])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7])) {
               $query .= ", ";
             }
-//             $query .= " approval_date = '" . $params[8] . "'";
-              $query .= " approval_date = " . ($params[8] == "CURRENT_TIMESTAMP" ? $params[8] : "'" . $params[8] . "'");
+              $query .= " registration_date = '" . $params[8] . "'";
           }
           if (! empty($params[9])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8])) {
               $query .= ", ";
             }
-            $query .= " approval_userid = " . $params[9];
+            $query .= " approval_date = " . ($params[9] == "CURRENT_TIMESTAMP" ? $params[9] : "'" . $params[9] . "'");
           }
           if (! empty($params[10])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9])) {
               $query .= ", ";
             }
-            $query .= " rejection_date = " . ($params[10] == "CURRENT_TIMESTAMP" ? $params[10] : "'" . $params[10] . "'");
+            $query .= " approval_userid = " . $params[10];
           }
           if (! empty($params[11])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10])) {
               $query .= ", ";
             }
-            $query .= " rejection_userid = " . $params[11];
+            $query .= " rejection_date = " . ($params[11] == "CURRENT_TIMESTAMP" ? $params[11] : "'" . $params[11] . "'");
           }
-          if (!empty($params[12]) && in_array($params[12], $validValues)) {
+          if (!empty($params[12])) {
             if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11])) {
+              $query .= ", ";
+            }
+            $query .= " rejection_userid = '" . $params[12] . "'";
+          }
+          if (!empty($params[13]) && in_array($params[13], $validValues)) {
+            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11]) || ! empty($params[12])) {
               $query .= ", ";
             }
             $query .= " active = '" . $params[12] . "'";

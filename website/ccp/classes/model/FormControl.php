@@ -2,14 +2,16 @@
 namespace ccp\classes\model;
 class FormControl extends FormBase {
   // DO NOT USE FormInput eclipse shows errors even though code runs
-  public static $TYPE_INPUT_BUTTON   = "button";
-  public static $TYPE_INPUT_CHECKBOX = "checkbox";
-  public static $TYPE_INPUT_HIDDEN   = "hidden";
-  public static $TYPE_INPUT_PASSWORD = "password";
-  public static $TYPE_INPUT_RESET    = "reset";
-  public static $TYPE_INPUT_SUBMIT   = "submit";
-  public static $TYPE_INPUT_TEXTAREA = "textarea";
-  public static $TYPE_INPUT_TEXTBOX  = "text";
+  public static $TYPE_INPUT_BUTTON    = "button";
+  public static $TYPE_INPUT_CHECKBOX  = "checkbox";
+  public static $TYPE_INPUT_EMAIL     = "email";
+  public static $TYPE_INPUT_HIDDEN    = "hidden";
+  public static $TYPE_INPUT_PASSWORD  = "password";
+  public static $TYPE_INPUT_RESET     = "reset";
+  public static $TYPE_INPUT_SUBMIT    = "submit";
+  public static $TYPE_INPUT_TELEPHONE = "tel";
+  public static $TYPE_INPUT_TEXTAREA  = "textarea";
+  public static $TYPE_INPUT_TEXTBOX   = "text";
   private $accessKey;
   private $autoComplete;
   private $autoFocus; // boolean
@@ -72,10 +74,13 @@ class FormControl extends FormBase {
       (isset($this->required) ? " required=\"" . $this->required . "\"" : "") .
       (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") .
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
-      " type=\"" . $this->type . "\"" .
+//       " type=\"" . $this->type . "\"" .
+      " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TEXTBOX : $this->type) . "\"" .
       ("" !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
+//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" placeholder=\"(999) 999-9999\"" : "") .
+      (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"(999) 999-9999\"" : "") .
       (self::$TYPE_INPUT_TEXTAREA == $this->type ? "></textarea>\n" : " />\n");
   }
   public function getMaxLength() {

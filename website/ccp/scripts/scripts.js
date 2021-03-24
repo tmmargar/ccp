@@ -235,6 +235,8 @@ const input = {
         throw error;
       }
     }
+    // apply mask automatically to any inputs with data-mask attribute
+    $.applyDataMask();
     if (positionFixId != undefined) {
       try {
         input.cursorPositionFix(positionFixId);

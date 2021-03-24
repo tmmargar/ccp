@@ -81,7 +81,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxPhone = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getPhone() : ""), null);
+      $textBoxPhone = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TELEPHONE, ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getPhone() : ""), null);
       $output .= $textBoxPhone->getHtml();
       $output .= " (10 digits)\n";
       $output .= "    </div>\n";
@@ -118,7 +118,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $city = (isset($_POST[CITY_FIELD_NAME . "_" . $id])) ? $_POST[CITY_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $state = (isset($_POST[STATE_FIELD_NAME . "_" . $id])) ? $_POST[STATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $zipCode = (isset($_POST[ZIP_FIELD_NAME . "_" . $id])) ? $_POST[ZIP_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? $_POST[PHONE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? preg_replace("/[^0-9]/", "", $_POST[PHONE_FIELD_NAME . "_" . $id]) : DEFAULT_VALUE_BLANK;
     $active = (isset($_POST[ACTIVE_FIELD_NAME . "_" . $id])) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       $params = array($locationName, $playerId, $address, $city, $state, $zipCode, $phone, isset($active) ? $active : 0);
