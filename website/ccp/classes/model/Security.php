@@ -2,11 +2,12 @@
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class Security extends Base {
-  private $login; // Login object
-  private $user; // User object populated after valid login
-  private $season; // Season object
-  public function __construct4($debug, $id, Login $login, User $user) {
-    parent::__construct2($debug, $id);
+  private Login $login; // Login object
+  private User $user; // User object populated after valid login
+  private Season $season; // Season object
+  public function __construct(bool $debug, string|int|null $id, Login $login, User $user) {
+//     echo "<BR>SECURITY -> " . var_dump($debug) . " -- " . $id;
+    parent::__construct($debug, $id);
     $this->login = $login;
     $this->user = $user;
   }
@@ -111,7 +112,10 @@ class Security extends Base {
     $this->user = $user;
   }
   public function __toString() {
-    return parent::__toString() . "<br>login = " . $this->login->__toString() . "<br>user = " . $this->user->__toString();
+    $output = parent::__toString();
+    $output .= ", login = [" . $this->login;
+    $output .= "], user = [" . $this->user . "]";
+    return $output;
   }
   private function validatePassword() {
     $found = false;

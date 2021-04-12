@@ -1,13 +1,13 @@
 <?php
 namespace ccp\classes\model;
 class FormBase extends Base {
-  private $class; // array
-  private $disabled; // boolean
-  private $name;
-  private $suffix;
-  private $value;
-  public function __construct7($debug, $class, $disabled, $id, $name, $suffix, $value) {
-    parent::__construct2($debug, $id);
+  private array $class; // array
+  private bool $disabled; // boolean
+  private string|null $name;
+  private string|null $suffix;
+  private array|string|null $value;
+  public function __construct(bool $debug, array|null $class, bool $disabled, string|int $id, string|null $name, string|null $suffix, array|string|null $value) {
+    parent::__construct($debug, $id);
     $this->class = null == $class ? array() : $class;
     $this->disabled = $disabled;
     $this->name = Base::build($name, null);
@@ -16,44 +16,6 @@ class FormBase extends Base {
     $this->value = (isset($value) && $value != "") || $value == 0 ? $value : null;
 //     echo "<BR>" . $id . " -- " . $value . " -> " . $this->value;
   }
-//   public function buildClasses() {
-//     $class = "";
-//     for ($idx = 0; $idx < count($this->class); $idx ++) {
-//       if ($class != "") {
-//         $class .= " ";
-//       }
-//       switch ($this->class[$idx]) {
-//         case "currency":
-//         case "percentage":
-//         case "number":
-//           $class .= "number";
-//           if ($this->class[$idx] == "currency" && isset($this->value)) {
-//             if (0 > $this->value) {
-//               $class .= " negative";
-//             } else if (0 < $this->value) {
-//               $class .= " positive";
-//             }
-//           }
-//           break;
-//         case "positive":
-//           $class .= "positive";
-//           break;
-//         case "negative":
-//           $class .= "negative";
-//           break;
-//         case "center":
-//           $class .= "center";
-//           break;
-//       }
-//     }
-//     return $class;
-//   }
-//   public function buildId() {
-//     return $this->build($this->getId(), $this->suffix);
-//   }
-//   public function buildName() {
-//     return $this->build($this->name, $this->suffix);
-//   }
   public function getClass() {
     return $this->class;
   }
@@ -72,19 +34,19 @@ class FormBase extends Base {
   public function isDisabled() {
     return $this->disabled;
   }
-  public function setClass($class) {
+  public function setClass(array|null $class) {
     $this->class = $class;
   }
-  public function setDisabled($disabled) {
+  public function setDisabled(bool $disabled) {
     $this->disabled = $disabled;
   }
-  public function setName($name) {
+  public function setName(string|null $name) {
     $this->name = $name;
   }
-  public function setSuffix($suffix) {
+  public function setSuffix(string|null $suffix) {
     $this->suffix = $suffix;
   }
-  public function setValue($value) {
+  public function setValue(array|string|null $value) {
     $this->value = $value;
   }
   public function toString() {

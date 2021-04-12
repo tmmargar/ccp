@@ -2,7 +2,7 @@
 namespace ccp\classes\model;
 use Smarty;
 class SmartyLocal {
-  private $smarty;
+  private Smarty $smarty;
   public function __construct() {
     $this->smarty = new Smarty();
   }
@@ -16,7 +16,7 @@ class SmartyLocal {
     $this->smarty->setConfigDir("classes/common/smarty/configs");
 //     $this->smarty->registerClass("htmlUtility", "\ccp\classes\utility\HtmlUtility");
   }
-  public function setSmarty($smarty) {
+  public function setSmarty(Smarty $smarty) {
     $this->smarty = $smarty;
   }
 }

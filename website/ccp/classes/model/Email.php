@@ -3,22 +3,22 @@ namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
 use Exception;
 class Email extends Base {
-  private static $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
-  private $fromName; // array
-  private $fromEmail; // array
-  private $toName; // array
-  private $toEmail; // array
-  private $ccName; // array
-  private $ccEmail; // array
-  private $bccName; // array
-  private $bccEmail; // array
-  private $subject;
-  private $body;
-  private $local = false;
-  private $localEmail;
+  private static string $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
+  private array $fromName; // array
+  private array $fromEmail; // array
+  private array $toName; // array
+  private array $toEmail; // array
+  private array|null $ccName; // array
+  private array|null $ccEmail; // array
+  private array|null $bccName; // array
+  private array|null $bccEmail; // array
+  private string|null $subject;
+  private string|null $body;
+  private bool $local = false;
+  private array|null $localEmail;
 
-  public function __construct11($debug, $fromName, $fromEmail, $toName, $toEmail, $ccName, $ccEmail, $bccName, $bccEmail, $subject, $body) {
-    parent::__construct2($debug, null);
+  public function __construct(bool $debug, array $fromName, array $fromEmail, array $toName, array $toEmail, array|null $ccName, array|null $ccEmail, array|null $bccName, array|null $bccEmail, string|null $subject, string|null $body) {
+    parent::__construct($debug, null);
     $this->fromName = $fromName;
     $this->fromEmail = $fromEmail;
     $this->toName = $toName;
@@ -31,11 +31,6 @@ class Email extends Base {
     $this->body = $body;
     $this->local = Constant::FLAG_LOCAL();
   }
-  // deprecated and remove once all code is updated
-//   public function __construct() {
-//     echo "<BR>BAD";
-//     $this->setLocal(Constant::FLAG_LOCAL());
-//   }
   public function getFromName() {
     return $this->fromName;
   }
@@ -82,80 +77,44 @@ class Email extends Base {
   public function getLocalEmail() {
     return $this->localEmail;
   }
-  public function setFromName($fromName) {
-    if (is_array($fromName)) {
-      $this->fromName = $fromName;
-    } else {
-      throw new Exception($fromName . " is not a valid array of from names");
+  public function setFromName(array $fromName) {
+    $this->fromName = $fromName;
+  }
+  public function setFromEmail(array $fromEmail) {
+    $this->fromEmail = $fromEmail;
+  }
+  public function setToName(array $toName) {
+    $this->toName = $toName;
+  }
+  public function setToEmail(array $toEmail) {
+    $this->toEmail = $toEmail;
+  }
+  public function setCcName(array $ccName) {
+    $this->ccName = $ccName;
+  }
+  public function setCcEmail(array $ccEmail) {
+    $this->ccEmail = $ccEmail;
+    if ($this->isLocal()) {
+      $this->setBody("<br>CC to " . print_r($ccEmail, true) . "\n\n" . $this->getBody());
+      $ccEmail = array($this->localEmail);
     }
   }
-  public function setFromEmail($fromEmail) {
-    if (is_array($fromEmail)) {
-      $this->fromEmail = $fromEmail;
-    } else {
-      throw new Exception($fromEmail . " is not a valid array of from emails");
-    }
+  public function setBccName(array $bccName) {
+    $this->bccName = $bccName;
   }
-  public function setToName($toName) {
-    if (is_array($toName)) {
-      $this->toName = $toName;
-    } else {
-      throw new Exception($toName . " is not a valid array of to names");
-    }
+  public function setBccEmail(array $bccEmail) {
+    $this->bccEmail = $bccEmail;
   }
-  public function setToEmail($toEmail) {
-    if (is_array($toEmail)) {
-      $this->toEmail = $toEmail;
-    } else {
-      throw new Exception($toEmail . " is not a valid array of to emails");
-    }
-  }
-  public function setCcName($ccName) {
-    if (is_array($ccName)) {
-      $this->ccName = $ccName;
-    } else {
-      throw new Exception($ccName . " is not a valid array of cc names");
-    }
-  }
-  public function setCcEmail($ccEmail) {
-    if (is_array($ccEmail)) {
-      $this->ccEmail = $ccEmail;
-      if ($this->isLocal()) {
-        $this->setBody("<br>CC to " . print_r($ccEmail, true) . "\n\n" . $this->getBody());
-        $ccEmail = array($this->localEmail);
-      }
-    } else {
-      throw new Exception($ccEmail . " is not a valid array of cc emails");
-    }
-  }
-  public function setBccName($bccName) {
-    if (is_array($bccName)) {
-      $this->bccName = $bccName;
-    } else {
-      throw new Exception($bccName . " is not a valid array of bcc names");
-    }
-  }
-  public function setBccEmail($bccEmail) {
-    if (is_array($bccEmail)) {
-      $this->bccEmail = $bccEmail;
-    } else {
-      throw new Exception($bccEmail . " is not a valid array of bcc emails");
-    }
-  }
-  public function setSubject($subject) {
+  public function setSubject(string $subject) {
     $this->subject = $subject;
   }
-  public function setBody($body) {
+  public function setBody(string $body) {
     $this->body = $body;
   }
-  public function setLocal($local) {
-    if (is_bool($local)) {
-      $this->local = $local;
-    } else {
-      throw new Exception($local . " is not a valid local");
-    }
+  public function setLocal(bool $local) {
+    $this->local = $local;
   }
-  public function setLocalEmail($localEmail) {
+  public function setLocalEmail(array|null $localEmail) {
     $this->localEmail = $localEmail;
   }
   public function __toString() {
@@ -182,9 +141,8 @@ class Email extends Base {
     $output .= $this->body;
     $output .= "', local = ";
     $output .= var_export($this->local, true);
-    $output .= ", localEmail = '";
-    $output .= $this->localEmail;
-    $output .= "'";
+    $output .= ", localEmail = ";
+    $output .= print_r($this->localEmail, true);
     return $output;
   }
   // from, to, cc, bcc should comply with
@@ -222,7 +180,7 @@ class Email extends Base {
     return $message;
   }
 
-  public function sendRegisteredEmail(Address $address, Tournament $tournament, $waitList, $autoRegister = null) {
+  public function sendRegisteredEmail(Address $address, Tournament $tournament, string|int $waitList, string $autoRegister = null) {
     $result = "";
     $url = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
@@ -259,7 +217,7 @@ class Email extends Base {
     return $result;
   }
 
-  public function sendReminderEmail(Address $address, Tournament $tournament, $waitListCount) {
+  public function sendReminderEmail(Address $address, Tournament $tournament, int $waitListCount) {
     $result = "";
     $url = "";
     for ($idx = 0; $idx < count($this->fromName); $idx++) {
@@ -355,7 +313,7 @@ class Email extends Base {
     return $result;
   }
   // array of username, email, selector and validator
-  public function sendPasswordResetRequestEmail(Array $info, Array $selectorAndToken) {
+  public function sendPasswordResetRequestEmail(array $info, array $selectorAndToken) {
       $result = "";
       for ($idx = 0; $idx < count($this->fromName); $idx++) {
           $subject = "password reset request";

@@ -1,10 +1,10 @@
 <?php
 namespace ccp\classes\model;
 class Login extends Base {
-  private $username;
-  private $password;
-  public function __construct4($debug, $id, $username, $password) {
-    parent::__construct2($debug, $id);
+  private string $username;
+  private string $password;
+  public function __construct(bool $debug, string|int|null $id, string $username, string $password) {
+    parent::__construct($debug, $id);
     $this->username = $username;
     $this->password = $password;
   }
@@ -21,8 +21,9 @@ class Login extends Base {
     $this->username = $username;
   }
   public function __toString() {
-    return parent::__toString() .
-    "<br>username = " . $this->username .
-    "<br>password = " . $this->password;
+    $output = parent::__toString();
+    $output .= ", username = '" . $this->username;
+    $output .= "', password = " . $this->password;
+    return $output;
   }
 }

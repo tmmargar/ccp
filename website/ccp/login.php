@@ -27,7 +27,8 @@ $output = "";
 $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : "";
 if (Constant::$MODE_LOGIN == $mode) {
   $login = new Login(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $_POST["username"], $_POST["password"]);
-  $security = new Security(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $login, new User());
+  $user = new User(false, 0, "", "", "", "", "", null, 0, "", "", 0, "", "", 0, "", 0, null, null, null, null, null, null, null);
+  $security = new Security(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $login, $user);
   if ($security->login()) {
     $pageName = "home.php";
     if (! empty($_SERVER["QUERY_STRING"])) {

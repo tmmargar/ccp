@@ -1,15 +1,16 @@
 <?php
 namespace ccp\classes\model;
 abstract class Base extends Root {
-  private $id; // key // number
-  public function __construct2($debug, $id) {
+  private string|int|null $id; // key // number
+  public function __construct(bool $debug, string|int|null $id) {
+//     echo "<BR>BASE -> " . var_dump($debug) . " -- " . $id;
     $this->setDebug($debug);
     $this->id = Base::build($id, null);
   }
   public function getId() {
     return $this->id;
   }
-  public function setId($id) {
+  public function setId(int $id) {
     $this->id = $this->build($id, null);
   }
   public function __toString() {
@@ -18,21 +19,7 @@ abstract class Base extends Root {
     $output .= $this->id;
     return $output;
   }
-  // dynamic way to call constructor based on number of parameters (using naming build#()
-//   public static function build() {
-//     $arguments = func_get_args();
-//     $numberOfArguments = func_num_args();
-//     if (method_exists(Base::class, $function = 'build' . $numberOfArguments)) {
-// //       $reflection = new \ReflectionClass($this);
-// //       echo "<br>Calling __construct" . $numberOfArguments . " on " . $reflection->getName();
-//       return call_user_func_array(array(Base::class, $function), $arguments);
-//     }
-//   }
-//   public static function build1($value) {
-//     return Base::build2($value, null);
-//   }
-//   public static function build2($value, $suffix) {
-  public static function build($value, $suffix) {
+  public static function build(string|int|null $value, string|null $suffix) {
     $idTemp = "";
     $temp = explode(" ", $value);
     if (count($temp) > 1) {
@@ -54,5 +41,4 @@ abstract class Base extends Root {
     }
     return $idTemp;
   }
-
 }

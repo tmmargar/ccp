@@ -4,12 +4,12 @@ use Exception;
 class Address extends Base {
   // AA and XX are temporary placeholders
   public static $stateList = array("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ","NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WY", "AA", "XX");
-  private $address;
-  private $city;
-  private $phone;
-  private $state; // 2 character
-  private $zip; // 5 digits
-  public function __construct5($address, $city, $state, int $zip, int $phone) {
+  private string $address;
+  private string $city;
+  private int $phone;
+  private string $state; // 2 character
+  private int $zip; // 5 digits
+  public function __construct(string $address, string $city, string $state, int $zip, int $phone) {
     $this->address = $address;
     $this->city = $city;
     $this->state = $state;
@@ -31,32 +31,26 @@ class Address extends Base {
   public function getZip() {
     return $this->zip;
   }
-  public function setAddress($address) {
+  public function setAddress(string $address) {
     $this->address = $address;
   }
-  public function setCity($city) {
+  public function setCity(string $city) {
     $this->city = $city;
   }
-  public function setPhone($phone) {
-    // fix validation to handle leading zero
+  public function setPhone(int $phone) {
     $this->phone = $phone;
   }
-  public function setState($state) {
+  public function setState(string $state) {
     if (in_array($state, self::$stateList)) {
       $this->state = $state;
     } else {
       throw new Exception($state . " is not a valid state abberviation");
     }
   }
-  public function setZip($zip) {
-    // fix validation to handle leading zero
-//     if (is_int($zip) && strlen($zip) == 5) {
+  public function setZip(int $zip) {
       $this->zip = $zip;
-//     } else {
-//       throw new Exception($zip . " is not a valid zip code");
-//     }
   }
-  public function toString() {
+  public function __toString() {
     $output = parent::__toString();
     $output .= ", address = '";
     $output .= $this->getAddress();
@@ -66,7 +60,7 @@ class Address extends Base {
     $output .= $this->getState();
     $output .= "', zip = ";
     $output .= $this->getZip();
-    $output .= "', phone = ";
+    $output .= ", phone = ";
     $output .= $this->getPhone();
     return $output;
   }

@@ -1,12 +1,12 @@
 <?php
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
-
 class HtmlMenu extends HtmlBase {
-  private $items; // array of HtmlLink or HtmlMenu
-  private $text;
-  public function __construct4($debug, $items, $id, $text) {
-    parent::__construct2($debug, $id);
+  private array|null $items; // array of HtmlLink or HtmlMenu
+  private string|null $text;
+  public function __construct(bool $debug, string|int|null $id, array|null $items, string|null $text) {
+    //public function __construct(string|null $accessKey, array|null $class, bool $debug, string|int|null $id, int $tabIndex, string|null $title) {
+    parent::__construct(null, null, $debug, $id, 0, null);
     $this->items = $items;
     $this->text = $text;
   }
@@ -31,7 +31,7 @@ class HtmlMenu extends HtmlBase {
     $output .= "</div>\n";
     return $output;
   }
-  public function getHtml($parent, $counter) {
+  public function getHtml(bool $parent, int $counter) {
     $output = "";
     foreach ($this->items as $item) { // $menu is HtmlLink or HtmlMenu object
       if (get_class($item) == "ccp\classes\model\HtmlLink") {
@@ -62,7 +62,7 @@ class HtmlMenu extends HtmlBase {
   public function setItems(array $items) {
     $this->items = $items;
   }
-  public function setText($text) {
+  public function setText(string $text) {
     $this->text = $text;
   }
   public function __toString() {

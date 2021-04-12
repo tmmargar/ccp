@@ -180,5 +180,5 @@ $htmlLinkMyProfileArray = array($htmlLinkEdit, $htmlLinkLogout, $htmlLinkResetPa
 $htmlMenuReportMyProfile->setItems($htmlLinkMyProfileArray);
 array_push($levels, $htmlMenuReportMyProfile);
   // echo print_r($levels, true);
-$htmlMenuRoot = new HtmlMenu(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $levels, null, null);
+$htmlMenuRoot = new HtmlMenu(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $levels, null);
 $smarty->assign("navigation", $htmlMenuRoot->getHtmlRoot());

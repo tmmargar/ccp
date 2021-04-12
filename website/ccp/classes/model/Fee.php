@@ -1,10 +1,9 @@
 <?php
 namespace ccp\classes\model;
-// include_once ROOT . "/autoload.php";
 class Fee {
-  private $user; // key// user object
-  private $year; // key // calendar year 4 digit
-  private $amount; // number
+  private User $user; // key// user object
+  private int $year; // key // calendar year 4 digit
+  private int $amount; // number
   public function getUser() {
     return $this->user;
   }
@@ -17,19 +16,19 @@ class Fee {
   public function setUser(User $user) {
     $this->user = $user;
   }
-  public function setYear($year) {
+  public function setYear(int $year) {
     $this->year = $year;
   }
-  public function setAmount($amount) {
+  public function setAmount(int $amount) {
     $this->amount = $amount;
   }
   public function __toString() {
     $output = "user = [";
-    $output .= $this->getUser()->__toString();
+    $output .= $this->user;
     $output .= "], year = ";
-    $output .= $this->getYear();
+    $output .= $this->year;
     $output .= ", amount = ";
-    $output .= $this->getAmount();
+    $output .= $this->amount;
     return $output;
   }
 }

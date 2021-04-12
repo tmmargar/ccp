@@ -1,13 +1,13 @@
 <?php
 namespace ccp\classes\model;
 class Location extends Base {
-  private $name;
-  private $user; // user object
-  private $count; // total tournaments hosted
-  private $active;
+  private string $name;
+  private User $user; // user object
+  private int $count; // total tournaments hosted
+  private int $active;
   private $map; // blob map pdf
-  private $mapName; // name of file
-  private $tournamentCount; // # of tournaments
+  private string $mapName; // name of file
+  private int $tournamentCount; // # of tournaments
   public function buildMapUrl() {
     return "<a href =\"" . Constant::PATH_MAP() . "/" . $this->getMapName() . "\">Map</a>\n";
   }
@@ -32,29 +32,25 @@ class Location extends Base {
   public function getTournamentCount() {
     return $this->tournamentCount;
   }
-  public function setName($name) {
+  public function setName(string $name) {
     $this->name = $name;
   }
   public function setUser(User $user) {
     $this->user = $user;
   }
-  public function setCount($count) {
+  public function setCount(int $count) {
     $this->count = $count;
   }
-  public function setActive($active) {
-//     if (Constant::$FLAG_YES == $active || Constant::$FLAG_NO == $active) {
-      $this->active = $active;
-//     } else {
-//       throw new Exception($active . " is not a valid active");
-//     }
+  public function setActive(int $active) {
+    $this->active = $active;
   }
   public function setMap($map) {
     $this->map = $map;
   }
-  public function setMapName($mapName) {
+  public function setMapName(string $mapName) {
     $this->mapName = $mapName;
   }
-  public function setTournamentCount($tournamentCount) {
+  public function setTournamentCount(int $tournamentCount) {
     $this->tournamentCount = $tournamentCount;
   }
   public function getLink() {
@@ -65,19 +61,19 @@ class Location extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= ", name = '";
-    $output .= $this->getName();
+    $output .= $this->name;
     $output .= "', user = [";
-    $output .= $this->getUser()->__toString();
+    $output .= $this->user;
     $output .= "], count = ";
-    $output .= $this->getCount();
+    $output .= $this->count;
     $output .= ", active = ";
-    $output .= var_export($this->getActive(), true);
+    $output .= var_export($this->active, true);
     $output .= ", map = '";
-    $output .= $this->getMap();
+    $output .= $this->map;
     $output .= "', mapName = '";
-    $output .= $this->getMapName();
+    $output .= $this->mapName;
     $output .= "', tournamentCount = ";
-    $output .= $this->getTournamentCount();
+    $output .= $this->tournamentCount;
     return $output;
   }
 }
