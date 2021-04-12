@@ -1,14 +1,15 @@
 <?php
 namespace ccp\classes\model;
 class Phone extends Base {
-  private $value;
-  public function __construct($value) {
+  private string $value;
+  public function __construct(bool $debug, string|int|null $id, string $value) {
+    parent::__construct($debug, $id);
     $this->value = $value;
   }
   public function getValue() {
     return $this->value;
   }
-  public function setValue($value) {
+  public function setValue(string $value) {
     $this->value = $value;
   }
   public function getDisplayFormatted() {

@@ -1,36 +1,37 @@
 <?php
 namespace ccp\classes\model;
 class User extends Base {
-  private $firstName;
-  private $lastName;
-  private $email;
-  private $phone;
-  private $username;
-  private $password;
-  private $administrator; // boolean 0 is false non 0 is true
-  private $registrationDate;
-  private $approvalDate;
-  private $approvalUserid;
-  private $approvalName;
-  private $rejectionDate;
-  private $rejectionUserid;
-  private $rejectionName;
-  private $active; // boolean 0 is false non 0 is true
+  private string $firstName;
+  private string $lastName;
+  private string|null $email;
+  private Phone|null $phone;
+  private string|null $username;
+  private string|null $password;
+  private int $administrator; // boolean 0 is false non 0 is true
+  private string|null $registrationDate;
+  private string|null $approvalDate;
+  private int|null $approvalUserid;
+  private string|null $approvalName;
+  private string|null $rejectionDate;
+  private int|null $rejectionUserid;
+  private string|null $rejectionName;
+  private int $active; // boolean 0 is false non 0 is true
+  private Address|null $address; // address object
+  private int $idPrevious; // holds previous userid after making sequential
   private $resetSelector;
   private $resetToken;
   private $resetExpires;
   private $rememberSelector;
   private $rememberToken;
   private $rememberExpires;
-  private $address; // address object
-  private $idPrevious; // holds previous userid after making sequential
-  public function __construct22($id, $firstName, $lastName, $username, $password, $email, $administrator, $registrationDate, $approvalDate, $approvalUserid, $approvalName, $rejectionDate, $rejectionUserid, $rejectionName, $active, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires, Address $address) {
-    $this->setId($id);
+  public function __construct(bool $debug, string|int|null $id, string $firstName, string $lastName, string|null $username, string|null $password, string|null $email, Phone|null $phone, int $administrator, string|null $registrationDate, string|null $approvalDate, int|null $approvalUserid, string|null $approvalName, string|null $rejectionDate, int|null $rejectionUserid, string|null $rejectionName, int $active, Address|null $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires) {
+    parent::__construct($debug, $id);
     $this->firstName = $firstName;
     $this->lastName = $lastName;
     $this->username = $username;
     $this->password = $password;
     $this->email = $email;
+    $this->phone = $phone;
     $this->administrator = $administrator;
     $this->registrationDate = $registrationDate;
     $this->approvalDate = $approvalDate;
@@ -40,13 +41,14 @@ class User extends Base {
     $this->rejectionUserid = $rejectionUserid;
     $this->rejectionName = $rejectionName;
     $this->active = $active;
+    $this->address = $address;
     $this->resetSelector = $resetSelector;
     $this->resetToken = $resetToken;
     $this->resetExpires = $resetExpires;
     $this->rememberSelector = $rememberSelector;
     $this->rememberToken = $rememberToken;
     $this->rememberExpires = $rememberExpires;
-    $this->address = $address;
+    $this->idPrevious = 0;
   }
   public function getFirstName() {
     return $this->firstName;
@@ -120,52 +122,51 @@ class User extends Base {
   public function getIdPrevious() {
     return $this->idPrevious;
   }
-  public function setFirstName($firstName) {
+  public function setFirstName(string $firstName) {
     $this->firstName = $firstName;
   }
-  public function setLastName($lastName) {
+  public function setLastName(string $lastName) {
     $this->lastName = $lastName;
   }
-  public function setEmail($email) {
+  public function setEmail(string $email) {
     // TODO: validate
     $this->email = $email;
   }
-  public function setPhone($phone) {
-    // fix validation to handle leading zero
+  public function setPhone(Phone|null $phone) {
     $this->phone = $phone;
   }
-  public function setUsername($username) {
+  public function setUsername(string $username) {
     $this->username = $username;
   }
-  public function setPassword($password) {
+  public function setPassword(string $password) {
     // TODO: encryption or hiding
     $this->password = $password;
   }
-  public function setAdministrator($administrator) {
+  public function setAdministrator(int $administrator) {
     $this->administrator = $administrator;
   }
-  public function setRegistrationDate($registrationDate) {
+  public function setRegistrationDate(string $registrationDate) {
     $this->registrationDate = $registrationDate;
   }
-  public function setApprovalDate($approvalDate) {
+  public function setApprovalDate(string $approvalDate) {
     $this->approvalDate = $approvalDate;
   }
-  public function setApprovalUserid($approvalUserid) {
+  public function setApprovalUserid(int $approvalUserid) {
     $this->approvalUserid = $approvalUserid;
   }
-  public function setApprovalName($approvalName) {
+  public function setApprovalName(string $approvalName) {
     $this->approvalName = $approvalName;
   }
-  public function setRejectionDate($rejectionDate) {
+  public function setRejectionDate(string $rejectionDate) {
     $this->rejectionDate = $rejectionDate;
   }
-  public function setRejectionUserid($rejectionUserid) {
+  public function setRejectionUserid(int $rejectionUserid) {
     $this->rejectionUserid = $rejectionUserid;
   }
-  public function setRejectionName($rejectionName) {
+  public function setRejectionName(string $rejectionName) {
     $this->rejectionName = $rejectionName;
   }
-  public function setActive($active) {
+  public function setActive(int $active) {
     $this->active = $active;
   }
   public function setResetSelector($resetSelector) {
@@ -189,7 +190,7 @@ class User extends Base {
   public function setAddress(Address $address) {
     $this->address = $address;
   }
-  public function setIdPrevious($idPrevious) {
+  public function setIdPrevious(int $idPrevious) {
     $this->idPrevious = $idPrevious;
   }
   // pass in full name which gets split and set
@@ -208,51 +209,52 @@ class User extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= ", firstName = '";
-    $output .= $this->getFirstName();
+    $output .= $this->firstName;
     $output .= "', lastName = '";
-    $output .= $this->getLastName();
+    $output .= $this->lastName;
     $output .= "', email = '";
-    $output .= $this->getEmail();
-    $output .= "', phone = ";
-    $output .= $this->getPhone();
-    $output .= ", username = '";
-    $output .= $this->getUsername();
+    $output .= $this->email;
+    $output .= "', phone = [";
+    $output .= null !== $this->phone ? $this->phone->__toString() : "";
+    $output .= "], username = '";
+    $output .= $this->username;
     $output .= "', password = '";
-    $output .= $this->getPassword();
+    $output .= $this->password;
     $output .= "', administrator = '";
-    $output .= $this->getAdministrator();
+    $output .= $this->administrator;
     $output .= "', registrationDate = '";
-    $output .= $this->getRegistrationDate();
+    $output .= $this->registrationDate;
     $output .= "', approvalDate = '";
-    $output .= $this->getApprovalDate();
+    $output .= $this->approvalDate;
     $output .= "', approvalUserId = '";
-    $output .= $this->getApprovalUserId();
+    $output .= $this->approvalUserid;
     $output .= "', approvalName = '";
-    $output .= $this->getApprovalName();
+    $output .= $this->approvalName;
     $output .= "', rejectionDate = '";
-    $output .= $this->getRejectionDate();
+    $output .= $this->rejectionDate;
     $output .= "', rejectionUserId = '";
-    $output .= $this->getRejectionUserId();
+    $output .= $this->rejectionUserid;
     $output .= "', rejectionName = '";
-    $output .= $this->getRejectionName();
+    $output .= $this->rejectionName;
     $output .= "', active = '";
-    $output .= $this->getActive();
-    $output .= "', resetSelector = '";
-    $output .= $this->getResetSelector();
-    $output .= "', resetToken = '";
-    $output .= $this->getResetToken();
-    $output .= "', resetExpires = '";
-    $output .= $this->getResetExpires();
-    $output .= "', rememberSelector = '";
-    $output .= $this->getRememberSelector();
-    $output .= "', rememberToken = '";
-    $output .= $this->getRememberToken();
-    $output .= "', rememberExpires = '";
-    $output .= $this->getRememberExpires();
+    $output .= $this->active;
     $output .= "', address = [";
-    $output .= null !== $this->getAddress() ? $this->getAddress()->__toString() : "";
+    $output .= null !== $this->address ? $this->address->__toString() : "";
     $output .= "], idPrevious = ";
     $output .= $this->idPrevious;
+    $output .= ", resetSelector = '";
+    $output .= $this->resetSelector;
+    $output .= "', resetToken = '";
+    $output .= $this->resetToken;
+    $output .= "', resetExpires = '";
+    $output .= $this->resetExpires;
+    $output .= "', rememberSelector = '";
+    $output .= $this->rememberSelector;
+    $output .= "', rememberToken = '";
+    $output .= $this->rememberToken;
+    $output .= "', rememberExpires = '";
+    $output .= $this->rememberExpires;
+    $output .= "'";
     return $output;
   }
 }

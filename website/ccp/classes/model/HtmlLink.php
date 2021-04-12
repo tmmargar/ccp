@@ -1,12 +1,12 @@
 <?php
 namespace ccp\classes\model;
 class HtmlLink extends HtmlBase {
-  private $href;
-  private $paramName; // array of names
-  private $paramValue; // aray of values
-  private $text;
-  public function __construct10($accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title) {
-    parent::__construct6($accessKey, $class, $debug, $id, $tabIndex, $title);
+  private string $href;
+  private array|null $paramName; // array of names
+  private array|null $paramValue; // aray of values
+  private string $text;
+  public function __construct(string|null $accessKey, array|null $class, bool $debug, string $href, string|int|null $id, array|null $paramName, array|null $paramValue, int $tabIndex, string $text, string|null $title) {
+    parent::__construct($accessKey, $class, $debug, $id, $tabIndex, $title);
     $this->href = $href;
     $this->paramName = $paramName;
     $this->paramValue = $paramValue;
@@ -48,16 +48,16 @@ class HtmlLink extends HtmlBase {
   public function getText() {
     return $this->text;
   }
-  public function setHref($href) {
+  public function setHref(string $href) {
     $this->href = $href;
   }
-  public function setParamName($paramName) {
+  public function setParamName(array $paramName) {
     $this->paramName = $paramName;
   }
-  public function setParamValue($paramValue) {
+  public function setParamValue(array $paramValue) {
     $this->paramValue = $paramValue;
   }
-  public function setText($text) {
+  public function setText(string $text) {
     $this->text = $text;
   }
   public function __toString() {

@@ -1,10 +1,9 @@
 <?php
 namespace ccp\classes\model;
-// include_once ROOT . "/autoload.php";
 class TournamentBounty extends Base {
-  private $tournament; // tournament object
-  private $bounty; // bounty object
-  private $user; // user object
+  private Tournament $tournament; // tournament object
+  private Bounty $bounty; // bounty object
+  private User $user; // user object
   public function getTournament() {
     return $this->tournament;
   }
@@ -26,11 +25,11 @@ class TournamentBounty extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= ", tournament = [";
-    $output .= $this->getTournament()->__toString();
+    $output .= $this->tournament;
     $output .= "], bounty = [";
-    $output .= $this->getBounty()->__toString();
+    $output .= $this->bounty;
     $output .= "], user = [";
-    $output .= $this->getUser()->__toString();
+    $output .= $this->user;
     $output .= "]";
     return $output;
   }

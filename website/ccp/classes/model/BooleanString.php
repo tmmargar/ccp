@@ -1,14 +1,14 @@
 <?php
 namespace ccp\classes\model;
 class BooleanString extends Base {
-  private $value;
+  private string $value;
   public function __construct($value) {
     $this->value = $value;
   }
   public function getValue() {
     return $this->value;
   }
-  public function setValue($value) {
+  public function setValue(string $value) {
     $this->value = $value;
   }
   public function getBoolean() {

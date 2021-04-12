@@ -1,13 +1,11 @@
 <?php
 namespace ccp\classes\model;
-use Exception;
-// include_once ROOT . "/autoload.php";
 class Payout extends Base {
-  private $name;
-  private $bonusPoints; // number
-  private $minPlayers; // number
-  private $maxPlayers; // number
-  private $structures; // array of Structure objects
+  private string $name;
+  private int $bonusPoints; // number
+  private int $minPlayers; // number
+  private int $maxPlayers; // number
+  private array $structures; // array of Structure objects
   public function getName() {
     return $this->name;
   }
@@ -23,51 +21,35 @@ class Payout extends Base {
   public function getStructures() {
     return $this->structures;
   }
-  public function setName($name) {
+  public function setName(string $name) {
     $this->name = $name;
   }
-  public function setBonusPoints($bonusPoints) {
-    if (is_int($bonusPoints)) {
-      $this->bonusPoints = $bonusPoints;
-    } else {
-      throw new Exception($bonusPoints . " is not a valid number");
-    }
+  public function setBonusPoints(int $bonusPoints) {
+    $this->bonusPoints = $bonusPoints;
   }
-  public function setMinPlayers($minPlayers) {
-    if (is_int($minPlayers)) {
-      $this->minPlayers = $minPlayers;
-    } else {
-      throw new Exception($minPlayers . " is not a valid number");
-    }
+  public function setMinPlayers(int $minPlayers) {
+    $this->minPlayers = $minPlayers;
   }
-  public function setMaxPlayers($maxPlayers) {
-    if (is_int($maxPlayers)) {
-      $this->maxPlayers = $maxPlayers;
-    } else {
-      throw new Exception($maxPlayers . " is not a valid number");
-    }
+  public function setMaxPlayers(int $maxPlayers) {
+    $this->maxPlayers = $maxPlayers;
   }
-  public function setStructures($structures) {
-    if (is_array($structures)) {
-      $this->structures = $structures;
-    } else {
-      throw new Exception($structures . " is not an array");
-    }
+  public function setStructures(array $structures) {
+    $this->structures = $structures;
   }
   public function __toString() {
     $output = parent::__toString();
     $output .= ", name = '";
-    $output .= $this->getName();
+    $output .= $this->name;
     $output .= "', bonusPoints = ";
-    $output .= $this->getBonusPoints();
+    $output .= $this->bonusPoints;
     $output .= "', minPlayers = ";
-    $output .= $this->getMinPlayers();
+    $output .= $this->minPlayers;
     $output .= ", maxPlayers = ";
-    $output .= $this->getMaxPlayers();
+    $output .= $this->maxPlayers;
     $output .= ", structures = [";
-    foreach ($this->getStructures() as $structure) {
+    foreach ($this->structures as $structure) {
       $output .= "[";
-      $output .= $structure->__toString();
+      $output .= $structure;
       $output .= "],";
     }
     $output = substr($output, 0, strlen($output) - 1) . "]";

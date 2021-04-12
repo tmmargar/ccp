@@ -1,10 +1,8 @@
 <?php
 namespace ccp\classes\model;
-use Exception;
-// include_once ROOT . "/autoload.php";
 class GroupPayout extends Base {
-  private $group; // Group object
-  private $payouts; // array of Payout objects
+  private Group $group; // Group object
+  private array $payouts; // array of Payout objects
   public function getGroup() {
     return $this->group;
   }
@@ -14,21 +12,17 @@ class GroupPayout extends Base {
   public function setGroup(Group $group) {
     $this->group = $group;
   }
-  public function setPayouts($payouts) {
-    if (is_array($payouts)) {
-      $this->payouts = $payouts;
-    } else {
-      throw new Exception($payouts . " is not an array");
-    }
+  public function setPayouts(array $payouts) {
+    $this->payouts = $payouts;
   }
   public function __toString() {
     $output = parent::__toString();
     $output .= "group = [";
-    $output .= $this->getGroup()->__toString();
+    $output .= $this->group;
     $output .= "], payouts = [";
-    foreach ($this->getPayouts() as $payout) {
+    foreach ($this->payouts as $payout) {
       $output .= "[";
-      $output .= $payout->__toString();
+      $output .= $payout;
       $output .= "],";
     }
     $output = substr($output, 0, strlen($output) - 1) . "]";

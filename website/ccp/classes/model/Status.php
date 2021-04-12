@@ -1,15 +1,10 @@
 <?php
 namespace ccp\classes\model;
 use Exception;
-// include_once ROOT . "/autoload.php";
 class Status extends Base {
-  private static $codeList = array(
-    "P" => "Paid",
-    "R" => "Registered",
-    "F" => "Finished"
-  );
-  private $code;
-  private $name;
+  private static array $codeList = array("P" => "Paid", "R" => "Registered", "F" => "Finished");
+  private string $code;
+  private string $name;
   public function getCode() {
     return $this->code;
   }
@@ -19,24 +14,24 @@ class Status extends Base {
   public function getDescription() {
     return self::$codeList[$this->code];
   }
-  public function setCode($code) {
+  public function setCode(string $code) {
     if (array_key_exists($code, self::$codeList)) {
       $this->code = $code;
     } else {
       throw new Exception($code . " is not a valid status code");
     }
   }
-  public function setName($name) {
+  public function setName(string $name) {
     $this->name = $name;
   }
   public function __toString() {
     $output = parent::__toString();
     $output .= ", code = '";
-    $output .= $this->getCode();
+    $output .= $this->code;
     $output .= "', name = '";
-    $output .= $this->getName();
+    $output .= $this->name;
     $output .= "', description = '";
-    $output .= $this->getDescription();
+    $output .= $this->description;
     $output .= "'";
     return $output;
   }

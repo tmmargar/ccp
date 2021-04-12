@@ -76,6 +76,7 @@ if (isset($navigation)) {
 if (!isset($parentObjectId)) {
   $parentObjectId = "container";
 }
+$classNames = array();
 $output = "";
 switch ($reportId) {
   case PRIZE_POOL_FOR_SEASON:
@@ -421,7 +422,7 @@ if (!isset($reportId) || "" == $reportId) {
       break;
   }
   if (PRIZE_POOL_FOR_SEASON != $reportId && BOUNTIES_FOR_SEASON != $reportId) {
-    $classNames = "top5";
+    array_push($classNames, "top5");
     $headerRow = true;
   }
   if (isset($navigation)) {
@@ -459,7 +460,7 @@ if (!isset($reportId) || "" == $reportId) {
     $mode = "";
     $caption = "";
     $hiddenId = null;
-    $selectedColumnVals = "";
+    $selectedColumnVals = null;
     $delimiter = Constant::$DELIMITER_DEFAULT;
     $foreignKeys = null;
     $html = NULL;
@@ -627,7 +628,7 @@ if (!isset($reportId) || "" == $reportId) {
             $tableIdSuffix = "Bully";
             $titleText = "Your Victims";
           }
-          $classNames .= " " . $tableIdSuffix;
+          array_push($classNames, $tableIdSuffix);
         } else {
           $tableIdSuffix = ucfirst($reportId);
         }

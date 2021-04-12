@@ -1,12 +1,12 @@
 <?php
 namespace ccp\classes\model;
 class FormSelect extends FormBase {
-  private $accessKey;
-  private $multiple;
-  private $onClick;
-  private $readOnly;
-  private $size;
-  public function __construct12($debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value) {
+  private string $accessKey;
+  private bool $multiple;
+  private string $onClick;
+  private bool $readOnly;
+  private int $size;
+  public function __construct(bool $debug, string $accessKey, array $class, bool $disabled, int $id, bool $multiple, strin $name, string $onClick, bool $readOnly, int $size, string|null $suffix, string $value) {
     parent::__construct7($debug, $class, $disabled, $id, $name, $suffix, $value);
     $this->accessKey = $accessKey;
     $this->multiple = $multiple;
@@ -46,19 +46,19 @@ class FormSelect extends FormBase {
   public function isReadOnly() {
     return $this->readOnly;
   }
-  public function setAccessKey($accessKey) {
+  public function setAccessKey(string $accessKey) {
     $this->accessKey = $accessKey;
   }
-  public function setMultiple($multiple) {
+  public function setMultiple(bool $multiple) {
     $this->multiple = $multiple;
   }
-  public function setOnClick($onClick) {
+  public function setOnClick(string $onClick) {
     $this->onClick = $onClick;
   }
-  public function setReadOnly($readOnly) {
+  public function setReadOnly(bool $readOnly) {
     $this->readOnly = $readOnly;
   }
-  public function setSize($size) {
+  public function setSize(int $size) {
     $this->size = $size;
   }
   public function toString() {

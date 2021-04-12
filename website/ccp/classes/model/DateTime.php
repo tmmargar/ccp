@@ -4,32 +4,26 @@ namespace ccp\classes\model;
 use DateTimeZone;
 
 class DateTime extends Base {
-  public static $YEAR_FIRST_SEASON = 2005;
-  private static $DATE_FORMAT_YEAR = "Y";
-  private static $DATE_FORMAT_DATABASE_DEFAULT = "Y-m-d";
-  private static $DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT = "Y-m-d H:i:s";
-  private static $DATE_FORMAT_DISPLAY_DEFAULT = "M d, Y";
-  private static $DATE_FORMAT_DISPLAY_LONG = "l, F d, Y";
-  private static $DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
-  private static $DATE_FORMAT_PICKER_DISPLAY_DEFAULT = "m/d/Y";
-  private static $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT = "m/d/Y H:i";
-  private static $DATE_FORMAT_TIME_DISPLAY_DEFAULT = "M d, Y h:i A";
-  private static $TIME_FORMAT_DATABASE_DEFAULT = "H:i:s";
-  private static $TIME_FORMAT_DISPLAY_AMPM = "H:i";
-  private static $TIME_FORMAT_NOW = "Ymd H:i:s";
+  public static int $YEAR_FIRST_SEASON                             = 2005;
+  private static string $DATE_FORMAT_YEAR                          = "Y";
+  private static string $DATE_FORMAT_DATABASE_DEFAULT              = "Y-m-d";
+  private static string $DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT    = "Y-m-d H:i:s";
+  private static string $DATE_FORMAT_DISPLAY_DEFAULT               = "M d, Y";
+  private static string $DATE_FORMAT_DISPLAY_LONG                  = "l, F d, Y";
+  private static string $DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
+  private static string $DATE_FORMAT_PICKER_DISPLAY_DEFAULT        = "m/d/Y";
+  private static string $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT   = "m/d/Y H:i";
+  private static string $DATE_FORMAT_TIME_DISPLAY_DEFAULT          = "M d, Y h:i A";
+  private static string $TIME_FORMAT_DATABASE_DEFAULT              = "H:i:s";
+  private static string $TIME_FORMAT_DISPLAY_AMPM                  = "H:i";
+  private static string $TIME_FORMAT_NOW                           = "Ymd H:i:s";
 
-  private $time;
-  private $timeZone; // \DateTimeZone
+  private \DateTime $time;
+  private \DateTimeZone $timeZone; // \DateTimeZone
 
-  public function __construct3($debug, $id, $time) {
-    self::__construct4($debug, $id, $time, null);
-  }
-  public function __construct4($debug, $id, $time, $timeZone) {
-    parent::__construct2($debug, $id);
-    if (!isset($timeZone)) {
-        $timeZone = new DateTimeZone(date_default_timezone_get());
-    }
-    $this->timeZone = $timeZone;
+  public function __construct(bool $debug, string|int|null $id, string $time) {
+    parent::__construct($debug, $id);
+    $this->timeZone = new DateTimeZone(date_default_timezone_get());
     if ("now" == $time) {
       $temp = new \DateTime();
       $time = $temp->format(self::$TIME_FORMAT_NOW);
@@ -93,11 +87,11 @@ class DateTime extends Base {
     return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_YEAR);
   }
 
-  public function setTime($time) {
+  public function setTime(int $time) {
     $this->time = $time;
   }
 
-  public function setTimeZone($timeZone) {
+  public function setTimeZone(DateTimezone $timeZone) {
     $this->timeZone = $timeZone;
   }
   public function __toString() {

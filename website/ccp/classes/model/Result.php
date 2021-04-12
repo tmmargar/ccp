@@ -1,20 +1,18 @@
 <?php
 namespace ccp\classes\model;
-use Exception;
-// include_once ROOT . "/autoload.php";
 class Result extends Base {
-  private $tournament; // tournament object
-  private $user; // user object
-  private $status; // status object
-  private $registerOrder; // number
-  private $buyinPaid = false;
-  private $rebuyPaid = false;
-  private $addonPaid = false;
-  private $rebuyCount; // number
-  private $addonFlag = false;
-  private $place; // number
-  private $knockedOutBy; // user object
-  private $food;
+  private Tournament $tournament; // tournament object
+  private User $user; // user object
+  private Status $status; // status object
+  private int $registerOrder; // number
+  private bool $buyinPaid = false;
+  private bool $rebuyPaid = false;
+  private bool $addonPaid = false;
+  private int $rebuyCount; // number
+  private bool $addonFlag = false;
+  private int $place; // number
+  private User $knockedOutBy; // user object
+  private string $food;
   public function getTournament() {
     return $this->tournament;
   }
@@ -60,59 +58,31 @@ class Result extends Base {
   public function setStatus(Status $status) {
     $this->status = $status;
   }
-  public function setRegisterOrder($registerOrder) {
-    if (is_int($registerOrder)) {
-      $this->registerOrder = $registerOrder;
-    } else {
-      throw new Exception($registerOrder . " is not a valid register order");
-    }
+  public function setRegisterOrder(int $registerOrder) {
+    $this->registerOrder = $registerOrder;
   }
-  public function setBuyinPaid($buyinPaid) {
-    if (is_bool($buyinPaid)) {
-      $this->buyinPaid = $buyinPaid;
-    } else {
-      throw new Exception($buyinPaid . " is not a valid buyin paid");
-    }
+  public function setBuyinPaid(bool $buyinPaid) {
+    $this->buyinPaid = $buyinPaid;
   }
-  public function setRebuyPaid($rebuyPaid) {
-    if (is_bool($rebuyPaid)) {
-      $this->rebuyPaid = $rebuyPaid;
-    } else {
-      throw new Exception($rebuyPaid . " is not a valid rebuy paid");
-    }
+  public function setRebuyPaid(bool $rebuyPaid) {
+    $this->rebuyPaid = $rebuyPaid;
   }
-  public function setAddonPaid($addonPaid) {
-    if (is_bool($addonPaid)) {
-      $this->addonPaid = $addonPaid;
-    } else {
-      throw new Exception($addonPaid . " is not a valid addon paid");
-    }
+  public function setAddonPaid(bool $addonPaid) {
+    $this->addonPaid = $addonPaid;
   }
-  public function setRebuyCount($rebuyCount) {
-    if (is_int($rebuyCount)) {
-      $this->rebuyCount = $rebuyCount;
-    } else {
-      throw new Exception($rebuyCount . " is not a valid rebuy count");
-    }
+  public function setRebuyCount(int $rebuyCount) {
+    $this->rebuyCount = $rebuyCount;
   }
-  public function setAddonFlag($addonFlag) {
-    if (is_bool($addonFlag)) {
-      $this->addonFlag = $addonFlag;
-    } else {
-      throw new Exception($addonFlag . " is not a valid addon flag");
-    }
+  public function setAddonFlag(bool $addonFlag) {
+    $this->addonFlag = $addonFlag;
   }
-  public function setPlace($place) {
-    if (is_int($place)) {
-      $this->place = $place;
-    } else {
-      throw new Exception($place . " is not a valid place");
-    }
+  public function setPlace(int $place) {
+    $this->place = $place;
   }
   public function setKnockedOutBy(User $knockedOutBy) {
     $this->knockedOutBy = $knockedOutBy;
   }
-  public function setFood($food) {
+  public function setFood(string $food) {
     $this->food = $food;
   }
   public function getLink() {
@@ -123,29 +93,29 @@ class Result extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= "tournament = [";
-    $output .= $this->getTournament()->__toString();
+    $output .= $this->tournament;
     $output .= "], user = [";
-    $output .= $this->getUser()->__toString();
+    $output .= $this->user;
     $output .= "], status = [";
-    $output .= $this->getStatus()->__toString();
+    $output .= $this->status;
     $output .= "], registerOrder = ";
-    $output .= $this->getRegisterOrder();
+    $output .= $this->registerOrder;
     $output .= ", buyinPaid = ";
-    $output .= var_export($this->isBuyinPaid(), true);
+    $output .= var_export($this->buyinPaid, true);
     $output .= ", rebuyPaid = ";
-    $output .= var_export($this->isRebuyPaid(), true);
+    $output .= var_export($this->eebuyPaid, true);
     $output .= ", addonPaid = ";
-    $output .= var_export($this->isAddonPaid(), true);
+    $output .= var_export($this->addonPaid, true);
     $output .= ", rebuyCount = ";
-    $output .= $this->getRebuyCount();
+    $output .= $this->rebuyCount;
     $output .= ", addonFlag = ";
-    $output .= var_export($this->isAddonFlag(), true);
+    $output .= var_export($this->addonFlag, true);
     $output .= ", place = ";
-    $output .= $this->getPlace();
+    $output .= $this->place;
     $output .= ", knockedOutBy = [";
-    $output .= $this->getKnockedOutBy()->__toString();
+    $output .= $this->knockedOutBy;
     $output .= "], food = '";
-    $output .= $this->getFood();
+    $output .= $this->food;
     $output .= "'";
     return $output;
   }

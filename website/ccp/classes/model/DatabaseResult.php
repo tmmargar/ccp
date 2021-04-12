@@ -5,11 +5,10 @@ use Exception;
 use PDO;
 use PDOException;
 class DatabaseResult extends Root {
-  private $database; // Database object
-  private $connection; // actual connection
-  public function __construct($debug) {
-//     $debug = true;
-    parent::__construct1($debug);
+  private Database $database;
+  private PDO $connection;
+  public function __construct(bool $debug) {
+    parent::__construct($debug);
     $this->initialize();
   }
   public function getConnection() {
@@ -22,49 +21,49 @@ class DatabaseResult extends Root {
     $this->setDatabase($this->initializeDatabase());
     $this->setConnection($this->initializeConnection());
   }
-  public function setConnection($connection) {
+  public function setConnection(PDO $connection) {
     $this->connection = $connection;
   }
   public function setDatabase(Database $database) {
     $this->database = $database;
   }
-  public function getAutoRegisterHost($params) {
+  public function getAutoRegisterHost(array $params) {
     return $this->getData("autoRegisterHost", $params, null, false, null, false);
   }
   public function getBounty() {
     return $this->getData("bountySelectAll", null, null, false, null, false);
   }
-  public function getBountyCountSelectByTournament($params) {
+  public function getBountyCountSelectByTournament(array $params) {
     return $this->getData("bountyCountSelectByTournament", $params, null, false, null, false);
   }
-  public function getBountyEarnings($params) {
+  public function getBountyEarnings(array $params) {
     return $this->getData("bountyEarnings", $params, null, true, null, false);
   }
-  public function getBountiesForSeason($params) {
-    return $this->getData("bountiesForSeason", $params, false, false, null, false);
+  public function getBountiesForSeason(array $params) {
+    return $this->getData("bountiesForSeason", $params, null, false, null, false);
   }
-  public function getBullyForUser($params) {
+  public function getBullyForUser(array $params) {
     return $this->getData("bullyForUser", $params, null, true, null, false);
   }
-  public function getChampionshipByYearByEarnings($params) {
+  public function getChampionshipByYearByEarnings(array $params) {
     return $this->getData("championship", $params, null, true, null, false);
   }
-  public function getChampionshipByPlayerForYear($params) {
+  public function getChampionshipByPlayerForYear(array $params) {
     return $this->getData("championship", $params, null, true, null, false);
   }
-  public function getChampionshipByPlayerByEarnings($params) {
+  public function getChampionshipByPlayerByEarnings(array $params) {
     return $this->getData("championship", $params, null, true, null, false);
   }
-  public function getChampionshipQualifiedPlayers($params) {
+  public function getChampionshipQualifiedPlayers(array $params) {
     return $this->getData("championshipQualifiedPlayers", $params, null, false, null, false);
   }
-  public function getCountTournamentForDates($params) {
+  public function getCountTournamentForDates(array $params) {
     return $this->getData("countTournamentForDates", $params, null, false, null, false);
   }
   public function getEarningsAverageForSeason($params, $orderBy, $limitCount) {
     return $this->getData("earningsAverageForSeason", $params, $orderBy, true, $limitCount, false);
   }
-  public function getEarningsTotalForChampionship($params) {
+  public function getEarningsTotalForChampionship(array $params) {
     return $this->getData("earningsTotalForChampionship", $params, null, true, null, false);
   }
   public function getEarningsTotalForSeason($params, $orderBy, $limitCount) {
@@ -79,19 +78,19 @@ class DatabaseResult extends Root {
   public function getFee() {
     return $this->getData("feeSelectAll", null, null, false, null, false);
   }
-  public function getFinishesForUser($params) {
+  public function getFinishesForUser(array $params) {
     return $this->getData("finishesSelectAllByPlayerId", $params, null, true, null, false);
   }
-  public function getFoodByTournamentIdAndPlayerId($params) {
+  public function getFoodByTournamentIdAndPlayerId(array $params) {
     return $this->getData("foodByTournamentIdAndPlayerId", $params, null, false, null, false);
   }
   public function getGameType() {
     return $this->getData("gameTypeSelectAll", null, null, false, null, false);
   }
-  public function getGroupsAll($params) {
+  public function getGroupsAll(array $params) {
     return $this->getData("groupSelectAll", null, null, $params[0], null, false);
   }
-  public function getGroupById($params) {
+  public function getGroupById(array $params) {
     return $this->getData("groupSelectAllById", $params, null, false, null, false);
   }
   public function getGroupNameList() {
@@ -100,7 +99,7 @@ class DatabaseResult extends Root {
   public function getGroupPayout() {
     return $this->getData("groupPayoutSelectAll", null, null, true, null, false);
   }
-  public function getGroupPayoutById($params) {
+  public function getGroupPayoutById(array $params) {
     return $this->getData("groupPayoutSelectAllById", $params, null, false, null, false);
   }
   public function getKnockoutsAverageForSeason($params, $orderBy, $limitCount) {
@@ -118,10 +117,10 @@ class DatabaseResult extends Root {
   public function getLimitType() {
     return $this->getData("limitTypeSelectAll", null, null, false, null, false);
   }
-  public function getLocation($params) {
+  public function getLocation(array $params) {
     return $this->getData("locationSelectAll", $params, null, $params[0], null, false);
   }
-  public function getLocationById($params) {
+  public function getLocationById(array $params) {
     return $this->getData("locationSelectById", $params, null, false, null, false);
   }
   public function getLocationMaxId() {
@@ -133,19 +132,19 @@ class DatabaseResult extends Root {
   public function getLogin($userName) {
     return $this->getData("login", array($userName, "Super Users"), null, false, null, false);
   }
-  public function getNemesisForUser($params) {
+  public function getNemesisForUser(array $params) {
     return $this->getData("nemesisForUser", $params, null, true, null, false);
   }
   public function getNotification($params, $returnQuery) {
     return $this->getData("notificationSelectAll", $params, null, $returnQuery, null, false);
   }
-  public function getNotificationById($params) {
+  public function getNotificationById(array $params) {
     return $this->getData("notificationSelectOneById", $params, null, false, null, false);
   }
-  public function getPayoutsAll($params) {
+  public function getPayoutsAll(array $params) {
     return $this->getData("payoutSelectAll", null, null, $params[0], null, false);
   }
-  public function getPayoutById($params) {
+  public function getPayoutById(array $params) {
     return $this->getData("payoutSelectAllById", $params, null, false, null, false);
   }
   public function getPayoutMaxId() {
@@ -169,55 +168,55 @@ class DatabaseResult extends Root {
   public function getPrizePoolForSeason($params, $returnQuery) {
     return $this->getData("prizePoolForSeason", $params, null, $returnQuery, null, false);
   }
-  public function getRegistrationWaitList($params) {
+  public function getRegistrationWaitList(array $params) {
     return $this->getData("registrationWaitList", $params, null, false, null, false);
   }
-  public function getResultIdMax($params) {
-    return $this->getData("resultIdMax", null, null, false, null, false);
+  public function getResultIdMax(array|null $params) {
+    return $this->getData("resultIdMax", $params, null, false, null, false);
   }
   public function getResult() {
     return $this->getData("resultSelectAll", null, null, false, null, false);
   }
-  public function getResultDuring($params) {
+  public function getResultDuring(array $params) {
     return $this->getData("resultSelectAllDuring", $params, null, false, null, false);
   }
-  public function getResultLastEnteredDuring($params) {
+  public function getResultLastEnteredDuring(array $params) {
     return $this->getData("resultSelectLastEnteredDuring", $params, null, false, null, false);
   }
-  public function getResultByTournamentId($params) {
+  public function getResultByTournamentId(array $params) {
     return $this->getData("resultSelectAllByTournamentId", $params, null, true, null, false);
   }
-  public function getResultByTournamentIdAndPlayerId($params) {
+  public function getResultByTournamentIdAndPlayerId(array $params) {
     return $this->getData("resultSelectOneByTournamentIdAndPlayerId", $params, null, false, null, false);
   }
-  public function getResultRegisteredByTournamentId($params) {
+  public function getResultRegisteredByTournamentId(array $params) {
     return $this->getData("resultSelectRegisteredByTournamentId", $params, null, false, null, false);
   }
-  public function getResultFinishedByTournamentId($params) {
+  public function getResultFinishedByTournamentId(array $params) {
     return $this->getData("resultSelectAllFinishedByTournamentId", $params, null, $params[1], null, false);
   }
   public function getResultPaidByTournamentId($params, $returnQuery) {
     return $this->getData("resultSelectPaidByTournamentId", $params, null, $returnQuery, null, false);
   }
-  public function getResultPaidNotEnteredByTournamentId($params) {
+  public function getResultPaidNotEnteredByTournamentId(array $params) {
     return $this->getData("resultSelectPaidNotEnteredByTournamentId", $params, null, false, null, false);
   }
-  public function getResultOrderedTotalPoints($params) {
+  public function getResultOrderedTotalPoints(array $params) {
     return $this->getData("resultAllOrderedPoints", $params, null, true, null, false);
   }
-  public function getResultOrderedEarnings($params) {
+  public function getResultOrderedEarnings(array $params) {
     return $this->getData("resultAllOrderedEarnings", $params, null, true, null, false);
   }
-  public function getResultOrderedKnockouts($params) {
+  public function getResultOrderedKnockouts(array $params) {
     return $this->getData("resultAllOrderedKnockouts", $params, null, true, null, false);
   }
-  // public function getResultOrderedKnockoutsStats($params) {
+  // public function getResultOrderedKnockoutsStats(array $params) {
   // return $this->getData("resultAllOrderedKnockoutsStats", $params, null, false, null, false);
   // }
-  public function getResultOrderedSummary($params) {
+  public function getResultOrderedSummary(array $params) {
     return $this->getData("resultAllOrderedSummary", $params, null, true, null, false);
   }
-  public function getResultOrderedSummaryStats($params) {
+  public function getResultOrderedSummaryStats(array $params) {
     $resultListSummary = $this->getData("resultAllOrderedSummaryStats", $params, null, false, null, false);
     $resultListKo = $this->getData("resultAllOrderedKnockoutsStats", $params, null, false, null, false);
     $resultListWinners = $this->getData("winnersSelectAllStats", $params, null, false, null, false);
@@ -240,37 +239,37 @@ class DatabaseResult extends Root {
   public function getResultBounty() {
     return $this->getData("resultBountySelectAll", null, null, false, null, false);
   }
-  public function getResultBountyCurrent($params) {
+  public function getResultBountyCurrent(array $params) {
     return $this->getData("resultBountyCurrent", $params, null, false, null, false);
   }
   public function getResultPaidUserCount() {
     return $this->getData("resultPaidUserCount", null, null, false, null, false);
   }
-  public function getResultBountyByTournamentIdAndBountyId($params) {
+  public function getResultBountyByTournamentIdAndBountyId(array $params) {
     return $this->getData("resultBountyByTournamentIdAndBountyId", $params, null, true, null, false);
   }
-  public function getSeason($params) {
+  public function getSeason(array $params) {
     return $this->getData("seasonSelectAll", null, $params[0], $params[1], null, false);
   }
-  public function getSeasonByActive($params) {
+  public function getSeasonByActive(array $params) {
     return $this->getData("seasonSelectOneByActive", $params, null, false, null, false);
   }
-  public function getSeasonById($params) {
+  public function getSeasonById(array $params) {
     return $this->getData("seasonSelectOneById", $params, null, false, null, false);
   }
-  public function getSeasonByIdAndDesc($params) {
+  public function getSeasonByIdAndDesc(array $params) {
     return $this->getData("seasonSelectOneByIdAndDesc", $params, null, false, null, false);
   }
   public function getSeasonActiveCount() {
     return $this->getData("seasonActiveCount", null, null, false, null, false);
   }
-  public function getSeasonDateCheckCount($params) {
+  public function getSeasonDateCheckCount(array $params) {
     return $this->getData("seasonDateCheckCount", $params, null, false, null, false);
   }
-  public function getSpecialType($params) {
+  public function getSpecialType(array $params) {
     return $this->getData("specialTypeSelectAll", null, $params[0], $params[1], null, false);
   }
-  public function getSpecialTypeById($params) {
+  public function getSpecialTypeById(array $params) {
     return $this->getData("specialTypeSelectOneById", $params, null, false, null, false);
   }
   public function getStatus() {
@@ -282,34 +281,34 @@ class DatabaseResult extends Root {
   public function getStructure() {
     return $this->getData("structureSelectAll", null, null, false, null, false);
   }
-  public function getStructurePayout($params) {
+  public function getStructurePayout(array $params) {
     return $this->getData("structurePayout", $params, null, false, null, false);
   }
-  public function getTournamentAll($params) {
-    return $this->getData("tournamentAll", $params, null, null, null, false);
+  public function getTournamentAll(array $params) {
+    return $this->getData("tournamentAll", $params, null, false, null, false);
   }
-  public function getTournament($params) {
+  public function getTournament(array $params) {
     return $this->getData("tournamentSelectAll", null, $params[0], $params[1], null, false);
   }
-  public function getTournamentIdMax($params) {
+  public function getTournamentIdMax(array $params) {
     return $this->getData("tournamentIdMax", null, null, false, null, false);
   }
-  public function getTournamentOrdered($params) {
+  public function getTournamentOrdered(array $params) {
     return $this->getData("tournamentSelectAllOrdered", null, null, $params[0], null, false);
   }
-  public function getTournamentsForEmailNotifications($params) {
+  public function getTournamentsForEmailNotifications(array $params) {
     return $this->getData("tournamentsSelectForEmailNotifications", $params, null, false, null, false);
   }
   public function getTournamentByDateAndStartTime($params, $limitCount) {
     return $this->getData("tournamentSelectAllByDateAndStartTime", $params, null, false, $limitCount, false);
   }
-  public function getTournamentById($params) {
+  public function getTournamentById(array $params) {
     return $this->getData("tournamentSelectOneById", $params, null, false, null, false);
   }
   public function getTournamentBounty() {
     return $this->getData("tournamentBountySelectAll", null, null, false, null, false);
   }
-  public function getTournamentBountyByTournamentId($params) {
+  public function getTournamentBountyByTournamentId(array $params) {
     return $this->getData("tournamentBountySelectByTournamentId", $params, null, false, null, false);
   }
   public function getTournamentDuring() {
@@ -318,68 +317,68 @@ class DatabaseResult extends Root {
   public function getSeasonChampionships() {
     return $this->getData("seasonSelectAllChampionship", null, null, false, null, false);
 }
-  public function getTournamentYearsPlayed($params) {
+  public function getTournamentYearsPlayed(array $params) {
 //     return $this->getData("tournamentSelectAllYearsPlayed", null, $params[0], false, null, false);
-    return $this->getData("tournamentSelectAllYearsPlayed", null, null, false, null, false);
+    return $this->getData("tournamentSelectAllYearsPlayed", $params, null, false, null, false);
   }
-  public function getTournamentForRegistration($params) {
+  public function getTournamentForRegistration(array $params) {
     return $this->getData("tournamentSelectAllForRegistration", $params, null, false, null, false);
   }
-  public function getTournamentForBuyins($params) {
+  public function getTournamentForBuyins(array $params) {
     return $this->getData("tournamentSelectAllForBuyins", $params, null, false, null, false);
   }
-  public function getTournamentForRegistrationStatus($params) {
+  public function getTournamentForRegistrationStatus(array $params) {
     return $this->getData("tournamentSelectAllRegistrationStatus", $params, null, true, null, false);
   }
-  public function getTournamentsPlayedByPlayerIdAndDateRange($params) {
+  public function getTournamentsPlayedByPlayerIdAndDateRange(array $params) {
     return $this->getData("tournamentsPlayedByPlayerIdAndDateRange", $params, null, false, null, false);
   }
-  public function getTournamentsWonByPlayerId($params) {
+  public function getTournamentsWonByPlayerId(array $params) {
     return $this->getData("tournamentsWonByPlayerId", $params, null, false, null, false);
   }
-  public function getTournamentsPlayed($params) {
+  public function getTournamentsPlayed(array $params) {
     return $this->getData("tournamentsPlayed", $params, null, true, null, true);
   }
-  public function getTournamentsPlayedByTypeByPlayerId($params) {
+  public function getTournamentsPlayedByTypeByPlayerId(array $params) {
     return $this->getData("tournamentsPlayedByType", $params, null, true, null, false);
   }
-  public function getTournamentsPlayedFirstByPlayerId($params) {
+  public function getTournamentsPlayedFirstByPlayerId(array $params) {
     return $this->getData("tournamentsPlayedFirst", $params, null, false, null, false);
   }
-  public function getTournamentIdList($params) {
+  public function getTournamentIdList(array $params) {
     return $this->getData("tournamentIdList", $params, null, false, null, false);
   }
-  // public function getUser($params) {
+  // public function getUser(array $params) {
   // return $this->getData("userSelectAll", $params, null, $params[0], null, false);
   // }
-  public function getUserAbsencesByTournamentId($params) {
+  public function getUserAbsencesByTournamentId(array $params) {
     return $this->getData("userAbsencesByTournamentId", $params, null, false, null, false);
   }
-  public function getUsersActive($params) {
+  public function getUsersActive(array $params) {
     return $this->getData("userActive", null, null, false, null, false);
   }
-  public function getUsersAll($params) {
-    return $this->getData("userSelectAll", null, null, $params[0], null, false);
+  public function getUsersAll(array $params) {
+    return $this->getData("userSelectAll", $params, null, $params[0], null, false);
   }
-  public function getUserById($params) {
+  public function getUserById(array $params) {
     return $this->getData("userSelectOneById", $params, null, false, null, false);
   }
-  public function getUserByUsername($params) {
+  public function getUserByUsername(array $params) {
     return $this->getData("userSelectOneByUsername", $params, null, false, null, false);
   }
-  public function getUserByEmail($params) {
+  public function getUserByEmail(array $params) {
     return $this->getData("userSelectOneByEmail", $params, null, false, null, false);
   }
-  public function getUsersForEmailNotifications($params) {
+  public function getUsersForEmailNotifications(array $params) {
     return $this->getData("usersSelectForEmailNotifications", $params, null, false, null, false);
   }
   public function getUsersForApproval() {
     return $this->getData("usersSelectForApproval", null, null, true, null, false);
   }
-  public function getUserPaidByTournamentId($params) {
+  public function getUserPaidByTournamentId(array $params) {
     return $this->getData("userPaidByTournamentId", $params, null, false, null, false);
   }
-  public function getWaitListedPlayerByTournamentId($params) {
+  public function getWaitListedPlayerByTournamentId(array $params) {
     return $this->getData("waitListedPlayerByTournamentId", $params, null, false, null, false);
   }
   public function getWinnersForSeason($params, $returnQuery, $limitCount) {
@@ -391,157 +390,157 @@ class DatabaseResult extends Root {
   public function getWinsTotalAndAverageForSeasonForUser($params, $orderBy, $rank) {
     return $this->getData("winsTotalAndAverageForSeasonForUser", $params, $orderBy, true, null, $rank);
   }
-  public function getWinners($params) {
+  public function getWinners(array $params) {
     return $this->getData("winnersSelectAll", $params, null, true, null, false);
   }
-  public function getUserPasswordReset($params) {
+  public function getUserPasswordReset(array $params) {
     return $this->getData("userPasswordReset", $params, null, false, null, false);
   }
-  public function deleteBounty($params) {
+  public function deleteBounty(array $params) {
     return $this->deleteData("bountyDelete", $params);
   }
-  public function deleteLocation($params) {
+  public function deleteLocation(array $params) {
     return $this->deleteData("locationDelete", $params);
   }
-  public function deleteGroup($params) {
+  public function deleteGroup(array $params) {
     return $this->deleteData("groupDelete", $params);
   }
-  public function deleteGroupPayout($params) {
+  public function deleteGroupPayout(array $params) {
     return $this->deleteData("groupPayoutDelete", $params);
   }
-  public function deleteNotification($params) {
+  public function deleteNotification(array $params) {
     return $this->deleteData("notificationDelete", $params);
   }
-  public function deletePayout($params) {
+  public function deletePayout(array $params) {
     return $this->deleteData("payoutDelete", $params);
   }
-  public function deleteRegistration($params) {
+  public function deleteRegistration(array $params) {
     return $this->deleteData("registrationDelete", $params);
   }
-  public function deleteResult($params) {
+  public function deleteResult(array $params) {
     return $this->deleteData("resultDelete", $params);
   }
-  public function deleteResultBounty($params) {
+  public function deleteResultBounty(array $params) {
     return $this->deleteData("resultBountyDelete", $params);
   }
-  public function deleteSeason($params) {
+  public function deleteSeason(array $params) {
     return $this->deleteData("seasonDelete", $params);
   }
-  public function deleteStructure($params) {
+  public function deleteStructure(array $params) {
     return $this->deleteData("structureDelete", $params);
   }
-  public function deleteTournament($params) {
+  public function deleteTournament(array $params) {
     return $this->deleteData("tournamentDelete", $params);
   }
-  public function deleteTournamentBountyByTournamentId($params) {
+  public function deleteTournamentBountyByTournamentId(array $params) {
     return $this->deleteData("tournamentBountyDeleteByTournamentId", $params);
   }
-  public function deleteTournamentBountyByTournamentIdAndBountyId($params) {
+  public function deleteTournamentBountyByTournamentIdAndBountyId(array $params) {
     return $this->deleteData("tournamentBountyDeleteByTournamentIdAndBountyId", $params);
   }
-  public function deleteTournamentBountyByPlayerId($params) {
+  public function deleteTournamentBountyByPlayerId(array $params) {
     return $this->deleteData("tournamentBountyDeleteByPlayerId", $params);
   }
-  public function deleteSpecialType($params) {
+  public function deleteSpecialType(array $params) {
     return $this->deleteData("specialTypeDelete", $params);
   }
-  public function insertBounty($params) {
+  public function insertBounty(array $params) {
     return $this->insertData("bountyInsert", $params);
   }
-  public function insertGroup($params) {
+  public function insertGroup(array $params) {
     return $this->insertData("groupInsert", $params);
   }
-  public function insertGroupPayout($params) {
+  public function insertGroupPayout(array $params) {
     return $this->insertData("groupPayoutInsert", $params);
   }
-  public function insertLocation($params) {
+  public function insertLocation(array $params) {
     return $this->insertData("locationInsert", $params);
   }
-  public function insertNotification($params) {
+  public function insertNotification(array $params) {
     return $this->insertData("notificationInsert", $params);
   }
-  public function insertPayout($params) {
+  public function insertPayout(array $params) {
     return $this->insertData("payoutInsert", $params);
   }
-  public function insertRegistration($params) {
+  public function insertRegistration(array $params) {
     return $this->insertData("registrationInsert", $params);
   }
-  public function insertSeason($params) {
+  public function insertSeason(array $params) {
     return $this->insertData("seasonInsert", $params);
   }
-  public function insertStructure($params) {
+  public function insertStructure(array $params) {
     return $this->insertData("structureInsert", $params);
   }
-  public function insertTournament($params) {
+  public function insertTournament(array $params) {
     return $this->insertData("tournamentInsert", $params);
   }
-  public function insertTournamentBounty($params) {
+  public function insertTournamentBounty(array $params) {
     return $this->insertData("tournamentBountyInsert", $params);
   }
-  public function insertSpecialType($params) {
+  public function insertSpecialType(array $params) {
     return $this->insertData("specialTypeInsert", $params);
   }
-  public function insertUser($params) {
+  public function insertUser(array $params) {
     return $this->insertData("userInsert", $params);
   }
-  public function updateBuyins($params) {
+  public function updateBuyins(array $params) {
     return $this->updateData("buyinsUpdate", $params);
   }
-  public function updateGroup($params) {
+  public function updateGroup(array $params) {
     return $this->updateData("groupUpdate", $params);
   }
-  public function updateGroupPayout($params) {
+  public function updateGroupPayout(array $params) {
     return $this->updateData("groupPayoutUpdate", $params);
   }
-  public function updateLocation($params) {
+  public function updateLocation(array $params) {
     return $this->updateData("locationUpdate", $params);
   }
-  public function updateNotification($params) {
+  public function updateNotification(array $params) {
     return $this->updateData("notificationUpdate", $params);
   }
-  public function updatePayout($params) {
+  public function updatePayout(array $params) {
     return $this->updateData("payoutUpdate", $params);
   }
-  public function updateRegistration($params) {
+  public function updateRegistration(array $params) {
     return $this->updateData("registrationUpdate", $params);
   }
-  public function updateRegistrationCancel($params) {
+  public function updateRegistrationCancel(array $params) {
     return $this->updateData("registrationCancelUpdate", $params);
   }
-  public function updateResult($params) {
+  public function updateResult(array $params) {
     return $this->updateData("resultUpdate", $params);
   }
-  public function updateResultDuring($params) {
+  public function updateResultDuring(array $params) {
     return $this->updateData("resultUpdateDuring", $params);
   }
-  public function updateResultByTournamentIdAndPlace($params) {
+  public function updateResultByTournamentIdAndPlace(array $params) {
     return $this->updateData("resultUpdateByTournamentIdAndPlace", $params);
   }
-  public function updateResultByTournamentId($params) {
+  public function updateResultByTournamentId(array $params) {
     return $this->updateData("resultUpdateByTournamentId", $params);
   }
-  public function updateSeason($params) {
+  public function updateSeason(array $params) {
     return $this->updateData("seasonUpdate", $params);
   }
-  public function updateTournament($params) {
+  public function updateTournament(array $params) {
     return $this->updateData("tournamentUpdate", $params);
   }
-  public function updateSpecialType($params) {
+  public function updateSpecialType(array $params) {
     return $this->updateData("specialTypeUpdate", $params);
   }
-  public function updateUser($params) {
+  public function updateUser(array $params) {
     return $this->updateData("userUpdate", $params);
   }
-  public function updateUserReset($params) {
+  public function updateUserReset(array $params) {
     return $this->updateData("userUpdateReset", $params);
   }
-  public function updateUserChangePassword($params) {
+  public function updateUserChangePassword(array $params) {
     return $this->updateData("userUpdateChangePassword", $params);
   }
-  public function updateUserRememberMe($params) {
+  public function updateUserRememberMe(array $params) {
     return $this->updateData("userUpdateRememberMe", $params);
   }
-  public function updateUserRememberMeClear($params) {
+  public function updateUserRememberMeClear(array $params) {
     return $this->updateData("userUpdateRememberMeClear", $params);
   }
   private function initializeDatabase() {
@@ -573,7 +572,7 @@ class DatabaseResult extends Root {
   // $returnQuery is boolean (true returns query instead of results, false returns results)
   // $limitCount is number to limit the results by
   // $rank is boolean (true means ranking, false means no ranking)
-  private function getData($dataName, $params, $orderBy = null, $returnQuery = false, $limitCount = null, $rank = false) {
+  private function getData(string $dataName, array|null $params, array|null $orderBy = null, bool $returnQuery = false, int|null $limitCount = null, bool $rank = false) {
 //     try {
       $resultList = array();
       switch ($dataName) {
@@ -2241,21 +2240,10 @@ class DatabaseResult extends Root {
                   array_push($resultList, $tournament);
                   break;
                 case "bountiesForSeason":
-                  $resultBounty = new ResultBounty();
-                  $bounty = new Bounty();
-                  if ("points" == $row["type"]) {
-                    $bounty->setId(1);
-                    $bounty->setName("Bounty A");
-                  } else {
-                    $bounty->setId(2);
-                    $bounty->setName("Bounty B");
-                  }
-                  $bounty->setDescription($row["type"]);
-                  $resultBounty->setBounty($bounty);
-                  $user = new User();
-                  $user->setName($row["name"]);
-                  $user->setActive($row["active"]);
-                  $resultBounty->setUser($user);
+                  $bounty = new Bounty($this->isDebug(), "points" == $row["type"] ? 1 : 2, "points" == $row["type"] ? "Bounty A" : "Bounty B", $row["type"]);
+                  $name = explode(" ", $row["name"]);
+                  $user = new User($this->isDebug(), null, $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, $row["active"], null, null, null, null, null, null, null);
+                  $resultBounty = new ResultBounty($this->isDebug(), null, null, $bounty, $user);
                   array_push($resultList, $resultBounty);
                   break;
                 case "bountyCountSelectByTournament":
@@ -2685,11 +2673,13 @@ class DatabaseResult extends Root {
                   array_push($resultList, (int) $row["tournamentId"]);
                   break;
                 case "tournamentAll":
-                  $tournament = new Tournament();
-                  $tournament->setId((int) $row["tournamentId"]);
-                  $tournament->setDescription($row["tournamentDesc"]);
                   $dateTime = new DateTime($this->isDebug(), null, $row["tournamentDate"]);
-                  $tournament->setDate($dateTime);
+                  $tournament = new Tournament($this->isDebug(), $row["tournamentId"], $row["tournamentDesc"], null, null, null, null, 0, null, $dateTime, null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
+//                   $tournament = new Tournament();
+//                   $tournament->setId((int) $row["tournamentId"]);
+//                   $tournament->setDescription($row["tournamentDesc"]);
+//                   $dateTime = new DateTime($this->isDebug(), null, $row["tournamentDate"]);
+//                   $tournament->setDate($dateTime);
                   array_push($resultList, $tournament);
                   break;
                 case "tournamentSelectAll":
@@ -2876,40 +2866,45 @@ class DatabaseResult extends Root {
                 case "userSelectOneByUsername":
                 case "userSelectOneByEmail":
                 case "userPaidByTournamentId":
-                  $user = new User();
-                  $user->setId((int) $row["id"]);
                   $name = explode(" ", $row["name"]);
-                  $user->setFirstName($name[0]);
-                  if (1 < count($name)) {
-                    $user->setLastName($name[1]);
-                  }
-                  $user->setUsername($row[2]);
-                  $user->setPassword($row[3]);
-                  $user->setEmail($row[4]);
-                  $user->setPhone($row[5]);
-                  $user->setAdministrator($row[6]);
-                  $user->setRegistrationDate($row[7]);
-                  $user->setApprovalDate($row[8]);
-                  $user->setApprovalUserid($row[9]);
-                  $user->setApprovalName($row[10]);
-                  $user->setRejectionDate($row[11]);
-                  $user->setRejectionUserid($row[12]);
-                  $user->setRejectionName($row[13]);
-                  $user->setActive($row[13]);
-                  // $user->setResetSelector($row["reset_selector"]);
-                  // $user->setResetToken($row["reset_token"]);
-                  // $user->setResetExpires($row["reset_expires"]);
-                  // $user->setRememberSelector($row["remember_selector"]);
-                  // $user->setRememberToken($row["remember_token"]);
-                  // $user->setRememberExpires($row["remember_expires"]);
-                  // $user->setType($row["usertype"]);
+                  $phone = new Phone($this->isDebug(), null, $row[5]);
+                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], $row[2], $row[3], $row[4], $phone, $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], null, null, null, null, null, null, null, null);
+//                   $user = new User();
+//                   $user->setId((int) $row["id"]);
+//                   $name = explode(" ", $row["name"]);
+//                   $user->setFirstName($name[0]);
+//                   if (1 < count($name)) {
+//                     $user->setLastName($name[1]);
+//                   }
+//                   $user->setUsername($row[2]);
+//                   $user->setPassword($row[3]);
+//                   $user->setEmail($row[4]);
+//                   $user->setPhone($row[5]);
+//                   $user->setAdministrator($row[6]);
+//                   $user->setRegistrationDate($row[7]);
+//                   $user->setApprovalDate($row[8]);
+//                   $user->setApprovalUserid($row[9]);
+//                   $user->setApprovalName($row[10]);
+//                   $user->setRejectionDate($row[11]);
+//                   $user->setRejectionUserid($row[12]);
+//                   $user->setRejectionName($row[13]);
+//                   $user->setActive($row[14]);
+//                   // $user->setResetSelector($row["reset_selector"]);
+//                   // $user->setResetToken($row["reset_token"]);
+//                   // $user->setResetExpires($row["reset_expires"]);
+//                   // $user->setRememberSelector($row["remember_selector"]);
+//                   // $user->setRememberToken($row["remember_token"]);
+//                   // $user->setRememberExpires($row["remember_expires"]);
+//                   // $user->setType($row["usertype"]);
                   array_push($resultList, $user);
                   break;
                 case "usersSelectForEmailNotifications":
-                  $user = new User();
-                  $user->setId((int) $row["id"]);
-                  $user->setName($row["name"]);
-                  $user->setEmail($row["email"]);
+//                   $user = new User();
+//                   $user->setId((int) $row["id"]);
+//                   $user->setName($row["name"]);
+//                   $user->setEmail($row["email"]);
+                  $name = explode(" ", $row["name"]);
+                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], null, null, $row["email"], null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
                   array_push($resultList, $user);
                   break;
                 case "waitListedPlayerByTournamentId":
@@ -2958,7 +2953,7 @@ class DatabaseResult extends Root {
   // $groupId is group id
   // $payoutId is payout id
   // $structureFlag is boolean true for structures
-  private function getPayouts($groupId, $payoutId, $structureFlag) {
+  private function getPayouts(int $groupId, int $payoutId, bool $structureFlag) {
     $payouts = array();
     $queryNested =
       "SELECT p.payoutId AS id, p.payoutName AS name, p.bonusPoints AS 'bonus pts', p.minPlayers AS 'min players', p.maxPlayers AS 'max players' " .
@@ -3017,7 +3012,7 @@ class DatabaseResult extends Root {
   }
   // $dataName is name of query
   // $params is array of input parameters
-  private function deleteData($dataName, $params = null) {
+  private function deleteData(string $dataName, array $params = null) {
     $numRecords = 0;
     try {
       switch ($dataName) {
@@ -3117,7 +3112,7 @@ class DatabaseResult extends Root {
   }
   // $dataName is name of query
   // $params is array of input parameters
-  private function insertData($dataName, $params = null) {
+  private function insertData(string $dataName, array $params = null) {
     $numRecords = 0;
     try {
       switch ($dataName) {
@@ -3180,7 +3175,7 @@ class DatabaseResult extends Root {
   }
   // $dataName is query name
   // $params is array of input parameters
-  private function updateData($dataName, $params = null) {
+  private function updateData(string $dataName, array $params = null) {
     $numRecords = 0;
     try {
       switch ($dataName) {
@@ -3497,11 +3492,11 @@ class DatabaseResult extends Root {
     return $numRecords;
   }
   // $prefix is table alias
-  private function buildOrderByName($prefix) {
+  private function buildOrderByName(string|null $prefix) {
     $alias = isset($prefix) ? $prefix . "." : "";
     return $alias . "last_name, " . $alias . "first_name";
   }
-  private function buildChampionship($params) {
+  private function buildChampionship(array $params) {
     $query =
       "SELECT YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
     "                                          (SELECT SUM(total) AS 'Total Pool' " . "                                           FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, " .
@@ -3566,7 +3561,7 @@ class DatabaseResult extends Root {
   // $selectFieldName is field name used for ranking
   // $selectFieldNames is list of field names to search in
   // $orderByFieldName is order by field name to use when replacing
-  private function modifyQueryAddRank($query, $whereClause, $selectFieldName, $selectFieldNames, $orderByFieldName) {
+  private function modifyQueryAddRank(string $query, string $whereClause, string $selectFieldName, string $selectFieldNames, string $orderByFieldName) {
     if ($this->isDebug()) {
       echo "<br>orig -> " . $query;
     }

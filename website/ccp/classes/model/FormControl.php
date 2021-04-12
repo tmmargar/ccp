@@ -2,32 +2,32 @@
 namespace ccp\classes\model;
 class FormControl extends FormBase {
   // DO NOT USE FormInput eclipse shows errors even though code runs
-  public static $TYPE_INPUT_BUTTON    = "button";
-  public static $TYPE_INPUT_CHECKBOX  = "checkbox";
-  public static $TYPE_INPUT_EMAIL     = "email";
-  public static $TYPE_INPUT_HIDDEN    = "hidden";
-  public static $TYPE_INPUT_PASSWORD  = "password";
-  public static $TYPE_INPUT_RESET     = "reset";
-  public static $TYPE_INPUT_SUBMIT    = "submit";
-  public static $TYPE_INPUT_TELEPHONE = "tel";
-  public static $TYPE_INPUT_TEXTAREA  = "textarea";
-  public static $TYPE_INPUT_TEXTBOX   = "text";
-  private $accessKey;
-  private $autoComplete;
-  private $autoFocus; // boolean
-  private $checked; // boolean
-  private $cols;
-  private $maxLength;
-  private $onClick;
-  private $placeholder;
-  private $readOnly; // boolean
-  private $required; // boolean
-  private $rows;
-  private $size;
-  private $type;
-  private $wrap;
-  public function __construct21($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap) {
-    parent::__construct7($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
+  public static string $TYPE_INPUT_BUTTON    = "button";
+  public static string $TYPE_INPUT_CHECKBOX  = "checkbox";
+  public static string $TYPE_INPUT_EMAIL     = "email";
+  public static string $TYPE_INPUT_HIDDEN    = "hidden";
+  public static string $TYPE_INPUT_PASSWORD  = "password";
+  public static string $TYPE_INPUT_RESET     = "reset";
+  public static string $TYPE_INPUT_SUBMIT    = "submit";
+  public static string $TYPE_INPUT_TELEPHONE = "tel";
+  public static string $TYPE_INPUT_TEXTAREA  = "textarea";
+  public static string $TYPE_INPUT_TEXTBOX   = "text";
+  private string|null $accessKey;
+  private string|null $autoComplete;
+  private bool $autoFocus; // boolean
+  private bool|null $checked; // boolean
+  private string|null $cols;
+  private string|null $maxLength;
+  private string|null $onClick;
+  private string|null $placeholder;
+  private bool $readOnly; // boolean
+  private bool|null $required; // boolean
+  private string|null $rows;
+  private int|null $size;
+  private string|null $type;
+  private string|null $wrap;
+  public function __construct(bool $debug, string|null $accessKey, string|null $autoComplete, bool $autoFocus, bool|null $checked, array|null $class, string|null $cols, bool $disabled, string|int|null $id, string|null $maxLength, string|null $name, string|null $onClick, string|null $placeholder, bool $readOnly, bool|null $required, string|null $rows, int|null $size, string|null $suffix, string|null $type, string|null $value, string|null $wrap) {
+    parent::__construct($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
     $this->accessKey = $accessKey;
     $this->autoComplete = $autoComplete;
     $this->autoFocus = $autoFocus;
@@ -113,46 +113,46 @@ class FormControl extends FormBase {
   public function isRequired() {
     return $this->required;
   }
-  public function setAccessKey($accessKey) {
+  public function setAccessKey(string|null $accessKey) {
     $this->accessKey = $accessKey;
   }
   public function setAutoComplete($autoComplete) {
     $this->autoComplete = $autoComplete;
   }
-  public function setAutoFocus($autoFocus) {
+  public function setAutoFocus(bool $autoFocus) {
     $this->autoFocus = $autoFocus;
   }
-  public function setChecked($checked) {
+  public function setChecked(bool|null $checked) {
     $this->checked = $checked;
   }
-  public function setCols($cols) {
+  public function setCols(string|null $cols) {
     $this->cols = $cols;
   }
-  public function setMaxLength($maxLength) {
+  public function setMaxLength(string|null $maxLength) {
     $this->maxLength = $maxLength;
   }
-  public function setOnClick($onClick) {
+  public function setOnClick(string|null $onClick) {
     $this->onClick = $onClick;
   }
-  public function setPlaceholder($placeholder) {
+  public function setPlaceholder(string|null $placeholder) {
     $this->placeholder = $placeholder;
   }
-  public function setReadOnly($readOnly) {
+  public function setReadOnly(bool $readOnly) {
     $this->readOnly = $readOnly;
   }
-  public function setRequired($required) {
+  public function setRequired(bool|null $required) {
     $this->required = $required;
   }
-  public function setRows($rows) {
+  public function setRows(string|null $rows) {
     $this->rows = $rows;
   }
-  public function setSize($size) {
+  public function setSize(int|null $size) {
     $this->size = $size;
   }
-  public function setType($type) {
+  public function setType(string|null $type) {
     $this->type = $type;
   }
-  public function setWrap($wrap) {
+  public function setWrap(string|null $wrap) {
     $this->wrap = $wrap;
   }
   public function toString() {

@@ -3,29 +3,18 @@ namespace ccp\classes\utility;
 use ccp\classes\model\Constant;
 use Exception;
 class SessionUtility {
-  public static $OBJECT_NAME_ADMINISTRATOR = "administrator";
-  public static $OBJECT_NAME_DEBUG = "debug";
-  public static $OBJECT_NAME_NAME = "name";
-  public static $OBJECT_NAME_USERID = "userid";
-  public static $OBJECT_NAME_USERNAME = "username";
-  public static $OBJECT_NAME_SECURITY = "securityObject";
-  public static $OBJECT_NAME_SEASON = "seasonObject";
-  public static $OBJECT_NAME_START_DATE = "startDate";
-  public static $OBJECT_NAME_END_DATE = "endDate";
+  public static string $OBJECT_NAME_ADMINISTRATOR = "administrator";
+  public static string $OBJECT_NAME_DEBUG         = "debug";
+  public static string $OBJECT_NAME_NAME          =  "name";
+  public static string $OBJECT_NAME_USERID        = "userid";
+  public static string $OBJECT_NAME_USERNAME      = "username";
+  public static string $OBJECT_NAME_SECURITY      = "securityObject";
+  public static string $OBJECT_NAME_SEASON        = "seasonObject";
+  public static string $OBJECT_NAME_START_DATE    = "startDate";
+  public static string $OBJECT_NAME_END_DATE      = "endDate";
   public static function destroy() {
     self::startSession();
-    // clear out session
     $_SESSION = array();
-    // If it's desired to kill the session, also delete the session cookie.
-    // Note: This will destroy the session, and not just the session data!
-    // if (ini_get("session.use_cookies")) {
-    // $params = session_get_cookie_params();
-    // setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
-    // }
-    // // Use this too
-    // ini_set('session.gc_max_lifetime', 0);
-    // ini_set('session.gc_probability', 1);
-    // ini_set('session.gc_divisor', 1);
     session_destroy();
   }
   public static function destroyAllSessions() {
@@ -42,10 +31,8 @@ class SessionUtility {
   public static function existsSecurity() {
     return !empty($_SESSION[self::$OBJECT_NAME_SECURITY]);
   }
-  public static function getValue($name) {
-    // TODO: find better way to do this
-    // return $_SESSION[$name];
-    $value = "";
+  public static function getValue(string $name) {
+    $value = $name == self::$OBJECT_NAME_DEBUG ? false : "";
     if (self::existsSecurity()) {
       $security = unserialize($_SESSION[self::$OBJECT_NAME_SECURITY]);
       switch ($name) {
@@ -82,7 +69,7 @@ class SessionUtility {
   public static function print() {
     return print_r($_SESSION, true);
   }
-  public static function regenerateAllSessions($seasonNew) {
+  public static function regenerateAllSessions(int $seasonNew) {
     $sessionCurrentId = session_id(); // get current session id
     $ctr = -1;
     $files = glob(session_save_path() . "/*"); // get all session files
@@ -126,7 +113,7 @@ class SessionUtility {
     session_start();
 //     session_regenerate_id(true);
   }
-  public static function setValue($name, $value) {
+  public static function setValue(string $name, mixed $value) {
     $_SESSION[$name] = serialize($value);
   }
   public static function unserialize($session_data) {

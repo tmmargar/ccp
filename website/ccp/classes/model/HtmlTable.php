@@ -1,7 +1,7 @@
 <?php
 namespace ccp\classes\model;
 class HtmlTable extends HtmlBase {
-  public static $ID_TABLE_DATA = "dataTbl";
+  public static string $ID_TABLE_DATA = "dataTbl";
   /*
    * $query is sql query
    * $mode is page mode
@@ -22,25 +22,25 @@ class HtmlTable extends HtmlBase {
    * $width is width of table (default is 100%)
    * $link is array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name) (default is NULL)
    */
-   private $query; // query
-   private $class; // array of class names
-   private $caption; // additional info about table
-   private $columnFormat; // array of column formats
-   private $hiddenId; // name prefix of field to store row identifier
-   private $selectedRow; // aray of selected rows
-   private $delimiter; // delimiter (default is ", ")
-   private $foreignKeys; // array of foreign key queries
-   private $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
-   private $header; // boolean to display header row or not
-   private $note; // boolean true to display sorting note, false to hide
-   private $hiddenAdditional; // array of name and index of value to store
-   private $hideColumnIndexes; // array of column indexes to hide that are returned from query
-   private $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
-   private $suffix; // suffix of table id
-   private $width; // width of table
-   private $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
-  public function __construct19($caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width) {
-    parent::__construct6(null, $class, $debug, $id, -1, null);
+   private string $query; // query
+   private array $class; // array of class names
+   private string $caption; // additional info about table
+   private array $columnFormat; // array of column formats
+   private string|null $hiddenId; // name prefix of field to store row identifier
+   private array|null $selectedRow; // array of selected rows
+   private string $delimiter; // delimiter (default is ", ")
+   private array|null $foreignKeys; // array of foreign key queries
+   private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+   private bool $header; // boolean to display header row or not
+   private bool $note; // boolean true to display sorting note, false to hide
+   private array|null $hiddenAdditional; // array of name and index of value to store
+   private array $hideColumnIndexes; // array of column indexes to hide that are returned from query
+   private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
+   private string $suffix; // suffix of table id
+   private string $width; // width of table
+   private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
+  public function __construct(string $caption, array $class, int|null $colspan, array $columnFormat, bool $debug, string $delimiter, array|null $foreignKeys, bool $header, array|null $hiddenAdditional, string|null $hiddenId, array $hideColumnIndexes, array|null $html, string|int|null $id, array|null $link, bool $note, string $query, array|null $selectedRow, string $suffix, string $width) {
+    parent::__construct(null, $class, $debug, $id, -1, null);
     $this->caption = $caption;
     $this->colspan = $colspan;
     $this->columnFormat = $columnFormat;
@@ -393,67 +393,67 @@ class HtmlTable extends HtmlBase {
     return $this->note;
   }
 
-  public function setCaption($caption) {
+  public function setCaption(string $caption) {
     $this->caption = $caption;
   }
 
-  public function setColspan($colspan) {
+  public function setColspan(array $colspan) {
     $this->colspan = $colspan;
   }
 
-  public function setColumnFormat($columnFormat) {
+  public function setColumnFormat(array $columnFormat) {
     $this->columnFormat = $columnFormat;
   }
 
-  public function setDelimiter($delimiter) {
+  public function setDelimiter(string $delimiter) {
     $this->delimiter = $delimiter;
   }
 
-  public function setForeignKeys($foreignKeys) {
+  public function setForeignKeys(array $foreignKeys) {
     $this->foreignKeys = $foreignKeys;
   }
 
-  public function setHiddenId($hiddenId) {
+  public function setHiddenId(string $hiddenId) {
     $this->hiddenId = $hiddenId;
   }
 
-  public function setHeader($header) {
+  public function setHeader(bool $header) {
     $this->header = $header;
   }
 
-  public function setHiddenAdditional($hiddenAdditional) {
+  public function setHiddenAdditional(array $hiddenAdditional) {
     $this->hiddenAdditional = $hiddenAdditional;
   }
 
-  public function setHideColumnIndexes($hideColumnIndexes) {
+  public function setHideColumnIndexes(array $hideColumnIndexes) {
     $this->hideColumnIndexes = $hideColumnIndexes;
   }
 
-  public function setHtml($html) {
+  public function setHtml(array $html) {
     $this->html = $html;
   }
 
-  public function setLink($link) {
+  public function setLink(array $link) {
       $this->link = $link;
   }
 
-  public function setNote($note) {
+  public function setNote(bool $note) {
       $this->note = $note;
   }
 
-  public function setQuery($query) {
+  public function setQuery(string $query) {
     $this->query = $query;
   }
 
-  public function setSelectedRow($selectedRow) {
+  public function setSelectedRow(array $selectedRow) {
     $this->selectedRow = $selectedRow;
   }
 
-  public function setSuffix($suffix) {
+  public function setSuffix(string $suffix) {
       $this->suffix = $suffix;
   }
 
-  public function setWidth($width) {
+  public function setWidth(string $width) {
       $this->width = $width;
   }
 

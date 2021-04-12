@@ -1,10 +1,10 @@
 <?php
 namespace ccp\classes\model;
 class SpecialType extends Base {
-  private $description;
+  private string $description;
 
-  public function __construct3($debug, $id, $description) {
-    parent::__construct2($debug, $id);
+  public function __construct(bool $debug, int $id, string $description) {
+    parent::__construct($debug, $id);
     $this->description = $description;
   }
 
@@ -12,14 +12,14 @@ class SpecialType extends Base {
     return $this->description;
   }
 
-  public function setDescription($description) {
+  public function setDescription(string $description) {
     $this->description = $description;
   }
 
   public function __toString() {
     $output = parent::__toString();
     $output .= ", description = '";
-    $output .= $this->getDescription();
+    $output .= $this->description;
     $output .= "'";
     return $output;
   }
