@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DateTime;
@@ -93,20 +94,20 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TELEPHONE, ((count($resultList) > 0) ? $resultList[$ctr]->getPhone() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TELEPHONE, ((count($resultList) > 0) ? $resultList[$ctr]->getPhone()->getValue() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) == 1) {
         $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . ADMINISTRATOR_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $output .= "    <div style=\"float: left;\">\n     ";
-        $checkboxAdministrator = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getAdministrator() ? true : false), null, null, false, ADMINISTRATOR_FIELD_NAME . "_" . $id, null, ADMINISTRATOR_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
+        $checkboxAdministrator = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getAdministrator() ? true : false), null, null, false, ADMINISTRATOR_FIELD_NAME . "_" . $id, null, ADMINISTRATOR_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, (string) Constant::$FLAG_YES_DATABASE, null);
         $output .= "        " . $checkboxAdministrator->getHtml();
         $output .= "    </div>\n";
         $output .= "    <div style=\"clear: both;\"></div>\n";
         $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $output .= "    <div style=\"float: left;\">\n     ";
-        $checkboxActive = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), null, null, false, ACTIVE_FIELD_NAME . "_" . $id, null, ACTIVE_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, Constant::$FLAG_YES_DATABASE, null);
+        $checkboxActive = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), null, null, false, ACTIVE_FIELD_NAME . "_" . $id, null, ACTIVE_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, (string) Constant::$FLAG_YES_DATABASE, null);
         $output .= "        " . $checkboxActive->getHtml();
         $output .= "    </div>\n";
         $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -150,7 +151,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $hiddenRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), null);
       $output .= $hiddenRow->getHtml();
       $output .= "    <div style==\"clear: both;\"></div>\n";
-      $ctr++;
+      $ctr ++;
     }
     $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, true, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
     $output .= $buttonSave->getHtml();
@@ -177,17 +178,17 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $active = isset($_POST[ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_ACTIVE;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       // $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTime::createFromFormat(DateTimeUtility::$DATE_FORMAT_PICKER_DISPLAY_DEFAULT, "12/25/2019")), SessionUtility::getValue("userid"), null, null, "1", null, null, null, null, null, null);
-//       $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTimeUtility::createDate(null, null)), SessionUtility::getValue("userid"), null, null, $active == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, null);
+      // $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTimeUtility::createDate(null, null)), SessionUtility::getValue("userid"), null, null, $active == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, null);
       $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-      $params = array(null, $firstName, $lastName, $username, $password, $email, $phone, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, isset($active) ? $active : 0, null, null, null);
+      $params = array(null, $firstName, $lastName, $username, $password, $email, $phone, $administrator, null, $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, $active, null, null, null);
       $databaseResult->insertUser($params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       // $userId = (isset($_POST[USER_ID_FIELD_NAME . "_" . $id])) ? $_POST[USER_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $tempUserId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $params = array($tempUserId, $firstName, $lastName, $username, $password, $email, $phone, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, isset($active) ? $active : 0, null, null, null, null, null, null);
+      $params = array($tempUserId, $firstName, $lastName, $username, $password, $email, $phone, $administrator, null, null, null, null, null, $active, null, null, null, null, null, null);
       $databaseResult->updateUser($params);
     }
-    $ctr++;
+    $ctr ++;
   }
   $ids = DEFAULT_VALUE_BLANK;
   $mode = Constant::$MODE_VIEW;
@@ -221,9 +222,9 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE userId IN (" . $ids . ")";
   }
-  $hideColIndexes = array(3, 8, 11);
-//   $output .= HtmlUtility::buildTable($query, $mode, $classNames, $caption, $colFormats, $hiddenId, $selectedColumnVals, $delimiter, $foreignKeys, $html, $headerRow, $showNote, $hiddenAdditional, $hideColIndexes, $colSpan, $tableIdSuffix, $width);
-// public function __construct18($caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width) {
+  $hideColIndexes = array(3, 8, 9, 11, 12);
+  // $output .= HtmlUtility::buildTable($query, $mode, $classNames, $caption, $colFormats, $hiddenId, $selectedColumnVals, $delimiter, $foreignKeys, $html, $headerRow, $showNote, $hiddenAdditional, $hideColIndexes, $colSpan, $tableIdSuffix, $width);
+  // public function __construct18($caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width) {
   $htmlTable = new HtmlTable(null, null, null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, HIDDEN_ROW_FIELD_NAME, $hideColIndexes, null, null, null, true, $query, $ids, null, "100%");
   $output .= $htmlTable->getHtml();
 }

@@ -1,8 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class GroupPayout extends Base {
-  private Group $group; // Group object
-  private array $payouts; // array of Payout objects
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Group $group, protected array $payouts) {
+    parent::__construct($debug, $id);
+  }
   public function getGroup() {
     return $this->group;
   }

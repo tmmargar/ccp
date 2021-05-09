@@ -1,16 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class HtmlLink extends HtmlBase {
-  private string $href;
-  private array|null $paramName; // array of names
-  private array|null $paramValue; // aray of values
-  private string $text;
-  public function __construct(string|null $accessKey, array|null $class, bool $debug, string $href, string|int|null $id, array|null $paramName, array|null $paramValue, int $tabIndex, string $text, string|null $title) {
+  public function __construct(protected string|null $accessKey, protected array|null $class, protected bool $debug, protected string $href, protected string|int|null $id, protected array|null $paramName, protected array|null $paramValue, protected int $tabIndex, protected string $text, protected string|null $title) {
     parent::__construct($accessKey, $class, $debug, $id, $tabIndex, $title);
-    $this->href = $href;
-    $this->paramName = $paramName;
-    $this->paramValue = $paramValue;
-    $this->text = $text;
   }
   private function getParamString() {
     $output = "";

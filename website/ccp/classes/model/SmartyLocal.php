@@ -1,10 +1,12 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use Smarty;
 class SmartyLocal {
   private Smarty $smarty;
   public function __construct() {
     $this->smarty = new Smarty();
+//     $this->smarty->initialize();
   }
   public function getSmarty() {
     return $this->smarty;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Address;
 use ccp\classes\model\Constant;
@@ -18,29 +19,21 @@ if (count($resultList) == 0) {
 } else {
   foreach ($resultList as $tournament) {
     $user = $tournament->getLocation()->getUser();
-    $params = array($tournament->getId(), $user->getId(), "NULL");
+    $params = array($tournament->getId(), $user->getId(), null);
     $rowCount = $databaseResult->insertRegistration($params);
     if (1 == $rowCount) {
       $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $user->getName() . " for tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . "\");\n" : "\r";
     }
     $tournamentAddress = $user->getAddress();
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
-    $emailAddress = new Address();
-    $emailAddress->setAddress($tournamentAddress->getAddress());
-    $emailAddress->setCity($tournamentAddress->getCity());
-    $emailAddress->setState($tournamentAddress->getState());
-    $emailAddress->setZip($tournamentAddress->getZip());
+    $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
     $output .= (isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $tournament, 0) . "\");\n" : "\r");
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null, null, null);
-    $emailAddress = new Address();
-    $emailAddress->setAddress($tournamentAddress->getAddress());
-    $emailAddress->setCity($tournamentAddress->getCity());
-    $emailAddress->setState($tournamentAddress->getState());
-    $emailAddress->setZip($tournamentAddress->getZip());
+    $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
     $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $tournament, 0, $user->getName()) . "\");\n" : "\r";
   }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 }
+$output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 if (isset($_GET[Constant::$FIELD_NAME_MODE])) {
   $smarty->assign("title", "Chip Chair and a Prayer Auto Register Host");
   $smarty->assign("heading", "Auto Register Host");

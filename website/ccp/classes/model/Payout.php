@@ -1,11 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Payout extends Base {
-  private string $name;
-  private int $bonusPoints; // number
-  private int $minPlayers; // number
-  private int $maxPlayers; // number
-  private array $structures; // array of Structure objects
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected int $bonusPoints, protected int $minPlayers, protected int $maxPlayers, protected array|null $structures) {
+    parent::__construct($debug, $id);
+  }
   public function getName() {
     return $this->name;
   }
@@ -33,7 +32,7 @@ class Payout extends Base {
   public function setMaxPlayers(int $maxPlayers) {
     $this->maxPlayers = $maxPlayers;
   }
-  public function setStructures(array $structures) {
+  public function setStructures(array|null $structures) {
     $this->structures = $structures;
   }
   public function __toString() {

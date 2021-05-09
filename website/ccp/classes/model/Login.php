@@ -1,12 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Login extends Base {
-  private string $username;
-  private string $password;
-  public function __construct(bool $debug, string|int|null $id, string $username, string $password) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $username, protected string $password) {
     parent::__construct($debug, $id);
-    $this->username = $username;
-    $this->password = $password;
   }
   public function getPassword() {
     return $this->password;

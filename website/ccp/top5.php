@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
@@ -8,72 +9,130 @@ use ccp\classes\utility\HtmlUtility;
 use ccp\classes\utility\SessionUtility;
 use PDO;
 require_once "init.php";
-if (!defined("REPORT_ID_PARAM_NAME")) {define("REPORT_ID_PARAM_NAME", "reportId");}
-if (!defined("USER_ID_PARAM_NAME")) {define("USER_ID_PARAM_NAME", "userId");}
-if (!defined("NAVIGATION_PARAM_NAME")) {define("NAVIGATION_PARAM_NAME", "navigation");}
-if (!defined("PRIZE_POOL_FOR_SEASON")) {define("PRIZE_POOL_FOR_SEASON", "prizePoolForSeason");}
-if (!defined("POINTS_TOTAL_FOR_SEASON")) {define("POINTS_TOTAL_FOR_SEASON", "pointsTotalForSeason");}
-if (!defined("POINTS_TOTAL_FOR_SEASON_FOR_USER")) {define("POINTS_TOTAL_FOR_SEASON_FOR_USER", "pointsTotalForSeasonForUser");}
-if (!defined("POINTS_TOTAL_FOR_USER")) {define("POINTS_TOTAL_FOR_USER", "pointsTotalForUser");}
-if (!defined("POINTS_AVERAGE_FOR_SEASON")) {define("POINTS_AVERAGE_FOR_SEASON", "pointsAverageForSeason");}
-if (!defined("POINTS_AVERAGE_FOR_SEASON_FOR_USER")) {define("POINTS_AVERAGE_FOR_SEASON_FOR_USER", "pointsAverageForSeasonForUser");}
-if (!defined("POINTS_AVERAGE_FOR_USER")) {define("POINTS_AVERAGE_FOR_USER", "pointsAverageForUser");}
-if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON")) {define("KNOCKOUTS_TOTAL_FOR_SEASON", "knockoutsTotalForSeason");}
-if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER")) {define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER", "knockoutsTotalForSeasonForUser");}
-if (!defined("KNOCKOUTS_TOTAL_FOR_USER")) {define("KNOCKOUTS_TOTAL_FOR_USER", "knockoutsTotalForUser");}
-if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON")) {define("KNOCKOUTS_AVERAGE_FOR_SEASON", "knockoutsAverageForSeason");}
-if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER")) {define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER", "knockoutsAverageForSeasonForUser");}
-if (!defined("KNOCKOUTS_AVERAGE_FOR_USER")) {define("KNOCKOUTS_AVERAGE_FOR_USER", "knockoutsAverageForUser");}
-if (!defined("EARNINGS_TOTAL_FOR_SEASON")) {define("EARNINGS_TOTAL_FOR_SEASON", "earningsTotalForSeason");}
-if (!defined("EARNINGS_TOTAL_FOR_SEASON_FOR_USER")) {define("EARNINGS_TOTAL_FOR_SEASON_FOR_USER", "earningsTotalForSeasonForUser");}
-if (!defined("EARNINGS_TOTAL_FOR_USER")) {define("EARNINGS_TOTAL_FOR_USER", "earningsTotalForUser");}
-if (!defined("EARNINGS_AVERAGE_FOR_SEASON")) {define("EARNINGS_AVERAGE_FOR_SEASON", "earningsAverageForSeason");}
-if (!defined("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER")) {define("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER", "earningsAverageForSeasonForUser");}
-if (!defined("EARNINGS_AVERAGE_FOR_USER")) {define("EARNINGS_AVERAGE_FOR_USER", "earningsAverageForUser");}
-if (!defined("WINNERS_FOR_SEASON")) {define("WINNERS_FOR_SEASON", "winnersForSeason");}
-if (!defined("WINS_FOR_USER")) {define("WINS_FOR_USER", "winsForUser");}
-if (!defined("WINS_TOTAL_FOR_SEASON_FOR_USER")) {define("WINS_TOTAL_FOR_SEASON_FOR_USER", "winsTotalForSeasonForUser");}
-if (!defined("WINS_AVERAGE_FOR_SEASON_FOR_USER")) {define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForUser");}
-if (!defined("BOUNTIES_FOR_SEASON")) {define("BOUNTIES_FOR_SEASON", "bountiesForSeason");}
-if (!defined("NEMESIS_FOR_USER")) {define("NEMESIS_FOR_USER", "nemesisForUser");}
-if (!defined("BULLY_FOR_USER")) {define("BULLY_FOR_USER", "bullyForUser");}
-if (!defined("TOURNAMENTS_WON_FOR_USER")) {define("TOURNAMENTS_WON_FOR_USER", "tournamentsWonForUser");}
-if (!defined("FINISHES_FOR_USER")) {define("FINISHES_FOR_USER", "finishesForUser");}
-if (!defined("TOURNAMENTS_PLAYED_FOR_USER")) {define("TOURNAMENTS_PLAYED_FOR_USER", "tournamentsPlayedForUser");}
-if (!defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER")) {define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForUser");}
-if (!defined("TOURNAMENTS_PLAYED_FIRST_FOR_USER")) {define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForUser");}
+if (! defined("REPORT_ID_PARAM_NAME")) {
+  define("REPORT_ID_PARAM_NAME", "reportId");
+}
+if (! defined("USER_ID_PARAM_NAME")) {
+  define("USER_ID_PARAM_NAME", "userId");
+}
+if (! defined("NAVIGATION_PARAM_NAME")) {
+  define("NAVIGATION_PARAM_NAME", "navigation");
+}
+if (! defined("PRIZE_POOL_FOR_SEASON")) {
+  define("PRIZE_POOL_FOR_SEASON", "prizePoolForSeason");
+}
+if (! defined("POINTS_TOTAL_FOR_SEASON")) {
+  define("POINTS_TOTAL_FOR_SEASON", "pointsTotalForSeason");
+}
+if (! defined("POINTS_TOTAL_FOR_SEASON_FOR_USER")) {
+  define("POINTS_TOTAL_FOR_SEASON_FOR_USER", "pointsTotalForSeasonForUser");
+}
+if (! defined("POINTS_TOTAL_FOR_USER")) {
+  define("POINTS_TOTAL_FOR_USER", "pointsTotalForUser");
+}
+if (! defined("POINTS_AVERAGE_FOR_SEASON")) {
+  define("POINTS_AVERAGE_FOR_SEASON", "pointsAverageForSeason");
+}
+if (! defined("POINTS_AVERAGE_FOR_SEASON_FOR_USER")) {
+  define("POINTS_AVERAGE_FOR_SEASON_FOR_USER", "pointsAverageForSeasonForUser");
+}
+if (! defined("POINTS_AVERAGE_FOR_USER")) {
+  define("POINTS_AVERAGE_FOR_USER", "pointsAverageForUser");
+}
+if (! defined("KNOCKOUTS_TOTAL_FOR_SEASON")) {
+  define("KNOCKOUTS_TOTAL_FOR_SEASON", "knockoutsTotalForSeason");
+}
+if (! defined("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER")) {
+  define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER", "knockoutsTotalForSeasonForUser");
+}
+if (! defined("KNOCKOUTS_TOTAL_FOR_USER")) {
+  define("KNOCKOUTS_TOTAL_FOR_USER", "knockoutsTotalForUser");
+}
+if (! defined("KNOCKOUTS_AVERAGE_FOR_SEASON")) {
+  define("KNOCKOUTS_AVERAGE_FOR_SEASON", "knockoutsAverageForSeason");
+}
+if (! defined("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER")) {
+  define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER", "knockoutsAverageForSeasonForUser");
+}
+if (! defined("KNOCKOUTS_AVERAGE_FOR_USER")) {
+  define("KNOCKOUTS_AVERAGE_FOR_USER", "knockoutsAverageForUser");
+}
+if (! defined("EARNINGS_TOTAL_FOR_SEASON")) {
+  define("EARNINGS_TOTAL_FOR_SEASON", "earningsTotalForSeason");
+}
+if (! defined("EARNINGS_TOTAL_FOR_SEASON_FOR_USER")) {
+  define("EARNINGS_TOTAL_FOR_SEASON_FOR_USER", "earningsTotalForSeasonForUser");
+}
+if (! defined("EARNINGS_TOTAL_FOR_USER")) {
+  define("EARNINGS_TOTAL_FOR_USER", "earningsTotalForUser");
+}
+if (! defined("EARNINGS_AVERAGE_FOR_SEASON")) {
+  define("EARNINGS_AVERAGE_FOR_SEASON", "earningsAverageForSeason");
+}
+if (! defined("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER")) {
+  define("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER", "earningsAverageForSeasonForUser");
+}
+if (! defined("EARNINGS_AVERAGE_FOR_USER")) {
+  define("EARNINGS_AVERAGE_FOR_USER", "earningsAverageForUser");
+}
+if (! defined("WINNERS_FOR_SEASON")) {
+  define("WINNERS_FOR_SEASON", "winnersForSeason");
+}
+if (! defined("WINS_FOR_USER")) {
+  define("WINS_FOR_USER", "winsForUser");
+}
+if (! defined("WINS_TOTAL_FOR_SEASON_FOR_USER")) {
+  define("WINS_TOTAL_FOR_SEASON_FOR_USER", "winsTotalForSeasonForUser");
+}
+if (! defined("WINS_AVERAGE_FOR_SEASON_FOR_USER")) {
+  define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForUser");
+}
+if (! defined("BOUNTIES_FOR_SEASON")) {
+  define("BOUNTIES_FOR_SEASON", "bountiesForSeason");
+}
+if (! defined("NEMESIS_FOR_USER")) {
+  define("NEMESIS_FOR_USER", "nemesisForUser");
+}
+if (! defined("BULLY_FOR_USER")) {
+  define("BULLY_FOR_USER", "bullyForUser");
+}
+if (! defined("TOURNAMENTS_WON_FOR_USER")) {
+  define("TOURNAMENTS_WON_FOR_USER", "tournamentsWonForUser");
+}
+if (! defined("FINISHES_FOR_USER")) {
+  define("FINISHES_FOR_USER", "finishesForUser");
+}
+if (! defined("TOURNAMENTS_PLAYED_FOR_USER")) {
+  define("TOURNAMENTS_PLAYED_FOR_USER", "tournamentsPlayedForUser");
+}
+if (! defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER")) {
+  define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForUser");
+}
+if (! defined("TOURNAMENTS_PLAYED_FIRST_FOR_USER")) {
+  define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForUser");
+}
 $smarty->assign("title", "Chip Chair and a Prayer Top 5");
 $smarty->assign("heading", "");
-if (!isset($reportId)) {
+if (! isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : "";
 }
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
-if (!isset($navigation)) {
+if (! isset($navigation)) {
   $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : null;
 }
 if (isset($navigation)) {
-  $style =
-    "<style type=\"text/css\">\n" .
-    " div {\n" .
-    "   text-align: center;\n" .
-    " }\n" .
-    " div.title {\n" .
-    "   font-size: 1.5em;\n" .
-    "   font-weight: bold;\n" .
-  //  " margin-left: 50px;\n";
-  //  " text-align: center;\n";
-    " }\n" .
-    " div#container {\n" .
-  //  " margin: 0 auto;\n";
-  //  " text-align: center;\n";
-    "   width: 35%;\n" .
-    " }\n" .
-    " </style>\n";
+  $style = "<style type=\"text/css\">\n" . " div {\n" . "   text-align: center;\n" . " }\n" . " div.title {\n" . "   font-size: 1.5em;\n" . "   font-weight: bold;\n" .
+  // " margin-left: 50px;\n";
+  // " text-align: center;\n";
+  " }\n" . " div#container {\n" .
+  // " margin: 0 auto;\n";
+  // " text-align: center;\n";
+  "   width: 35%;\n" . " }\n" . " </style>\n";
   $smarty->assign("style", $style);
   $smarty->assign("formName", "frmTop5");
   $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 }
-if (!isset($parentObjectId)) {
+if (! isset($parentObjectId)) {
   $parentObjectId = "container";
 }
 $classNames = array();
@@ -175,7 +234,7 @@ switch ($reportId) {
   default:
     $output .= "No value provided for report id";
 }
-if (!isset($reportId) || "" == $reportId) {
+if (! isset($reportId) || "" == $reportId) {
   $output .= "Unable to identify report to view";
 } else {
   // change to get for season
@@ -197,7 +256,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getPointsTotalForSeason($params, $orderBy, 5);
       $colFormats = array(array(2, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Points";
       break;
     case POINTS_AVERAGE_FOR_SEASON:
@@ -206,7 +265,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getPointsAverageForSeason($params, $orderBy, 5);
       $colFormats = array(array(3, "number", 2));
       $hideColIndexes = array(0, 2, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Avg Points";
       break;
     case EARNINGS_TOTAL_FOR_SEASON:
@@ -215,7 +274,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getEarningsTotalForSeason($params, $orderBy, 5);
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0, 3, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Money";
       break;
     case EARNINGS_AVERAGE_FOR_SEASON:
@@ -224,7 +283,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getEarningsAverageForSeason($params, $orderBy, 5);
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0, 2, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Avg Money";
       break;
     case KNOCKOUTS_TOTAL_FOR_SEASON:
@@ -233,7 +292,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getKnockoutsTotalForSeason($params, $orderBy, 5);
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 KO";
       break;
     case KNOCKOUTS_AVERAGE_FOR_SEASON:
@@ -242,7 +301,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getKnockoutsAverageForSeason($params, $orderBy, 5);
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0));
       $hideColIndexes = array(0, 2, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Avg KO";
       break;
     case BOUNTIES_FOR_SEASON:
@@ -255,7 +314,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getWinnersForSeason($params, true, null);
       $colFormats = array(array(2, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Season Winners";
       break;
     case POINTS_TOTAL_FOR_SEASON_FOR_USER:
@@ -271,7 +330,7 @@ if (!isset($reportId) || "" == $reportId) {
         $formatPlaces = 2;
       }
       $query = $databaseResult->getPointsTotalAndAverageForSeasonForUser($params, $orderBy, true);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Points", $valueIndex);
       $rank = array(array("center"), null, "Rank", 0);
       break;
@@ -305,7 +364,7 @@ if (!isset($reportId) || "" == $reportId) {
       }
       $query = $databaseResult->getEarningsTotalAndAverageForSeasonForUser($params, $orderBy, true);
       $hideColIndexes = array(0, 1, 2, 3, 5);
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $value = array(array("currency", "center"), array(4, "currency", $formatPlaces), "Earnings", $valueIndex);
       $rank = array(array("center"), null, "Rank", 0);
       $hideColIndexes = array(0, 2);
@@ -345,8 +404,7 @@ if (!isset($reportId) || "" == $reportId) {
       break;
     case KNOCKOUTS_AVERAGE_FOR_USER:
     case KNOCKOUTS_TOTAL_FOR_USER:
-      $params = array(
-        $userId);
+      $params = array($userId);
       if (KNOCKOUTS_TOTAL_FOR_USER == $reportId) {
         $orderBy = array(1);
         $valueIndex = 3;
@@ -357,8 +415,7 @@ if (!isset($reportId) || "" == $reportId) {
         $formatPlaces = 2;
       }
       $query = $databaseResult->getKnockoutsTotalAndAverageForUser($params, $orderBy, true);
-      $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts",
-        $valueIndex);
+      $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
       $rank = array(array("center"), null, "Rank", 0);
       break;
     case EARNINGS_AVERAGE_FOR_USER:
@@ -401,9 +458,9 @@ if (!isset($reportId) || "" == $reportId) {
     case FINISHES_FOR_USER:
       $params = array($userId);
       $query = $databaseResult->getFinishesForUser($params);
-//       $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
+      // $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
       $colFormats = array(array(2, "percentage", 2));
-//       $width = isset($navigation) ? "20%" : "100%";
+      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Place of Finish";
       break;
     case TOURNAMENTS_PLAYED_FOR_USER:
@@ -417,7 +474,7 @@ if (!isset($reportId) || "" == $reportId) {
       $query = $databaseResult->getTournamentsPlayedByTypeByPlayerId($params);
       $colFormats = array(array(4, "number", 0));
       $hideColIndexes = array(0, 2);
-//       $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
+      // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
       $titleText = "Played by type by user";
       break;
   }
@@ -450,12 +507,12 @@ if (!isset($reportId) || "" == $reportId) {
     }
     $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
     foreach ($aryData as $data) {
-//       $output .= "<div style=\"float:left; text-align: left; width: 19%;\">&nbsp;</div>\n<div style=\"float:left; text-align: left; width: 31%;\">" . $data[0] . "</div>\n<div style=\"float:left; text-align: left; width: 31%;\">" . $data[1] . "</div>\n<div style=\"float:left; width: 19%;\">&nbsp;</div>\n<div style=\"clear:both\"></div>\n";
+      // $output .= "<div style=\"float:left; text-align: left; width: 19%;\">&nbsp;</div>\n<div style=\"float:left; text-align: left; width: 31%;\">" . $data[0] . "</div>\n<div style=\"float:left; text-align: left; width: 31%;\">" . $data[1] . "</div>\n<div style=\"float:left; width: 19%;\">&nbsp;</div>\n<div style=\"clear:both\"></div>\n";
       $output .= "<div style=\"float:left; text-align: left; width: 40%;\">" . $data[0] . "</div>\n<div style=\"float:left; text-align: left; width: 60%;\">" . $data[1] . "</div>\n";
     }
   } else if (PRIZE_POOL_FOR_SEASON == $reportId) {
     $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-    $output .= "<span class=\"number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format($resultList[0], 0) . "</span>\n";
+    $output .= "<span class=\"number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</span>\n";
   } else {
     $mode = "";
     $caption = "";
@@ -495,7 +552,7 @@ if (!isset($reportId) || "" == $reportId) {
           }
           $dialogParameters = array($titleText, 500, 460, $parentObjectId);
         } else if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
-          $colFormats = array(array(1, "number", 0), array(4,"number", 0), array(5, "number", 2));
+          $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
           $hideColIndexes = array(0, 2, 5);
           if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Knockouts";
@@ -513,7 +570,7 @@ if (!isset($reportId) || "" == $reportId) {
           }
           $dialogParameters = array($titleText, 500, 460, $parentObjectId);
         } else if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId || WINS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
-          $colFormats = array(array(1, "number", 0), array(4, "number", 0), array( 5, "percentage", 2));
+          $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "percentage", 2));
           $hideColIndexes = array(0, 2, 5);
           if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Wins";
@@ -532,7 +589,7 @@ if (!isset($reportId) || "" == $reportId) {
           }
           $dialogParameters = array($titleText, 500, 400, $parentObjectId);
         } else if (EARNINGS_TOTAL_FOR_USER == $reportId || EARNINGS_AVERAGE_FOR_USER == $reportId) {
-          $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array( 5, "currency", 2));
+          $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array(5, "currency", 2));
           if (EARNINGS_TOTAL_FOR_USER == $reportId) {
             $titleText = "Lifetime Earnings";
             $hideColIndexes = array(0, 2, 5);
@@ -573,7 +630,8 @@ if (!isset($reportId) || "" == $reportId) {
         $rank[3] += 1;
         $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
         $result = $databaseResult->getConnection()->query($query);
-        $htmlTable = new HtmlTable(null, null, null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, true, null, null, $hideColIndexes, null, null, null, true, $query, null, "Rank" . $suffix, "100%");
+        // (string|null $caption, array|null $class, array|null $colspan, array $columnFormat, bool $debug, string $delimiter, array|null $foreignKeys, bool $header, array|null $hiddenAdditional, string|null $hiddenId, array $hideColumnIndexes, array|null $html, string|int|null $id, array|null $link, bool $note, string $query, string|null $selectedRow, string|null $suffix, string $width) {
+        $htmlTable = new HtmlTable(null, null, null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $delimiter, null, true, null, null, $hideColIndexes, null, null, null, true, $query, null, "Rank" . $suffix, "100%");
         $outputTemp = $htmlTable->getHtml();
         if (0 < $result->rowCount()) {
           // unable to get ranking to use where clause so loop through and find matching user
@@ -604,7 +662,7 @@ if (!isset($reportId) || "" == $reportId) {
           $output .= "<script type=\"text/javascript\">$(document).ready(function() {\$(\"#title" . ucfirst($reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count($resultList) . " + ')');});</script>\n";
           $ctr = 0;
           foreach ($resultList as $tournament) {
-            $ctr++;
+            $ctr ++;
             $tournamentInfo = $tournament->getDate()->getDisplayFormat() . ", " . $tournament->getStartTime()->getDisplayAmPmFormat() . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played";
             $output .= "<div style=\"display: inline-block; vertical-align: top; width: 10%;\">" . $ctr . "</div>\n<div style=\"display: inline-block; text-align: left; width: 80%;\">" . $tournamentInfo . "</div>\n";
           }

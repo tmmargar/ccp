@@ -1,13 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Location extends Base {
-  private string $name;
-  private User $user; // user object
-  private int $count; // total tournaments hosted
-  private int $active;
-  private $map; // blob map pdf
-  private string $mapName; // name of file
-  private int $tournamentCount; // # of tournaments
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map, protected string|null $mapName, protected int $tournamentCount) {
+    parent::__construct($debug, $id);
+  }
   public function buildMapUrl() {
     return "<a href =\"" . Constant::PATH_MAP() . "/" . $this->getMapName() . "\">Map</a>\n";
   }

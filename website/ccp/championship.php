@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
@@ -178,7 +179,7 @@ if (0 < $count) {
     }
     $ctr ++;
   }
-  $output .= "    <h3 style='margin: 0;'>Total payout of $" . number_format($prizePool, 0) . "</h3>\n";
+  $output .= "    <h3 style='margin: 0;'>Total payout of $" . number_format((float) $prizePool, 0) . "</h3>\n";
   $output .= "    <h4 style='margin: 0;'>Exact amounts below subject to change</h4>\n";
   $output .= "    <div style='float: left; width: 125px;'><strong>Top " . $topThird . "</strong></div>\n";
   $output .= "    <div style='float: left; width: 125px;'><strong>Middle " . $middleThird . "</strong></div>\n";

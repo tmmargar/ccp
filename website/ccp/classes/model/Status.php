@@ -1,10 +1,12 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use Exception;
 class Status extends Base {
   private static array $codeList = array("P" => "Paid", "R" => "Registered", "F" => "Finished");
-  private string $code;
-  private string $name;
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $code, protected string $name) {
+    parent::__construct($debug, $id);
+  }
   public function getCode() {
     return $this->code;
   }

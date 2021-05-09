@@ -1,3 +1,4 @@
+USE chipch5_stats;
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               10.4.17-MariaDB - mariadb.org binary distribution

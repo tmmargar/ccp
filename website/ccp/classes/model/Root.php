@@ -2,10 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class Root {
-  private bool $debug = false;
-  public function __construct($debug) {
-    $this->debug = $debug;
-  }
+  public function __construct(protected bool $debug = false) {}
   public function isDebug() {
     return $this->debug;
   }
@@ -14,7 +11,9 @@ abstract class Root {
   }
   public function __toString() {
     $output = "debug = ";
-    $output .= var_export($this->debug, true);
+    if (isset($this->debug)) {
+      $output .= var_export($this->debug, true);
+    }
     return $output;
   }
 }

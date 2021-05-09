@@ -1,20 +1,12 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use Exception;
 class Address extends Base {
   // AA and XX are temporary placeholders
   public static $stateList = array("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ","NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WY", "AA", "XX");
-  private string $address;
-  private string $city;
-  private int $phone;
-  private string $state; // 2 character
-  private int $zip; // 5 digits
-  public function __construct(string $address, string $city, string $state, int $zip, int $phone) {
-    $this->address = $address;
-    $this->city = $city;
-    $this->state = $state;
-    $this->zip = $zip;
-    $this->phone = $phone;
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $address, protected string $city, protected string $state, protected int $zip, protected int|null $phone) {
+    parent::__construct($debug, $id);
   }
   public function getAddress() {
     return $this->address;

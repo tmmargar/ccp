@@ -1,20 +1,12 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormBase extends Base {
-  private array $class; // array
-  private bool $disabled; // boolean
-  private string|null $name;
-  private string|null $suffix;
-  private array|string|null $value;
-  public function __construct(bool $debug, array|null $class, bool $disabled, string|int $id, string|null $name, string|null $suffix, array|string|null $value) {
+  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected string|int|null $id, protected string|null $name, protected string|null $suffix, protected array|string|null $value) {
     parent::__construct($debug, $id);
     $this->class = null == $class ? array() : $class;
-    $this->disabled = $disabled;
     $this->name = Base::build($name, null);
-    $this->suffix = $suffix;
-//     $this->value = !isset($value) || $value == "" ? null : $value;
     $this->value = (isset($value) && $value != "") || $value == 0 ? $value : null;
-//     echo "<BR>" . $id . " -- " . $value . " -> " . $this->value;
   }
   public function getClass() {
     return $this->class;

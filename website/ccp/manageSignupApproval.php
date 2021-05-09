@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\Email;
@@ -29,11 +30,11 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
   $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
   // update approval date or rejection date and set active flag
   $params = array();
-  //id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
+  // id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
   foreach ($approval as $key => $value) {
     $params[0] = $key;
-    $params[8] = "CURRENT_TIMESTAMP";
-    $params[9] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
+    $params[9] = "CURRENT_TIMESTAMP";
+    $params[10] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
     $output .= "  aryMessages.push(\"Successfully approved " . $value . "\");\n";
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
@@ -41,8 +42,8 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
   }
   foreach ($rejection as $key => $value) {
     $params[0] = $key;
-    $params[10] = "CURRENT_TIMESTAMP";
-    $params[11] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
+    $params[11] = "CURRENT_TIMESTAMP";
+    $params[12] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
     $databaseResult->updateUser($params);
     $output .= "  aryMessages.push(\"Successfully rejected " . $value . "\");\n";
     $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
@@ -77,8 +78,8 @@ if (0 < $result->rowCount()) {
       $hiddenUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_USERNAME . "_" . $row[0], null, Constant::$FIELD_NAME_USERNAME . "_" . $row[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[3], null);
       $output .= "   <td>" . $row[$index] . ($index == 1 ? $hiddenUser->getHtml() : ($index == 2 ? $hiddenEmail->getHtml() : ($index == 3 ? $hiddenUsername->getHtml() : ""))) . "</td>\n";
     }
-    $output .= "   <td class=\"center\"><input id=\"approveUser_" . $row[0] . "\" name=\"approveUser_" . $row[0] . "\" type=\"checkbox\" /></td>\n";
-    $output .= "   <td class=\"center\"><input id=\"rejectUser_" . $row[0] . "\" name=\"rejectUser_" . $row[0] . "\" type=\"checkbox\" /></td>\n";
+    $output .= "   <td class=\"center\"><input id=\"approveUser_" . $row[0] . "\" name=\"approveUser_" . $row[0] . "\" type=\"checkbox\" value=\"1\" /></td>\n";
+    $output .= "   <td class=\"center\"><input id=\"rejectUser_" . $row[0] . "\" name=\"rejectUser_" . $row[0] . "\" type=\"checkbox\" value=\"1\" /></td>\n";
     $output .= "  </tr>\n";
   }
   $output .= " </tbody>\n";
@@ -92,27 +93,7 @@ if (0 < $result->rowCount()) {
   $output .= "<br />\nNo users require approval";
 }
 $smarty->assign("title", "Chip Chair and a Prayer User Approval");
-$style =
-  "<style type=\"text/css\">\n" .
-  "div.label, div.input {\n" .
-  "  height: 17px;\n" .
-  "  line-height: 17px;\n" .
-  "  margin: 5px;\n" .
-  "}\n" .
-  "div.label {\n" .
-  "  float: left;\n" .
-  "  width: 100px;\n" .
-  "}\n" .
-  "div.input {\n" .
-  "  float: left;\n" .
-  "  margin: 0;\n" .
-   "}\n" .
-  "div.clear {\n" .
-  "  clear: both;\n" .
-  "  height: 0;\n" .
-  "  line-height: 0;\n" .
-  "}\n" .
-  "</style>\n";
+$style = "<style type=\"text/css\">\n" . "div.label, div.input {\n" . "  height: 17px;\n" . "  line-height: 17px;\n" . "  margin: 5px;\n" . "}\n" . "div.label {\n" . "  float: left;\n" . "  width: 100px;\n" . "}\n" . "div.input {\n" . "  float: left;\n" . "  margin: 0;\n" . "}\n" . "div.clear {\n" . "  clear: both;\n" . "  height: 0;\n" . "  line-height: 0;\n" . "}\n" . "</style>\n";
 $smarty->assign("style", $style);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmSignup");

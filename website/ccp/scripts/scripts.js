@@ -171,7 +171,9 @@ const input = {
   },
   cursorPositionFix : function(positionFixId) {
     const id = $("#ids").val();
-    $("#" + positionFixId + id).setCursorPosition($("#" + positionFixId + id).val().length);
+    if ($("#" + positionFixId + id).length > 0) {
+      $("#" + positionFixId + id).setCursorPosition($("#" + positionFixId + id).val().length);
+    }
   },
   deselectAllSelectize : function(objId) {
     const selectizes = $("#" + objId).selectize(); // Selectize plugin initialization

@@ -1,15 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class Security extends Base {
-  private Login $login; // Login object
-  private User $user; // User object populated after valid login
-  private Season $season; // Season object
-  public function __construct(bool $debug, string|int|null $id, Login $login, User $user) {
-//     echo "<BR>SECURITY -> " . var_dump($debug) . " -- " . $id;
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Login $login, protected User $user) {
     parent::__construct($debug, $id);
-    $this->login = $login;
-    $this->user = $user;
   }
   public function getLogin() {
     return $this->login;

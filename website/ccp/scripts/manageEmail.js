@@ -51,7 +51,7 @@ const inputLocal = {
   },
   reset : function() {
     input.deselectAllSelectize("to");
-  }
+  },
   validate : function() {
     input.validateLength($(".selectize-input"), 1, false);
     input.validateLength($("#subject"), 1, false);

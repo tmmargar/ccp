@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Home");

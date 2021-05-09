@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Base;
 use ccp\classes\model\Constant;
@@ -46,7 +47,7 @@ if (!isset($seasonSelection)) {
 }
 if (!isset($seasonId)) {
   $seasonTemp = (isset($_POST[SEASON_PARAM_NAME]) ? $_POST[SEASON_PARAM_NAME] : isset($_GET[SEASON_PARAM_NAME])) ? $_GET[SEASON_PARAM_NAME] : null;
-  $arySeason = explode("::", $seasonTemp);
+  $arySeason = isset($seasonTemp) ? explode("::", $seasonTemp) : array("");
   $seasonId = $arySeason[0];
   if (count($arySeason) > 1) {
     $seasonStartDate = $arySeason[1];

@@ -1,18 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Result extends Base {
-  private Tournament $tournament; // tournament object
-  private User $user; // user object
-  private Status $status; // status object
-  private int $registerOrder; // number
-  private bool $buyinPaid = false;
-  private bool $rebuyPaid = false;
-  private bool $addonPaid = false;
-  private int $rebuyCount; // number
-  private bool $addonFlag = false;
-  private int $place; // number
-  private User $knockedOutBy; // user object
-  private string $food;
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder, protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy, protected string|null $food) {
+    parent::__construct($debug, $id);
+  }
   public function getTournament() {
     return $this->tournament;
   }

@@ -1,53 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class User extends Base {
-  private string $firstName;
-  private string $lastName;
-  private string|null $email;
-  private Phone|null $phone;
-  private string|null $username;
-  private string|null $password;
-  private int $administrator; // boolean 0 is false non 0 is true
-  private string|null $registrationDate;
-  private string|null $approvalDate;
-  private int|null $approvalUserid;
-  private string|null $approvalName;
-  private string|null $rejectionDate;
-  private int|null $rejectionUserid;
-  private string|null $rejectionName;
-  private int $active; // boolean 0 is false non 0 is true
-  private Address|null $address; // address object
-  private int $idPrevious; // holds previous userid after making sequential
-  private $resetSelector;
-  private $resetToken;
-  private $resetExpires;
-  private $rememberSelector;
-  private $rememberToken;
-  private $rememberExpires;
-  public function __construct(bool $debug, string|int|null $id, string $firstName, string $lastName, string|null $username, string|null $password, string|null $email, Phone|null $phone, int $administrator, string|null $registrationDate, string|null $approvalDate, int|null $approvalUserid, string|null $approvalName, string|null $rejectionDate, int|null $rejectionUserid, string|null $rejectionName, int $active, Address|null $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $firstName, protected string $lastName, protected string|null $username, protected string|null $password, protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate, protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName, protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
     parent::__construct($debug, $id);
-    $this->firstName = $firstName;
-    $this->lastName = $lastName;
-    $this->username = $username;
-    $this->password = $password;
-    $this->email = $email;
-    $this->phone = $phone;
-    $this->administrator = $administrator;
-    $this->registrationDate = $registrationDate;
-    $this->approvalDate = $approvalDate;
-    $this->approvalUserid = $approvalUserid;
-    $this->approvalName = $approvalName;
-    $this->rejectionDate = $rejectionDate;
-    $this->rejectionUserid = $rejectionUserid;
-    $this->rejectionName = $rejectionName;
-    $this->active = $active;
-    $this->address = $address;
-    $this->resetSelector = $resetSelector;
-    $this->resetToken = $resetToken;
-    $this->resetExpires = $resetExpires;
-    $this->rememberSelector = $rememberSelector;
-    $this->rememberToken = $rememberToken;
-    $this->rememberExpires = $rememberExpires;
     $this->idPrevious = 0;
   }
   public function getFirstName() {

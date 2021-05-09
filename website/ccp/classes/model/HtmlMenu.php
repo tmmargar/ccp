@@ -1,14 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class HtmlMenu extends HtmlBase {
-  private array|null $items; // array of HtmlLink or HtmlMenu
-  private string|null $text;
-  public function __construct(bool $debug, string|int|null $id, array|null $items, string|null $text) {
-    //public function __construct(string|null $accessKey, array|null $class, bool $debug, string|int|null $id, int $tabIndex, string|null $title) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected array|null $items, protected string|null $text) {
     parent::__construct(null, null, $debug, $id, 0, null);
-    $this->items = $items;
-    $this->text = $text;
   }
   public function getHtmlRoot() {
     //$output = "<ul class=\"drop-nav\" id=\"drop-nav\">\n";

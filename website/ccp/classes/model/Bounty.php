@@ -1,13 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
-// include_once ROOT . "/autoload.php";
 class Bounty extends Base {
-  private string $name;
-  private string $description;
-  public function __construct(bool $debug, string|int|null $id, string $name, string $description) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string $description) {
     parent::__construct($debug, $id);
-    $this->name = $name;
-    $this->description = $description;
   }
   public function getName() {
     return $this->name;

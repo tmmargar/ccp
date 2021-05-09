@@ -1,7 +1,7 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
 use ccp\classes\model\FormSelect;
@@ -20,6 +20,7 @@ define("TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME", "tournamentKnockoutByName");
 $smarty->assign("title", "Manage Results During");
 $smarty->assign("heading", "Manage Results During");
 if ($mode == Constant::$MODE_SAVE_VIEW) {
+  $output .= "<script type=\"text/javascript\">\n aryErrors = [];\n aryMessages = [];\n";
   $tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_BLANK;
   $playerId = isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME] : DEFAULT_VALUE_BLANK;
   $playerIdTemp = isset($_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"]) ? $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "Temp"] : DEFAULT_VALUE_BLANK;
@@ -35,27 +36,28 @@ if ($mode == Constant::$MODE_SAVE_VIEW) {
   if (isset($bountyA)) {
     $params = array($tournamentId, 1, $bountyA);
     $databaseResult->insertTournamentBounty($params);
-    $output .= "Bounty A is " . $bountyAName . "<br />\n";
+    $output .= "  aryMessages.push(\"Bounty A is " . $bountyAName . "\");\n";
   }
   if (isset($bountyB)) {
     $params = array($tournamentId, 2, $bountyB);
     $databaseResult->insertTournamentBounty($params);
-    $output .= "Bounty B is " . $bountyBName;
+    $output .= "  aryMessages.push(\"Bounty B is " . $bountyBName . "\");\n";
   }
   if (isset($playerId)) {
     $params = array(Constant::$CODE_STATUS_FINISHED, $place, $knockoutId, $tournamentId, $playerId);
     $databaseResult->updateResultDuring($params);
-    $output .= $playerName . " finished #" . $place;
+    $output .= "  aryMessages.push(\"" . $playerName . " finished #" . $place;
     if (1 < $place) {
-      $output .= " and was knocked out by " . $knockoutName;
+      $output .= " and was knocked out by " . $knockoutName . "\");\n";
     }
     if (2 == $place) {
       $params = array(Constant::$CODE_STATUS_FINISHED, 1, "null", $tournamentId, $playerIdTemp);
       $databaseResult->updateResultDuring($params);
-      $output .= " <br /> " . $playerNameTemp . " finished #1";
+      $output .= "  aryMessages.push(\"" . $playerNameTemp . " finished #1\");\n";
     }
   }
-  $output .= "</strong>\n</span>\n<br />\n";
+  $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 }
 $resultList = $databaseResult->getTournamentDuring();
 if (count($resultList) > 0) {
@@ -96,8 +98,7 @@ if (count($resultList) > 0) {
     } else if ($place <= $totalPlayers) {
       $place -= 1;
     }
-    $params = array(
-      $tournamentId);
+    $params = array($tournamentId);
     $resultList2 = $databaseResult->getResultPaidNotEnteredByTournamentId($params, false);
     if (count($resultList2) > 0) {
       $index = 0;
@@ -142,7 +143,7 @@ if (count($resultList) > 0) {
       $output .= "    <div style=\"float: left;\">" . $place . "\n</div>\n";
       $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
     }
-    $hiddenPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_PLACE_FIELD_NAME, null, TOURNAMENT_PLACE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $place, null);
+    $hiddenPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_PLACE_FIELD_NAME, null, TOURNAMENT_PLACE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (string) $place, null);
     $output .= $hiddenPlace->getHtml();
     $hiddenPlayerName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_PLAYER_NAME_FIELD_NAME, null, TOURNAMENT_PLAYER_NAME_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
     $output .= $hiddenPlayerName->getHtml();
@@ -158,7 +159,7 @@ if (count($resultList) > 0) {
     $output .= $buttonReset->getHtml();
     $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
     $output .= $hiddenMode->getHtml();
-    $hiddenTournamentId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_ID_FIELD_NAME, null, TOURNAMENT_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $tournamentId, null);
+    $hiddenTournamentId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_ID_FIELD_NAME, null, TOURNAMENT_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (string) $tournamentId, null);
     $output .= $hiddenTournamentId->getHtml();
   } else {
     $output .= "No tournaments found without results for today\n";

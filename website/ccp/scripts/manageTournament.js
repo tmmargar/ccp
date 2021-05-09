@@ -90,7 +90,7 @@ const inputLocal = {
     return result;
   },
   defaultDescription : function() {
-    return "Season " + (new Date().getFullYear() - input.firstYear() + 1) + " - Tournament ";
+    return "S" + (new Date().getFullYear() - input.firstYear() + 1) + " - T";
   },
   enableSave : function(id) {
     return (($("#tournamentDescription_" + id).val() == "") || ($("#tournamentLimitTypeId_" + id).val() == "") || ($("#tournamentGameTypeId_" + id).val() == "")

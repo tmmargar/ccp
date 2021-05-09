@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Constant {
   public static string $ACCESSKEY_ACTIVE                      = "v";
@@ -68,7 +69,7 @@ class Constant {
   public static string $CODE_STATUS_FINISHED                  = "F";
   public static string $CODE_STATUS_PAID                      = "P";
   public static string $CODE_STATUS_REGISTERED                = "R";
-  public static int $COUNT_TOURNAMENT_QUALIFY_CHAMPIONSHIP = 10;
+  public static int $COUNT_TOURNAMENT_QUALIFY_CHAMPIONSHIP    = 10;
   public static string $DELIMITER_DEFAULT                     = ", ";
   public static string $DESCRIPTION_CHAMPIONSHIP              = "Championship";
   public static string $DESCRIPTION_MAIN_EVENT                = "Main Event";
@@ -82,7 +83,7 @@ class Constant {
   public static string $FIELD_NAME_USERNAME                   = "username";
   public static string $FLAG_NO                               = "N";
   public static string $FLAG_YES                              = "Y";
-  public static int $FLAG_YES_DATABASE                     = 1;
+  public static int $FLAG_YES_DATABASE                        = 1;
   public static string $ID_TABLE_DATA                         = "dataTbl";
   public static string $ID_TABLE_INPUT                        = "inputs";
   public static string $INTERVAL_DATE_REGISTRATION_OPEN       = "P14D";
@@ -166,6 +167,5 @@ class Constant {
   }
   public static function SERVER_EMAIL() {
     return self::FLAG_LOCAL() ? "localhost" : "secure253.inmotionhosting.com";
-    //return self::FLAG_LOCAL() ? "localhost" : "ecbiz253.inmotionhosting.com";
   }
 }

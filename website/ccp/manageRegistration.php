@@ -1,8 +1,8 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Address;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\Email;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
@@ -43,7 +43,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     if ($aryStatus[$index] == Constant::$NAME_STATUS_NOT_REGISTERED) {
       $params = array($tournamentId, $id, "null");
       $rowCount = $databaseResult->insertRegistration($params);
-      if (!is_numeric($rowCount)) {
+      if (! is_numeric($rowCount)) {
         $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
       $state = "registering";
@@ -53,7 +53,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $registerOrder = $resultList[0]->getRegisterOrder();
       // same parameter list
       $rowCount = $databaseResult->deleteRegistration($params);
-      if (!is_numeric($rowCount)) {
+      if (! is_numeric($rowCount)) {
         $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
       $state = "cancelling";
@@ -78,7 +78,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       }
       $params = array($tournamentId, $registerOrder);
       $rowCount = $databaseResult->updateRegistrationCancel($params);
-      if (!is_numeric($rowCount)) {
+      if (! is_numeric($rowCount)) {
         $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
       }
     }
@@ -90,15 +90,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $tournamentAddress = $tournament->getLocation()->getUser()->getAddress();
       $waitListCount = ($tournament->getMaxPlayers() - $tournament->getRegisteredCount()) < 0 ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
       $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($userName), array($userEmail), null, null, null, null, null, null);
-      $emailAddress = new Address();
-      $emailAddress->setAddress($tournamentAddress->getAddress());
-      $emailAddress->setCity($tournamentAddress->getCity());
-      $emailAddress->setState($tournamentAddress->getState());
-      $emailAddress->setZip($tournamentAddress->getZip());
-      $emailTournament = new Tournament();
-      $emailTournament->setDate($tournament->getDate());
-      $emailTournament->setStartTime($tournament->getStartTime());
-      $emailTournament->setId($tournament->getId());
+      $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
+      $emailTournament = new Tournament(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $tournament->getId(), null, null, null, null, null, 0, null, $tournament->getDate(), $tournament->getStartTime(), null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
       if ("cancelling" == $state) {
         $message = $email->sendCancelledEmail($emailAddress, $emailTournament);
       } else {
@@ -112,17 +105,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     // send email to people moved from wait list to registered
     while ($cnt < count($emailInfo)) {
       $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($emailInfo[$cnt][0]), array($emailInfo[$cnt][1]), null, null, null, null, null, null);
-      $emailAddress = new Address();
-      $emailAddress->setAddress($tournamentAddress->getAddress());
-      $emailAddress->setCity($tournamentAddress->getCity());
-      $emailAddress->setState($tournamentAddress->getState());
-      $emailAddress->setZip($tournamentAddress->getZip());
-      $emailTournament = new Tournament();
-      $emailTournament->setDate($tournament->getDate());
-      $emailTournament->setStartTime($tournament->getStartTime());
-      $emailTournament->setId($tournament->getId());
+      $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
+      $emailTournament = new Tournament(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $tournament->getId(), null, null, null, null, null, 0, null, $tournament->getDate(), $tournament->getStartTime(), null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
       $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99) . "\");\n";
-      $cnt++;
+      $cnt ++;
     }
   }
   $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
@@ -136,7 +122,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= "    " . TOURNAMENT_FIELD_LABEL . ": \n    ";
     $selectTournament = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_TOURNAMENT_ID, null, false, TOURNAMENT_ID_FIELD_NAME, false, TOURNAMENT_ID_FIELD_NAME, null, false, 1, null, null);
     $output .= $selectTournament->getHtml();
-    $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
+    $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, ! isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
     foreach ($resultList as $tournament) {
       $optionText = $tournament->getDate()->getDisplayDatePickerFormat();

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DateTime;
@@ -129,7 +130,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       }
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_CHIP_COUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CHIP_COUNT, null, false, null, null, null, false, TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id, 5, TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 5, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getChipCount() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CHIP_COUNT, null, false, null, null, null, false, TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id, 5, TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 5, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getChipCount() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number > 0)\n    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -158,37 +159,37 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_BUYIN_AMOUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BUYIN_AMOUNT, null, false, null, null, null, false, TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 3, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getBuyinAmount() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BUYIN_AMOUNT, null, false, null, null, null, false, TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 3, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getBuyinAmount() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number > 0 except Championship)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_MAX_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_PLAYERS, null, false, null, null, null, false, TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id, 2, TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_PLAYERS, null, false, null, null, null, false, TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id, 2, TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getMaxPlayers() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number > 0)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_REBUY_AMOUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_REBUY_AMOUNT, null, false, null, null, null, false, TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getRebuyAmount() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_REBUY_AMOUNT, null, false, null, null, null, false, TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getRebuyAmount() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_MAX_REBUYS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_REBUYS, null, false, null, null, null, false, TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id, 2, TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getMaxRebuys() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_REBUYS, null, false, null, null, null, false, TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id, 2, TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getMaxRebuys() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number >= 0)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_ADDON_AMOUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADDON_AMOUNT, null, false, null, null, null, false, TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, (count($resultList) > 0 ? $resultList[$ctr]->getAddonAmount() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADDON_AMOUNT, null, false, null, null, null, false, TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id, 4, TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, (count($resultList) > 0 ? (string) $resultList[$ctr]->getAddonAmount() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_ADDON_CHIP_COUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADDON_CHIP_COUNT, null, false, null, null, null, false, TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id, 5, TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getAddonChipCount() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADDON_CHIP_COUNT, null, false, null, null, null, false, TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id, 5, TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getAddonChipCount() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number >= 0)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -210,7 +211,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       }
       $output .= "    <div style=\"float: left; width: 150px; height: 25px;\">" . TOURNAMENT_RAKE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RAKE, null, false, null, null, null, false, TOURNAMENT_RAKE_FIELD_NAME . "_" . $id, 4, TOURNAMENT_RAKE_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getRake() : ""), null);
+      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RAKE, null, false, null, null, null, false, TOURNAMENT_RAKE_FIELD_NAME . "_" . $id, 4, TOURNAMENT_RAKE_FIELD_NAME . "_" . $id, null, null, false, null, null, 4, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getRake() : ""), null);
       $output .= $textBoxName->getHtml();
       $output .= " (number from 0 to 99)\n</div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -284,7 +285,7 @@ if (Constant::$MODE_MODIFY == $mode || Constant::$MODE_DELETE == $mode) {
   if (count($resultList) > 0) {
     $resultsExist = Constant::$FLAG_YES_DATABASE;
   }
-  $hiddenResultsExist = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_RESULTS_EXIST_FIELD_NAME, null, TOURNAMENT_RESULTS_EXIST_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $resultsExist, null);
+  $hiddenResultsExist = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_RESULTS_EXIST_FIELD_NAME, null, TOURNAMENT_RESULTS_EXIST_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (string) $resultsExist, null);
   $output .= $hiddenResultsExist->getHtml();
 }
 if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant::$MODE_CONFIRM == $mode) {

@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
-use Exception;
 class Structure extends Base {
-  private int $place; // number
-  private int $percentage; // number
+  public function __construct(protected bool $debug, protected string|int|null $id, protected int $place, protected float $percentage) {
+    parent::__construct($debug, $id);
+  }
+
   public function getPlace() {
     return $this->place;
   }
@@ -19,9 +21,9 @@ class Structure extends Base {
   public function __toString() {
     $output = parent::__toString();
     $output .= ", place = ";
-    $output .= $this->getPlace();
+    $output .= $this->place;
     $output .= ", percentage = ";
-    $output .= $this->getPercentage();
+    $output .= $this->percentage;
     return $output;
   }
 }
