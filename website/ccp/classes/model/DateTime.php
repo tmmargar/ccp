@@ -1,8 +1,7 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
-
 use DateTimeZone;
-
 class DateTime extends Base {
   public static int $YEAR_FIRST_SEASON                             = 2005;
   private static string $DATE_FORMAT_YEAR                          = "Y";
@@ -17,11 +16,10 @@ class DateTime extends Base {
   private static string $TIME_FORMAT_DATABASE_DEFAULT              = "H:i:s";
   private static string $TIME_FORMAT_DISPLAY_AMPM                  = "H:i";
   private static string $TIME_FORMAT_NOW                           = "Ymd H:i:s";
-
-  private \DateTime $time;
+  private \DateTime|null $time;
   private \DateTimeZone $timeZone; // \DateTimeZone
 
-  public function __construct(bool $debug, string|int|null $id, string $time) {
+  public function __construct(protected bool $debug, protected string|int|null $id, string|null $time) {
     parent::__construct($debug, $id);
     $this->timeZone = new DateTimeZone(date_default_timezone_get());
     if ("now" == $time) {

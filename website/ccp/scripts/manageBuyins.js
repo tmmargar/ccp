@@ -104,7 +104,7 @@ const inputLocal = {
   },
   enableSave : function() {
     return false;
-  }
+  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
   },

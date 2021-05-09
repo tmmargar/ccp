@@ -1,9 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Base;
 use ccp\classes\model\BooleanString;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
 use ccp\classes\model\FormSelect;
@@ -78,7 +78,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    " . TOURNAMENT_ID_FIELD_LABEL . ": \n    ";
       $selectTournament = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_TOURNAMENT_ID, null, false, TOURNAMENT_ID_FIELD_NAME, false, TOURNAMENT_ID_FIELD_NAME, null, false, 1, null, null);
       $output .= $selectTournament->getHtml();
-      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
+      $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, ! isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
       $output .= $option->getHtml();
       $cnt = 0;
       while ($cnt < count($resultList2)) {
@@ -184,8 +184,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
             $resultTemp = $databaseResult->getConnection()->query($queryTemp);
             $output .= " <thead>\n";
             $output .= " <tr>\n";
-            for ($idx = 0; $idx < $resultTemp->columnCount(); $idx++) {
-              if (!in_array($idx, $hideColIndexes)) {
+            for ($idx = 0; $idx < $resultTemp->columnCount(); $idx ++) {
+              if (! in_array($idx, $hideColIndexes)) {
                 $output .= "       <th>" . ucwords($resultTemp->getColumnMeta($idx)["name"]) . "</th>\n";
               }
             }
@@ -194,7 +194,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
             $output .= "     <tbody>\n";
           }
           $row = $queryResult->fetch(PDO::FETCH_BOTH);
-          $ctrTemp++;
+          $ctrTemp ++;
           if ($mode == Constant::$MODE_MODIFY) {
             if (0 < strlen($ids)) {
               $ids .= Constant::$DELIMITER_DEFAULT;
@@ -235,7 +235,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           $output .= "        " . $textBoxRebuyCount->getHtml();
           $output .= "       </td>\n";
           $output .= "       <td class=\"center\">\n";
-         $booleanString = new BooleanString($row !== false ? $row[10] : "");
+          $booleanString = new BooleanString($row !== false ? $row[10] : "");
           $checkboxAddon = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, $booleanString->getBoolean(), null, null, $addonFlag, TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctrTemp, null, TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctrTemp, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, Constant::$FLAG_YES, null);
           $output .= "        " . $checkboxAddon->getHtml();
           $output .= "       </td>\n";
@@ -245,7 +245,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
             $player = $row[1];
           }
           $output .= "       <td class=\"center\">\n";
-          $textBoxPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, null, TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, 2, TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, isset($row[12]) ? $row[12] : $maxPlayers, null);
+          $textBoxPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, 2, TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, isset($row[12]) ? $row[12] : $maxPlayers, null);
           $output .= "        " . $textBoxPlace->getHtml();
           $output .= "       </td>\n";
           if (count($aryPlayerInfo) > 0) {
@@ -289,14 +289,14 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
     $output .= $buttonCancel->getHtml();
   }
-    $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
-    $output .= $hiddenMode->getHtml();
-    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
-    $output .= $hiddenSelectedRowsPlayerId->getHtml();
-    $hiddenRebuys = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, MAX_REBUYS_FIELD_NAME, null, MAX_REBUYS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
-    $output .= $hiddenRebuys->getHtml();
-    $hiddenAddonAmount = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ADDON_AMOUNT_FIELD_NAME, null, ADDON_AMOUNT_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
-    $output .= $hiddenAddonAmount->getHtml();
+  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $output .= $hiddenMode->getHtml();
+  $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
+  $output .= $hiddenSelectedRowsPlayerId->getHtml();
+  $hiddenRebuys = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, MAX_REBUYS_FIELD_NAME, null, MAX_REBUYS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
+  $output .= $hiddenRebuys->getHtml();
+  $hiddenAddonAmount = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ADDON_AMOUNT_FIELD_NAME, null, ADDON_AMOUNT_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
+  $output .= $hiddenAddonAmount->getHtml();
 } elseif ($mode == Constant::$MODE_SAVE_CREATE || $mode == Constant::$MODE_SAVE_MODIFY) {
   $resultList2 = $databaseResult->getBounty();
   if (count($resultList2) > 0) {
@@ -411,13 +411,13 @@ if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode ==
       $output .= $buttonCancel->getHtml();
       $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MODIFY, null, false, null, null, null, false, Constant::$TEXT_MODIFY, null, Constant::$TEXT_MODIFY, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_MODIFY, null);
       $output .= $buttonCancel->getHtml();
-    if (DEFAULT_VALUE_TOURNAMENT_ID != $tournamentId) {
-      $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_DELETE, null, false, null, null, null, false, Constant::$TEXT_DELETE, null, Constant::$TEXT_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_DELETE, null);
-      $output .= $buttonCancel->getHtml();
-    }
+      if (DEFAULT_VALUE_TOURNAMENT_ID != $tournamentId) {
+        $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_DELETE, null, false, null, null, null, false, Constant::$TEXT_DELETE, null, Constant::$TEXT_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_DELETE, null);
+        $output .= $buttonCancel->getHtml();
+      }
       $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CREATE, null, false, null, null, null, false, Constant::$TEXT_CREATE, null, Constant::$TEXT_CREATE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CREATE, null);
       $output .= $buttonCancel->getHtml();
-      }
+    }
     if ($mode == Constant::$MODE_DELETE) {
       $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CONFIRM_DELETE, null, false, null, null, null, false, Constant::$TEXT_CONFIRM_DELETE, null, Constant::$TEXT_CONFIRM_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CONFIRM_DELETE, null);
       $output .= $buttonCancel->getHtml();

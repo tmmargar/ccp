@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\Email;
 use ccp\classes\model\FormControl;
-use ccp\classes\model\User;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("NAME_FIELD_NAME", "name");

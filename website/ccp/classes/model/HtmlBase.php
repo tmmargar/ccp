@@ -1,17 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class HtmlBase extends Base {
-  private string|null $accessKey;
-  private array|null $class; // array of class names
-  private int $tabIndex;
-  private string|null $title;
-
-  public function __construct(string|null $accessKey, array|null $class, bool $debug, string|int|null $id, int $tabIndex, string|null $title) {
+  public function __construct(protected string|null $accessKey, protected array|null $class, protected bool $debug, protected string|int|null $id, protected int $tabIndex, protected string|null $title) {
     parent::__construct($debug, $id);
-    $this->accessKey = $accessKey;
-    $this->class = $class;
-    $this->tabIndex = $tabIndex;
-    $this->title = $title;
   }
   public function getAccessKey() {
     return $this->accessKey;

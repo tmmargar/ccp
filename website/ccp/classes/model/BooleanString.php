@@ -1,10 +1,8 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class BooleanString extends Base {
-  private string $value;
-  public function __construct($value) {
-    $this->value = $value;
-  }
+  public function __construct(protected string $value) {}
   public function getValue() {
     return $this->value;
   }

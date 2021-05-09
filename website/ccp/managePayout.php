@@ -1,7 +1,7 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\HtmlTable;
 use ccp\classes\model\Structure;
@@ -42,19 +42,19 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . BONuS_POINTS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBonusPoints = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BONUS_POINTS, null, false, null, null, null, false, BONUS_POINTS_FIELD_NAME . "_" . $id, 2, BONUS_POINTS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getBonusPoints() : 3), null);
+      $textBonusPoints = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BONUS_POINTS, null, false, null, null, null, false, BONUS_POINTS_FIELD_NAME . "_" . $id, 2, BONUS_POINTS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getBonusPoints() : 3), null);
       $output .= $textBonusPoints->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textMinPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MIN_PLAYERS, null, false, null, null, null, false, MIN_PLAYERS_FIELD_NAME . "_" . $id, 2, MIN_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : "0"), null);
+      $textMinPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MIN_PLAYERS, null, false, null, null, null, false, MIN_PLAYERS_FIELD_NAME . "_" . $id, 2, MIN_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : 0), null);
       $output .= $textMinPlayers->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textMaxPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_PLAYERS, null, false, null, null, null, false, MAX_PLAYERS_FIELD_NAME . "_" . $id, 2, MAX_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : 36), null);
+      $textMaxPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_PLAYERS, null, false, null, null, null, false, MAX_PLAYERS_FIELD_NAME . "_" . $id, 2, MAX_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : 36), null);
       $output .= $textMaxPlayers->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -63,28 +63,27 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display\" id=\"" . Constant::$ID_TABLE_INPUT . "\" style=\"margin: 0;\" width=\"25%\">\n";
       $output .= "     <tbody>\n";
       if (count($resultList) == 0) {
-        $payout = new Payout();
-        $structure = new Structure();
-        $structure->setPlace(1);
-        $structure->setPercentage(1);
-        $payout->setStructures(array($structure));
+        // (bool $debug, string|int|null $id, int $place, int $percentage) {
+        $structure = new Structure(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, 1, 1);
+        // (bool $debug, string|int|null $id, string $name, int $bonusPoints, int $minPlayers, int $maxPlayers, array $structures) {
+        $payout = new Payout(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "", 0, 0, 0, array($structure));
         $resultList[0] = $payout;
       }
       foreach ($resultList[$ctr]->getStructures() as $structure) {
         $output .= "      <tr>\n";
         $output .= "       <td class=\"textAlignUnset\">" . PLACE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
         $output .= "       <td class=\"textAlignUnset\">\n";
-        $textPayoutPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PLACE, null, false, null, null, null, true, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $structure->getPlace() : ""), null);
+        $textPayoutPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PLACE, null, false, null, null, null, true, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $structure->getPlace() : ""), null);
         $output .= $textPayoutPlace->getHtml();
         $output .= "       </td>\n";
         $output .= "       <td class=\"textAlignUnset\">" . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
         $output .= "       <td class=\"textAlignUnset\">\n";
-        $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, false, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), null);
+        $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, false, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), null);
         $output .= $textPayoutPercentage->getHtml();
         $output .= "       </td>\n";
         $output .= "      </tr>\n";
         $percentageTotal += $structure->getPercentage() * 100;
-        $ctr2++;
+        $ctr2 ++;
       }
       $output .= "      <tr>\n";
       $output .= "       <td class=\"textAlignUnset\"></td>\n";
@@ -94,7 +93,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "       </td>\n";
       $output .= "       <td class=\"textAlignUnset\">Total " . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
       $output .= "       <td class=\"textAlignUnset\">\n";
-      $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, true, PERCENTAGE_FIELD_NAME . "Total", 2, PERCENTAGE_FIELD_NAME . "Total", null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, $percentageTotal, null);
+      $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, true, PERCENTAGE_FIELD_NAME . "Total", 2, PERCENTAGE_FIELD_NAME . "Total", null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) $percentageTotal, null);
       $output .= $textPayoutPercentage->getHtml();
       $output .= "       </td>\n";
       $output .= "      </tr>\n";
@@ -103,7 +102,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $hiddenRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), null);
       $output .= $hiddenRow->getHtml();
       $output .= "    <div style=\"clear: both;\"></div>\n";
-      $ctr++;
+      $ctr ++;
     }
     $buttonAddRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADD_ROW, null, false, null, null, null, false, Constant::$TEXT_ADD_ROW, null, Constant::$TEXT_ADD_ROW, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_BUTTON, Constant::$TEXT_ADD_ROW, null);
     $output .= $buttonAddRow->getHtml();
@@ -150,7 +149,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         if (isset($place) && isset($percentage)) {
           $params = array($tempPayoutId, $place, $percentage / 100);
           $databaseResult->insertStructure($params);
-          $ctr2++;
+          $ctr2 ++;
         } else {
           $found = false;
         }
@@ -193,7 +192,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     $query .= " WHERE p.payoutId IN (" . $ids . ")";
   }
   $colFormats = array(array(6, "percentage", 0));
-//   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
+  // $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
   $htmlTable = new HtmlTable(null, null, null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, HIDDEN_ROW_FIELD_NAME, null, null, null, null, true, $query, $ids, null, "60%");
   $output .= $htmlTable->getHtml();
 }

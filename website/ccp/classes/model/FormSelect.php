@@ -1,18 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormSelect extends FormBase {
-  private string $accessKey;
-  private bool $multiple;
-  private string $onClick;
-  private bool $readOnly;
-  private int $size;
-  public function __construct(bool $debug, string $accessKey, array $class, bool $disabled, int $id, bool $multiple, strin $name, string $onClick, bool $readOnly, int $size, string|null $suffix, string $value) {
-    parent::__construct7($debug, $class, $disabled, $id, $name, $suffix, $value);
-    $this->accessKey = $accessKey;
-    $this->multiple = $multiple;
-    $this->onClick = $onClick;
-    $this->readOnly = $readOnly;
-    $this->size = $size;
+  public function __construct(protected bool $debug, protected string $accessKey, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected bool $multiple, protected string|null $name, protected string|null $onClick, protected bool $readOnly, protected int $size, protected string|null $suffix, protected array|string|null $value) {
+    parent::__construct($debug, $class, $disabled, $id, $name, $suffix, $value);
   }
   public function getAccessKey() {
     return $this->accessKey;

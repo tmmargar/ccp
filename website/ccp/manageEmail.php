@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
@@ -75,7 +76,7 @@ $output .= $textBoxEmail->getHtml();
 $output .= " </div>\n";
 $output .= " <div class=\"label\">Body:</div>\n";
 $output .= " <div class=\"textarea\">\n";
-$textAreaBody = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BODY, null, false, null, null, 50, false, BODY_FIELD_NAME, null, BODY_FIELD_NAME, null, null, false, null, 10, null, null, FormControl::$TYPE_INPUT_TEXTAREA, null, true);
+$textAreaBody = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BODY, null, false, null, null, 50, false, BODY_FIELD_NAME, null, BODY_FIELD_NAME, null, null, false, null, 10, null, null, FormControl::$TYPE_INPUT_TEXTAREA, null, "hard");
 $output .= $textAreaBody->getHtml();
 $output .= " </div>\n";
 $output .= " <div class=\"label\">&nbsp;</div>\n";

@@ -1,12 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormOption extends FormBase {
-  private string $selectedValue;
-  private string $text;
-  public function __construct(bool $debug, array $class, bool $disabled, int $id, string $name, string $selectedValue, string|null $suffix, string $text, string $value) {
+  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected string|null $name, protected string|null $selectedValue, protected string|null $suffix, protected string $text, protected array|string|null $value) {
     parent::__construct($debug, $class, $disabled, $id, $name, $suffix, $value);
-    $this->selectedValue = $selectedValue;
-    $this->text = $text;
   }
   public function getHtml() {
     return "<option" .

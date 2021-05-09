@@ -17,11 +17,11 @@ const inputLocal = {
   	return ($("#firstName_" + id).val().length == 0) || ($("#lastName_" + id).val().length == 0) || ($("#username_" + id).val().length == 0) || ($("#mode").val() == "create" && $("#password_" + id).val().length == 0) || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email_" + id).val()));
   },
   initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "4%" }, { "type" : "name", "width" : "11%" }, { "width" : "10%" }, { "width" : "15%" }, { "render" : function (data, type, row, meta) { return display.formatPhone(data); }, "width" : "8%" }, { "width" : "4%" }, { "width" : "8%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "4%" }, { "searchable": false, "visible": false }], [ [ 11, "desc" ], [ 1, "asc" ] ], false, false, "375px");
+    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width" : "4%" }, { "type" : "name", "width" : "11%" }, { "width" : "10%" }, { "width" : "15%" }, { "render" : function (data, type, row, meta) { return display.formatPhone(data); }, "width" : "8%" }, { "width" : "4%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "7%" }, { "width" : "4%" }, { "searchable": false, "visible": false }], [ [ 9, "desc" ], [ 1, "asc" ] ], false, false, "375px");
   },
   postProcessing : function() {
     dataTable.displayHighlight("dataTbl", 5);
-    dataTable.displayActive("dataTbl", 11);
+    dataTable.displayActive("dataTbl", 9);
   },
   setIds : function(selectedRow) {
     return $(selectedRow).children("td").first().html();

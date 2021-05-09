@@ -1,10 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Phone extends Base {
-  private string $value;
-  public function __construct(bool $debug, string|int|null $id, string $value) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $value) {
     parent::__construct($debug, $id);
-    $this->value = $value;
   }
   public function getValue() {
     return $this->value;

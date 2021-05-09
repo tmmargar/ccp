@@ -3,7 +3,7 @@
 <head>
  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>{block name=title}Default Title{/block}</title>
+ <title>{block name=title}{$title}{/block}</title>
  <link href="images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
  <link href="images/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32">
  <link href="images/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16">

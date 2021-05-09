@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
@@ -35,7 +36,7 @@ foreach ($queryResultYears as $rowYears) {
   $queryResultAll = $databaseResult->getTournamentAll($params);
   if (0 < count($queryResultAll)) {
     foreach ($queryResultAll as $rowAll) {
-      $description = count(explode(" - ", $rowAll->getDescription())) > 1 ? explode(" - ", $rowAll->getDescription())[1] : explode(" - ", $rowAll->getDescription())[0];
+      $description = null !== $rowAll->getDescription() ? count(explode(" - ", $rowAll->getDescription())) > 1 ? explode(" - ", $rowAll->getDescription())[1] : explode(" - ", $rowAll->getDescription())[0] : "";
       $htmlLinkResult = new HtmlLink(null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), "reports.php", null, array("reportId", "tournamentId"), array("results", $rowAll->getId()), -1, $description . " (" . $rowAll->getDate()->getDisplayFormat() . ")", null);
       $htmlLinkResultArray[$htmlLinkResultArrayCounter] = $htmlLinkResult;
       $htmlLinkResultArrayCounter++;

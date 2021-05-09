@@ -1,25 +1,23 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
-use ccp\classes\utility\SessionUtility;
 use Exception;
 use PDO;
 use PDOException;
+use ccp\classes\utility\SessionUtility;
 class DatabaseResult extends Root {
   private Database $database;
   private PDO $connection;
   public function __construct(bool $debug) {
     parent::__construct($debug);
-    $this->initialize();
+    $this->setDatabase($this->initializeDatabase());
+    $this->setConnection($this->initializeConnection());
   }
   public function getConnection() {
     return $this->connection;
   }
   public function getDatabase() {
     return $this->database;
-  }
-  public function initialize() {
-    $this->setDatabase($this->initializeDatabase());
-    $this->setConnection($this->initializeConnection());
   }
   public function setConnection(PDO $connection) {
     $this->connection = $connection;
@@ -172,8 +170,8 @@ class DatabaseResult extends Root {
     return $this->getData("registrationWaitList", $params, null, false, null, false);
   }
   public function getResultIdMax(array|null $params) {
-    return $this->getData("resultIdMax", $params, null, false, null, false);
-  }
+  return $this->getData("resultIdMax", $params, null, false, null, false);
+}
   public function getResult() {
     return $this->getData("resultSelectAll", null, null, false, null, false);
   }
@@ -249,7 +247,7 @@ class DatabaseResult extends Root {
     return $this->getData("resultBountyByTournamentIdAndBountyId", $params, null, true, null, false);
   }
   public function getSeason(array $params) {
-    return $this->getData("seasonSelectAll", null, $params[0], $params[1], null, false);
+    return $this->getData("seasonSelectAll", $params, $params[0], $params[1], null, false);
   }
   public function getSeasonByActive(array $params) {
     return $this->getData("seasonSelectOneByActive", $params, null, false, null, false);
@@ -547,12 +545,12 @@ class DatabaseResult extends Root {
     if ($_SERVER["SERVER_NAME"] == "localhost") {
       $username = "root";
       $password = "toor";
-      $port = 3308;
+      $port = 3306;
       $databaseName = "chipch5_stats";
     } else {
       $username = "chipch5_app";
       $password = "app_chipch5";
-      $port = 3006;
+      $port = 3306;
       $databaseName = "chipch5_stats_new";
     }
     $database = new Database($this->isDebug(), "localhost", $username, $password, $databaseName, $port);
@@ -572,7 +570,7 @@ class DatabaseResult extends Root {
   // $returnQuery is boolean (true returns query instead of results, false returns results)
   // $limitCount is number to limit the results by
   // $rank is boolean (true means ranking, false means no ranking)
-  private function getData(string $dataName, array|null $params, array|null $orderBy = null, bool $returnQuery = false, int|null $limitCount = null, bool $rank = false) {
+  private function getData(string $dataName, array|null $params, array|string|null $orderBy = null, bool $returnQuery = false, int|null $limitCount = null, bool $rank = false) {
 //     try {
       $resultList = array();
       switch ($dataName) {
@@ -1842,10 +1840,13 @@ class DatabaseResult extends Root {
               " WHERE t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate AND t.tournamentId = " . $params[0] . " AND t.tournamentDesc LIKE '%" . $params[1] . "%'";
           } else if ("seasonSelectOneByActive" == $dataName) {
             $query .= " WHERE seasonActive = " . $params[0];
-          } else if ("seasonSelectAll" == $dataName) {
-            if (isset($orderBy)) {
-              $query .= $orderBy;
-            }
+//           } else if ("seasonSelectAll" == $dataName) {
+//             if (isset($orderBy)) {
+//               $query .= $orderBy;
+//             }
+          }
+          if (isset($params[2]) && $params[2]) {
+            $query .= " ORDER BY seasonStartDate DESC";
           }
           break;
         case "seasonSelectAllChampionship":
@@ -1940,7 +1941,7 @@ class DatabaseResult extends Root {
             $query .=
               " WHERE (" . $params[0] . " >= t.tournamentDate OR CURRENT_DATE <= " . $params[1] . ")" .
               " AND enteredCount IS NULL" .
-              " ORDER BY t.tournamentDate, t.startTime";
+              " ORDER BY t.tournamentDate DESC, t.startTime";
           } else if ("tournamentSelectAllOrdered" == $dataName) {
             $query .= " ORDER BY t.tournamentDate DESC, t.startTime DESC";
           } else if ("tournamentSelectAll" == $dataName) {
@@ -1995,7 +1996,7 @@ class DatabaseResult extends Root {
         case "tournamentBountySelectAll":
         case "tournamentBountySelectByTournamentId":
           $query =
-            "SELECT tb.tournamentId, b.bountyId, b.bountyName, b.bountyDesc, tb.playerId, CASE WHEN tb.playerId IS NULL THEN 'N/A' ELSE CONCAT(p.first_name, ' ', p.last_name) END AS name, p.active " .
+            "SELECT tb.tournamentId, b.bountyId, b.bountyName, b.bountyDesc, tb.playerId, CASE WHEN tb.playerId IS NULL THEN 'No Name' ELSE CONCAT(p.first_name, ' ', p.last_name) END AS name, p.active " .
             "FROM poker_bounty b LEFT JOIN poker_tournament_bounty tb ON b.bountyId = tb.bountyId";
           if ("tournamentBountySelectByTournamentId" == $dataName) {
             $query .= " AND tb.tournamentId = " . $params[0];
@@ -2217,57 +2218,32 @@ class DatabaseResult extends Root {
               $resultListForPerson = array();
               switch ($dataName) {
                 case "autoRegisterHost":
-                  $tournament = new Tournament();
-                  $tournament->setId((int) $row["tournamentId"]);
+                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zipCode"], (int) $row["phone"]);
+                  $name = explode(" ", $row["name"]);
+                  $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 0, $address, null, null, null, null, null, null);
+                  $location = new Location($this->isDebug(), null, "", $user, 0, 0, null, null, 0);
                   $dateTime = new DateTime($this->isDebug(), null, $row["tournamentDate"]);
-                  $tournament->setDate($dateTime);
-                  $dateTime = new DateTime($this->isDebug(), null, $row["startTime"]);
-                  $tournament->setStartTime($dateTime);
-                  $location = new Location();
-                  $user = new User();
-                  $user->setId((int) $row["playerId"]);
-                  $user->setName($row["name"]);
-                  $user->setEmail($row["email"]);
-                  $address = new Address();
-                  $address->setAddress($row["address"]);
-                  $address->setCity($row["city"]);
-                  $address->setState($row["state"]);
-                  $address->setZip((int) $row["zipCode"]);
-                  $address->setPhone($row["phone"]);
-                  $user->setAddress($address);
-                  $location->setUser($user);
-                  $tournament->setLocation($location);
+                  $dateStartTime = new DateTime($this->isDebug(), null, $row["startTime"]);
+                  $tournament = new Tournament($this->isDebug(), (int) $row["tournamentId"], null, null, null, null, null, 0, $location, $dateTime, $dateStartTime, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
                   array_push($resultList, $tournament);
                   break;
                 case "bountiesForSeason":
                   $bounty = new Bounty($this->isDebug(), "points" == $row["type"] ? 1 : 2, "points" == $row["type"] ? "Bounty A" : "Bounty B", $row["type"]);
                   $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), null, $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, $row["active"], null, null, null, null, null, null, null);
+                  $user = new User($this->isDebug(), null, $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $row["active"], null, null, null, null, null, null, null);
                   $resultBounty = new ResultBounty($this->isDebug(), null, null, $bounty, $user);
                   array_push($resultList, $resultBounty);
                   break;
                 case "bountyCountSelectByTournament":
-                  $values = array(
-                    $row["bountyName"],
-                    $row["bountyDesc"],
-                    $row["cnt"]);
+                  $values = array($row["bountyName"], $row["bountyDesc"], $row["cnt"]);
                   array_push($resultList, $values);
                   break;
                 case "bountyEarnings":
-                  $values = array(
-                    $row["knockedOutBy"],
-                    $row["name"],
-                    $row["winnings"],
-                    $row["cost"],
-                    $row["active"],
-                    $row["winnerActive"]);
+                  $values = array($row["knockedOutBy"], $row["name"], $row["winnings"], $row["cost"], $row["active"], $row["winnerActive"]);
                   array_push($resultList, $values);
                   break;
                 case "bountySelectAll":
-                  $bounty = new Bounty();
-                  $bounty->setId((int) $row["bountyId"]);
-                  $bounty->setName($row["bountyName"]);
-                  $bounty->setDescription($row["bountyDesc"]);
+                  $bounty = new Bounty($this->isDebug(), (int) $row["bountyId"], $row["bountyName"], $row["bountyDesc"]);
                   array_push($resultList, $bounty);
                   break;
                 case "bullyForUser":
@@ -2332,34 +2308,21 @@ class DatabaseResult extends Root {
                   array_push($resultList, $row["active"]);
                   break;
                 case "gameTypeSelectAll":
-                  $gameType = new GameType();
-                  $gameType->setId((int) $row["gameTypeId"]);
-                  $gameType->setName($row["gameTypeName"]);
+                  $gameType = new GameType($this->isDebug(), $row["gameTypeId"], $row["gameTypeName"]);
                   array_push($resultList, $gameType);
                   break;
                 case "groupSelectAll":
                 case "groupSelectAllById":
-                  $group = new Group();
-                  $group->setId((int) $row["id"]);
-                  $group->setName($row["name"]);
+                  $group = new Group($this->isDebug(), (int) $row["id"], $row["name"]);
 //                   $group->setGroup($group);
 //                   $group->setPayouts($this->getPayouts($row["groupId"], null, true));
                   array_push($resultList, $group);
                   break;
                 case "groupPayoutSelectAll":
                 case "groupPayoutSelectAllById":
-                  $groupPayout = new GroupPayout();
-                  $group = new Group();
-                  $group->setId((int) $row["id"]);
-                  $group->setName($row["group name"]);
-                  $groupPayout->setGroup($group);
-//                   $payout = new Payout();
-//                   $payout->setId($row["payout id"]);
-//                   $payout->setName($row["payout name"]);
-//                   $payouts = array($payout);
-//                   $groupPayout->setPayouts($payouts);
-                  $aryPayouts = $this->getPayouts($params[0], $dataName == "groupPayoutSelectAllById" ? $params[1] : null, $dataName == "groupPayoutSelectAllById" ? true : false);
-                  $groupPayout->setPayouts($aryPayouts);
+                  $group = new Group($this->isDebug(), (int) $row["id"], $row["group name"]);
+                  $aryPayouts = $this->getPayouts((int) $params[0], $dataName == "groupPayoutSelectAllById" ? (int) $params[1] : null, $dataName == "groupPayoutSelectAllById" ? true : false);
+                  $groupPayout = new GroupPayout($this->isDebug(), null, $group, $aryPayouts);
                   array_push($resultList, $groupPayout);
                   break;
                 case "groupSelectNameList":
@@ -2377,42 +2340,22 @@ class DatabaseResult extends Root {
                   array_push($resultList, $row["active"]);
                   break;
                 case "limitTypeSelectAll":
-                  $limitType = new LimitType();
-                  $limitType->setId((int) $row["limitTypeId"]);
-                  $limitType->setName($row["limitTypeName"]);
+                  $limitType = new LimitType($this->isDebug(), $row["limitTypeId"], $row["limitTypeName"]);
                   array_push($resultList, $limitType);
                   break;
                 case "locationSelectAll":
                 case "locationSelectById":
                 case "locationSelectAllCount":
-                  $location = new Location();
-                  $location->setId((int) $row["id"]);
-                  if ("locationSelectAllCount" == $dataName) {
-                    $location->setName($row["location"]);
-                  } else {
-                    $location->setName($row["name"]);
-                  }
-                  $user = new User();
-                  $user->setId((int) $row["playerId"]);
                   if ("locationSelectById" != $dataName) {
-                    $user->setName($row["host"]);
-                    $user->setActive($row["userActive"]);
+                    $name = explode(" ", $row["host"]);
+                    $active = $row["userActive"];
+                  } else {
+                    $name = array("", "");
+                    $active = 0; // fix
                   }
-                  $address = new Address();
-                  $address->setAddress($row["address"]);
-                  $address->setCity($row["city"]);
-                  $address->setState($row["state"]);
-                  $address->setZip((int) $row["zip"]);
-                  $address->setPhone($row["phone"]);
-                  $user->setAddress($address);
-                  $location->setUser($user);
-                  $location->setActive($row["active"]);
-                  if ("locationSelectAllCount" == $dataName) {
-                    $location->setCount((int) $row["count"]);
-                  }
-                  if ("locationSelectAll" == $dataName) {
-                    $location->setTournamentCount($row["trnys"]);
-                  }
+                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zip"], (int) $row["phone"]);
+                  $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $active, $address, null, null, null, null, null, null);
+                  $location = new Location($this->isDebug(), $row["id"], "locationSelectAllCount" == $dataName ? $row["location"] : $row["name"], $user, "locationSelectAllCount" == $dataName ? $row["count"] : 0, (int) $row["active"], null, null, "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
                   array_push($resultList, $location);
                   break;
                 case "locationSelectMaxId":
@@ -2430,7 +2373,7 @@ class DatabaseResult extends Root {
                 case "notificationSelectOneById":
                   $startDateTime = new DateTime($this->isDebug(), null, $row["start date"]);
                   $endDateTime = new DateTime($this->isDebug(), null, $row["end date"]);
-                  $notification = new Notification($this->isDebug(), $row["id"], $row["description"], $startDateTime, $endDateTime);
+                  $notification = new Notification($this->isDebug(), (int) $row["id"], $row["description"], $startDateTime, $endDateTime);
                   array_push($resultList, $notification);
                   break;
 //                 case "payoutSelectAll":
@@ -2484,39 +2427,30 @@ class DatabaseResult extends Root {
                 case "resultSelectAllFinishedByTournamentId":
                 case "resultSelectPaidByTournamentId":
                 case "resultSelectPaidNotEnteredByTournamentId":
-                  $result = new Result();
-                  $tournament = new Tournament();
-                  $tournament->setId((int) $row["tournamentId"]);
-                  $result->setTournament($tournament);
-                  $user = new User();
-                  $user->setId((int) $row["playerId"]);
-                  $user->setName($row["name"]);
-                  $user->setEmail($row["email"]);
-                  $user->setActive($row["active"]);
-                  $result->setUser($user);
-                  $status = new Status();
-                  $status->setCode($row["statusCode"]);
-                  $status->setName($row["status"]);
-                  $result->setStatus($status);
-                  $result->setRegisterOrder((int) $row["registerOrder"]);
-                  $booleanString = new BooleanString($row["buyinPaid"]);
-                  $result->setBuyinPaid($booleanString->getBoolean());
-                  $booleanString = new BooleanString($row["rebuyPaid"]);
-                  $result->setRebuyPaid($booleanString->getBoolean());
-                  $booleanString = new BooleanString($row["addon"]);
-                  $result->setAddonPaid($booleanString->getBoolean());
-                  $result->setRebuyCount((int) $row["rebuy"]);
-                  $booleanString = new BooleanString($row["addonFlag"]);
-                  $result->setAddonFlag($booleanString->getBoolean());
-                  $result->setPlace((int) $row["place"]);
-                  $user = new User();
-                  $user->setId((int) $row["knockedOutBy"]);
-                  $user->setActive($row["knockedOutActive"]);
+                  $status = new Status($this->isDebug(), null, $row["statusCode"], $row["status"]);
+                  //public function __construct(bool $debug, string|int|null $id, string|null $description ,string|null $comment, LimitType|null $limitType, GameType|null $gameType,
+                  //SpecialType|null $specialType, int $chipCount, Location|null $location, DateTime $date, DateTime|null $startTime, DateTime|null $endTime, int $buyinAmount, int $maxPlayers,
+                  //int $maxRebuys, int $rebuyAmount, int $addonAmount, int $addonChipCount, GroupPayout|null $groupPayout, int $rake, int $registeredCount, int $buyinsPaid, int $rebuysPaid,
+                  // int $rebuysCount, int $addonsPaid, int $enteredCount) {
+                  $tournament = new Tournament($this->isDebug(), (int) $row["tournamentId"], null, null, null, null, null, 0, null, null, null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
+                  //public function __construct(bool $debug, string|int|null $id, string $firstName, string $lastName, string|null $username, string|null $password, string|null $email,
+                  //Phone|null $phone, int $administrator, string|null $registrationDate, string|null $approvalDate, int|null $approvalUserid, string|null $approvalName, string|null $rejectionDate,
+                  //int|null $rejectionUserid, string|null $rejectionName, int $active, Address|null $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires) {
+                  $name = explode(" ", $row["name"]);
+                  $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, (int) $row["active"], null, null, null, null, null, null, null);
                   if (isset($row["knocked out by"])) {
-                    $user->setName($row["knocked out by"]);
+                    $nameKnockedOutBy = explode(" ", $row["knocked out by"]);
+                  } else {
+                    $nameKnockedOutBy = array("", "");
                   }
-                  $result->setKnockedOutBy($user);
-                  $result->setFood($row["food"]);
+                  $knockedOutBy = new User($this->isDebug(), (int) $row["knockedOutBy"], $nameKnockedOutBy[0], $nameKnockedOutBy[1], null, null, null, null, 0, null, null, null, null, null, null, null, isset($row["knockedOutActive"]) ? (int) $row["knockedOutActive"] : 0, null, null, null, null, null, null, null);
+                  //(bool $debug, string|int|null $id, Tournament $tournament, User $user, Status $status, int $registerOrder, bool $buyinPaid, bool $rebuyPaid, bool $addonPaid, int $rebuyCount,
+                  // bool $addonFlag, int $place, User $knockedOutBy, string $food) {
+                  $buyinPaid = new BooleanString($row["buyinPaid"]);
+                  $rebuyPaid = new BooleanString($row["rebuyPaid"]);
+                  $addonPaid = new BooleanString($row["addon"]);
+                  $addonFlag = new BooleanString($row["addonFlag"]);
+                  $result = new Result($this->isDebug(), null, $tournament, $user, $status, (int) $row["registerOrder"], $buyinPaid->getBoolean(), $rebuyPaid->getBoolean(), $addonPaid->getBoolean(), (int) $row["rebuy"], $addonFlag->getBoolean(), (int) $row["place"], $knockedOutBy, $row["food"]);
                   array_push($resultList, $result);
                   break;
                 case "resultSelectAllDuring":
@@ -2639,7 +2573,7 @@ class DatabaseResult extends Root {
                 case "seasonSelectOneByActive":
                   $startDateTime = new DateTime($this->isDebug(), null, $row["start date"]);
                   $endDateTime = new DateTime($this->isDebug(), null, $row["end date"]);
-                  $season = new Season($this->isDebug(), $row["id"], $row["description"], $startDateTime, $endDateTime, $row["active"]);
+                  $season = new Season($this->isDebug(), $row["id"], $row["description"], $startDateTime, $endDateTime, (int) $row["active"]);
                   array_push($resultList, $season);
                   break;
                 case "statusSelectPaid":
@@ -2690,78 +2624,59 @@ class DatabaseResult extends Root {
                 case "tournamentSelectAllOrdered":
                 case "tournamentsWonByPlayerId":
                 case "tournamentsSelectForEmailNotifications":
-                  $tournament = new Tournament();
-                  $tournament->setId((int) $row["id"]);
-                  $tournament->setDescription($row["description"]);
-                  $tournament->setComment($row["comment"]);
-                  $limitType = new LimitType();
-                  $limitType->setId((int) $row["limitTypeId"]);
-                  $limitType->setName($row["limit"]);
-                  $tournament->setLimitType($limitType);
-                  $gameType = new GameType();
-                  $gameType->setId((int) $row["gameTypeId"]);
-                  $gameType->setName($row["type"]);
-                  $tournament->setGameType($gameType);
-                  $tournament->setChipCount((int) $row["chips"]);
-                  $location = new Location();
-                  $location->setId((int) $row["locationId"]);
-                  $location->setName($row["location"]);
-                  $location->setMap($row["mapHide"]);
-                  $location->setMapName($row["map"]);
-                  $user = new User();
-                  $user->setId((int) $row["playerId"]);
+                  $limitType = new LimitType($this->isDebug(), $row["limitTypeId"], $row["limit"]);
+                  $gameType = new GameType($this->isDebug(), $row["gameTypeId"], $row["type"]);
+                  $specialType = new SpecialType($this->isDebug(), $row["specialTypeId"], $row["std"]);
+                  //(bool $debug, string|int|null $id, string $address, string $city, string $state, int $zip, int $phone) {
+                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zipCode"], (int) $row["phone"]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
-                    $user->setName($row["playerName"]);
+                      $name = explode(" ", $row["playerName"]);
+                  } else {
+                      $name = array("", "");
                   }
-                  $address = new Address();
-                  $address->setAddress($row["address"]);
-                  $address->setCity($row["city"]);
-                  $address->setState($row["state"]);
-                  $address->setZip((int) $row["zipCode"]);
-                  $address->setPhone($row["phone"]);
-                  $user->setAddress($address);
-                  $location->setUser($user);
-                  $tournament->setLocation($location);
+                  //(bool $debug, string|int|null $id, string $firstName, string $lastName, string|null $username, string|null $password, string|null $email, Phone|null $phone, int $administrator,
+                  //string|null $registrationDate, string|null $approvalDate, int|null $approvalUserid, string|null $approvalName, string|null $rejectionDate, int|null $rejectionUserid,
+                  //string|null $rejectionName, int $active, Address|null $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires) {
+                  $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, 0, $address, null, null, null, null, null, null);
+                  //(bool $debug, string|int|null $id, string $name, User $user, int $count, int $active, $map, string|null $mapName, int $tournamentCount) {
+                  $location = new Location($this->isDebug(), $row["locationId"], $row["location"], $user, 0, 0, $row["mapHide"], $row["map"], 0);
                   $dateTime = new DateTime($this->isDebug(), null, $row["date"]);
-                  $tournament->setDate($dateTime);
-                  $dateTime = new DateTime($this->isDebug(), null, $row["start"]);
-                  $tournament->setStartTime($dateTime);
-                  $dateTime = new DateTime($this->isDebug(), null, $row["end"]);
-                  $tournament->setEndTime($dateTime);
-                  $tournament->setBuyinAmount((int) $row["buyin"]);
-                  if (strpos($row["std"], Constant::$DESCRIPTION_CHAMPIONSHIP) === false) {
-                    $tournament->setMaxPlayers((int) $row["max players"]);
+                  $dateTimeStart = new DateTime($this->isDebug(), null, $row["start"]);
+                  $dateTimeEnd = new DateTime($this->isDebug(), null, $row["end"]);
+                  if (isset($row["std"]) && strpos($row["std"], Constant::$DESCRIPTION_CHAMPIONSHIP) === false) {
+                    $maxPlayers = (int) $row["max players"];
                   } else {
                     $databaseResult = new DatabaseResult($this->isDebug());
                     $databaseResult->setDebug(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
                     $params = array(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat());
-                    $tournament->setMaxPlayers((int) count($databaseResult->getChampionshipQualifiedPlayers($params)));
+                    $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers($params));
                   }
-                  $tournament->setMaxRebuys((int) $row["max"]);
-                  $tournament->setRebuyAmount((int) $row["amt"]);
-                  $tournament->setAddonAmount((int) $row["amt "]);
-                  $tournament->setAddonChipCount((int) $row["chips "]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
-                    $groupPayout = new GroupPayout();
-                    $group = new Group();
-                    $group->setId((int) $row["groupId"]);
-                    $group->setName($row["name"]);
-                    $groupPayout->setGroup($group);
-                    $groupPayout->setPayouts($this->getPayouts($row["groupId"], null, true));
-                    $tournament->setGroupPayout($groupPayout);
+                    $group = new Group($this->isDebug(), $row["groupId"], $row["name"]);
+                    $groupPayout = new GroupPayout($this->isDebug(), null, $group, $this->getPayouts((int) $row["groupId"], null, true));
+                  } else {
+                    $groupPayout = null;
                   }
-                  $tournament->setRake((float) ($row["rake"] * 100));
                   // $tournament->setDirections($row["map"]);
-                  $tournament->setEnteredCount((int) $row["enteredCount"]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
-                    $tournament->setRegisteredCount((int) $row["registeredCount"]);
-                    $tournament->setBuyinsPaid((int) $row["buyinsPaid"]);
-                    $tournament->setRebuysPaid((int) $row["rebuysPaid"]);
-                    $tournament->setRebuysCount((int) $row["rebuysCount"]);
-                    $tournament->setAddonsPaid((int) $row["addonsPaid"]);
+                    $registeredCount = (int) $row["registeredCount"];
+                    $buyinsPaid = (int) $row["buyinsPaid"];
+                    $rebuysPaid = (int) $row["rebuysPaid"];
+                    $rebuysCount = (int) $row["rebuysCount"];
+                    $addonsPaid = (int) $row["addonsPaid"];
+                  } else {
+                      $registeredCount = 0;
+                      $buyinsPaid = 0;
+                      $rebuysPaid = 0;
+                      $rebuysCount = 0;
+                      $addonsPaid = 0;
                   }
-                  $specialType = new SpecialType($this->isDebug(), $row["specialTypeId"], $row["std"]);
-                  $tournament->setSpecialType($specialType);
+                  //(bool $debug, string|int|null $id, string|null $description ,string|null $comment, LimitType|null $limitType, GameType|null $gameType, SpecialType|null $specialType, int $chipCount,
+                  // Location|null $location, DateTime $date, DateTime|null $startTime, DateTime|null $endTime, int $buyinAmount, int $maxPlayers, int $maxRebuys, int $rebuyAmount, int $addonAmount,
+                  // int $addonChipCount, GroupPayout|null $groupPayout, int $rake, int $registeredCount, int $buyinsPaid, int $rebuysPaid, int $rebuysCount, int $addonsPaid, int $enteredCount) {
+                  $tournament = new Tournament($this->isDebug(), $row["id"], $row["description"], $row["comment"], $limitType, $gameType, $specialType, (int) $row["chips"], $location, $dateTime, $dateTimeStart, $dateTimeEnd, (int) $row["buyin"],
+                      $maxPlayers, (int) $row["max"], (int) $row["amt"], (int) $row["amt "], (int) $row["chips "], $groupPayout, (float) ($row["rake"] * 100), $registeredCount, $buyinsPaid,
+                      $rebuysPaid, $rebuysCount, $addonsPaid, (int) $row["enteredCount"]);
                   array_push($resultList, $tournament);
                   break;
                 case "tournamentSelectAllRegistrationStatus":
@@ -2798,20 +2713,11 @@ class DatabaseResult extends Root {
                   break;
                 case "tournamentBountySelectAll":
                 case "tournamentBountySelectByTournamentId":
-                  $tournamentBounty = new TournamentBounty();
-                  $tournament = new Tournament();
-                  $tournament->setId((int) $row["tournamentId"]);
-                  $tournamentBounty->setTournament($tournament);
-                  $bounty = new Bounty();
-                  $bounty->setId((int) $row["bountyId"]);
-                  $bounty->setName($row["bountyName"]);
-                  $bounty->setDescription($row["bountyDesc"]);
-                  $tournamentBounty->setBounty($bounty);
-                  $user = new User();
-                  $user->setId((int) $row["playerId"]);
-                  $user->setName($row["name"]);
-                  $user->setActive($row["active"]);
-                  $tournamentBounty->setUser($user);
+                  $tournament = new Tournament($this->isDebug(), (int) $row["tournamentId"], null, null, null, null, null, 0, null, null, null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
+                  $bounty = new Bounty($this->isDebug(), (int) $row["bountyId"], $row["bountyName"], $row["bountyDesc"]);
+                  $name = isset($row["name"]) ? explode(" ", $row["name"]) : array("", "");
+                  $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, isset($row["active"]) ? (int) $row["active"] : 0, null, null, null, null, null, null, null);
+                  $tournamentBounty = new TournamentBounty($this->isDebug(), null, $tournament, $bounty, $user);
                   array_push($resultList, $tournamentBounty);
                   break;
                 case "tournamentsPlayedByPlayerIdAndDateRange":
@@ -2841,24 +2747,19 @@ class DatabaseResult extends Root {
                   array_push($resultList, (int) $row["tournamentId"]);
                   break;
                 case "userAbsencesByTournamentId":
-                  $values = array(
-                    $row["playerId"],
-                    $row["name"]);
+                  $values = array($row["playerId"], $row["name"]);
                   array_push($resultList, $values);
                   break;
                 case "userActive":
-                  $user = new User();
-                  $user->setId((int) $row["id"]);
                   $name = explode(" ", $row["name"]);
-                  $user->setFirstName($name[0]);
-                  if (1 < count($name)) {
-                    $lastName = "";
-                    for ($i = 1; $i < count($name); $i ++) {
-                      $lastName .= $name[$i] . " ";
-                    }
-                    $user->setLastName(substr($lastName, 0, strlen($lastName) - 1));
-                  }
-                  $user->setEmail($row["email"]);
+                  $user = new User($this->isDebug(), (int) $row["id"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null);
+//                   if (1 < count($name)) {
+//                     $lastName = "";
+//                     for ($i = 1; $i < count($name); $i ++) {
+//                       $lastName .= $name[$i] . " ";
+//                     }
+//                     $user->setLastName(substr($lastName, 0, strlen($lastName) - 1));
+//                   }
                   array_push($resultList, $user);
                   break;
                 case "userSelectAll":
@@ -2868,43 +2769,12 @@ class DatabaseResult extends Root {
                 case "userPaidByTournamentId":
                   $name = explode(" ", $row["name"]);
                   $phone = new Phone($this->isDebug(), null, $row[5]);
-                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], $row[2], $row[3], $row[4], $phone, $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], null, null, null, null, null, null, null, null);
-//                   $user = new User();
-//                   $user->setId((int) $row["id"]);
-//                   $name = explode(" ", $row["name"]);
-//                   $user->setFirstName($name[0]);
-//                   if (1 < count($name)) {
-//                     $user->setLastName($name[1]);
-//                   }
-//                   $user->setUsername($row[2]);
-//                   $user->setPassword($row[3]);
-//                   $user->setEmail($row[4]);
-//                   $user->setPhone($row[5]);
-//                   $user->setAdministrator($row[6]);
-//                   $user->setRegistrationDate($row[7]);
-//                   $user->setApprovalDate($row[8]);
-//                   $user->setApprovalUserid($row[9]);
-//                   $user->setApprovalName($row[10]);
-//                   $user->setRejectionDate($row[11]);
-//                   $user->setRejectionUserid($row[12]);
-//                   $user->setRejectionName($row[13]);
-//                   $user->setActive($row[14]);
-//                   // $user->setResetSelector($row["reset_selector"]);
-//                   // $user->setResetToken($row["reset_token"]);
-//                   // $user->setResetExpires($row["reset_expires"]);
-//                   // $user->setRememberSelector($row["remember_selector"]);
-//                   // $user->setRememberToken($row["remember_token"]);
-//                   // $user->setRememberExpires($row["remember_expires"]);
-//                   // $user->setType($row["usertype"]);
+                  $user = new User($this->isDebug(), (int) $row["id"], $name[0], $name[1], $row[2], $row[3], $row[4], $phone, (int) $row[6], $row[7], $row[8], (int) $row[9], $row[10], $row[11], (int) $row[12], $row[13], (int) $row[14], null, null, null, null, null, null, null, null);
                   array_push($resultList, $user);
                   break;
                 case "usersSelectForEmailNotifications":
-//                   $user = new User();
-//                   $user->setId((int) $row["id"]);
-//                   $user->setName($row["name"]);
-//                   $user->setEmail($row["email"]);
                   $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], null, null, $row["email"], null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 0, null, null, null, null, null, null, null, null);
                   array_push($resultList, $user);
                   break;
                 case "waitListedPlayerByTournamentId":
@@ -2942,7 +2812,7 @@ class DatabaseResult extends Root {
               $ctr ++;
             }
             if ($dataName == "payoutSelectAll" || $dataName == "payoutSelectAllById") {
-              $resultList = $this->getPayouts(null, $dataName == "payoutSelectAllById" ? $params[0] : null, $dataName == "payoutSelectAllById" ? true : false);
+              $resultList = $this->getPayouts(null, $dataName == "payoutSelectAllById" ? (int) $params[0] : null, $dataName == "payoutSelectAllById" ? true : false);
             }
           }
           $queryResult->closeCursor();
@@ -2953,7 +2823,7 @@ class DatabaseResult extends Root {
   // $groupId is group id
   // $payoutId is payout id
   // $structureFlag is boolean true for structures
-  private function getPayouts(int $groupId, int $payoutId, bool $structureFlag) {
+  private function getPayouts(int|null $groupId, int|null $payoutId, bool $structureFlag) {
     $payouts = array();
     $queryNested =
       "SELECT p.payoutId AS id, p.payoutName AS name, p.bonusPoints AS 'bonus pts', p.minPlayers AS 'min players', p.maxPlayers AS 'max players' " .
@@ -2962,22 +2832,23 @@ class DatabaseResult extends Root {
       $queryNested .=
         " INNER JOIN poker_group_payout gp ON gp.payoutId = p.payoutId" .
         " WHERE gp.groupId = " . $groupId;
-    } else if (isset($payoutId)) {
-      $queryNested .= " WHERE p.payoutId = " . $payoutId;
+    }
+    if (isset($payoutId)) {
+      if (isset($groupId)) {
+        $queryNested .= " AND ";
+      } else {
+        $queryNested .= " WHERE ";
+      }
+      $queryNested .= "p.payoutId = " . $payoutId;
     }
     $queryResultNested = $this->getConnection()->query($queryNested);
     if ($queryResultNested) {
       $numRecords = $queryResultNested->rowCount();
       $hasRecords = 0 < $numRecords;
       if ($hasRecords) {
+        $structures = null;
         $ctr2 = 0;
         while ($rowNested = $queryResultNested->fetch(PDO::FETCH_BOTH)) {
-          $payout = new Payout();
-          $payout->setBonusPoints((int) $rowNested["bonus pts"]);
-          $payout->setId((int) $rowNested["id"]);
-          $payout->setName($rowNested["name"]);
-          $payout->setMinPlayers((int) $rowNested["min players"]);
-          $payout->setMaxPlayers((int) $rowNested["max players"]);
           if ($structureFlag) {
             $queryNested2 =
               "SELECT s.place, s.percentage " .
@@ -2991,17 +2862,15 @@ class DatabaseResult extends Root {
                 $ctr3 = 0;
                 $structures = array();
                 while ($rowNested2 = $queryResultNested2->fetch(PDO::FETCH_BOTH)) {
-                  $structure = new Structure();
-                  $structure->setPercentage((float) $rowNested2["percentage"]);
-                  $structure->setPlace((int) $rowNested2["place"]);
+                  $structure = new Structure($this->isDebug(), null, (int) $rowNested2["place"], (float) $rowNested2["percentage"]);
                   $structures[$ctr3] = $structure;
                   $ctr3++;
                 }
-                $payout->setStructures($structures);
               }
             }
             $queryResultNested2->closeCursor();
           }
+          $payout = new Payout($this->isDebug(), (int) $rowNested["id"], $rowNested["name"], (int) $rowNested["bonus pts"], (int) $rowNested["min players"], (int) $rowNested["max players"], $structures);
           $payouts[$ctr2] = $payout;
           $ctr2++;
         }
@@ -3114,7 +2983,7 @@ class DatabaseResult extends Root {
   // $params is array of input parameters
   private function insertData(string $dataName, array $params = null) {
     $numRecords = 0;
-    try {
+//     try {
       switch ($dataName) {
         case "bountyInsert":
           $query = "INSERT INTO poker_result_bounty(tournamentId, playerId, bountyId) " . "VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
@@ -3135,7 +3004,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_payout(payoutId, payoutName, bonusPoints, minPlayers, maxPlayers) " . "SELECT IFNULL(MAX(payoutId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", " . $params[2] . ", " . $params[3] . " FROM poker_payout";
           break;
         case "registrationInsert":
-          $query = "INSERT INTO poker_result(tournamentId, playerId, rebuyCount, statusCode, registerOrder, addonFlag, place, knockedOutBy, food) " . "SELECT " . $params[0] . ", " . $params[1] . ", 0, '" . Constant::$CODE_STATUS_REGISTERED . "', CASE WHEN MAX(registerOrder) IS NULL THEN 1 ELSE MAX(registerOrder) + 1 END, '" . Constant::$FLAG_NO . "', 0, NULL, " . $params[2] . " FROM poker_result WHERE tournamentId = " . $params[0];
+          $query = "INSERT INTO poker_result(tournamentId, playerId, rebuyCount, statusCode, registerOrder, addonFlag, place, knockedOutBy, food) " . "SELECT " . $params[0] . ", " . $params[1] . ", 0, '" . Constant::$CODE_STATUS_REGISTERED . "', CASE WHEN MAX(registerOrder) IS NULL THEN 1 ELSE MAX(registerOrder) + 1 END, '" . Constant::$FLAG_NO . "', 0, NULL, '" . $params[2] . "' FROM poker_result WHERE tournamentId = " . $params[0];
           break;
         case "seasonInsert":
           $query = "INSERT INTO poker_season(seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonActive) " . "SELECT IFNULL(MAX(seasonId), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', '" . (isset($params[3]) ? $params[3] : "0") . "' FROM poker_season";
@@ -3144,7 +3013,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_structure(payoutId, place, percentage) VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
           break;
         case "tournamentInsert":
-          $query = "INSERT INTO poker_tournament(tournamentId, tournamentDesc, comment, limitTypeId, gameTypeId, chipCount, locationId, tournamentDate, startTime, endTime, buyinAmount, maxPlayers, maxRebuys, rebuyAmount, addonAmount, addonChipCount, groupId, rake, map, specialTypeId) " . "SELECT IFNULL(MAX(tournamentId), 0) + 1, " . (strlen(trim($params[0])) == 0 ? "null" : "'" . $params[0] . "'") . ", " . (strlen(trim($params[1])) == 0 ? "null" : "'" . $params[1] . "'") . ", " . $params[2] . ", " . $params[3] . ", " . $params[4] . ", " . $params[5] . ", " . (!isset($params[6]) ? "null" : "'" . $params[6]->getDatabaseFormat() . "'") . ", " . (!isset($params[7]) ? "null" : "'" . $params[7]->getDatabaseTimeFormat() . "'") . ", " . (strlen(trim($params[8])) == 0 ? "null" : "'" . $params[8] . "'") . ", " . $params[9] . ", " . $params[10] . ", " . $params[11] . ", " . $params[12] . ", " . $params[13] . ", " . $params[14] . ", " . $params[15] . ", " . (strlen(trim($params[16])) == 0 ? "null" : "'" . $params[16] . "'") . ", " . (strlen(trim($params[17])) == 0 ? "null" : ("'" . $params[17]) . "'") . ", " . (strlen(trim($params[18])) == 0 ? "null" : "'" . $params[18] . "'") . " FROM poker_tournament";
+          $query = "INSERT INTO poker_tournament(tournamentId, tournamentDesc, comment, limitTypeId, gameTypeId, chipCount, locationId, tournamentDate, startTime, endTime, buyinAmount, maxPlayers, maxRebuys, rebuyAmount, addonAmount, addonChipCount, groupId, rake, map, specialTypeId) " . "SELECT IFNULL(MAX(tournamentId), 0) + 1, " . (isset($params[0]) ? "'" . $params[0] . "'" : "null") . ", " . (isset($params[1]) == 0 ? "'" . $params[1] . "'" : "null") . ", " . $params[2] . ", " . $params[3] . ", " . $params[4] . ", " . $params[5] . ", " . (isset($params[6]) ? "'" . $params[6]->getDatabaseFormat() . "'" : "null") . ", " . (isset($params[7]) ? "'" . $params[7]->getDatabaseTimeFormat() . "'" : "null") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "null") . ", " . $params[9] . ", " . $params[10] . ", " . $params[11] . ", " . $params[12] . ", " . $params[13] . ", " . $params[14] . ", " . $params[15] . ", " . (isset($params[16]) ? $params[16] : "null") . ", " . (strlen($params[17]) > 0 ? ("'" . $params[17]) . "'" : "null") . ", " . (strlen($params[18]) > 0 ? "'" . $params[18] . "'" : "null") . " FROM poker_tournament";
           break;
         case "tournamentBountyInsert":
           $query = "INSERT INTO poker_tournament_bounty(tournamentId, bountyId, playerId) " . "VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
@@ -3168,9 +3037,9 @@ class DatabaseResult extends Root {
       } else if ($queryResult) {
         $numRecords = $queryResult->errorInfo();
       }
-    } catch (Exception $e) {
-      throw new Exception($e);
-    }
+//     } catch (Exception $e) {
+//       throw new Exception($e);
+//     }
     return $numRecords;
   }
   // $dataName is query name
@@ -3327,95 +3196,95 @@ class DatabaseResult extends Root {
           $query = "UPDATE poker_user " .
           // id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
           "SET";
-          if (! empty($params[0])) {
+          if (!empty($params[0])) {
             $query .= " id = " . $params[0];
           }
-          if (! empty($params[1])) {
-            if (! empty($params[0])) {
+          if (!empty($params[1])) {
+            if (!empty($params[0])) {
               $query .= ", ";
             }
             $query .= " first_name = '" . $params[1] . "'";
           }
-          if (! empty($params[2])) {
-            if (! empty($params[0]) || ! empty($params[1])) {
+          if (!empty($params[2])) {
+            if (!empty($params[0]) || ! empty($params[1])) {
               $query .= ", ";
             }
             $query .= " last_name = '" . $params[2] . "'";
           }
-          if (! empty($params[3])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2])) {
+          if (!empty($params[3])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2])) {
               $query .= ", ";
             }
             $query .= " username = '" . $params[3] . "'";
           }
-          if (! empty($params[4])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3])) {
+          if (!empty($params[4])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3])) {
               $query .= ", ";
             }
             $query .= " password = '" . password_hash($params[4], PASSWORD_DEFAULT) . "'";
           }
-          if (! empty($params[5])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4])) {
+          if (!empty($params[5])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4])) {
               $query .= ", ";
             }
             $query .= " email = '" . $params[5] . "'";
           }
           if (!empty($params[6])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5])) {
               $query .= ", ";
             }
             $query .= " phone = " . $params[6];
           }
-          if (! empty($params[7]) && in_array($params[7], $validValues)) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6])) {
+          if (in_array($params[7], $validValues)) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6])) {
               $query .= ", ";
             }
             $query .= " administrator = '" . $params[7] . "'";
           }
-          if (! empty($params[8])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7])) {
+          if (!empty($params[8])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7])) {
               $query .= ", ";
             }
               $query .= " registration_date = '" . $params[8] . "'";
           }
-          if (! empty($params[9])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8])) {
+          if (!empty($params[9])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8])) {
               $query .= ", ";
             }
             $query .= " approval_date = " . ($params[9] == "CURRENT_TIMESTAMP" ? $params[9] : "'" . $params[9] . "'");
           }
-          if (! empty($params[10])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9])) {
+          if (!empty($params[10])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9])) {
               $query .= ", ";
             }
             $query .= " approval_userid = " . $params[10];
           }
-          if (! empty($params[11])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10])) {
+          if (!empty($params[11])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10])) {
               $query .= ", ";
             }
             $query .= " rejection_date = " . ($params[11] == "CURRENT_TIMESTAMP" ? $params[11] : "'" . $params[11] . "'");
           }
           if (!empty($params[12])) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11])) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11])) {
               $query .= ", ";
             }
             $query .= " rejection_userid = '" . $params[12] . "'";
           }
-          if (!empty($params[13]) && in_array($params[13], $validValues)) {
-            if (! empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11]) || ! empty($params[12])) {
+          if (in_array($params[13], $validValues)) {
+            if (!empty($params[0]) || ! empty($params[1]) || ! empty($params[2]) || ! empty($params[3]) || ! empty($params[4]) || ! empty($params[5]) || ! empty($params[6]) || ! empty($params[7]) || ! empty($params[8]) || ! empty($params[9]) || ! empty($params[10]) || ! empty($params[11]) || ! empty($params[12])) {
               $query .= ", ";
             }
-            $query .= " active = '" . $params[12] . "'";
+            $query .= " active = '" . $params[13] . "'";
           }
-          if (! empty($params[34])) {
-            $query .= " selector = '" . $params[12] . "'";
+          if (!empty($params[14])) {
+            $query .= " selector = '" . $params[14] . "'";
           }
-          if (! empty($params[14])) {
-            $query .= " token = '" . $params[14] . "'";
+          if (!empty($params[15])) {
+            $query .= " token = '" . $params[15] . "'";
           }
-          if (! empty($params[15])) {
-            $query .= " expires = '" . $params[15] . "'";
+          if (!empty($params[16])) {
+            $query .= " expires = '" . $params[16] . "'";
           }
           //           if (! empty($params[14])) {
 //             $query .= " reset_selector = '" . $params[14] . "'";

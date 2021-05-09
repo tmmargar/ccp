@@ -1,7 +1,7 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\HtmlTable;
@@ -46,7 +46,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $resultList2 = $databaseResult->getSeasonActiveCount();
       $output .= "    <div style=\"float: left; width: 140px; height: 25px;\">" . SEASON_ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $checkboxActive = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), null, null, (count($resultList) > 0 && $resultList2[0] == 0) || (count($resultList) > 0 && $resultList2[0] != 0 && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive())  ? false : true, SEASON_ACTIVE_FIELD_NAME . "_" . $id, null, SEASON_ACTIVE_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, Constant::$FLAG_YES_DATABASE, null);
+      $checkboxActive = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), null, null, (count($resultList) > 0 && $resultList2[0] == 0) || (count($resultList) > 0 && $resultList2[0] != 0 && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive())  ? false : true, SEASON_ACTIVE_FIELD_NAME . "_" . $id, null, SEASON_ACTIVE_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, (string) Constant::$FLAG_YES_DATABASE, null);
       $output .= "        " . $checkboxActive->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -129,7 +129,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(null, true);
+  $params = array(null, true, Constant::$MODE_DELETE == $mode ? false : true);
   $query = $databaseResult->getSeason($params);
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE seasonId IN (" . $ids . ")";

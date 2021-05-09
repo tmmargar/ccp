@@ -1,7 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Group extends Base {
-  private string $name;
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name) {
+    parent::__construct($debug, $id);
+  }
   public function getName() {
     return $this->name;
   }

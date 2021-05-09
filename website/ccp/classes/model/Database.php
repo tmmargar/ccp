@@ -1,21 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Database extends Root {
-//   private string $hostName;
-//   private string $userid;
-//   private string $password;
-//   private string $databaseName;
-//   private int $port;
-
-//   public function __construct6($debug, $hostName, $userid, $password, $databaseName, $port) {
-//     parent::__construct1($debug);
-//     $this->hostName = $hostName;
-//     $this->userid = $userid;
-//     $this->password = $password;
-//     $this->databaseName = $databaseName;
-//     $this->port = $port;
-//   }
-  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port) {}
+  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port) {
+    parent::__construct($debug, null);
+  }
   public function getDsn() {
     return 'mysql:dbname=' . $this->getDatabaseName() . ';host=' . $this->getHostName() . ';port=' . $this->port;
   }

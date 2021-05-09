@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormControl extends FormBase {
   // DO NOT USE FormInput eclipse shows errors even though code runs
@@ -12,36 +13,8 @@ class FormControl extends FormBase {
   public static string $TYPE_INPUT_TELEPHONE = "tel";
   public static string $TYPE_INPUT_TEXTAREA  = "textarea";
   public static string $TYPE_INPUT_TEXTBOX   = "text";
-  private string|null $accessKey;
-  private string|null $autoComplete;
-  private bool $autoFocus; // boolean
-  private bool|null $checked; // boolean
-  private string|null $cols;
-  private string|null $maxLength;
-  private string|null $onClick;
-  private string|null $placeholder;
-  private bool $readOnly; // boolean
-  private bool|null $required; // boolean
-  private string|null $rows;
-  private int|null $size;
-  private string|null $type;
-  private string|null $wrap;
-  public function __construct(bool $debug, string|null $accessKey, string|null $autoComplete, bool $autoFocus, bool|null $checked, array|null $class, string|null $cols, bool $disabled, string|int|null $id, string|null $maxLength, string|null $name, string|null $onClick, string|null $placeholder, bool $readOnly, bool|null $required, string|null $rows, int|null $size, string|null $suffix, string|null $type, string|null $value, string|null $wrap) {
+  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked, protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name, protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size, protected string|null $suffix, protected string|null $type, protected array|string|null $value, protected string|null $wrap) {
     parent::__construct($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
-    $this->accessKey = $accessKey;
-    $this->autoComplete = $autoComplete;
-    $this->autoFocus = $autoFocus;
-    $this->checked = $checked;
-    $this->cols = $cols;
-    $this->maxLength = $maxLength;
-    $this->onClick = $onClick;
-    $this->placeholder = $placeholder;
-    $this->readOnly = $readOnly;
-    $this->required = $required;
-    $this->rows = $rows;
-    $this->size = $size;
-    $this->type = $type;
-    $this->wrap  = $wrap;
   }
   public function getAccessKey() {
     return $this->accessKey;
@@ -76,7 +49,7 @@ class FormControl extends FormBase {
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
 //       " type=\"" . $this->type . "\"" .
       " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TEXTBOX : $this->type) . "\"" .
-      ("" !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+      (null !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
 //       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" placeholder=\"(999) 999-9999\"" : "") .
@@ -125,10 +98,10 @@ class FormControl extends FormBase {
   public function setChecked(bool|null $checked) {
     $this->checked = $checked;
   }
-  public function setCols(string|null $cols) {
+  public function setCols(int|null $cols) {
     $this->cols = $cols;
   }
-  public function setMaxLength(string|null $maxLength) {
+  public function setMaxLength(int|null $maxLength) {
     $this->maxLength = $maxLength;
   }
   public function setOnClick(string|null $onClick) {
@@ -143,7 +116,7 @@ class FormControl extends FormBase {
   public function setRequired(bool|null $required) {
     $this->required = $required;
   }
-  public function setRows(string|null $rows) {
+  public function setRows(int|null $rows) {
     $this->rows = $rows;
   }
   public function setSize(int|null $size) {

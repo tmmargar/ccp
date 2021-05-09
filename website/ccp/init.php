@@ -1,8 +1,7 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
-use ccp\classes\model\DateTime;
 use ccp\classes\utility\SessionUtility;
 require_once "autoload.php";
 // TODO: NOT SURE WHERE TO PUT THIS

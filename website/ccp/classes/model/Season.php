@@ -1,16 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Season extends Base {
-  private string $description;
-  private DateTime $startDate;
-  private DateTime $endDate;
-  private int $active; // 1 is active, 0 is not
-  public function __construct(bool $debug, int $id, string $description, DateTime $startDate, DateTime $endDate, int $active) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate, protected int $active) {
     parent::__construct($debug, $id);
-    $this->description = $description;
-    $this->startDate = $startDate;
-    $this->endDate = $endDate;
-    $this->active = $active;
   }
 
   public function getActive() {

@@ -23,9 +23,6 @@ const inputLocal = {
     const payoutId = htmlPayout.substring(positionStart + 9, htmlPayout.indexOf("&", positionStart));
     return groupId + "::" + payoutId;
   },
-  tableRowClick : function(obj) {
-    $(obj).removeClass("selected");
-  },
   validate : function() {
     input.validateLength($("#groupId_"), 1, false);
     input.validateLength($("#payoutId_"), 1, false);

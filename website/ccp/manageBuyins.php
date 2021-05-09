@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Base;
 use ccp\classes\model\Constant;
@@ -22,29 +23,7 @@ define("DEFAULT_VALUE_TOURNAMENT_ID", "-1");
 define("PAID_TEXT", "Paid");
 define("REBUY_FLAG_FIELD_NAME", "rebuyFlag");
 define("ADDON_FLAG_FIELD_NAME", "addonFlag");
-$style =
-  "<style type=\"text/css\">\n" .
-  ".label {\n" .
-  "  float: left;\n" .
-  "  width: 150px;\n" .
-  "  text-align: right;\n" .
-  "}\n" .
-  ".value {\n" .
-  "  float: left;\n" .
-  "  text-align: right;\n" .
-  "  width: 50px;\n" .
-  "}\n" .
-  ".valueAfter {\n" .
-  "  float: left;\n" .
-  "  padding-left: 5px;\n" .
-  "  text-align: right;\n" .
-  "  width: 120px;\n" .
-  "}\n" .
-  "p {\n" .
-  "  margin: 0;\n" .
-  "  padding: 0;\n" .
-  "}\n" .
-  "</style>\n";
+$style = "<style type=\"text/css\">\n" . ".label {\n" . "  float: left;\n" . "  width: 150px;\n" . "  text-align: right;\n" . "}\n" . ".value {\n" . "  float: left;\n" . "  text-align: right;\n" . "  width: 50px;\n" . "}\n" . ".valueAfter {\n" . "  float: left;\n" . "  padding-left: 5px;\n" . "  text-align: right;\n" . "  width: 150px;\n" . "}\n" . "p {\n" . "  margin: 0;\n" . "  padding: 0;\n" . "}\n" . "</style>\n";
 $smarty->assign("title", "Manage Buyins");
 $smarty->assign("style", $style);
 $smarty->assign("heading", "Manage Buyins");
@@ -83,30 +62,30 @@ if (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode
     }
     $params = array($statusCode, $buyinPaid, $rebuyPaid, $addonPaid, $rebuyCount, $tournamentId, $aryPlayers[$index]);
     $rowCount = $databaseResult->updateBuyins($params);
-    if (!is_numeric($rowCount)) {
+    if (! is_numeric($rowCount)) {
       $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     $params = array($tournamentId, $aryPlayers[$index], 1);
     $rowCount = $databaseResult->deleteBounty($params);
-    if (!is_numeric($rowCount)) {
+    if (! is_numeric($rowCount)) {
       $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     if ($aryBountyAs[$index] == Constant::$TEXT_TRUE) {
       $params = array($tournamentId, $aryPlayers[$index], 1);
       $rowCount = $databaseResult->insertBounty($params);
-      if (!is_numeric($rowCount)) {
+      if (! is_numeric($rowCount)) {
         $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
       }
     }
     $params = array($tournamentId, $aryPlayers[$index], 2);
     $rowCount = $databaseResult->deleteBounty($params);
-    if (!is_numeric($rowCount)) {
+    if (! is_numeric($rowCount)) {
       $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
     }
     if (count($aryBountyBs) > 1 && $aryBountyBs[$index] == Constant::$TEXT_TRUE) {
       $params = array($tournamentId, $aryPlayers[$index], 2);
       $rowCount = $databaseResult->insertBounty($params);
-      if (!is_numeric($rowCount)) {
+      if (! is_numeric($rowCount)) {
         $output .= "  aryErrors.push(\"" . $rowCount . "\");\n";
       }
     }
@@ -121,7 +100,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= "    " . TOURNAMENT_ID_FIELD_LABEL . ": \n    ";
     $selectTournament = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_TOURNAMENT_ID, null, false, TOURNAMENT_ID_FIELD_NAME, false, TOURNAMENT_ID_FIELD_NAME, null, false, 1, null, null);
     $output .= $selectTournament->getHtml();
-    $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
+    $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, ! isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", null, Constant::$TEXT_NONE, DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
     $cnt = 0;
     while ($cnt < count($resultList)) {
@@ -144,9 +123,9 @@ if ($mode == Constant::$MODE_VIEW) {
         $maxRebuys = $tournament->getMaxRebuys();
         $addonAmount = $tournament->getAddonAmount();
       }
-      $totalBuyin[$tournament->getId()] = array($tournament->getBuyinsPaid(), -$tournament->getBuyinAmount());
-      $totalRebuy[$tournament->getId()] = array($tournament->getRebuysPaid(), $tournament->getRebuysCount(), -$tournament->getRebuyAmount());
-      $totalAddon[$tournament->getId()] = array($tournament->getAddonsPaid(), -$tournament->getAddonAmount());
+      $totalBuyin[$tournament->getId()] = array($tournament->getBuyinsPaid(), - $tournament->getBuyinAmount());
+      $totalRebuy[$tournament->getId()] = array($tournament->getRebuysPaid(), $tournament->getRebuysCount(), - $tournament->getRebuyAmount());
+      $totalAddon[$tournament->getId()] = array($tournament->getAddonsPaid(), - $tournament->getAddonAmount());
       if (strpos($tournament->getDescription(), "Championship") === false) {
         $championshipFlag[$tournament->getId()] = false;
         $total[$tournament->getId()] = ($totalBuyin[$tournament->getId()][0] * $totalBuyin[$tournament->getId()][1]) + ($totalRebuy[$tournament->getId()][1] * $totalRebuy[$tournament->getId()][2]) + ($totalAddon[$tournament->getId()][0] * $totalAddon[$tournament->getId()][1]);
@@ -176,9 +155,9 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
     $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_ADDON_PAID_FIELD_NAME, null, HIDDEN_ROW_ADDON_PAID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, null, null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
-    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, REBUY_FLAG_FIELD_NAME, null, REBUY_FLAG_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (isset($maxRebuys) ? $maxRebuys : ""), null);
+    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, REBUY_FLAG_FIELD_NAME, null, REBUY_FLAG_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (isset($maxRebuys) ? (string) $maxRebuys : ""), null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
-    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ADDON_FLAG_FIELD_NAME, null, ADDON_FLAG_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (isset($addonAmount) ? $addonAmount : ""), null);
+    $hiddenSelectedRowsPlayerId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ADDON_FLAG_FIELD_NAME, null, ADDON_FLAG_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, (isset($addonAmount) ? (string) $addonAmount : ""), null);
     $output .= $hiddenSelectedRowsPlayerId->getHtml();
   } else {
     $output .= "No tournaments available to manage buyins";
@@ -204,13 +183,13 @@ if ($mode == Constant::$MODE_VIEW) {
     $query = $databaseResult->getStatusPaid($params, true);
     $checkboxBuyinButton = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$TEXT_BUYIN . "_?2", null, Constant::$TEXT_BUYIN . "_?2", "input.changeState('" . Base::build(Constant::$TEXT_BUYIN, null) . "_?2', new Array(" . (0 == $maxRebuys ? "''" : "'" . Base::build(Constant::$TEXT_REBUY, null) . "_?2'") . (0 == $addonAmount ? "" : ", '" . Base::build(Constant::$TEXT_ADDON, null) . "_?2'") . ", 'bountyA_?2', 'bountyB_?2')); $('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_BUYIN_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", null, false, null, null, null, "_?2", FormControl::$TYPE_INPUT_CHECKBOX, "?1", null);
     $textBoxRebuyCount = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_REBUY_COUNT, null, false, null, null, null, (0 == $maxRebuys ? true : false), Constant::$TEXT_REBUY_COUNT . "_?2", 2, Constant::$TEXT_REBUY_COUNT . "_?2", null, null, false, null, null, 2, "_?2", FormControl::$TYPE_INPUT_TEXTBOX, "?4", null);
-    $checkboxRebuyButton = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $maxRebuys ? "disabled" : ""), Constant::$TEXT_REBUY . "_?2", null, Constant::$TEXT_REBUY . "_?2", "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_REBUY_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", null, false, null, null, null, "_?2", FormControl::$TYPE_INPUT_CHECKBOX, "?1", null);
-    $checkboxAddonButton = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $addonAmount ? "disabled" : ""), Constant::$TEXT_ADDON . "_?2", null, Constant::$TEXT_ADDON . "_?2", "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_ADDON_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", null, false, null, null, null, "_?2", FormControl::$TYPE_INPUT_CHECKBOX, "?1", null);
+    $checkboxRebuyButton = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $maxRebuys ? true : false), Constant::$TEXT_REBUY . "_?2", null, Constant::$TEXT_REBUY . "_?2", "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_REBUY_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", null, false, null, null, null, "_?2", FormControl::$TYPE_INPUT_CHECKBOX, "?1", null);
+    $checkboxAddonButton = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $addonAmount ? true : false), Constant::$TEXT_ADDON . "_?2", null, Constant::$TEXT_ADDON . "_?2", "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_ADDON_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", null, false, null, null, null, "_?2", FormControl::$TYPE_INPUT_CHECKBOX, "?1", null);
     $buttons = array("    " . $checkboxBuyinButton->getHtml(), "    " . $checkboxRebuyButton->getHtml() . " " . $textBoxRebuyCount->getHtml(), "    " . $checkboxAddonButton->getHtml());
     $allButtons = array_merge($buttons, $aryHtml);
     $checkboxBuyinColumnName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$TEXT_BUYIN . "CheckAll", null, Constant::$TEXT_BUYIN . "CheckAll", null, null, false, null, null, null, Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
-    $checkboxRebuyColumnName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $maxRebuys ? "disabled" : ""), Constant::$TEXT_REBUY . "CheckAll", null, Constant::$TEXT_REBUY . "CheckAll", null, null, false, null, null, null, Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
-    $checkboxAddonColumnName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $addonAmount ? "disabled" : ""), Constant::$TEXT_ADDON . "CheckAll", null, Constant::$TEXT_ADDON . "CheckAll", null, null, false, null, null, null, Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
+    $checkboxRebuyColumnName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $maxRebuys ? true : false), Constant::$TEXT_REBUY . "CheckAll", null, Constant::$TEXT_REBUY . "CheckAll", null, null, false, null, null, null, Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
+    $checkboxAddonColumnName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, (0 == $addonAmount ? true : false), Constant::$TEXT_ADDON . "CheckAll", null, Constant::$TEXT_ADDON . "CheckAll", null, null, false, null, null, null, Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, FormControl::$TYPE_INPUT_CHECKBOX, null, null);
     $columnNames = array(Constant::$TEXT_BUYIN . "<br />" . $checkboxBuyinColumnName->getHtml(), Constant::$TEXT_REBUY . "<br />" . $checkboxRebuyColumnName->getHtml(), Constant::$TEXT_ADDON . "<br />" . $checkboxAddonColumnName->getHtml());
     $allColNames = array_merge($columnNames, $aryBountyName);
     $colIndexes = array(2, 3, 5);
@@ -260,9 +239,9 @@ if ($mode == Constant::$MODE_VIEW) {
         $output .= "    <div style=\"clear: both;\"></div>\n";
       }
       $output .= "    <div class=\"label\">Total paid out:</div>\n";
-      $output .= "    <div class=\"positive value\">$" . ceil($total[$tournamentId] - $rake[$tournamentId]) . "</div>\n";
+      $output .= "    <div class=\"positive value\">$" . ceil((- $total[$tournamentId]) - (- $rake[$tournamentId])) . "</div>\n";
       if (! $championshipFlag[$tournamentId]) {
-        $output .= "    <div class=\"valueAfter\">($" . $total[$tournamentId] . " - $" . $rake[$tournamentId] . ")</div>\n";
+        $output .= "    <div class=\"valueAfter\">($" . (- $total[$tournamentId]) . " - $" . (- $rake[$tournamentId]) . ")</div>\n";
       }
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $resultList = $databaseResult->getStatusPaid($params, false);

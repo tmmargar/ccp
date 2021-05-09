@@ -1,9 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class TournamentBounty extends Base {
-  private Tournament $tournament; // tournament object
-  private Bounty $bounty; // bounty object
-  private User $user; // user object
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected Bounty $bounty, protected User $user) {
+    parent::__construct($debug, $id);
+  }
   public function getTournament() {
     return $this->tournament;
   }

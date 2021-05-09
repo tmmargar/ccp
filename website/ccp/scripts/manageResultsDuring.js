@@ -85,7 +85,6 @@ const inputLocal = {
       $("#tournamentPlayerNameTemp").val(option.text());
       $("#tournamentPlayerIdTemp").val(option.val());
     }
-    $("#mode").val("save" + $("#mode").val());
   },
   enableButtons : function() {
     $("#save").prop("disabled", ($("#bountyA").length > 0 && (($("#bountyA").val() == "") || ($("#bountyB").val() == ""))) || ($("#tournamentPlayerId").length > 0 && (($("#tournamentPlayerId").val() == "") || ($("#tournamentKnockoutBy").val() == ""))));
@@ -96,6 +95,9 @@ const inputLocal = {
     });
     $("#tournamentPlayerId").val("");
     $("#tournamentKnockoutBy").val("");
+  },
+  setDefaults : function() {
+    $("#mode").val("view");
   },
   validate : function() {
     input.validateLength($("#tournamentPlayerId"), 1, false);

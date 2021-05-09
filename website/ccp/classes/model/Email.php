@@ -1,34 +1,13 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
 use Exception;
 class Email extends Base {
   private static string $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
-  private array $fromName; // array
-  private array $fromEmail; // array
-  private array $toName; // array
-  private array $toEmail; // array
-  private array|null $ccName; // array
-  private array|null $ccEmail; // array
-  private array|null $bccName; // array
-  private array|null $bccEmail; // array
-  private string|null $subject;
-  private string|null $body;
-  private bool $local = false;
-  private array|null $localEmail;
 
-  public function __construct(bool $debug, array $fromName, array $fromEmail, array $toName, array $toEmail, array|null $ccName, array|null $ccEmail, array|null $bccName, array|null $bccEmail, string|null $subject, string|null $body) {
+  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|null $ccName, protected array|null $ccEmail, protected array|null $bccName, protected array|null $bccEmail, protected string|null $subject, protected string|null $body) {
     parent::__construct($debug, null);
-    $this->fromName = $fromName;
-    $this->fromEmail = $fromEmail;
-    $this->toName = $toName;
-    $this->toEmail = $toEmail;
-    $this->ccName = $ccName;
-    $this->ccEmail = $ccEmail;
-    $this->bccName = $bccName;
-    $this->bccEmail = $bccEmail;
-    $this->subject = $subject;
-    $this->body = $body;
     $this->local = Constant::FLAG_LOCAL();
   }
   public function getFromName() {

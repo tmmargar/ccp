@@ -1,55 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
-  private string|null $description;
-  private string|null $comment;
-  private LimitType|null $limitType; // limit type object
-  private GameType|null $gameType; // game type object
-  private SpecialType|null $specialType; // special type object
-  private int $chipCount;
-  private Location|null $location; // location object
-  private DateTime $date; // DateTime object
-  private DateTime|null $startTime; // DateTime object
-  private DateTime|null $endTime; // DateTime object
-  private int $buyinAmount; // number not currency
-  private int $maxPlayers; // number
-  private int $maxRebuys; // number
-  private int $rebuyAmount; // number not currency
-  private int $addonAmount; // number not currency
-  private int $addonChipCount; // number
-  private GroupPayout|null $groupPayout; // group payout object
-  private int $rake; // number not currency
-  private int $registeredCount; // number
-  private int $buyinsPaid; // number
-  private int $rebuysPaid; // number
-  private int $rebuysCount; // number
-  private int $addonsPaid; // number
-  private int $enteredCount; // number
-  public function __construct(bool $debug, string|int|null $id, string|null $description ,string|null $comment, LimitType|null $limitType, GameType|null $gameType, SpecialType|null $specialType, int $chipCount, Location|null $location, DateTime $date, DateTime|null $startTime, DateTime|null $endTime, int $buyinAmount, int $maxPlayers, int $maxRebuys, int $rebuyAmount, int $addonAmount, int $addonChipCount, GroupPayout|null $groupPayout, int $rake, int $registeredCount, int $buyinsPaid, int $rebuysPaid, int $rebuysCount, int $addonsPaid, int $enteredCount) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount) {
     parent::__construct($debug, $id);
-    $this->description = $description;
-    $this->comment = $comment;
-    $this->limitType = $limitType;
-    $this->gameType = $gameType;
-    $this->specialType = $specialType;
-    $this->chipCount = $chipCount;
-    $this->location = $location;
-    $this->date = $date;
-    $this->startTime = $startTime;
-    $this->endTime = $endTime;
-    $this->buyinAmount = $buyinAmount;
-    $this->maxPlayers = $maxPlayers;
-    $this->maxRebuys = $maxRebuys;
-    $this->rebuyAmount = $rebuyAmount;
-    $this->addonAmount = $addonAmount;
-    $this->addonChipCount = $addonChipCount;
-    $this->groupPayout = $groupPayout;
-    $this->rake = $rake;
-    $this->registeredCount = $registeredCount;
-    $this->buyinsPaid = $buyinsPaid;
-    $this->rebuysPaid = $rebuysPaid;
-    $this->addonsPaid = $addonsPaid;
-    $this->enteredCount = $enteredCount;
   }
   public function getDescription() {
     return $this->description;
@@ -186,7 +140,7 @@ class Tournament extends Base {
   public function setGroupPayout(GroupPayout $groupPayout) {
     $this->groupPayout = $groupPayout;
   }
-  public function setRake(int $rake) {
+  public function setRake(float $rake) {
     $this->rake = $rake;
   }
   public function setRegisteredCount(int $registeredCount) {

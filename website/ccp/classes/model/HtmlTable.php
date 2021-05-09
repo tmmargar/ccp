@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ccp\classes\model;
 class HtmlTable extends HtmlBase {
   public static string $ID_TABLE_DATA = "dataTbl";
@@ -22,41 +23,25 @@ class HtmlTable extends HtmlBase {
    * $width is width of table (default is 100%)
    * $link is array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name) (default is NULL)
    */
-   private string $query; // query
-   private array $class; // array of class names
-   private string $caption; // additional info about table
-   private array $columnFormat; // array of column formats
-   private string|null $hiddenId; // name prefix of field to store row identifier
-   private array|null $selectedRow; // array of selected rows
-   private string $delimiter; // delimiter (default is ", ")
-   private array|null $foreignKeys; // array of foreign key queries
-   private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
-   private bool $header; // boolean to display header row or not
-   private bool $note; // boolean true to display sorting note, false to hide
-   private array|null $hiddenAdditional; // array of name and index of value to store
-   private array $hideColumnIndexes; // array of column indexes to hide that are returned from query
-   private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
-   private string $suffix; // suffix of table id
-   private string $width; // width of table
-   private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
-  public function __construct(string $caption, array $class, int|null $colspan, array $columnFormat, bool $debug, string $delimiter, array|null $foreignKeys, bool $header, array|null $hiddenAdditional, string|null $hiddenId, array $hideColumnIndexes, array|null $html, string|int|null $id, array|null $link, bool $note, string $query, array|null $selectedRow, string $suffix, string $width) {
-    parent::__construct(null, $class, $debug, $id, -1, null);
-    $this->caption = $caption;
-    $this->colspan = $colspan;
-    $this->columnFormat = $columnFormat;
-    $this->delimiter = $delimiter;
-    $this->foreignKeys = $foreignKeys;
-    $this->header = $header;
-    $this->hiddenAdditional = $hiddenAdditional;
-    $this->hiddenId = $hiddenId;
-    $this->hideColumnIndexes = $hideColumnIndexes;
-    $this->html = $html;
-    $this->link = $link;
-    $this->note = $note;
-    $this->query = $query;
-    $this->selectedRow = $selectedRow;
-    $this->suffix = $suffix;
-    $this->width = $width;
+//    private string $query; // query
+//    private array|null $class; // array of class names
+//    private string|null $caption; // additional info about table
+//    private array|null $columnFormat; // array of column formats
+//    private string|null $hiddenId; // name prefix of field to store row identifier
+//    private string|null $selectedRow; // array of selected rows
+//    private string $delimiter; // delimiter (default is ", ")
+//    private array|null $foreignKeys; // array of foreign key queries
+//    private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+//    private bool $header; // boolean to display header row or not
+//    private bool $note; // boolean true to display sorting note, false to hide
+//    private array|null $hiddenAdditional; // array of name and index of value to store
+//    private array|null $hideColumnIndexes; // array of column indexes to hide that are returned from query
+//    private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
+//    private string|null $suffix; // suffix of table id
+//    private string $width; // width of table
+//    private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
+  public function __construct(protected string|null $caption, protected array|null $class, protected array|null $colspan, protected array|null $columnFormat, protected bool $debug, protected string $delimiter, protected array|null $foreignKeys, protected bool $header, protected array|null $hiddenAdditional, protected string|null $hiddenId, protected array|null $hideColumnIndexes, protected array|null $html, protected string|int|null $id, protected array|null $link, protected bool $note, protected string $query, protected string|null $selectedRow, protected string|null $suffix, protected string $width) {
+    parent::__construct(null, $class, $debug, $id, - 1, null);
   }
   public function getCaption() {
     return $this->caption;
@@ -236,8 +221,8 @@ class HtmlTable extends HtmlBase {
                       // $symbol = $formatter->getSymbol(NumberFormatter::PERCENT_SYMBOL);
                       // $temp = $formatter->formatCurrency($temp, $symbol);
                     }
-                    if (- 1 != $places) {
-                      $temp = number_format($temp, $places);
+                    if (isset($temp) && isset($places) && -1 != $places) {
+                      $temp = number_format((float) $temp, $places);
                     }
                     if ($temp != "") {
                       $temp = $prefix . $temp . $suffix;
@@ -262,7 +247,7 @@ class HtmlTable extends HtmlBase {
                     break;
                 }
               }
-              if (!in_array("negative", $class) && !in_array("positive", $class)) {
+              if (!in_array("negative", $class) && !in_array("positive", $class) && isset($temp)) {
                 if (0 != preg_match('/^\$-+\d+(,\d+)?(.\d+)?|-+\d+(,\d+)?(.\d+)?%$/', $temp)) {
                   array_push($class, "negative");
                 } else if (0 != preg_match('/^\$\d+(,\d+)?(.\d+)?|\d+(,\d+)?(.\d+)?%$/', $temp)) {
@@ -281,7 +266,7 @@ class HtmlTable extends HtmlBase {
               $output .= $link->getHtml();
               $linkCounter++;
             } else {
-              $output .= htmlentities($temp, ENT_NOQUOTES, "UTF-8");
+              $output .= isset($temp) ? htmlentities($temp, ENT_NOQUOTES, "UTF-8") : "";
             }
             $output .= "</td>\n";
           }
