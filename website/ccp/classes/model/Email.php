@@ -130,9 +130,8 @@ class Email extends Base {
   // each body line < 70 characters and separated with \n
   public function sendEmail() {
     $mail = new PHPMailer(true);
-    $mail->SMTPDebug = $this->isDebug(); //SMTP::DEBUG_SERVER;
+    $mail->SMTPDebug = $this->isDebug();
     $mail->isSMTP();
-    //$mail->SMTPOptions = array('ssl' => array('verify_peer' => false,'verify_peer_name' => false,'allow_self_signed' => true));
     $mail->Host = Constant::SERVER_EMAIL();
     $mail->isHTML(true);
     for ($idx = 0; $idx < count($this->fromName); $idx++) {

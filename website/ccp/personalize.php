@@ -64,12 +64,11 @@ $style =
 $smarty->assign("style", $style);
 $outputPersonalize = "<div id=\"widgetTitle\">\n";
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : "";
-if ($userId == "" || SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID) == $userId) {
+if ($userId == "" || SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID) == $userId) {
   $outputPersonalize .= "My";
 } else {
-  $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
   $params = array($userId);
-  $resultList = $databaseResult->getUserById($params);
+  $resultList = $databaseResult->getUserById(params: $params);
   $outputPersonalize .= $resultList[0]->getName() . "'s";
 }
 $outputPersonalize .= " Stats</div>\n";

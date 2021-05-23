@@ -28,29 +28,32 @@ $smarty->assign("title", "Manage Location");
 $smarty->assign("heading", "Manage Location");
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $params = Constant::$MODE_MODIFY == $mode ? array($ids) : array(0);
-  $resultList = $databaseResult->getLocationById($params);
+  $resultList = $databaseResult->getLocationById(params: $params);
   if (Constant::$MODE_CREATE == $mode || (Constant::$MODE_MODIFY == $mode && $ids != DEFAULT_VALUE_BLANK)) {
     $ctr = 0;
     $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
     foreach ($ary as $id) {
       $output = "    <div style=\"float: left; width: 125px; height: 25px;\">" . LOCATION_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_LOCATION_NAME, null, false, null, null, null, false, LOCATION_NAME_FIELD_NAME . "_" . $id, 30, LOCATION_NAME_FIELD_NAME . "_" . $id, null, null, false, null, null, 30, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getName() : ""), null);
+      // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
+      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOCATION_NAME, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: LOCATION_NAME_FIELD_NAME . "_" . $id, maxLength: 30, name: LOCATION_NAME_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getName() : ""), wrap: null);
       $output .= $textBoxName->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . PLAYER_ID_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $params = array(false);
       // $resultList2 = $databaseResult->getUsersAll($params);
-      $resultList2 = $databaseResult->getUsersActive($params);
+      $resultList2 = $databaseResult->getUsersActive(params: $params);
       if (count($resultList2) > 0) {
         $output .= "    <div style=\"float: left;\">\n";
-        $selectLocation = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PLAYER_ID, null, false, PLAYER_ID_FIELD_NAME . "_" . $id, false, PLAYER_ID_FIELD_NAME . "_" . $id, null, false, 1, null, null);
+        //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
+        $selectLocation = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PLAYER_ID, class: null, disabled: false, id: PLAYER_ID_FIELD_NAME . "_" . $id, multiple: false, name: PLAYER_ID_FIELD_NAME . "_" . $id, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
         $output .= $selectLocation->getHtml();
-        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, null, null, Constant::$TEXT_NONE, "");
+        //     $debug, $class, $disabled, $id, $name, $selectedValue, $suffix, $text, $value) {
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: null, suffix: null, text: Constant::$TEXT_NONE, value: "");
         $output .= $option->getHtml();
         foreach ($resultList2 as $user) {
-          $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, count($resultList) > 0 ? $resultList[$ctr]->getUser()->getId() : "", null, $user->getName(), $user->getId());
+          $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: count($resultList) > 0 ? $resultList[$ctr]->getUser()->getId() : "", suffix: null, text: $user->getName(), value: $user->getId());
           $output .= $option->getHtml();
         }
         $output .= "        </select>\n";
@@ -59,13 +62,13 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . ADDRESS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxAddress = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADDRESS, null, false, null, null, null, false, ADDRESS_FIELD_NAME . "_" . $id, 75, ADDRESS_FIELD_NAME . "_" . $id, null, null, false, null, null, 75, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getAddress() : ""), null);
+      $textBoxAddress = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_ADDRESS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: ADDRESS_FIELD_NAME . "_" . $id, maxLength: 75, name: ADDRESS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 75, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getAddress() : ""), wrap: null);
       $output .= $textBoxAddress->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . CITY_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxCity = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CITY, null, false, null, null, null, false, CITY_FIELD_NAME . "_" . $id, 50, CITY_FIELD_NAME . "_" . $id, null, null, false, null, null, 30, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getCity() : ""), null);
+      $textBoxCity = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CITY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: CITY_FIELD_NAME . "_" . $id, maxLength: 50, name: CITY_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getUser()->getAddress()->getCity() : ""), wrap: null);
       $output .= $textBoxCity->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -75,39 +78,39 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . ZIP_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxZip = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ZIP, null, false, null, null, null, false, ZIP_FIELD_NAME . "_" . $id, 50, ZIP_FIELD_NAME . "_" . $id, null, null, false, null, null, 5, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getUser()->getAddress()->getZip() : ""), null);
+      $textBoxZip = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_ZIP, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: ZIP_FIELD_NAME . "_" . $id, maxLength: 5, name: ZIP_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 5, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? (string) $resultList[$ctr]->getUser()->getAddress()->getZip() : ""), wrap: null);
       $output .= $textBoxZip->getHtml();
       $output .= " (5 digits)\n";
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxPhone = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PHONE, null, false, null, null, null, false, PHONE_FIELD_NAME . "_" . $id, 10, PHONE_FIELD_NAME . "_" . $id, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TELEPHONE, ((count($resultList) > 0) ? (string) $resultList[$ctr]->getUser()->getAddress()->getPhone() : ""), null);
+      $textBoxPhone = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: 10, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? (string) $resultList[$ctr]->getUser()->getAddress()->getPhone() : ""), wrap: null);
       $output .= $textBoxPhone->getHtml();
       $output .= " (10 digits)\n";
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $checkboxActive = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, ((count($resultList) == 0) || Constant::$FLAG_YES == $resultList[$ctr]->getActive() ? true : false), null, null, false, ACTIVE_FIELD_NAME . "_" . $id, null, ACTIVE_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_CHECKBOX, (string) Constant::$FLAG_YES_DATABASE, null);
+      $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) == 0) || Constant::$FLAG_YES == $resultList[$ctr]->getActive() ? true : false), class: null, cols: null, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
       $output .= "        " . $checkboxActive->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
-      $hiddenRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), null);
+      $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: null, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), wrap: null);
       $output .= $hiddenRow->getHtml();
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $ctr ++;
     }
-    $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, true, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
+    $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
-    $buttonReset = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RESET, null, false, null, null, null, false, Constant::$TEXT_RESET, null, Constant::$TEXT_RESET, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_RESET, Constant::$TEXT_RESET, null);
+    $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
     $output .= $buttonReset->getHtml();
   }
-  $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
   $output .= $buttonCancel->getHtml();
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
 } elseif (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
   $ctr = 0;
@@ -123,12 +126,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $active = (isset($_POST[ACTIVE_FIELD_NAME . "_" . $id])) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       $params = array($locationName, $playerId, $address, $city, $state, $zipCode, $phone, isset($active) ? $active : 0);
-      $databaseResult->insertLocation($params);
+      $databaseResult->insertLocation(params: $params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       $locationName = (isset($_POST[LOCATION_NAME_FIELD_NAME . "_" . $id])) ? $_POST[LOCATION_NAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $tempLocationId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $params = array($locationName, $playerId, $address, $city, $state, $zipCode, $phone, isset($active) ? $active : 0, $tempLocationId);
-      $databaseResult->updateLocation($params);
+      $databaseResult->updateLocation(params: $params);
     }
     $ctr ++;
   }
@@ -139,37 +142,38 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_CONFIRM == $mode) {
     if (DEFAULT_VALUE_BLANK != $ids) {
       $params = array($ids);
-      $databaseResult->deleteLocation($params);
+      $databaseResult->deleteLocation(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
     }
     $mode = Constant::$MODE_VIEW;
   }
   if (Constant::$MODE_VIEW == $mode) {
-    $buttonCreate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CREATE, null, false, null, null, null, false, Constant::$TEXT_CREATE, null, Constant::$TEXT_CREATE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CREATE, null);
+    $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
     $output .= $buttonCreate->getHtml();
-    $buttonModify = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MODIFY, null, false, null, null, null, true, Constant::$TEXT_MODIFY, null, Constant::$TEXT_MODIFY, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_MODIFY, null);
+    $buttonModify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MODIFY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_MODIFY, maxLength: null, name: Constant::$TEXT_MODIFY, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_MODIFY, wrap: null);
     $output .= $buttonModify->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_DELETE, null, false, null, null, null, true, Constant::$TEXT_DELETE, null, Constant::$TEXT_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_DELETE, maxLength: null, name: Constant::$TEXT_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
   } else if (Constant::$MODE_DELETE == $mode) {
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CONFIRM_DELETE, null, false, null, null, null, false, Constant::$TEXT_CONFIRM_DELETE, null, Constant::$TEXT_CONFIRM_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CONFIRM_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE,wrap:  null);
     $output .= $buttonDelete->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonDelete->getHtml();
   }
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
   $params = array(true, false, false);
-  $query = $databaseResult->getLocation($params);
+  $query = $databaseResult->getLocation(params: $params);
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE locationId IN (" . $ids . ")";
   }
   $colFormats = array(array(0, "right", 0), array(7, "right", 0));
   $hideColIndexes = array(2, 10);
   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
-  $htmlTable = new HtmlTable(null, null, null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, HIDDEN_ROW_FIELD_NAME, $hideColIndexes, null, null, $link, true, $query, $ids, null, "90%");
+  //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
+  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: $link, note: true, query: $query, selectedRow: $ids, suffix: null, width: "90%");
   $output .= $htmlTable->getHtml();
 }
 $smarty->assign("content", $output);

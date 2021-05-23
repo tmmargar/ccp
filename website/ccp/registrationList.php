@@ -24,18 +24,16 @@ if (null == $limitCount) {
 } else {
   $output .= "<div class=\"title\">Upcoming Events</div>\n";
 }
-$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
-$resultList = $databaseResult->getTournamentByDateAndStartTime($params, $limitCount);
+$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
-  $registrationOpenDate = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournament->getDate()->getDatabaseFormat() . " 12:00:00");
+  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " 12:00:00");
   $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
   $registrationOpen = (($now->getDatabaseFormat() <= $registrationOpenDate->getDatabaseFormat()) == 0);
-  $url = "registration.php?";
-  $url .= "tournamentId=" . $tournament->getId();
+  $url = "registration.php?tournamentId=" . $tournament->getId();
   $output .= "<p>";
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";

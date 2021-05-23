@@ -24,7 +24,7 @@ $smarty->assign("heading", "Manage Group Payout");
 $aryGroupPayoutIds = explode("::", $ids);
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $params = Constant::$MODE_MODIFY == $mode ? array($aryGroupPayoutIds[0], $aryGroupPayoutIds[1]) : array(0, 0);
-  $resultList = $databaseResult->getGroupPayoutById($params);
+  $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (Constant::$MODE_CREATE == $mode || (Constant::$MODE_MODIFY == $mode && $ids != DEFAULT_VALUE_BLANK)) {
     $groupId = isset($_POST[GROUP_ID_FIELD_NAME . "_"]) ? $_POST[GROUP_ID_FIELD_NAME . "_"] : DEFAULT_VALUE_GROUP_ID;
     $payoutId = isset($_POST[PAYOUT_ID_FIELD_NAME . "_"]) ? $_POST[PAYOUT_ID_FIELD_NAME . "_"] : DEFAULT_VALUE_PAYOUT_ID;
@@ -34,15 +34,17 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $arySplit = explode("::", $id);
       $output = "    <div style=\"float: left; width: 125px; height: 25px;\">" . GROUP_FIELD_LABEL . ($arySplit[0] != "" ? " " . $arySplit[0] : "") . ": </div>\n";
       $params = array(false);
-      $resultList2 = $databaseResult->getGroupsAll($params);
+      $resultList2 = $databaseResult->getGroupsAll(params: $params);
       if (count($resultList2) > 0) {
         $output .= "    <div style=\"float: left;\">\n";
-        $selectGroup = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_GROUP, null, false, GROUP_ID_FIELD_NAME . "_" . $arySplit[0], false, GROUP_ID_FIELD_NAME . "_" . $arySplit[0], null, false, 1, null, null);
+        //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
+        $selectGroup = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_GROUP, class: null, disabled: false, id: GROUP_ID_FIELD_NAME . "_" . $arySplit[0], multiple: false, name: GROUP_ID_FIELD_NAME . "_" . $arySplit[0], onClick: null, readOnly: false, size: 1, suffix: null, value: null);
         $output .= $selectGroup->getHtml();
-        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $groupId, null, Constant::$TEXT_NONE, "");
+        //     $debug, $class, $disabled, $id, $name, $selectedValue, $suffix, $text, $value) {
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $groupId, suffix: null, text: Constant::$TEXT_NONE, value: "");
         $output .= $option->getHtml();
         foreach ($resultList2 as $group) {
-          $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, count($resultList) > 0 ? $resultList[$ctr]->getGroup()->getId() : "", null, $group->getName(), $group->getId());
+          $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: count($resultList) > 0 ? $resultList[$ctr]->getGroup()->getId() : "", suffix: null, text: $group->getName(), value: $group->getId());
           $output .= $option->getHtml();
         }
         $output .= "        </select>\n";
@@ -51,41 +53,42 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . PAYOUT_FIELD_LABEL . ($arySplit[0] != "" ? " " . $arySplit[0] : "") . ": </div>\n";
       $params = array(false);
-      $resultList2 = $databaseResult->getPayoutsAll($params); // returns array of Payout objects
+      $resultList2 = $databaseResult->getPayoutsAll(params: $params); // returns array of Payout objects
       if (count($resultList2) > 0) {
         $output .= "    <div style=\"float: left;\">\n";
-        $selectGroup = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PAYOUT, null, false, PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], false, PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], null, false, 1, null, null);
+        $selectGroup = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PAYOUT, class: null, disabled: false, id: PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], multiple: false, name: PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], onClick: null, readOnly: false, size: 1, suffix: null, value: null);
         $output .= $selectGroup->getHtml();
-        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $payoutId, null, Constant::$TEXT_NONE, "");
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $payoutId, suffix: null, text: Constant::$TEXT_NONE, value: "");
         $output .= $option->getHtml();
         foreach ($resultList2 as $payout) {
           //TODO: handle array payout
-          $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, count($resultList) > 0 ? $resultList[$ctr]->getPayouts()[0]->getId() : "", null, $payout->getName(), $payout->getId());
+          $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: count($resultList) > 0 ? $resultList[$ctr]->getPayouts()[0]->getId() : "", suffix: null, text: $payout->getName(), value: $payout->getId());
           $output .= $option->getHtml();
         }
         $output .= "        </select>\n";
         $output .= "       </div>\n";
       }
       $output .= "    <div style=\"clear: both;\"></div>\n";
-      $hiddenOriginalGroupId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0], null, ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getGroup()->getId() : ""), null);
+      // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
+      $hiddenOriginalGroupId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0], maxLength: null, name: ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getGroup()->getId() : ""), wrap: null);
       $output .= $hiddenOriginalGroupId->getHtml();
-      $hiddenOriginalPayoutId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], null, ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getPayouts()[0]->getId() : ""), null);
+      $hiddenOriginalPayoutId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], maxLength: null, name: ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPayouts()[0]->getId() : ""), wrap: null);
       $output .= $hiddenOriginalPayoutId->getHtml();
-      $hiddenRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_FIELD_NAME . "_" . $arySplit[0], null, HIDDEN_ROW_FIELD_NAME . "_" . $arySplit[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getGroup()->getId() . "::" . $resultList[$ctr]->getPayouts()[0]->getId() : ""), null);
+      $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $arySplit[0], maxLength: null, name: HIDDEN_ROW_FIELD_NAME . "_" . $arySplit[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getGroup()->getId() . "::" . $resultList[$ctr]->getPayouts()[0]->getId() : ""), wrap: null);
       $output .= $hiddenRow->getHtml();
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $ctr ++;
     }
-    $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, true, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
+    $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
-    $buttonReset = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RESET, null, false, null, null, null, false, Constant::$TEXT_RESET, null, Constant::$TEXT_RESET, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_RESET, Constant::$TEXT_RESET, null);
+    $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
     $output .= $buttonReset->getHtml();
   }
-  $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
   $output .= $buttonCancel->getHtml();
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
 } elseif (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
@@ -97,10 +100,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $originalPayoutId = (isset($_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_PAYOUT_ID;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       $params = array($groupId, $payoutId);
-      $databaseResult->insertGroupPayout($params);
+      $databaseResult->insertGroupPayout(params: $params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       $params = array($groupId, $payoutId, $originalGroupId, $originalPayoutId);
-      $databaseResult->updateGroupPayout($params);
+      $databaseResult->updateGroupPayout(params: $params);
     }
   }
   $ids = DEFAULT_VALUE_BLANK;
@@ -110,30 +113,30 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_CONFIRM == $mode) {
     if (DEFAULT_VALUE_BLANK != $ids) {
       $params = array($aryGroupPayoutIds[0], $aryGroupPayoutIds[1]);
-      $databaseResult->deleteGroupPayout($params);
+      $databaseResult->deleteGroupPayout(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
     }
     $mode = Constant::$MODE_VIEW;
   }
   if (Constant::$MODE_VIEW == $mode) {
-    $buttonCreate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CREATE, null, false, null, null, null, false, Constant::$TEXT_CREATE, null, Constant::$TEXT_CREATE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CREATE, null);
+    $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
     $output .= $buttonCreate->getHtml();
-    $buttonModify = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MODIFY, null, false, null, null, null, true, Constant::$TEXT_MODIFY, null, Constant::$TEXT_MODIFY, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_MODIFY, null);
+    $buttonModify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MODIFY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_MODIFY, maxLength: null, name: Constant::$TEXT_MODIFY, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_MODIFY, wrap: null);
     $output .= $buttonModify->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_DELETE, null, false, null, null, null, true, Constant::$TEXT_DELETE, null, Constant::$TEXT_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_DELETE, maxLength: null, name: Constant::$TEXT_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
   } else if (Constant::$MODE_DELETE == $mode) {
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CONFIRM_DELETE, null, false, null, null, null, false, Constant::$TEXT_CONFIRM_DELETE, null, Constant::$TEXT_CONFIRM_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CONFIRM_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonDelete->getHtml();
   }
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
 //   $params = array(null);
-  $query = $databaseResult->getGroupPayout($params);
+  $query = $databaseResult->getGroupPayout();
   if (Constant::$MODE_DELETE == $mode) {
     $query .=
       " WHERE gp.groupId IN (" . $aryGroupPayoutIds[0] . ")" .
@@ -142,7 +145,8 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   //0$href, 1$paramName, 2/3$paramValue, 4$text
 //   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
   $link = array(array(1, 3), array("manageGroup.php", array("groupId", "mode"), 0, "modify", 1), array("managePayout.php", array("payoutId", "mode"), 2, "modify", 3));
-  $htmlTable = new HtmlTable(null, null, null, null, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, HIDDEN_ROW_FIELD_NAME, null, null, null, $link, true, $query, $ids, null, "30%");
+  //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
+  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: null, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: $link, note: true, query: $query, selectedRow: $ids, suffix: null, width: "30%");
   $output .= $htmlTable->getHtml();
 }
 $smarty->assign("content", $output);

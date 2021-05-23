@@ -11,13 +11,13 @@ require_once "init.php";
 if (Constant::FLAG_LOCAL()) {
   set_time_limit(240);
 }
-$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "now");
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
 $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
 $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->getDisplayLongTimeFormat() . "###\");\n" : "\r";
 $days = 14;
 $params = array($days);
-$resultList = $databaseResult->getUsersForEmailNotifications($params);
-$resultList2 = $databaseResult->getTournamentsForEmailNotifications($params);
+$resultList = $databaseResult->getUsersForEmailNotifications(params: $params);
+$resultList2 = $databaseResult->getTournamentsForEmailNotifications(params: $params);
 if (count($resultList2) == 0) {
   $output .= isset($mode) ? "  aryMessages.push(\"No tournaments needing auto email notification for registration open (" . $days . " days before)\");\n" : "\r";
 } else {
@@ -27,16 +27,16 @@ if (count($resultList2) == 0) {
       // echo "<br>" . $user->getName() . " -- " . $dt->getTimestamp();
       $locationUser = $tournament->getLocation()->getUser();
       $tournamentAddress = $locationUser->getAddress();
-      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
-      $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
-      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail($emailAddress, $tournament, 0) . "\");\n" : "\r";
+      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
+      $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip(), phone: null);
+      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail(address: $emailAddress, tournament: $tournament, waitListCount: 0) . "\");\n" : "\r";
     }
   }
 }
 $days = 2;
 $params = array($days);
-$resultList = $databaseResult->getUsersForEmailNotifications($params);
-$resultList2 = $databaseResult->getTournamentsForEmailNotifications($params);
+$resultList = $databaseResult->getUsersForEmailNotifications(params: $params);
+$resultList2 = $databaseResult->getTournamentsForEmailNotifications(params: $params);
 if (count($resultList2) == 0) {
   $output .= isset($mode) ? "  aryMessages.push(\"No tournaments needing auto email notification for registration open (" . $days . " days before)\");\n" : "\r";
 } else {
@@ -44,9 +44,9 @@ if (count($resultList2) == 0) {
     foreach ($resultList2 as $tournament) {
       $locationUser = $tournament->getLocation()->getUser();
       $tournamentAddress = $locationUser->getAddress();
-      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($user->getName()), array($user->getEmail()), null, null, null, null, null, null);
-      $emailAddress = new Address(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $tournamentAddress->getAddress(), $tournamentAddress->getCity(), $tournamentAddress->getState(), $tournamentAddress->getZip(), null);
-      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail($emailAddress, $tournament, 0) . "\");\n" : "\r";
+      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
+      $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip(), phone: null);
+      $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendReminderEmail(address: $emailAddress, tournament: $tournament, waitListCount: 0) . "\");\n" : "\r";
     }
   }
 }

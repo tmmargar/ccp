@@ -11,17 +11,15 @@ $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("heading", "Championship Seating");
 $smarty->assign("style", "");
 $output = "";
-$now = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null,"now");
-$startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
-$endDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
+$startDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
+$endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
 $params = array($startDate, $endDate);
-$resultList = $databaseResult->getPrizePoolForSeason($params, false);
+$resultList = $databaseResult->getPrizePoolForSeason(params: $params, returnQuery: false);
 if (0 < count($resultList)) {
   $prizePool = $resultList[0];
 }
-$resultList = $databaseResult->getWinnersForSeason($params, false, null);
+$resultList = $databaseResult->getWinnersForSeason(params: $params, returnQuery: false, limitCount: null);
 if (0 < count($resultList)) {
   $ctr = 0;
   while ($ctr < count($resultList)) {
@@ -37,7 +35,7 @@ $countWinners = isset($aryWinners) ? count($aryWinners) : 0;
 $aryAbsentIds = array();
 $aryAbsentNames = array();
 $params = array($now->getYearFormat());
-$resultList = $databaseResult->getUserAbsencesByTournamentId($params);
+$resultList = $databaseResult->getUserAbsencesByTournamentId(params: $params);
 $ctr = - 1;
 foreach ($resultList as $values) {
   $ctr ++;
@@ -45,7 +43,7 @@ foreach ($resultList as $values) {
   $aryAbsentNames[$ctr] = $values[1];
 }
 $params = array($startDate, $endDate);
-$resultList = $databaseResult->getChampionshipQualifiedPlayers($params);
+$resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
 $count = count($resultList) - count($aryAbsentIds);
 if (0 < $count) {
   // $numPlayers = $count;
@@ -179,7 +177,7 @@ if (0 < $count) {
     }
     $ctr ++;
   }
-  $output .= "    <h3 style='margin: 0;'>Total payout of $" . number_format((float) $prizePool, 0) . "</h3>\n";
+  $output .= "    <h3 style='margin: 0;'>Total payout of $" . number_format(num: (float) $prizePool, decimals: 0) . "</h3>\n";
   $output .= "    <h4 style='margin: 0;'>Exact amounts below subject to change</h4>\n";
   $output .= "    <div style='float: left; width: 125px;'><strong>Top " . $topThird . "</strong></div>\n";
   $output .= "    <div style='float: left; width: 125px;'><strong>Middle " . $middleThird . "</strong></div>\n";
@@ -193,7 +191,7 @@ if (0 < $count) {
   $output .= "    <div style='float: left; width: 125px;'><strong><i>Payout</i></strong></div>\n";
   $output .= "    <div style='clear: both;'></div>\n";
   $params = array(1, 1);
-  $resultList = $databaseResult->getGroupPayoutById($params);
+  $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (0 < count($resultList)) {
     $ctr = 0;
     while ($ctr < count($resultList)) {
@@ -202,7 +200,7 @@ if (0 < $count) {
       $structures = $payouts[0]->getStructures();
       foreach ($structures as $structure) {
         $output .= "    <div style='float: left; width: 125px;'>" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
-        $output .= "    <div style='float: left; width: 125px;'>$" . round($prizePool * $structure->getPercentage(), 0, PHP_ROUND_HALF_UP) . "</div>\n";
+        $output .= "    <div style='float: left; width: 125px;'>$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
         $output .= "    <div style='clear: both;'></div>\n";
       }
       $ctr ++;
@@ -220,7 +218,7 @@ if (0 < $count) {
   $ctr = 0;
   foreach ($aryAbsentNames as $absentName) {
     $output .= "    <div style='float: left; width: 125px;'>" . $absentName . "</div>\n";
-    $output .= "    <div style='float: left; width: 125px;'>Table " . ($aryAbsentSeeds[$ctr] % $numTables) . " Seat " . floor($aryAbsentSeeds[$ctr] / $numTables) . "</div>\n";
+    $output .= "    <div style='float: left; width: 125px;'>Table " . ($aryAbsentSeeds[$ctr] % $numTables) . " Seat " . floor(value: $aryAbsentSeeds[$ctr] / $numTables) . "</div>\n";
     $output .= "    <div style='clear: both;'></div>\n";
     $ctr ++;
   }
@@ -248,7 +246,7 @@ if (0 < $count) {
     }
   }
 } else {
-  $output .= "No one has qualified with at least 10 tournaments yet or 10 tournaments have not been completed for " . date("Y");
+  $output .= "No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y");
 }
 $smarty->assign("content", $output);
 $smarty->display("championship.tpl");

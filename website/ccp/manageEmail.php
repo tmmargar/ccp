@@ -21,15 +21,15 @@ if (Constant::$MODE_EMAIL == $mode) {
   $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
   foreach ($to as $toEach) {
     $toArray = explode(":", $toEach);
-    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($toArray[0]), array($toArray[1]), null, null, null, null, $subject, $body);
+//     $debug, $fromName, $fromEmail, $toName, $toEmail, $ccName, $ccEmail, $bccName, $bccEmail, $subject, $body
+    $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($toArray[0]), toEmail: array($toArray[1]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: $subject, body: $body);
     $output .= "  aryMessages.push(\"" . $email->sendEmail() . "\");\n";
   }
   $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
 }
 $smarty->assign("title", "Chip Chair and a Prayer Email");
-$databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
 $params = array();
-$resultList = $databaseResult->getUsersActive($params);
+$resultList = $databaseResult->getUsersActive(params: $params);
 if (count($resultList) == 0) {
   echo "No active users";
 } else {
@@ -65,28 +65,30 @@ $smarty->assign("formName", "frmLogin");
 $output .= "<div class=\"form_content\">\n";
 $output .= " <div class=\"label\">To:</div>\n";
 $output .= " <div class=\"input\">\n";
-$selectTo = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_TO, null, false, TO_FIELD_NAME, true, TO_FIELD_NAME . "[]", null, false, 5, null, null);
+//     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
+$selectTo = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_TO, class: null, disabled: false, id: TO_FIELD_NAME, multiple: true, name: TO_FIELD_NAME . "[]", onClick: null, readOnly: false, size: 5, suffix: null, value: null);
 $output .= $selectTo->getHtml();
 $output .= "  </select>\n";
 $output .= " </div>\n";
 $output .= " <div class=\"label\">Subject:</div>\n";
 $output .= " <div class=\"input\">\n";
-$textBoxEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SUBJECT, null, false, null, null, null, false, SUBJECT_FIELD_NAME, 100, SUBJECT_FIELD_NAME, null, null, false, null, null, 30, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
+// ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
+$textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SUBJECT, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SUBJECT_FIELD_NAME, maxLength: 100, name: SUBJECT_FIELD_NAME, onClick: null, placeholder:null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
 $output .= $textBoxEmail->getHtml();
 $output .= " </div>\n";
 $output .= " <div class=\"label\">Body:</div>\n";
 $output .= " <div class=\"textarea\">\n";
-$textAreaBody = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BODY, null, false, null, null, 50, false, BODY_FIELD_NAME, null, BODY_FIELD_NAME, null, null, false, null, 10, null, null, FormControl::$TYPE_INPUT_TEXTAREA, null, "hard");
+$textAreaBody = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_BODY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: 50, disabled: false, id: BODY_FIELD_NAME, maxLength: null, name: BODY_FIELD_NAME, onClick: null, placeholder:null, readOnly: false, required: null, rows: 10, size: null, suffix: null, type: FormControl::$TYPE_INPUT_TEXTAREA, value: null, wrap: "hard");
 $output .= $textAreaBody->getHtml();
 $output .= " </div>\n";
 $output .= " <div class=\"label\">&nbsp;</div>\n";
 $output .= " <div class=\"input\">\n";
-$buttonEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_EMAIL, null, false, null, null, null, false, EMAIL_FIELD_NAME, null, EMAIL_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, ucwords(EMAIL_FIELD_NAME), null);
+$buttonEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: null, name: EMAIL_FIELD_NAME, onClick: null, placeholder:null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(EMAIL_FIELD_NAME), wrap: null);
 $output .= $buttonEmail->getHtml();
-$buttonReset = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RESET, null, false, null, null, null, false, Constant::$TEXT_RESET, null, Constant::$TEXT_RESET, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_RESET, Constant::$TEXT_RESET, null);
+$buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder:null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
 $output .= $buttonReset->getHtml();
 $output .= " </div>\n";
-$hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+$hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();
 $output .= "</div>\n";
 $smarty->assign("content", $output);

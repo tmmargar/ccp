@@ -6,7 +6,7 @@ class Phone extends Base {
     parent::__construct($debug, $id);
   }
   public function getValue() {
-    return $this->value;
+    return $this->value == "0" ? "0000000000" : $this->value;
   }
   public function setValue(string $value) {
     $this->value = $value;
