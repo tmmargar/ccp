@@ -34,19 +34,19 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
   foreach ($approval as $key => $value) {
     $params[0] = $key;
     $params[9] = "CURRENT_TIMESTAMP";
-    $params[10] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
-    $databaseResult->updateUser($params);
+    $params[10] = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID);
+    $databaseResult->updateUser(params: $params);
     $output .= "  aryMessages.push(\"Successfully approved " . $value . "\");\n";
-    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
+    $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($value), toEmail: array($emailAddress[$key]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
     $output .= "  aryMessages.push(\"" . $email->sendApprovedEmail() . "\");\n";
   }
   foreach ($rejection as $key => $value) {
     $params[0] = $key;
     $params[11] = "CURRENT_TIMESTAMP";
-    $params[12] = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
-    $databaseResult->updateUser($params);
+    $params[12] = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID);
+    $databaseResult->updateUser(params: $params);
     $output .= "  aryMessages.push(\"Successfully rejected " . $value . "\");\n";
-    $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($value), array($emailAddress[$key]), null, null, null, null, null, null);
+    $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($value), toEmail: array($emailAddress[$key]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
     $output .= "  aryMessages.push(\"" . $email->sendRejectedEmail() . "\");\n";
   }
   $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
@@ -73,9 +73,9 @@ if (0 < $result->rowCount()) {
     }
     $output .= "  <tr>\n";
     for ($index = 1; $index < $count; $index ++) {
-      $hiddenUser = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_USER . "_" . $row[0], null, Constant::$FIELD_NAME_USER . "_" . $row[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[1], null);
-      $hiddenEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_EMAIL . "_" . $row[0], null, Constant::$FIELD_NAME_EMAIL . "_" . $row[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[2], null);
-      $hiddenUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_USERNAME . "_" . $row[0], null, Constant::$FIELD_NAME_USERNAME . "_" . $row[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[3], null);
+      $hiddenUser = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_USER . "_" . $row[0], maxLength: null, name: Constant::$FIELD_NAME_USER . "_" . $row[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $row[1], wrap: null);
+      $hiddenEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_EMAIL . "_" . $row[0], maxLength: null, name: Constant::$FIELD_NAME_EMAIL . "_" . $row[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $row[2], wrap: null);
+      $hiddenUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_USERNAME . "_" . $row[0], maxLength: null, name: Constant::$FIELD_NAME_USERNAME . "_" . $row[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $row[3], wrap: null);
       $output .= "   <td>" . $row[$index] . ($index == 1 ? $hiddenUser->getHtml() : ($index == 2 ? $hiddenEmail->getHtml() : ($index == 3 ? $hiddenUsername->getHtml() : ""))) . "</td>\n";
     }
     $output .= "   <td class=\"center\"><input id=\"approveUser_" . $row[0] . "\" name=\"approveUser_" . $row[0] . "\" type=\"checkbox\" value=\"1\" /></td>\n";
@@ -86,7 +86,7 @@ if (0 < $result->rowCount()) {
   $output .= " </table>\n";
   $output .= " <br />\n";
   $output .= "<div class=\"input\">\n";
-  $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, true, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
+  $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
   $output .= $buttonSave->getHtml();
   $output .= "</div>\n";
 } else {

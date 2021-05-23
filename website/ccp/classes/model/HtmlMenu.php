@@ -19,9 +19,11 @@ class HtmlMenu extends HtmlBase {
     if ("" == SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)) {
       $output .= "None";
     } else {
-      $output .= SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDisplayFormat();
+      $output .= SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDisplayFormat();
       $output .= "<br />|<br />\n";
-      $output .= SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDisplayFormat();
+      $output .= SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDisplayFormat();
+      $output .= "<br />|<br />\n";
+      $output .= SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " to qualify";
     }
     $output .= " </div>\n";
     $output .= "</div>\n";

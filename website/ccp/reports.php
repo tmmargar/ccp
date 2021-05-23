@@ -62,8 +62,8 @@ if ("ALL" == $seasonId) {
   $endDate = null;
   $year = $seasonId;
 } else {
-  $startDate = isset($seasonStartDate) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $seasonStartDate) : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE);
-  $endDate = isset($seasonEndDate) ? new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $seasonEndDate) : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE);
+  $startDate = isset($seasonStartDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $seasonStartDate) : SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE);
+  $endDate = isset($seasonEndDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $seasonEndDate) : SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE);
   $year = $startDate->getYearFormat();
 }
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
@@ -137,16 +137,16 @@ if (!isset($reportId)) {
     case REPORT_ID_TOURNAMENT_RESULTS:
       $prizePool = null;
       $params = array($tournamentId, Constant::$DESCRIPTION_CHAMPIONSHIP);
-      $resultList = $databaseResult->getSeasonByIdAndDesc($params);
+      $resultList = $databaseResult->getSeasonByIdAndDesc(params: $params);
       if (0 < count($resultList)) {
         $params = array($resultList[0]->getStartDate()->getDatabaseFormat(), $resultList[0]->getEndDate()->getDatabaseFormat());
-        $resultList2 = $databaseResult->getPrizePoolForSeason($params, false);
+        $resultList2 = $databaseResult->getPrizePoolForSeason(params: $params, returnQuery: false);
         $prizePool = $resultList2[0];
       }
       $params = array();
-      $resultListIds = $databaseResult->getTournamentIdList($params);
+      $resultListIds = $databaseResult->getTournamentIdList(params: $params);
       $params = array($tournamentId);
-      $resultList = $databaseResult->getTournamentById($params);
+      $resultList = $databaseResult->getTournamentById(params: $params);
       if (0 < count($resultList)) {
         $tournament = $resultList[0];
         $arrayIndex = array_keys($resultListIds, $tournament->getId());
@@ -162,131 +162,116 @@ if (!isset($reportId)) {
         $output .= "<strong>Game details: " . $tournament->getDescription() . ", " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . $tournament->getComment() . " at " . $tournament->getLocation()->getName() . "</strong>";
       }
       $params = array($prizePool, $tournamentId);
-      $query = $databaseResult->getResultByTournamentId($params);
+      $query = $databaseResult->getResultByTournamentId(params: $params);
       $colFormats = array(array(0, "number", 0), array(2, "currency,negative", 0), array(3, "currency,negative", 0), array(4, "currency", 0), array(5, "number", 0));
       $hideColIndexes = array(8); // hide 2 actives
-            // $width = Constant::FLAG_LOCAL() ? "50%" : "100%";
-//       $width = "60%";
       break;
     case REPORT_ID_TOTAL_POINTS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedTotalPoints($params);
+      $query = $databaseResult->getResultOrderedTotalPoints(params: $params);
       $colFormats = array(array(1, "number", 0), array(2, "number", 2), array(3, "number", 0));
       $hideColIndexes = array(4);
-      // $width = Constant::FLAG_LOCAL() ? "28%" : "100%";
       $width = "28%";
       break;
     case REPORT_ID_EARNINGS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedEarnings($params);
+      $query = $databaseResult->getResultOrderedEarnings(params: $params);
       $colFormats = array(array(1, "currency", 0), array(2, "currency", 2), array(3, "currency", 0), array(4, "number", 0));
       $hideColIndexes = array(5);
-      // $width = Constant::FLAG_LOCAL() ? "35%" : "100%";
       $width = "35%";
       break;
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
       $params = array("ALL" == $seasonId ? null : $year);
-      $query = $databaseResult->getEarningsTotalForChampionship($params);
+      $query = $databaseResult->getEarningsTotalForChampionship(params: $params);
       $colFormats = array(array(2, "currency", 0));
       $hideColIndexes = array(0);
-      // $width = Constant::FLAG_LOCAL() ? "35%" : "100%";
       $width = "20%";
       break;
     case REPORT_ID_KNOCKOUTS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedKnockouts($params);
+      $query = $databaseResult->getResultOrderedKnockouts(params: $params);
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0), array(5, "number", 0));
       $hideColIndexes = array(0, 6);
-      // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
       $width = "30%";
       break;
     case REPORT_ID_SUMMARY:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedSummary($params);
-      // name, tourneys, points, AvgPoints, count, %, avg, best, worst, buyins, rebuys, addons, bounties, earnings, net(+/-)
-      // name, tourneys, points, count, %, avg, best, worst, buyins, rebuys, addons, bounties, earnings, net(+/-)
+      $query = $databaseResult->getResultOrderedSummary(params: $params);
       $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "percentage", 2), array(6, "number", 2), array(7, "number", 0), array(8, "number", 0), array(9, "currency", 0), array(10, "currency", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0), array(17, "currency", 0));
       $hideColIndexes = array(3, 13, 18);
       $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(4, 6, 9, 14), array(array(5), array(7, 8), array(10, 11, 12), array(15, 16, 17)));
-      // $width = Constant::FLAG_LOCAL() ? "80%" : "100%";
       $width = "100%";
       break;
     case REPORT_ID_WINNERS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getWinnersForSeason($params, true, null);
+      $query = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: null);
       $colFormats = array(array(2, "number", 0), array(3, "percentage", 2), array(4, "number", 0));
       $hideColIndexes = array( 0, 5);
       $width = Constant::FLAG_LOCAL() ? "25%" : "75%";
       break;
     case REPORT_ID_FINISHES:
       $params = array($userId, $startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getFinishesForUser($params);
+      $query = $databaseResult->getFinishesForUser(params: $params);
       $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
       $caption = "";
-      // $width = Constant::FLAG_LOCAL() ? "15%" : "100%";
       $width = "15%";
       break;
     case REPORT_ID_BOUNTIES:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getBountyEarnings($params);
+      $query = $databaseResult->getBountyEarnings(params: $params);
       $colFormats = array(array(2, "currency", 0), array(3, "currency,negative", 0));
       $hideColIndexes = array(0, 4, 5);
       $caption = "";
-      // $width = Constant::FLAG_LOCAL() ? "25%" : "100%";
       $width = "25%";
       break;
     case REPORT_ID_LOCATIONS_HOSTED_COUNT:
       $query = $databaseResult->getLocationsHostedCount();
       $colFormats = array(array(10, "number", 0));
       $hideColIndexes = array(0, 2);
-      // $width = Constant::FLAG_LOCAL() ? "65%" : "100%";
       $width = "65%";
       break;
     case REPORT_ID_CHAMPIONSHIP:
-      // $params = array(null, null, "yr desc, earnings desc");
-      // $params = array(null, null, $sort);
       $params = array(null, null, null, $group); // from date, to date, sort, group
-      $query = $databaseResult->getChampionshipByYearByEarnings($params);
+      $query = $databaseResult->getChampionshipByYearByEarnings(params: $params);
       $colFormats = array(array($group ? 1 : 3, "currency", 0));
       $hideColIndexes = $group ? null : array(
         1);
-      // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
       $width = "30%";
       break;
   }
   if ("show" == $seasonSelection) {
     $output .= "<div>\n";
-    $selectSeason = new FormSelect(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SEASON, null, false, Base::build("season", null), false, Base::build("season", null), null, false, 1, null, null);
+    $selectSeason = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SEASON, class: null, disabled: false, id: Base::build("season", null), multiple: false, name: Base::build("season", null), onClick: null, readOnly: false, size: 1, suffix: null, value: null);
     $output .= "Season: " . $selectSeason->getHtml();
-    $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, "", null, "Overall", "ALL");
+    $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: "", suffix: null, text: "Overall", value: "ALL");
     $output .= $option->getHtml();
     $params = array(null, false);
-    $resultList = $databaseResult->getSeason($params);
+    $resultList = $databaseResult->getSeason(params: $params);
     if (0 < count($resultList)) {
       $ctr = 0;
       while ($ctr < count($resultList)) {
         $seasonText = $resultList[$ctr]->getDescription() . " (" . $resultList[$ctr]->getStartDate()->getDisplayFormat() . " - " . $resultList[$ctr]->getEndDate()->getDisplayFormat() . ")";
         $seasonValue = $resultList[$ctr]->getId() . "::" . $resultList[$ctr]->getStartDate()->getDatabaseFormat() . "::" . $resultList[$ctr]->getEndDate()->getDatabaseFormat();
-        $option = new FormOption(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, false, null, null, $year == $resultList[$ctr]->getStartDate()->getYearFormat() || $year == $resultList[$ctr]->getEndDate()->getYearFormat() ? $seasonValue : "", null, $seasonText, $seasonValue);
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $year == $resultList[$ctr]->getStartDate()->getYearFormat() || $year == $resultList[$ctr]->getEndDate()->getYearFormat() ? $seasonValue : "", suffix: null, text: $seasonText, value: $seasonValue);
         $output .= $option->getHtml();
         $ctr++;
       }
     }
     $output .= "</select>\n";
-    $hiddenSeasonStartDate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SEASON_START_DATE_FIELD_NAME, null, SEASON_START_DATE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $seasonStartDate, null);
+    $hiddenSeasonStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SEASON_START_DATE_FIELD_NAME, maxLength: null, name: SEASON_START_DATE_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $seasonStartDate, wrap: null);
     $output .= $hiddenSeasonStartDate->getHtml();
-    $hiddenSeasonEndDate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SEASON_END_DATE_FIELD_NAME, null, SEASON_END_DATE_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $seasonEndDate, null);
+    $hiddenSeasonEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SEASON_END_DATE_FIELD_NAME, maxLength: null, name: SEASON_END_DATE_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $seasonEndDate, wrap: null);
     $output .= $hiddenSeasonEndDate->getHtml();
     $output .= "</div>\n";
   }
-  $htmlTable = new HtmlTable($caption, $classNames, $colSpan, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), $delimiter, $foreignKeys, $headerRow, $hiddenAdditional, $hiddenId, $hideColIndexes, $html, null, null, $showNote, $query, $selectedColumnVals, str_replace(" ", "", ucwords($title)), $width);
+  $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: str_replace(" ", "", ucwords($title)), width: $width);
   $outputTable = $htmlTable->getHtml();
   if (REPORT_ID_TOURNAMENT_RESULTS == $reportId && $outputTable == "") {
     $output .= "<br>No results because not yet entered/played";
   } else {
     $output .= $outputTable;
   }
-  $hiddenReportId = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, array(REPORT_ID_FIELD_NAME . "2"), null, false, REPORT_ID_FIELD_NAME, null, REPORT_ID_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $reportId, null);
+  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_FIELD_NAME . "2"), cols: null, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: null, name: REPORT_ID_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
   $output .= $hiddenReportId->getHtml();
 }
 $smarty->assign("content", $output);

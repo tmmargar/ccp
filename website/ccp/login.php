@@ -27,9 +27,9 @@ $smarty->assign("formName", "frmLogin");
 $output = "";
 $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : "";
 if (Constant::$MODE_LOGIN == $mode) {
-  $login = new Login(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $_POST["username"], $_POST["password"]);
+  $login = new Login(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, username: $_POST["username"], password: $_POST["password"]);
   $user = new User(false, 0, "", "", "", "", "", null, 0, "", "", 0, "", "", 0, "", 0, null, null, null, null, null, null, null);
-  $security = new Security(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $login, $user);
+  $security = new Security(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, login: $login, user: $user);
   if ($security->login()) {
     $pageName = "home.php";
     if (! empty($_SERVER["QUERY_STRING"])) {
@@ -47,12 +47,12 @@ if (Constant::$MODE_LOGIN == $mode) {
 $output .= "<div class=\"form_content\">";
 $output .= " <div class=\"label\">Username:</div>";
 $output .= " <div class=\"input\">";
-$textBoxUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_USERNAME, "username", true, null, null, null, false, NAME_FIELD_USERNAME, 30, NAME_FIELD_USERNAME, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
+$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_USERNAME, maxLength: 30, name: NAME_FIELD_USERNAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
 $output .= $textBoxUsername->getHtml();
 $output .= " </div>";
 $output .= " <div class=\"label\">Password:</div>";
 $output .= " <div class=\"input\">";
-$textBoxPassword = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PASSWORD, "current-password", false, null, null, null, false, NAME_FIELD_PASSWORD, null, NAME_FIELD_PASSWORD, null, null, false, null, null, 10, null, FormControl::$TYPE_INPUT_PASSWORD, null, null);
+$textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "current-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_PASSWORD, maxLength: null, name: NAME_FIELD_PASSWORD, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: null, wrap: null);
 $output .= $textBoxPassword->getHtml();
 $output .= " </div>";
 // $output .= "<div class=\"label\">Remember Me:</div>";
@@ -62,12 +62,12 @@ $output .= " </div>";
 // $output .= "<div class=\"clear\"></div>";
 $output .= " <div class=\"label\">&nbsp;</div>";
 $output .= " <div class=\"input\">";
-$buttonLogin = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_LOGIN, null, false, null, null, null, true, NAME_FIELD_LOGIN, null, NAME_FIELD_LOGIN, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, ucwords(NAME_FIELD_LOGIN), null);
+$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
 $output .= $buttonLogin->getHtml();
 $output .= "&nbsp;&nbsp;<a href=\"resetPassword.php\">Forgot Password</a>";
 $output .= "&nbsp;&nbsp;<a href=\"signup.php\">New User</a>";
 $output .= " </div>";
-$hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+$hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();
 $output .= "</div>";
 // $configTidy = [ "clean" => true, "coerce-endtags" => true, "doctype" => "omit", "drop-proprietary-attributes" => true, "indent" => true, "indent-spaces" => 1, "output-html" => true, "show-body-only" => true, "sort-attributes" => "alpha", "wrap" => 0 ];

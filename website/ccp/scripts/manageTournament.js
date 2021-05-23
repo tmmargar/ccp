@@ -137,7 +137,7 @@ const inputLocal = {
     return result;
   },
   setDefaults : function() {
-    input.initializeTimePicker("m/d/Y h:i A", true, [0, 1, 2, 3, 4, 5], ['14:00', '15:00', '17:30', '19:30']);
+    input.initializeTimePicker("m/d/Y H:i", true, [0, 1, 2, 3, 4, 5], ['14:00', '15:00', '17:30', '19:30']);
     if ($("#mode").val() == "create") {
       $("#tournamentDescription_").val(inputLocal.defaultDescription());
       $("#tournamentLimitTypeId_").val(3);
@@ -145,7 +145,7 @@ const inputLocal = {
       $("#tournamentChipCount_").val(3000);
       const d = new Date();
       d.setDate(d.getDate() + (6 - d.getDay()));
-      $('#tournamentStartDateTime_').val($.datepicker.formatDate("mm/dd/yy", d) + " 02:00");
+      $('#tournamentStartDateTime_').val($.datepicker.formatDate("mm/dd/yy", d) + " 14:00");
       $("#tournamentMaxPlayers_").val(27);
       $("#tournamentBuyinAmount_").val("25");
       $("#tournamentMaxRebuys_").val(0);

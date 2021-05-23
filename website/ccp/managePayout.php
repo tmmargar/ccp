@@ -29,32 +29,33 @@ $smarty->assign("heading", "Manage Payout");
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $ids = isset($_GET[PAYOUT_ID_FIELD_NAME]) ? $_GET[PAYOUT_ID_FIELD_NAME] : $ids;
   $params = Constant::$MODE_MODIFY == $mode ? array($ids) : array(0);
-  $resultList = $databaseResult->getPayoutById($params);
+  $resultList = $databaseResult->getPayoutById(params: $params);
   if (Constant::$MODE_CREATE == $mode || (Constant::$MODE_MODIFY == $mode && $ids != DEFAULT_VALUE_BLANK)) {
     $ctr = 0;
     $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
     foreach ($ary as $id) {
       $output = "    <div style=\"float: left; width: 125px; height: 25px;\">" . PAYOUT_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textPayoutName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_NAME, null, false, null, null, null, false, PAYOUT_NAME_FIELD_NAME . "_" . $id, 30, PAYOUT_NAME_FIELD_NAME . "_" . $id, null, null, false, null, null, 30, null, FormControl::$TYPE_INPUT_TEXTBOX, ((count($resultList) > 0) ? $resultList[$ctr]->getName() : ""), null);
+      // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
+      $textPayoutName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_NAME, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PAYOUT_NAME_FIELD_NAME . "_" . $id, maxLength: 30, name: PAYOUT_NAME_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getName() : ""), wrap: null);
       $output .= $textPayoutName->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . BONuS_POINTS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textBonusPoints = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_BONUS_POINTS, null, false, null, null, null, false, BONUS_POINTS_FIELD_NAME . "_" . $id, 2, BONUS_POINTS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getBonusPoints() : 3), null);
+      $textBonusPoints = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_BONUS_POINTS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: BONUS_POINTS_FIELD_NAME . "_" . $id, maxLength: 2, name: BONUS_POINTS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getBonusPoints() : 3), wrap: null);
       $output .= $textBonusPoints->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textMinPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MIN_PLAYERS, null, false, null, null, null, false, MIN_PLAYERS_FIELD_NAME . "_" . $id, 2, MIN_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : 0), null);
+      $textMinPlayers = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MIN_PLAYERS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: MIN_PLAYERS_FIELD_NAME . "_" . $id, maxLength: 2, name: MIN_PLAYERS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : 0), wrap: null);
       $output .= $textMinPlayers->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $textMaxPlayers = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MAX_PLAYERS, null, false, null, null, null, false, MAX_PLAYERS_FIELD_NAME . "_" . $id, 2, MAX_PLAYERS_FIELD_NAME . "_" . $id, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : 36), null);
+      $textMaxPlayers = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MAX_PLAYERS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: MAX_PLAYERS_FIELD_NAME . "_" . $id, maxLength: 2, name: MAX_PLAYERS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : 36), wrap: null);
       $output .= $textMaxPlayers->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -63,22 +64,20 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display\" id=\"" . Constant::$ID_TABLE_INPUT . "\" style=\"margin: 0;\" width=\"25%\">\n";
       $output .= "     <tbody>\n";
       if (count($resultList) == 0) {
-        // (bool $debug, string|int|null $id, int $place, int $percentage) {
-        $structure = new Structure(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, 1, 1);
-        // (bool $debug, string|int|null $id, string $name, int $bonusPoints, int $minPlayers, int $maxPlayers, array $structures) {
-        $payout = new Payout(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, "", 0, 0, 0, array($structure));
+        $structure = new Structure(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, place: 1, percentage : 1);
+        $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, name: "", bonusPoints: 0, minPlayers: 0, maxPlayers: 0, structures: array($structure));
         $resultList[0] = $payout;
       }
       foreach ($resultList[$ctr]->getStructures() as $structure) {
         $output .= "      <tr>\n";
         $output .= "       <td class=\"textAlignUnset\">" . PLACE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
         $output .= "       <td class=\"textAlignUnset\">\n";
-        $textPayoutPlace = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PLACE, null, false, null, null, null, true, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $structure->getPlace() : ""), null);
+        $textPayoutPlace = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PLACE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, maxLength: 2, name: PLACE_FIELD_NAME . "_" . $id . "_" . $ctr2, onClick: null, placeholder: null, readOnly: true, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $structure->getPlace() : ""), wrap: null);
         $output .= $textPayoutPlace->getHtml();
         $output .= "       </td>\n";
         $output .= "       <td class=\"textAlignUnset\">" . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
         $output .= "       <td class=\"textAlignUnset\">\n";
-        $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, false, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, 2, PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), null);
+        $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, maxLength: 2, name: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), wrap: null);
         $output .= $textPayoutPercentage->getHtml();
         $output .= "       </td>\n";
         $output .= "      </tr>\n";
@@ -88,36 +87,36 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "      <tr>\n";
       $output .= "       <td class=\"textAlignUnset\"></td>\n";
       $output .= "       <td class=\"textAlignUnset\">\n";
-      $textDummy = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, array("hidden"), null, false, "dummy_" . $id . "_total", 2, "dummy_" . $id . "_total", null, null, false, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, null, null);
+      $textDummy = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hidden"), cols: null, disabled: false, id: "dummy_" . $id . "_total", maxLength: 2, name: "dummy_" . $id . "_total", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
       $output .= $textDummy->getHtml();
       $output .= "       </td>\n";
       $output .= "       <td class=\"textAlignUnset\">Total " . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
       $output .= "       <td class=\"textAlignUnset\">\n";
-      $textPayoutPercentage = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PERCENTAGE, null, false, null, null, null, true, PERCENTAGE_FIELD_NAME . "Total", 2, PERCENTAGE_FIELD_NAME . "Total", null, null, true, null, null, 2, null, FormControl::$TYPE_INPUT_TEXTBOX, (string) $percentageTotal, null);
+      $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: PERCENTAGE_FIELD_NAME . "Total", maxLength: 2, name: PERCENTAGE_FIELD_NAME . "Total", onClick: null, placeholder: null, readOnly: true, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) $percentageTotal, wrap: null);
       $output .= $textPayoutPercentage->getHtml();
       $output .= "       </td>\n";
       $output .= "      </tr>\n";
       $output .= "     </tbody>\n";
       $output .= "    </table>\n";
-      $hiddenRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, HIDDEN_ROW_FIELD_NAME . "_" . $id, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), null);
+      $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: null, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), wrap: null);
       $output .= $hiddenRow->getHtml();
       $output .= "    <div style=\"clear: both;\"></div>\n";
       $ctr ++;
     }
-    $buttonAddRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_ADD_ROW, null, false, null, null, null, false, Constant::$TEXT_ADD_ROW, null, Constant::$TEXT_ADD_ROW, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_BUTTON, Constant::$TEXT_ADD_ROW, null);
+    $buttonAddRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_ADD_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_ADD_ROW, maxLength: null, name: Constant::$TEXT_ADD_ROW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_ADD_ROW, wrap: null);
     $output .= $buttonAddRow->getHtml();
-    $buttonRemoveRow = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_REMOVE_ROW, null, false, null, null, null, false, Constant::$TEXT_REMOVE_ROW, null, Constant::$TEXT_REMOVE_ROW, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_BUTTON, Constant::$TEXT_REMOVE_ROW, null);
+    $buttonRemoveRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REMOVE_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_REMOVE_ROW, maxLength: null, name: Constant::$TEXT_REMOVE_ROW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_REMOVE_ROW, wrap: null);
     $output .= $buttonRemoveRow->getHtml();
-    $buttonSave = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SAVE, null, false, null, null, null, true, Constant::$TEXT_SAVE, null, Constant::$TEXT_SAVE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_SAVE, null);
+    $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
-    $buttonReset = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_RESET, null, false, null, null, null, false, Constant::$TEXT_RESET, null, Constant::$TEXT_RESET, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_RESET, Constant::$TEXT_RESET, null);
+    $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
     $output .= $buttonReset->getHtml();
   }
-  $buttonCancel = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
   $output .= $buttonCancel->getHtml();
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
 } elseif (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
@@ -129,7 +128,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $maxPlayers = isset($_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       if (Constant::$MODE_SAVE_CREATE == $mode) {
         $params = array($payoutName, $bonusPoints, $minPlayers, $maxPlayers);
-        $databaseResult->insertPayout($params);
+        $databaseResult->insertPayout(params: $params);
         $resultList = $databaseResult->getPayoutMaxId();
         $tempPayoutId = $resultList[0];
       } else {
@@ -137,9 +136,9 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       }
       if (Constant::$MODE_SAVE_MODIFY == $mode) {
         $params = array($payoutName, $bonusPoints, $minPlayers, $maxPlayers, $tempPayoutId);
-        $databaseResult->updatePayout($params);
+        $databaseResult->updatePayout(params: $params);
         $params = array($tempPayoutId);
-        $databaseResult->deleteStructure($params);
+        $databaseResult->deleteStructure(params: $params);
       }
       $ctr2 = 0;
       $found = true;
@@ -148,7 +147,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         $percentage = (isset($_POST[PERCENTAGE_FIELD_NAME . "_" . (Constant::$MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2])) ? $_POST[PERCENTAGE_FIELD_NAME . "_" . (Constant::$MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2] : null;
         if (isset($place) && isset($percentage)) {
           $params = array($tempPayoutId, $place, $percentage / 100);
-          $databaseResult->insertStructure($params);
+          $databaseResult->insertStructure(params: $params);
           $ctr2 ++;
         } else {
           $found = false;
@@ -163,28 +162,28 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_CONFIRM == $mode) {
     if (DEFAULT_VALUE_BLANK != $ids) {
       $params = array($ids);
-      $databaseResult->deleteStructure($params);
-      $databaseResult->deletePayout($params);
+      $databaseResult->deleteStructure(params: $params);
+      $databaseResult->deletePayout(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
     }
     $mode = Constant::$MODE_VIEW;
   }
   if (Constant::$MODE_VIEW == $mode) {
-    $buttonCreate = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CREATE, null, false, null, null, null, false, Constant::$TEXT_CREATE, null, Constant::$TEXT_CREATE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CREATE, null);
+    $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
     $output .= $buttonCreate->getHtml();
-    $buttonModify = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_MODIFY, null, false, null, null, null, true, Constant::$TEXT_MODIFY, null, Constant::$TEXT_MODIFY, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_MODIFY, null);
+    $buttonModify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MODIFY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_MODIFY, maxLength: null, name: Constant::$TEXT_MODIFY, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_MODIFY, wrap: null);
     $output .= $buttonModify->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_DELETE, null, false, null, null, null, true, Constant::$TEXT_DELETE, null, Constant::$TEXT_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_DELETE, maxLength: null, name: Constant::$TEXT_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
   } else if (Constant::$MODE_DELETE == $mode) {
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CONFIRM_DELETE, null, false, null, null, null, false, Constant::$TEXT_CONFIRM_DELETE, null, Constant::$TEXT_CONFIRM_DELETE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CONFIRM_DELETE, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
-    $buttonDelete = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CANCEL, null, false, null, null, null, false, Constant::$TEXT_CANCEL, null, Constant::$TEXT_CANCEL, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, Constant::$TEXT_CANCEL, null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonDelete->getHtml();
   }
-  $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
-  $hiddenSelectedRows = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, SELECTED_ROWS_FIELD_NAME, null, SELECTED_ROWS_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $ids, null);
+  $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
   $params = array(true);
   $query = $databaseResult->getPayoutsAll($params);
@@ -193,7 +192,8 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   }
   $colFormats = array(array(6, "percentage", 0));
   // $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
-  $htmlTable = new HtmlTable(null, null, null, $colFormats, SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$DELIMITER_DEFAULT, null, true, null, HIDDEN_ROW_FIELD_NAME, null, null, null, null, true, $query, $ids, null, "60%");
+  //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
+  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "60%");
   $output .= $htmlTable->getHtml();
 }
 $smarty->assign("content", $output);

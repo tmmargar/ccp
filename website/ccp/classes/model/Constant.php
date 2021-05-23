@@ -69,7 +69,6 @@ class Constant {
   public static string $CODE_STATUS_FINISHED                  = "F";
   public static string $CODE_STATUS_PAID                      = "P";
   public static string $CODE_STATUS_REGISTERED                = "R";
-  public static int $COUNT_TOURNAMENT_QUALIFY_CHAMPIONSHIP    = 10;
   public static string $DELIMITER_DEFAULT                     = ", ";
   public static string $DESCRIPTION_CHAMPIONSHIP              = "Championship";
   public static string $DESCRIPTION_MAIN_EVENT                = "Main Event";

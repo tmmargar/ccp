@@ -13,6 +13,7 @@ class SessionUtility {
   public static string $OBJECT_NAME_SEASON = "seasonObject";
   public static string $OBJECT_NAME_START_DATE = "startDate";
   public static string $OBJECT_NAME_END_DATE = "endDate";
+  public static string $OBJECT_NAME_CHAMPIONSHIP_QUALIFY = "championshipQualify";
   public static function destroy() {
     self::startSession();
     $_SESSION = array();
@@ -63,6 +64,9 @@ class SessionUtility {
         case self::$OBJECT_NAME_END_DATE:
           $value = $season->getEndDate();
           break;
+        case self::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY:
+          $value = $season->getChampionshipQualify();
+          break;
       }
     }
     return $value;
@@ -76,9 +80,10 @@ class SessionUtility {
     $files = glob(session_save_path() . "/*"); // get all session files
     foreach ($files as $file) {
       $ctr ++;
-      // echo "<br>file is " . $file;
-      if (is_file($file) && ("sessions/sess_" . $sessionCurrentId) != $file) { // if file and not current session
-                                                                               // echo "<BR>backing up current session " . $sessionCurrentId;
+//       echo "<br>file is " . $file;
+      //if (is_file($file) && ("sessions/sess_" . $sessionCurrentId) != $file) { // if file and not current session
+      if (is_file($file)) {
+//          echo "<BR>backing up current session " . $sessionCurrentId;
         $temp = array();
         // $temp['tempid'] = session_id();
         $temp['sessionId'] = $sessionCurrentId;
@@ -86,7 +91,7 @@ class SessionUtility {
           $temp[$key] = $val;
         }
         session_write_close();
-        // echo "<BR>updating other session " . $file;
+//         echo "<BR>updating other session " . $file;
         $fileAry = explode("_", $file);
         session_id($fileAry[1]);
         session_start();
@@ -94,13 +99,13 @@ class SessionUtility {
         // $_SESSION[self::$OBJECT_NAME_SEASON] = serialize($seasonNew);
         self::setValue(self::$OBJECT_NAME_SEASON, $seasonNew);
         session_write_close();
-        // echo "<BR>restoring current session " . $temp['sessionId'];
+//         echo "<BR>restoring current session " . $temp['sessionId'];
         session_id($temp['sessionId']); // restart local sesh
         session_start();
         foreach ($temp as $key => $val) {
           $_SESSION[$key] = $val;
         }
-        // echo "<BR>restoring current session season " . $seasonNew;
+//         echo "<BR>restoring current session season " . $seasonNew;
         // update session here
         // $_SESSION[self::$OBJECT_NAME_SEASON] = serialize($seasonNew);
         self::setValue(self::$OBJECT_NAME_SEASON, $seasonNew);

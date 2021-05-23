@@ -25,9 +25,8 @@ $autoFocusName = true;
 $autoFocusUserName = false;
 $autoFocusEmail = false;
 if (Constant::$MODE_SIGNUP == $mode) {
-  $databaseResult = new DatabaseResult(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
   $params = array($username);
-  $resultList = $databaseResult->getUserByUsername($params);
+  $resultList = $databaseResult->getUserByUsername(params: $params);
   if (0 < count($resultList)) {
     $failMessage = "Username <strong><u>" . $username . "</u></strong> already exists. Please choose another.";
     $classUsername = "errors";
@@ -35,7 +34,7 @@ if (Constant::$MODE_SIGNUP == $mode) {
     $autoFocusName = false;
   } else {
     $params = array($emailAddress);
-    $resultList = $databaseResult->getUserByEmail($params);
+    $resultList = $databaseResult->getUserByEmail(params: $params);
     if (0 < count($resultList)) {
       $failMessage = "Email <strong><u>" . $emailAddress . "</u></strong> already exists. Please choose another.";
       $classEmail = "errors";
@@ -45,11 +44,11 @@ if (Constant::$MODE_SIGNUP == $mode) {
       $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
       $nameValues = explode(" ", $name);
       $params = array(null, $nameValues[0], $nameValues[1], $username, $password, $emailAddress, 0, null, null, null, null, null, null, null, null, null, null, null, null);
-      $databaseResult->insertUser($params);
-      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array($name), array($emailAddress), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null);
+      $databaseResult->insertUser(params: $params);
+      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), toName: array(Constant::$NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), fromName: array($name), fromEmail: array($emailAddress), ccName: array(Constant::$NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: null, bccEmail: null, subject: null, body: null);
       $output .= "  aryMessages.push(\"" . $email->sendSignUpEmail() . "\");\n";
       // send email to staff for approval
-      $email = new Email(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), array($name), array($emailAddress), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), array(Constant::$NAME_STAFF), array(Constant::EMAIL_STAFF()), null, null, null, null);
+      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), toName: array($name), toEmail: array($emailAddress), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), ccName: array(Constant::$NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: null, bccEmail: null, subject: null, body: null);
       $output .= "  aryMessages.push(\"" . $email->sendSignUpApprovalEmail() . "\");\n";
       $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
       $name = DEFAULT_VALUE_BLANK;
@@ -90,40 +89,40 @@ if (isset($failMessage)) {
 }
 $output .= "<div class=\"label\">Name:</div>\n";
 $output .= "<div class=\"input\">\n";
-$textBoxName = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_NAME, "name", $autoFocusName, null, null, null, false, NAME_FIELD_NAME, 60, NAME_FIELD_NAME, null, null, false, null, null, 20, null, FormControl::$TYPE_INPUT_TEXTBOX, $name, null);
+$textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_NAME, autoComplete: "name", autoFocus: $autoFocusName, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_NAME, maxLength: 60, name: NAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $name, wrap: null);
 $output .= $textBoxName->getHtml();
 $output .= "</div>\n";
 $output .= "<div class=\"clear\"></div>\n";
 $output .= "<div class=\"label\">Email:</div>\n";
 $output .= "<div class=\"input\">\n";
-$textBoxEmail = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_EMAIL, "email", $autoFocusEmail, null, array($classEmail), null, false, EMAIL_FIELD_NAME, 50, EMAIL_FIELD_NAME, null, null, false, null, null, 20, null, FormControl::$TYPE_INPUT_TEXTBOX, $emailAddress, null);
+$textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: $autoFocusEmail, checked: null, class: array($classEmail), cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: null);
 $output .= $textBoxEmail->getHtml();
 $output .= "</div>\n";
 $output .= "<div class=\"clear\"></div>\n";
 $output .= "<div class=\"label\">Username:</div>\n";
 $output .= "<div class=\"input\">\n";
-$textBoxUsername = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_USERNAME, "username", $autoFocusUserName, null, array($classUsername), null, false, USERNAME_FIELD_NAME, 30, USERNAME_FIELD_NAME, null, null, false, null, null, 20, null, FormControl::$TYPE_INPUT_TEXTBOX, $username, null);
+$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: $autoFocusUserName, checked: null, class: array($classUsername), cols: null, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $username, wrap: null);
 $output .= $textBoxUsername->getHtml();
 $output .= "</div>\n";
 $output .= "<div class=\"clear\"></div>\n";
 $output .= "<div class=\"label\">\nPassword:\n</div>\n";
 $output .= "<div class=\"input\">\n";
-$textBoxPassword = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_PASSWORD, "new-password", false, null, null, null, false, PASSWORD_FIELD_NAME, null, PASSWORD_FIELD_NAME, null, null, false, null, null, 20, null, FormControl::$TYPE_INPUT_PASSWORD, $password, null);
+$textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PASSWORD_FIELD_NAME, maxLength: null, name: PASSWORD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: $password, wrap: null);
 $output .= $textBoxPassword->getHtml();
 $output .= "</div>\n";
 $output .= "<div class=\"clear\"></div>\n";
 $output .= "<div class=\"label\">\nConfirm Password:\n</div>\n";
 $output .= "<div class=\"input\">\n";
-$textBoxConfirmPassword = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_CONFIRM_PASSWORD, "new-password", false, null, null, null, false, CONFIRM_PASSWORD_FIELD_NAME, null, CONFIRM_PASSWORD_FIELD_NAME, null, null, false, null, null, 20, null, FormControl::$TYPE_INPUT_PASSWORD, $confirmPassword, null);
+$textBoxConfirmPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: CONFIRM_PASSWORD_FIELD_NAME, maxLength: null, name: CONFIRM_PASSWORD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: $confirmPassword, wrap: null);
 $output .= $textBoxConfirmPassword->getHtml();
 $output .= "</div>\n";
 $output .= "<div class=\"clear\"></div>\n";
 $output .= "<div class=\"label\">&nbsp;</div>\n";
 $output .= "<div class=\"input\">\n";
-$buttonSignup = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), Constant::$ACCESSKEY_SIGN_UP, null, false, null, null, null, true, SIGN_UP_FIELD_NAME, null, SIGN_UP_FIELD_NAME, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_SUBMIT, SIGN_UP_TEXT, null);
+$buttonSignup = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SIGN_UP, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: SIGN_UP_FIELD_NAME, maxLength: null, name: SIGN_UP_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: SIGN_UP_TEXT, wrap: null);
 $output .= $buttonSignup->getHtml();
 $output .= "</div>\n";
-$hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
+$hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();
 $smarty->assign("content", $output);
 $smarty->display("signup.tpl");

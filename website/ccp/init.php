@@ -22,7 +22,7 @@ if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["S
 }
 // if any auto or manage pages and not administrator display not authorized message
 if (strpos($_SERVER["SCRIPT_NAME"], "auto") !== false || strpos($_SERVER["SCRIPT_NAME"], "manage") !== false) {
-  if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 1 && SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID) != $_GET["id"]) {
+  if (SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 1 && SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID) != $_GET["id"]) {
     echo "<h1 style=\"color: red;\">You are not authorized to access this page!!</h1>";
     die();
   }
