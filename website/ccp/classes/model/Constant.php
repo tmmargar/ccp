@@ -147,7 +147,7 @@ class Constant {
   private static string $FOLDER_MAP                           = "maps";
   private static string $PATH_HOME_SERVER                     = "/home/chipch5/public_html";
   public static function CONTEXT_ROOT() {
-    return self::FLAG_LOCAL() ? "/ccp/" : "/demo/";
+    return self::FLAG_LOCAL() ? "/ccp/" : "/new/";
   }
   public static function EMAIL_STAFF() {
     return self::FLAG_LOCAL() ? "staff@localhost.com" : "staff@chipchairprayer.com";
