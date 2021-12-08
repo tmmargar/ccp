@@ -35,6 +35,7 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
     $params[0] = $key;
     $params[9] = "CURRENT_TIMESTAMP";
     $params[10] = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID);
+    $params[13] = 1;
     $databaseResult->updateUser(params: $params);
     $output .= "  aryMessages.push(\"Successfully approved " . $value . "\");\n";
     $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($value), toEmail: array($emailAddress[$key]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
