@@ -73,7 +73,6 @@ if ("ALL" == $seasonId) {
   }
   if (!isset($seasonId) || empty($seasonId)) {
     $seasonId = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ID);
-    echo "<br>aft sid -> " . $seasonId;
   }
 }
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
@@ -261,8 +260,6 @@ if (!isset($reportId)) {
       while ($ctr < count($resultList)) {
         $seasonText = $resultList[$ctr]->getDescription() . " (" . $resultList[$ctr]->getStartDate()->getDisplayFormat() . " - " . $resultList[$ctr]->getEndDate()->getDisplayFormat() . ")";
         $seasonValue = $resultList[$ctr]->getId() . "::" . $resultList[$ctr]->getStartDate()->getDatabaseFormat() . "::" . $resultList[$ctr]->getEndDate()->getDatabaseFormat();
-        echo "<br>sd -> " . $startDate;
-        echo "<br>val -> " . $seasonId . "::" . $startDate->getDatabaseFormat() . "::" . $endDate->getDatabaseFormat();
         $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $startDate == null || $endDate == null ? "" : $seasonId . "::" . $startDate->getDatabaseFormat() . "::" . $endDate->getDatabaseFormat(), suffix: null, text: $seasonText, value: $seasonValue);
         $output .= $option->getHtml();
         $ctr++;
