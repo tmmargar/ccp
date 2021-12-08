@@ -192,7 +192,6 @@ if (!isset($reportId)) {
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
       $params = array("ALL" == $seasonId ? null : $year);
       $query = $databaseResult->getEarningsTotalForChampionship(params: $params);
-      echo $query;
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0);
       $width = "20%";
