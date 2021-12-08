@@ -165,6 +165,7 @@ class Constant {
     return (self::FLAG_LOCAL() ? "" : self::$PATH_HOME_SERVER . self::CONTEXT_ROOT()) . self::$FOLDER_SESSION;
   }
   public static function SERVER_EMAIL() {
-    return self::FLAG_LOCAL() ? "localhost" : "secure253.inmotionhosting.com";
+    //return self::FLAG_LOCAL() ? "localhost" : "secure253.inmotionhosting.com";
+    return self::FLAG_LOCAL() ? "localhost" : "ecngx303.inmotionhosting.com";
   }
 }
