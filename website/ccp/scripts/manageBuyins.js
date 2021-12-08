@@ -2,25 +2,26 @@
 $(document).ready(function() {
   input.initialize();
 });
-$(document).on("click", "#buyinCheckAll, #rebuyCheckAll", function(event) {
-  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
-  input.toggleCheckboxes(id);
-  input.countChecked(id);
-});
 $(document).on("click", "#buyinCheckAll", function(event) {
+  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
+  input.toggleCheckboxes(id, id);
+  input.countUpdate(id, id + "Count");
   inputLocal.postProcessing();
 });
 $(document).on("click", "#rebuyCheckAll", function(event) {
   inputLocal.toggleRebuy($(this).prop("checked"));
+  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
+  input.toggleCheckboxes(id, id);
+  input.countUpdate(id, id + "Count");
 });
 $(document).on("click", "#addonCheckAll, #bountyACheckAll, #bountyBCheckAll", function(event) {
   const id = this.id.substring(0, this.id.indexOf("CheckAll"));
-  input.toggleCheckboxes(id);
-  input.countChecked(id);
+  input.toggleCheckboxes(id, id);
+  input.countUpdate(id, id + "Count");
 });
 $(document).on("click", "input[id^='buyin_'], input[id^='rebuy_']", function(event) {
   const id = this.id.substring(0, this.id.indexOf("_"));
-  input.toggleCheckAll(id);
+  input.toggleCheckAll(id, id);
 });
 $(document).on("click", "input[id^='buyin_']", function(event) {
   inputLocal.postProcessing();
@@ -29,7 +30,7 @@ $(document).on("click", "input[id^='rebuy_']", function(event) {
   const values = $(this).attr("id").split("_");
   $("#rebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
   $("#rebuyCount_" + values[1]).val(($(this).prop("checked") ? 1 : 0));
-  input.countChecked("rebuy");
+  input.countUpdate("rebuy", "rebuyCount");
 });
 $(document).on("keyup paste", "input[id^='rebuyCount_']", function(event) {
   input.validateNumberOnly($(this), event, false);
@@ -40,19 +41,20 @@ $(document).on("keyup paste", "input[id^='rebuyCount_']", function(event) {
     const values = id.split("_");
     $(this).prop("disabled", ($(this).val() == 0));
     $("#rebuy_" + values[1]).prop("checked", !($(this).val() == 0));
+    input.countUpdate("rebuy", "rebuyCount");
   }
 });
 $(document).on("click", "input[id^='addon_']", function(event) {
-  input.toggleCheckAll("addon");
-  input.countChecked("addon");
+  input.toggleCheckAll("addon", "addon");
+  input.countUpdate("addon");
 });
 $(document).on("click", "input[id^='bountyA_']", function(event) {
-  input.toggleCheckAll("bountyA");
-  input.countChecked("bountyA");
+  input.toggleCheckAll("bountyA", "bountyA");
+  input.countUpdate("bountyA");
 });
 $(document).on("click", "input[id^='bountyB_']", function(event) {
-  input.toggleCheckAll("bountyB");
-  input.countChecked("bountyB");
+  input.toggleCheckAll("bountyB", "bountyB");
+  input.countUpdate("bountyB");
 });
 const inputLocal = {
   buildData : function(objTableId, mode) {
@@ -151,18 +153,18 @@ const inputLocal = {
     $("input[id^='rebuyCount_']").each(function(index) {
       $(this).data("previousValue", $(this).val());
     });
-    input.countChecked("buyin");
-    input.countChecked("rebuy");
-    input.countChecked("addon");
-    input.countChecked("bountyA");
-    input.countChecked("bountyB");
+    input.countUpdate("buyin");
+    input.countUpdate("rebuy", "rebuyCount");
+    input.countUpdate("addon");
+    input.countUpdate("bountyA");
+    input.countUpdate("bountyB");
   },
   processAllCheckAll : function(countNotCheckedPaid) {
-    input.toggleCheckAll("buyin");
-    input.toggleCheckAll("rebuy");
-    input.toggleCheckAll("addon");
-    input.toggleCheckAll("bountyA");
-    input.toggleCheckAll("bountyB");
+    input.toggleCheckAll("buyin", "buyin");
+    input.toggleCheckAll("rebuy", "rebuy");
+    input.toggleCheckAll("addon", "addon");
+    input.toggleCheckAll("bountyA", "bountyA");
+    input.toggleCheckAll("bountyB", "bountyB");
     inputLocal.disableCheckboxAll(true, "rebuy", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(true, "addon", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(false, "bountyA", countNotCheckedPaid);

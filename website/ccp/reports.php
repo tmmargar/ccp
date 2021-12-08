@@ -245,7 +245,7 @@ if (!isset($reportId)) {
     $output .= "Season: " . $selectSeason->getHtml();
     $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: "", suffix: null, text: "Overall", value: "ALL");
     $output .= $option->getHtml();
-    $params = array(null, false);
+    $params = array(null, false, true);
     $resultList = $databaseResult->getSeason(params: $params);
     if (0 < count($resultList)) {
       $ctr = 0;

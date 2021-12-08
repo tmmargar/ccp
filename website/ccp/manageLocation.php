@@ -13,7 +13,6 @@ define("ADDRESS_FIELD_LABEL", "Address");
 define("CITY_FIELD_LABEL", "City");
 define("STATE_FIELD_LABEL", "State");
 define("ZIP_FIELD_LABEL", "Zip");
-define("PHONE_FIELD_LABEL", "Phone");
 define("ACTIVE_FIELD_LABEL", "Active");
 define("PLAYER_ID_FIELD_LABEL", "Player name");
 define("LOCATION_NAME_FIELD_NAME", "locationName");
@@ -21,7 +20,6 @@ define("ADDRESS_FIELD_NAME", "address");
 define("CITY_FIELD_NAME", "city");
 define("STATE_FIELD_NAME", "states");
 define("ZIP_FIELD_NAME", "zipCode");
-define("PHONE_FIELD_NAME", "phone");
 define("ACTIVE_FIELD_NAME", "active");
 define("PLAYER_ID_FIELD_NAME", "playerId");
 $smarty->assign("title", "Manage Location");
@@ -83,16 +81,9 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= " (5 digits)\n";
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxPhone = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: 10, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? (string) $resultList[$ctr]->getUser()->getAddress()->getPhone() : ""), wrap: null);
-      $output .= $textBoxPhone->getHtml();
-      $output .= " (10 digits)\n";
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
       $output .= "    <div style=\"float: left; width: 125px; height: 25px;\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
-      $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) == 0) || Constant::$FLAG_YES == $resultList[$ctr]->getActive() ? true : false), class: null, cols: null, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
+      $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) == 0) || Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), class: null, cols: null, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
       $output .= "        " . $checkboxActive->getHtml();
       $output .= "    </div>\n";
       $output .= "    <div style=\"clear: both;\"></div>\n";
@@ -122,15 +113,14 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $city = (isset($_POST[CITY_FIELD_NAME . "_" . $id])) ? $_POST[CITY_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $state = (isset($_POST[STATE_FIELD_NAME . "_" . $id])) ? $_POST[STATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $zipCode = (isset($_POST[ZIP_FIELD_NAME . "_" . $id])) ? $_POST[ZIP_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? preg_replace("/[^0-9]/", "", $_POST[PHONE_FIELD_NAME . "_" . $id]) : DEFAULT_VALUE_BLANK;
     $active = (isset($_POST[ACTIVE_FIELD_NAME . "_" . $id])) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
-      $params = array($locationName, $playerId, $address, $city, $state, $zipCode, $phone, isset($active) ? $active : 0);
+      $params = array($locationName, $playerId, $address, $city, $state, $zipCode, isset($active) ? $active : 0);
       $databaseResult->insertLocation(params: $params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       $locationName = (isset($_POST[LOCATION_NAME_FIELD_NAME . "_" . $id])) ? $_POST[LOCATION_NAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $tempLocationId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $params = array($locationName, $playerId, $address, $city, $state, $zipCode, $phone, isset($active) ? $active : 0, $tempLocationId);
+      $params = array($locationName, $playerId, $address, $city, $state, $zipCode, isset($active) ? $active : 0, $tempLocationId);
       $databaseResult->updateLocation(params: $params);
     }
     $ctr ++;
@@ -170,7 +160,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     $query .= " WHERE locationId IN (" . $ids . ")";
   }
   $colFormats = array(array(0, "right", 0), array(7, "right", 0));
-  $hideColIndexes = array(2, 10);
+  $hideColIndexes = array(2, 9);
   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
   //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
   $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: $link, note: true, query: $query, selectedRow: $ids, suffix: null, width: "90%");

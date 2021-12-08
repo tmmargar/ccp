@@ -4,6 +4,15 @@ namespace ccp;
 use ccp\classes\model\Constant;
 use ccp\classes\utility\SessionUtility;
 require_once "autoload.php";
+// check if site is down
+$file_handle = fopen("status.txt", "a+");
+$contents = file_get_contents("status.txt");
+//fwrite($file_handle, "status=503.php");
+$values = explode("=", $contents);
+// echo $values[0] . " = " . $values[1];
+if ($values[1] != "") {
+  header("Location: " . $values[1]);
+}
 // TODO: NOT SURE WHERE TO PUT THIS
 date_default_timezone_set(Constant::$NAME_TIME_ZONE);
 if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false) {
@@ -22,7 +31,7 @@ if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["S
 }
 // if any auto or manage pages and not administrator display not authorized message
 if (strpos($_SERVER["SCRIPT_NAME"], "auto") !== false || strpos($_SERVER["SCRIPT_NAME"], "manage") !== false) {
-  if (SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 1 && SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID) != $_GET["id"]) {
+  if (SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_ADMINISTRATOR) != 1 && (!isset($_GET["id"]) || SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID) != $_GET["id"])) {
     echo "<h1 style=\"color: red;\">You are not authorized to access this page!!</h1>";
     die();
   }

@@ -153,7 +153,7 @@ class Constant {
     return self::FLAG_LOCAL() ? "staff@localhost.com" : "staff@chipchairprayer.com";
   }
   public static function FLAG_LOCAL() {
-    return $_SERVER['HTTP_HOST'] == "chipchairprayer.com" ? false : true;
+    return $_SERVER['HTTP_HOST'] == "chipchairprayer.com" || $_SERVER['HTTP_HOST'] == "www.chipchairprayer.com" ? false : true;
   }
   public static function PATH() {
     return $_SERVER["HTTP_HOST"] . self::CONTEXT_ROOT();
