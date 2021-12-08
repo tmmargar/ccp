@@ -534,16 +534,16 @@ class DatabaseResult extends Root {
     return $this->updateData(dataName: "userUpdateRememberMeClear", params: $params);
   }
   private function initializeDatabase() {
-    if ($_SERVER["SERVER_NAME"] == "localhost") {
-      $username = "root";
-      $password = "toor";
-      $port = 3306;
-      $databaseName = "chipch5_stats";
-    } else {
+    if ($_SERVER["SERVER_NAME"] == "chipchairprayer.com" || $_SERVER["SERVER_NAME"] == "www.chipchairprayer.com") {
       $username = "chipch5_app";
       $password = "app_chipch5";
       $port = 3306;
       $databaseName = "chipch5_stats_new";
+    } else {
+      $username = "root";
+      $password = "toor";
+      $port = 3306;
+      $databaseName = "chipch5_stats";
     }
     $database = new Database($this->isDebug(), "localhost", $username, $password, $databaseName, $port);
     return $database;
@@ -569,7 +569,7 @@ class DatabaseResult extends Root {
         case "autoRegisterHost":
           // tournament id so that it returns a record for each tournament on the day
           $query =
-            "SELECT t.tournamentId, t.tournamentDate, t.startTime, l.playerId, l.address, l.city, l.state, l.zipCode, l.phone, CONCAT(u.first_name, ' ', u.last_name) AS name, u.email " .
+            "SELECT t.tournamentId, t.tournamentDate, t.startTime, l.playerId, l.address, l.city, l.state, l.zipCode, CONCAT(u.first_name, ' ', u.last_name) AS name, u.email " .
             "FROM poker_tournament t " .
             "INNER JOIN poker_location l ON t.locationId = l.locationId AND tournamentDate BETWEEN '" . $params[0] . "' AND DATE_ADD('" . $params[0] . "', INTERVAL 14 DAY) " .
             "INNER JOIN poker_user u ON l.playerId = u.id " . $this->buildUserActive(where: "AND", alias: "u") .
@@ -1043,7 +1043,7 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectAll":
           $query =
-            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, l.phone, l.active, u.active AS userActive, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
+            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, l.active, u.active AS userActive, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
             "FROM poker_location l " .
             "INNER JOIN poker_user u ON l.playerId = u.id ";
           if ($params[1]) {
@@ -1055,7 +1055,7 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectById":
           $query =
-            "SELECT locationId AS id, locationName AS name, playerId, address, city, UPPER(state) AS state, zipCode AS zip, phone, active " .
+            "SELECT locationId AS id, locationName AS name, playerId, address, city, UPPER(state) AS state, zipCode AS zip, active " .
             "FROM poker_location " .
             "WHERE locationId IN (" . $params[0] . ")";
           break;
@@ -1066,7 +1066,7 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectAllCount":
           $query =
-            "SELECT l.locationId AS id, l.locationName AS location, l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, l.state, l.zipCode AS zip, l.phone, l.active, u.active AS userActive, COUNT(*) AS count " .
+            "SELECT l.locationId AS id, l.locationName AS location, l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, l.state, l.zipCode AS zip, l.active, u.active AS userActive, COUNT(*) AS count " .
             "FROM poker_tournament t " .
             "INNER JOIN poker_location l ON t.locationId = l.locationId " .
             "INNER JOIN poker_user u ON l.playerId = u.id " .
@@ -1882,7 +1882,7 @@ class DatabaseResult extends Root {
         case "tournamentsSelectForEmailNotifications":
           $query =
             "SELECT t.tournamentId AS id, t.tournamentDesc AS description, t.comment, t.locationId, l.locationName AS location, t.limitTypeId, lt.limitTypeName AS 'limit', t.gameTypeId, gt.gameTypeName AS 'type', " .
-            "       l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS playerName, l.address, l.city, l.state, l.zipCode, l.phone, l.map AS mapHide, l.mapLink AS map, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.maxPlayers AS 'max players', t.chipCount AS 'chips', -t.buyinAmount AS 'buyin', t.maxRebuys AS 'max', -t.rebuyAmount AS 'amt', -t.addonAmount AS 'amt ', " .
+            "       l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS playerName, l.address, l.city, l.state, l.zipCode, u.phone, l.map AS mapHide, l.mapLink AS map, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.maxPlayers AS 'max players', t.chipCount AS 'chips', -t.buyinAmount AS 'buyin', t.maxRebuys AS 'max', -t.rebuyAmount AS 'amt', -t.addonAmount AS 'amt ', " .
             "       t.addonChipCount AS 'chips ', t.groupId, g.groupName AS name, t.rake, CASE WHEN nr.registeredCount IS NULL THEN 0 ELSE nr.registeredCount END AS registeredCount, " .
             "       CASE WHEN bp.buyinsPaid IS NULL THEN 0 ELSE bp.buyinsPaid END AS buyinsPaid, " .
             "       CASE WHEN rp.rebuysPaid IS NULL THEN 0 ELSE rp.rebuysPaid END AS rebuysPaid, " .
@@ -1987,7 +1987,7 @@ class DatabaseResult extends Root {
         case "tournamentsWonByPlayerId":
           $query =
             "SELECT t.tournamentId AS id, t.tournamentDesc AS description, t.comment as comment, t.locationId, l.locationName AS location, t.limitTypeId, lt.limitTypeName AS 'limit', t.gameTypeId, gt.gameTypeName AS 'type', t.chipCount AS 'chips', " .
-            "l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS name, l.address, l.city, l.state, l.zipCode, l.phone, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.buyinAmount AS 'buyin', t.maxPlayers AS 'max players', t.maxRebuys AS 'max', t.rebuyAmount AS 'amt', t.addonAmount AS 'amt ', " .
+            "l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS name, l.address, l.city, l.state, l.zipCode, u.phone, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.buyinAmount AS 'buyin', t.maxPlayers AS 'max players', t.maxRebuys AS 'max', t.rebuyAmount AS 'amt', t.addonAmount AS 'amt ', " .
             "t.addonChipCount AS 'chips ', t.rake, l.map AS mapHide, l.mapLink AS map, CASE WHEN ec.enteredCount IS NULL THEN 0 ELSE ec.enteredCount END AS enteredCount, u.active, t.specialTypeId, st.typeDescription AS std " .
             "FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId AND u.id = " . $params[0] .
             " INNER JOIN poker_tournament t ON t.tournamentId = r.tournamentId AND r.place = 1 " .
@@ -2185,7 +2185,7 @@ class DatabaseResult extends Root {
               $resultListForPerson = array();
               switch ($dataName) {
                 case "autoRegisterHost":
-                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zipCode"], (int) $row["phone"]);
+                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zipCode"]);
                   $name = explode(" ", $row["name"]);
                   $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 0, $address, null, null, null, null, null, null);
                   $location = new Location($this->isDebug(), null, "", $user, 0, 0, null, null, 0);
@@ -2309,7 +2309,7 @@ class DatabaseResult extends Root {
                     $name = array("", "");
                     $active = 0; // fix
                   }
-                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zip"], (int) $row["phone"]);
+                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zip"]);
                   $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $active, $address, null, null, null, null, null, null);
                   $location = new Location($this->isDebug(), $row["id"], "locationSelectAllCount" == $dataName ? $row["location"] : $row["name"], $user, "locationSelectAllCount" == $dataName ? $row["count"] : 0, (int) $row["active"], null, null, "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
                   array_push($resultList, $location);
@@ -2556,8 +2556,8 @@ class DatabaseResult extends Root {
                   $limitType = new LimitType(debug: $this->isDebug(), id: $row["limitTypeId"], name: $row["limit"]);
                   $gameType = new GameType(debug: $this->isDebug(), id: $row["gameTypeId"], name: $row["type"]);
                   $specialType = new SpecialType(debug: $this->isDebug(), id: $row["specialTypeId"], description: $row["std"]);
-                  //(bool $debug, string|int|null $id, string $address, string $city, string $state, int $zip, int $phone) {
-                  $address = new Address(debug: $this->isDebug(), id: null, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zipCode"], phone: (int) $row["phone"]);
+                  //(bool $debug, string|int|null $id, string $address, string $city, string $state, int $zip) {
+                  $address = new Address(debug: $this->isDebug(), id: null, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zipCode"]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
                       $name = explode(" ", $row["playerName"]);
                   } else {
@@ -2566,7 +2566,8 @@ class DatabaseResult extends Root {
                   //$debug, $id, string $firstName, string $lastName, $username, $password, $email, $phone, int $administrator,
                   //$registrationDate, $approvalDate, $approvalUserid, $approvalName, $rejectionDate, $rejectionUserid,
                   //$rejectionName, $active, $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires
-                  $user = new User(debug: $this->isDebug(), id: $row["playerId"], firstName: $name[0], lastName: $name[1], username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
+                  $phone = new Phone($this->isDebug(), null, $row["phone"]);
+                  $user = new User(debug: $this->isDebug(), id: $row["playerId"], firstName: $name[0], lastName: $name[1], username: null, password: null, email: null, phone: $phone, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   //$debug, $id, $name, $user, $count, $active, $map, $mapName, $tournamentCount
                   $location = new Location(debug: $this->isDebug(), id: $row["locationId"], name: $row["location"], user: $user, count: 0, active: 0, map: $row["mapHide"], mapName: $row["map"], tournamentCount: 0);
                   $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["date"]);
@@ -2923,7 +2924,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_group_payout(groupId, payoutId) VALUES(" . $params[0] . ", " . $params[1] . ")";
           break;
         case "locationInsert":
-          $query = "INSERT INTO poker_location(locationId, locationName, playerId, address, city, state, zipCode, phone, active) " . "SELECT IFNULL(MAX(locationId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", '" . $params[2] . "', '" . $params[3] . "', UPPER('" . $params[4] . "'), " . $params[5] . ", " . $params[6] . ", '" . ($params[7] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' FROM poker_location";
+          $query = "INSERT INTO poker_location(locationId, locationName, playerId, address, city, state, zipCode, active) " . "SELECT IFNULL(MAX(locationId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", '" . $params[2] . "', '" . $params[3] . "', UPPER('" . $params[4] . "'), " . $params[5] . ", '" . ($params[6] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' FROM poker_location";
           break;
         case "notificationInsert":
           $query = "INSERT INTO poker_notification(id, description, startDate, endDate) " . "SELECT IFNULL(MAX(id), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "' FROM poker_notification";
@@ -3010,9 +3011,8 @@ class DatabaseResult extends Root {
             "', city = '" . $params[3] .
             "', state = UPPER('" . $params[4] .
             "'), zipCode = " . $params[5] .
-            ", phone = " . $params[6] .
-            ", active = '" . ($params[7] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' " .
-            "WHERE locationId = " . $params[8];
+            ", active = '" . ($params[6] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' " .
+            "WHERE locationId = " . $params[7];
           break;
         case "notificationUpdate":
           $query =

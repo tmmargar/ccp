@@ -135,7 +135,7 @@ if ($mode == Constant::$MODE_VIEW) {
         $params = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat());
         $resultListNested = $databaseResult->getPrizePoolForSeason(params: $params, returnQuery: false);
         if (0 < count($resultListNested)) {
-          $total[$tournament->getId()] = str_replace(search: ",", replace: "", subject: number_format($resultListNested[0], 0));
+          $total[$tournament->getId()] = str_replace(search: ",", replace: "", subject: number_format((float) $resultListNested[0], 0));
         }
       }
       $rake[$tournament->getId()] = ceil($total[$tournament->getId()] * $tournament->getRakeForCalculation());
@@ -243,7 +243,7 @@ if ($mode == Constant::$MODE_VIEW) {
       }
       $output .= "    <div class=\"label\">Total paid out:</div>\n";
       $output .= "    <div class=\"positive value\">$" . ceil((- $total[$tournamentId]) - (- $rake[$tournamentId])) . "</div>\n";
-      if (! $championshipFlag[$tournamentId]) {
+      if (!$championshipFlag[$tournamentId]) {
         $output .= "    <div class=\"valueAfter\">($" . (- $total[$tournamentId]) . " - $" . (- $rake[$tournamentId]) . ")</div>\n";
       }
       $output .= "    <div style=\"clear: both;\"></div>\n";

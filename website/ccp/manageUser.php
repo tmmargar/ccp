@@ -76,12 +76,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . PASSWORD_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $output .= "    <div style=\"float: left;\">\n     ";
       $output .= "     <div id=\"passwordDiv\"" . (Constant::$MODE_MODIFY == $mode ? " style=\"display: none;\"" : "") . ">\n";
-      $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PASSWORD_FIELD_NAME . "_" . $id, maxLength: null, name: PASSWORD_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPassword() : ""), wrap: null);
+      $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PASSWORD_FIELD_NAME . "_" . $id, maxLength: null, name: PASSWORD_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: "", wrap: null);
       $output .= $textBoxPassword->getHtml();
       $output .= "     </div>\n";
       if (Constant::$MODE_MODIFY == $mode) {
         $output .= "     <div id=\"passwordLinkDiv\">";
-        $output .= "      <a href=\"javascript:input.showHideToggle(['passwordLinkDiv', 'passwordDiv']);\">Click to enter new password</a>\n";
+        $output .= "      <a href=\"javascript:input.showHideToggle(['passwordLinkDiv', 'passwordDiv'], '" . PASSWORD_FIELD_NAME . "_" . $id . "');\">Click to enter new password</a>\n";
         $output .= "     </div>\n";
       }
       $output .= "    </div>\n";

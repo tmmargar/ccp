@@ -28,10 +28,10 @@ class SessionUtility {
     }
   }
   public static function existsSeason() {
-    return ! empty($_SESSION[self::$OBJECT_NAME_SEASON]);
+    return !empty($_SESSION[self::$OBJECT_NAME_SEASON]);
   }
   public static function existsSecurity() {
-    return ! empty($_SESSION[self::$OBJECT_NAME_SECURITY]);
+    return !empty($_SESSION[self::$OBJECT_NAME_SECURITY]);
   }
   public static function getValue(string $name) {
     $value = $name == self::$OBJECT_NAME_DEBUG ? false : "";

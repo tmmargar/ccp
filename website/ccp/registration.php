@@ -81,6 +81,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
     $resultList = $databaseResult->getTournamentById(params: $params);
     if (0 < count($resultList)) {
       $tournament = $resultList[0];
+      $tournamentLocationUser = $tournament->getLocation()->getUser();
       $tournamentAddress = $tournament->getLocation()->getUser()->getAddress();
       $waitListCount = ($tournament->getRegisteredCount() > $tournament->getMaxPlayers()) ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
       if ($mode == Constant::$MODE_SEND_EMAIL) {
@@ -148,7 +149,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
         $output .= "  <div style=\"float: left;\">" . $tournament->getLocation()->buildMapUrl() . "</div>\n";
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $output .= "  <div style=\"float: left; width: 175px;\">Location:</div>\n";
-        $phone = new Phone(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_DEBUG), null, (string) $tournamentAddress->getPhone());
+        $phone = new Phone(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_DEBUG), null, (string) $tournamentLocationUser->getPhone()->getValue());
         $output .= "  <div style=\"float: left;\">" . $tournamentAddress->getAddress() . "<br />" . $tournamentAddress->getCity() . ", " . $tournamentAddress->getState() . " " . $tournamentAddress->getZip() . "<br />" . $phone->getDisplayFormatted() . "</div>\n";
         $output .= "  <div style=\"clear: both;\"></div>\n";
         $output .= "  <div style=\"float: left; width: 175px;\">Registrations available:</div>\n";

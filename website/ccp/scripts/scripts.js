@@ -156,13 +156,24 @@ const input = {
     // check all inputs starting with same name
     $("#" + inputId).prop("checked", checked);
   },
-  countChecked : function(prefix) {
+  countChecked : function(prefix, prefixAdditional) {
     let count = 0;
     $("input[id^='" + prefix + "_']").each(function(index) {
       if (this.checked) {
         count++;
       }
     });
+    if (prefixAdditional) {
+      $("input[id^='" + prefixAdditional + "_']").each(function(index) {
+        if (this.value > 1) {
+          count += this.value - 1;
+        }
+      });
+    }
+    return count;
+  },
+  countUpdate : function(prefix, prefixAdditional) {
+    let count = input.countChecked(prefix, prefixAdditional);
     if ($("#" + prefix + "CheckAllCount").length == 0) {
       $("#" + prefix + "CheckAll").after("<span id=\"" + prefix + "CheckAllCount\"> (" + count + ")</span>");
     } else {
@@ -297,12 +308,13 @@ const input = {
   showDialogWithWidth : function(name, heightVal, titleVal, widthVal, positionVal) {
     $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal, position: positionVal });
   },
-  showHideToggle : function(aryId) {
+  showHideToggle : function(aryId, idFocus) {
     // does not work for IE 
     //aryId.forEach(element => {
     Array.prototype.slice.call(aryId).forEach( function(element) {
       $("#" + element).toggle();
     });
+    $("#" + idFocus).focus();
   },
   toggleCheckAll : function(id, idAll) {
     // if all checkboxes are checked then mark check all checkbox
@@ -321,20 +333,8 @@ const input = {
     });
     // if at least 1 disabled checkbox then uncheck check all checkbox
     if (disabled) {
-      $("#" + id + "CheckAll").prop("checked", false);
+      $("#" + idAll + "CheckAll").prop("checked", false);
     }
-  },
-  toggleCheckAll : function(name) {
-    // if all checkboxes are checked then mark check all checkbox
-    $("#" + name + "CheckAll").prop("checked", $("input[id^='" + name + "_']:checked").length == $("input[id^='" + name + "_']").length);
-  },
-  toggleCheckboxes : function(name) {
-    $("input[id^='" + name + "_']").each(function(index) {
-      // if enabled then set checked state to same as check all checkbox
-      if (!$(this).prop("disabled")) {
-        $(this).prop("checked", $("#" + name + "CheckAll").prop("checked"));
-      }
-    });
   },
   ucwords : function(str) {
     return (str + '').replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function ($1) {

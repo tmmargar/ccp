@@ -44,6 +44,7 @@ $outputChange =
   "    <li>Added payouts</li>\n" .
   "    <li>Added seasons</li>\n" .
   "    <li>Added special types (for tournaments)</li>\n" .
+  "    <li>Added site down capability</li>\n" .
   "   </ul>\n" .
   "  </li>\n" .
   "  <li>Changed menu and moved to left</li>\n" .
