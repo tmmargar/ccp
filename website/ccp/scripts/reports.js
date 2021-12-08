@@ -37,12 +37,12 @@ const reportsInputLocal = {
       } else if (reportId == "earnings") {
         dataTableId = "dataTblEarnings";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [ [ 1,'desc'], [0, "asc" ] ]);
         }
       } else if (reportId == "earningsChampionship") {
         dataTableId = "dataTblEarnings\\(Championship\\)";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
         }
       } else if (reportId == "knockouts") {
         dataTableId = "dataTblKnockouts";

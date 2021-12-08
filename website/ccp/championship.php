@@ -42,6 +42,17 @@ foreach ($resultList as $values) {
   $aryAbsentIds[$ctr] = $values[0];
   $aryAbsentNames[$ctr] = $values[1];
 }
+$aryPosition = array();
+$aryPosition[0] = 1;
+$aryPosition[1] = 9;
+$aryPosition[2] = 8;
+$aryPosition[3] = 7;
+$aryPosition[4] = 6;
+$aryPosition[5] = 5;
+$aryPosition[6] = 4;
+$aryPosition[7] = 3;
+$aryPosition[8] = 2;
+
 $params = array($startDate, $endDate);
 $resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
 $count = count($resultList) - count($aryAbsentIds);
@@ -54,10 +65,16 @@ if (0 < $count) {
   $additionalPlayers = 36 - $countWinners;
   while ($ctr < count($resultList)) {
     $aryResult = $resultList[$ctr];
-    // echo "<br>".$ctr."-->".$index."->".$aryResult[0];
+//     echo "<br>".$ctr."-->".$index."->".$aryResult[0];
     if (in_array($aryResult[0], $aryAbsentNames)) {
-      $aryAbsentSeeds[$absentCtr] = $ctr + 1;
-      $absentCtr ++;
+      foreach ($aryAbsentNames as $aryAbsentName) {
+//         echo "<Br>" . $aryResult[0] . " == " . $aryAbsentName;
+        if ($aryResult[0] == $aryAbsentName) {
+//           $aryAbsentSeeds[$absentCtr] = $ctr + 1;
+          $aryAbsentSeeds[$aryAbsentName] = $ctr + 1;
+          $absentCtr ++;
+        }
+      }
     } else {
       $index ++;
       // echo "<br>".$allowCtr . " <= " . $additionalPlayers;
@@ -216,9 +233,16 @@ if (0 < $count) {
   $output .= "    <div style='float: left; width: 125px;'><strong><i>Original seat</i></strong></div>\n";
   $output .= "    <div style='clear: both;'></div>\n";
   $ctr = 0;
+//   echo "<br>aryAbsentNames " . print_r($aryAbsentNames, true);
+//   echo "<br>aryAbsentSeeds " . print_r($aryAbsentSeeds, true);
+//   echo print_r($aryPosition, true);
   foreach ($aryAbsentNames as $absentName) {
     $output .= "    <div style='float: left; width: 125px;'>" . $absentName . "</div>\n";
-    $output .= "    <div style='float: left; width: 125px;'>Table " . ($aryAbsentSeeds[$ctr] % $numTables) . " Seat " . floor(value: $aryAbsentSeeds[$ctr] / $numTables) . "</div>\n";
+//     $output .= "    <div style='float: left; width: 125px;'>Table " . ($aryAbsentSeeds[$ctr] % $numTables) . " Seat " . floor($aryAbsentSeeds[$ctr] / $numTables) . "</div>\n";
+    $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
+    $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[$aryAbsentSeeds[$absentName] / $numTables];
+//     echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
+    $output .= "    <div style='float: left; width: 125px;'>Table " . $tableNum . " Position " . $positionNum . "</div>\n";
     $output .= "    <div style='clear: both;'></div>\n";
     $ctr ++;
   }

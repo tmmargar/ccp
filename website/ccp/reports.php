@@ -52,6 +52,8 @@ if (!isset($seasonId)) {
   if (count($arySeason) > 1) {
     $seasonStartDate = $arySeason[1];
     $seasonEndDate = $arySeason[2];
+    $startDate = $seasonStartDate;
+    $endDate = $seasonEndDate;
   } else {
     $seasonStartDate = null;
     $seasonEndDate = null;
@@ -65,6 +67,13 @@ if ("ALL" == $seasonId) {
   $startDate = isset($seasonStartDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $seasonStartDate) : SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE);
   $endDate = isset($seasonEndDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $seasonEndDate) : SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE);
   $year = $startDate->getYearFormat();
+  $yearEnd = $endDate->getYearFormat();
+  if ($year != $yearEnd) {
+    $year .= "', '" . $yearEnd;
+  }
+  if (!isset($seasonId)) {
+    $seasonId = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ID);
+  }
 }
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
 $style = " <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n";
@@ -183,7 +192,8 @@ if (!isset($reportId)) {
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
       $params = array("ALL" == $seasonId ? null : $year);
       $query = $databaseResult->getEarningsTotalForChampionship(params: $params);
-      $colFormats = array(array(2, "currency", 0));
+      echo $query;
+      $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0);
       $width = "20%";
       break;
@@ -231,11 +241,10 @@ if (!isset($reportId)) {
       $width = "65%";
       break;
     case REPORT_ID_CHAMPIONSHIP:
-      $params = array(null, null, null, $group); // from date, to date, sort, group
+      $params = array(null, null, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
       $query = $databaseResult->getChampionshipByYearByEarnings(params: $params);
       $colFormats = array(array($group ? 1 : 3, "currency", 0));
-      $hideColIndexes = $group ? null : array(
-        1);
+      $hideColIndexes = $group ? array(2, 3) : array(1, 4, 5);
       $width = "30%";
       break;
   }
@@ -252,7 +261,7 @@ if (!isset($reportId)) {
       while ($ctr < count($resultList)) {
         $seasonText = $resultList[$ctr]->getDescription() . " (" . $resultList[$ctr]->getStartDate()->getDisplayFormat() . " - " . $resultList[$ctr]->getEndDate()->getDisplayFormat() . ")";
         $seasonValue = $resultList[$ctr]->getId() . "::" . $resultList[$ctr]->getStartDate()->getDatabaseFormat() . "::" . $resultList[$ctr]->getEndDate()->getDatabaseFormat();
-        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $year == $resultList[$ctr]->getStartDate()->getYearFormat() || $year == $resultList[$ctr]->getEndDate()->getYearFormat() ? $seasonValue : "", suffix: null, text: $seasonText, value: $seasonValue);
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $startDate == null || $endDate == null ? "" : $seasonId . "::" . $startDate->getDatabaseFormat() . "::" . $endDate->getDatabaseFormat(), suffix: null, text: $seasonText, value: $seasonValue);
         $output .= $option->getHtml();
         $ctr++;
       }
