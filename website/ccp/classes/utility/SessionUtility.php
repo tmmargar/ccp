@@ -6,6 +6,7 @@ use Exception;
 class SessionUtility {
   public static string $OBJECT_NAME_ADMINISTRATOR = "administrator";
   public static string $OBJECT_NAME_DEBUG = "debug";
+  public static string $OBJECT_NAME_ID = "id";
   public static string $OBJECT_NAME_NAME = "name";
   public static string $OBJECT_NAME_USERID = "userid";
   public static string $OBJECT_NAME_USERNAME = "username";
@@ -58,6 +59,9 @@ class SessionUtility {
     if (self::existsSeason()) {
       $season = unserialize($_SESSION[self::$OBJECT_NAME_SEASON]);
       switch ($name) {
+        case self::$OBJECT_NAME_ID:
+          $value = $season->getId();
+          break;
         case self::$OBJECT_NAME_START_DATE:
           $value = $season->getStartDate();
           break;

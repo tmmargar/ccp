@@ -682,12 +682,14 @@ class DatabaseResult extends Root {
             $query .= "SUM(earnings) AS ";
           }
           $query .=
-            "earnings " .
+            "earnings, SUM(earnings) / trnys AS avg, trnys " .
             "FROM (" . $this->buildChampionship($params) . ") a " .
             "WHERE earnings > 0";
-          if (isset($params[3]) && $params[3]) {
-            $query .= " GROUP BY name";
-          }
+//           if (isset($params[3]) && $params[3]) {
+//             $query .= " GROUP BY name";
+//           }
+//           $query .= " GROUP BY yr, id";
+          $query .= " GROUP BY " . $params[2];
           break;
         case "championshipQualifiedPlayers":
           $query =
@@ -808,18 +810,39 @@ class DatabaseResult extends Root {
               "            GROUP BY id " .
               "            UNION ";
           } else {
-            $query .=
-              "             SELECT id, CONCAT(first_name, ' ', last_name) AS name, IFNULL(totalEarnings, 0) AS earns " .
-              "             FROM (";
+            $query .= "             SELECT id, CONCAT(first_name, ' ', last_name) AS name, IFNULL(totalEarnings, 0) AS earns";
+            if ("earningsTotalForChampionship" == $dataName) {
+              $query .= ", IFNULL(totalEarnings / trnys, 0) AS avg, IFNULL(trnys, 0) AS trnys ";
+            }
+            $query .= "             FROM (";
           }
           $query .=
-            "            SELECT xx.id, xx.last_name, xx.first_name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0 " .
-            "            FROM (SELECT YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, " .
-            "                        (SELECT SUM(total) - CASE WHEN YEAR(t.tournamentDate) = 2008 THEN 150 ELSE " . // adjust to match Dave W stats
-            "                                               CASE WHEN YEAR(t.tournamentDate) = 2007 THEN -291 ELSE " . // adjust to match Dave W stats
-            "                                                 CASE WHEN YEAR(t.tournamentDate) = 2006 THEN -824 ELSE 0 END " . // adjust to match Dave W stats
+            "            SELECT xx.id, xx.last_name, xx.first_name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0";
+          if ("earningsTotalForChampionship" == $dataName) {
+            $query .= ", numTourneys AS trnys ";
+          }
+          $query .=
+            "            FROM (SELECT Yr, p.Id, p.first_name, p.last_name, ";
+          if ("earningsTotalForChampionship" == $dataName) {
+            $query .= " numTourneys, ";
+          }
+          $query .=
+            "                        qq.total * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS Earnings " .
+            "                 FROM poker_user p " .
+            "                 INNER JOIN poker_result r ON p.id = r.playerId " .
+            "                 INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId";
+            if ("earningsTotalAndAverageForUser" != $dataName && "earningsTotalForChampionship" != $dataName) {
+              $query .= "        AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+            }
+            if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
+              $query .= "                               AND YEAR(t.tournamentDate) IN ('" . $params[0] . "') ";
+            }
+            $query .= 
+            "                  INNER JOIN (SELECT Yr, SUM(total) - CASE WHEN Yr = 2008 THEN 150 ELSE " . // adjust to match Dave W stats
+            "                                               CASE WHEN Yr = 2007 THEN -291 ELSE " . // adjust to match Dave W stats
+            "                                                 CASE WHEN Yr = 2006 THEN -824 ELSE 0 END " . // adjust to match Dave W stats
             "                                               END " .
-            "                                            END AS 'Total Pool' " .
+            "                                            END AS total " .
             "                         FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.tournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE b.Play END, " .
             "                                      ((t2.BuyinAmount * t2.rake) * Play) + " .
             "                                      ((t2.rebuyAmount * t2.rake) * CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END) + " .
@@ -829,13 +852,13 @@ class DatabaseResult extends Root {
             "                                                                   WHERE buyinPaid = '" . Constant::$FLAG_YES . "' " .
             "                                                                   AND place > 0 " .
             "                                                                   GROUP BY tournamentId) b ON t2.tournamentId = b.tournamentId";
-          if ("earningsTotalAndAverageForUser" != $dataName && "earningsTotalForChampionship" != $dataName) {
-            $query .= "                               AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-          }
-          if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-            $query .= "                               AND YEAR(t2.tournamentDate) = '" . $params[0] . "' ";
-          }
-          $query .=
+            if ("earningsTotalAndAverageForUser" != $dataName && "earningsTotalForChampionship" != $dataName) {
+              $query .= "                               AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+            }
+            if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
+              $query .= "                               AND YEAR(t2.tournamentDate) IN ('" . $params[0] . "') ";
+            }
+            $query .=
             "                              LEFT JOIN (SELECT r.tournamentId, SUM(r.rebuyCount) AS numRebuys " .
             "                                         FROM poker_result r " .
             "                                         WHERE r.rebuyPaid = '" . Constant::$FLAG_YES . "' " .
@@ -845,19 +868,18 @@ class DatabaseResult extends Root {
             "                                         FROM poker_result r " .
             "                                         WHERE r.AddonPaid = '" . Constant::$FLAG_YES . "' " .
             "                                         GROUP BY r.tournamentId) na ON t2.tournamentId = na.tournamentId) zz " .
-            "                        WHERE zz.yr = YEAR(t.tournamentDate) " .
-            "                        GROUP BY zz.yr) * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS Earnings " .
-            "                 FROM poker_user p " .
-            "                 INNER JOIN poker_result r ON p.id = r.playerId " .
-          "                 INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId";
-          if ("earningsTotalAndAverageForUser" != $dataName && "earningsTotalForChampionship" != $dataName) {
-            $query .= "        AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-          }
-          if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-            $query .= "                               AND YEAR(t.tournamentDate) = '" . $params[0] . "' ";
-          }
-          $query .=
-            "                  LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
+            "                        GROUP BY zz.yr) qq";
+            if (isset($params[0])) {
+              $query .= " ON qq.yr IN ('" . $params[0] . "') ";
+            } else {
+              $query .= " ON qq.yr = YEAR(t.tournamentDate) ";
+            }
+            $query .=
+            "                  LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId";
+            if ("earningsTotalForChampionship" == $dataName) {
+              $query .= "                  INNER JOIN (SELECT r1.playerId, COUNT(*) AS NumTourneys FROM poker_result r1 INNER JOIN poker_tournament t1 ON r1.tournamentId = t1.tournamentId AND r1.place > 0 INNER JOIN poker_special_type st1 ON t1.specialTypeId = st1.typeId AND st1.typeDescription = 'Championship' GROUP BY r1.playerId) nt ON r.playerId = nt.playerId ";
+            }
+            $query .=
             "                  LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
             "                             FROM (SELECT np.tournamentId, p.payoutId " .
             "                                   FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers " .
@@ -869,7 +891,7 @@ class DatabaseResult extends Root {
             $query .= "                                    AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
           }
           if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-            $query .= "                               AND YEAR(t.tournamentDate) = '" . $params[0] . "' ";
+            $query .= "                               AND YEAR(t.tournamentDate) IN ('" . $params[0] . "') ";
           }
           $query .=
             "                                   INNER JOIN poker_group_payout gp ON t.GroupId = gp.GroupId " .
@@ -1605,7 +1627,7 @@ class DatabaseResult extends Root {
             "                             GROUP BY xx.id, xx.name) cc " .
             "                       GROUP BY id, name) b ON a.Id = b.Id) d " .
 //             "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN (c.tournamentDesc IS NULL OR c.tournamentDesc <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "') THEN " .
-            "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN c.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN " .
+            "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN " .
             "                                                      CASE WHEN c.place BETWEEN 1 AND 8 THEN " .
 //             "                                                       CASE WHEN c.tournamentdesc LIKE '%" . Constant::$DESCRIPTION_MAIN_EVENT . "%' THEN (c.numPlayers - c.place + 4) * 2 ELSE c.numPlayers - c.place + 4 END " .
             "                                                       CASE WHEN c.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (c.numPlayers - c.place + 4) * 2 ELSE c.numPlayers - c.place + 4 END " .
@@ -3295,57 +3317,94 @@ class DatabaseResult extends Root {
     return $alias . "last_name, " . $alias . "first_name";
   }
   private function buildChampionship(array $params) {
-    $query =
-      "SELECT YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
-    "                                          (SELECT SUM(total) AS 'Total Pool' " . "                                           FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, " .
-    "                                                        ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END) + " .
-    "                                                         ((t2.AddonAmount * t2.Rake) * CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END) AS Total " .
-    "                                                 FROM poker_tournament t2 " .
-    "                                                 LEFT JOIN (SELECT TournamentId, COUNT(*) AS Play " .
-    "                                                            FROM poker_result " .
-    "                                                            WHERE buyinPaid = '" . Constant::$FLAG_YES . "' AND Place > 0 " .
-    "                                                            GROUP BY TournamentId) b ON t2.TournamentId = b.TournamentId";
-    if (isset($params[0]) && isset($params[1])) {
+//     $query =
+//       "SELECT YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
+//       "                                          (SELECT SUM(total) AS 'Total Pool' " . 
+//       "                                           FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, " .
+//       "                                                        ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END) + " .
+//       "                                                         ((t2.AddonAmount * t2.Rake) * CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END) AS Total " .
+//       "                                                 FROM poker_tournament t2 " .
+//       "                                                 LEFT JOIN (SELECT TournamentId, COUNT(*) AS Play " .
+//       "                                                            FROM poker_result " .
+//       "                                                            WHERE buyinPaid = '" . Constant::$FLAG_YES . "' AND Place > 0 " .
+//       "                                                            GROUP BY TournamentId) b ON t2.TournamentId = b.TournamentId";
+//     if (isset($params[0]) && isset($params[1])) {
+//       $query .=
+//       "                                                 AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+//     }
+//     $query .= "                                                 LEFT JOIN (SELECT r.TournamentId, SUM(r.rebuyCount) AS NumRebuys " .
+//       "                                                            FROM poker_result r " .
+//       "                                                            WHERE r.rebuyPaid = '" . Constant::$FLAG_YES . "' " .
+//       "                                                            AND r.RebuyCount > 0 " .
+//       "                                                            GROUP BY r.TournamentId) nr ON t2.TournamentId = nr.TournamentId " .
+//       "                                                LEFT JOIN (SELECT r.TournamentId, COUNT(*) AS NumAddons " .
+//       "                                                           FROM poker_result r " .
+//       "                                                           WHERE r.AddonPaid = '" . Constant::$FLAG_YES . "' " .
+//       "                                                           GROUP BY r.TournamentId) na ON t2.TournamentId = na.TournamentId) zz " .
+//       "                                                WHERE zz.yr = YEAR(t.tournamentDate) " .
+//       "                                                GROUP BY zz.yr) * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings " .
+//       "                                   FROM poker_result r INNER JOIN poker_user p ON r.PlayerId = p.Id " .
+//       "                                   INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId";
+//     if (isset($params[0]) && isset($params[1])) {
+//       $query .=
+//         "                                   AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+//     }
+//     $query .=
+//       "                                   LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
+//       "                                   LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
+//       "                                              FROM (SELECT np.tournamentId, p.payoutId " .
+//       "                                                    FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers " .
+//       "                                                          FROM poker_result r " .
+//       "                                                          WHERE r.place > 0 " .
+//       "                                                          AND r.statusCode IN ('" . Constant::$CODE_STATUS_REGISTERED . "','" . Constant::$CODE_STATUS_FINISHED . "') " .
+//       "                                                          GROUP BY r.tournamentId) np " .
+//       "                                                    INNER JOIN poker_tournament t on np.tournamentId = t.tournamentId";
+//     if (isset($params[0]) && isset($params[1])) {
+//       $query .=
+//         "                                                    AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+//     }
+//     $query .=
+//       "                                                    INNER JOIN poker_group_payout gp ON t.GroupId = gp.GroupId " .
+//       "                                                    INNER JOIN poker_payout p ON gp.PayoutId = p.PayoutId AND np.numPlayers BETWEEN p.minPlayers AND p.maxPlayers) a " .
+//       "                                              INNER JOIN poker_structure s1 ON a.payoutId = s1.payoutId) s ON r.tournamentId = s.tournamentId AND r.place = s.place " .
+//       "                                   WHERE r.Place > 0 " .
+//       "                                   AND st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "'";
+    $query = 
+      "SELECT se.seasonStartDate, YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
+      "       qq.total * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings, numTourneys AS trnys " .
+      "FROM poker_result r " .
+      "INNER JOIN poker_user p ON r.PlayerId = p.Id " .
+      "INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId ";
+      if (isset($params[0]) && isset($params[1])) {
+        $query .=
+          "            AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+      }
       $query .=
-      "                                                 AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-    }
-    $query .= "                                                 LEFT JOIN (SELECT r.TournamentId, SUM(r.rebuyCount) AS NumRebuys " .
-    "                                                            FROM poker_result r " .
-    "                                                            WHERE r.rebuyPaid = '" . Constant::$FLAG_YES . "' " .
-    "                                                            AND r.RebuyCount > 0 " .
-    "                                                            GROUP BY r.TournamentId) nr ON t2.TournamentId = nr.TournamentId " .
-    "                                                LEFT JOIN (SELECT r.TournamentId, COUNT(*) AS NumAddons " .
-    "                                                           FROM poker_result r " .
-    "                                                           WHERE r.AddonPaid = '" . Constant::$FLAG_YES . "' " .
-    "                                                           GROUP BY r.TournamentId) na ON t2.TournamentId = na.TournamentId) zz " .
-    "                                                WHERE zz.yr = YEAR(t.tournamentDate) " .
-    "                                                GROUP BY zz.yr) * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings " .
-    "                                   FROM poker_result r INNER JOIN poker_user p ON r.PlayerId = p.Id " .
-    "                                   INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId";
-    if (isset($params[0]) && isset($params[1])) {
+        "INNER JOIN poker_season se ON t.tournamentDate BETWEEN se.seasonStartDate AND se.seasonEndDate " .
+        "INNER JOIN (SELECT seasonStartDate, seasonEndDate, SUM(total) - CASE WHEN YEAR(seasonEndDate) = 2008 THEN 150 ELSE CASE WHEN YEAR(seasonEndDate) = 2007 THEN -291 ELSE CASE WHEN YEAR(seasonEndDate) = 2006 THEN -824 ELSE 0 END END END AS total " .
+        "            FROM (SELECT se2.seasonStartDate, se2.seasonEndDate, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END) + ((t2.AddonAmount * t2.Rake) * CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END) AS Total " .
+        "                  FROM poker_tournament t2 " .
+        "                  INNER JOIN poker_season se2 ON t2.tournamentDate BETWEEN se2.seasonStartDate AND se2.seasonEndDate " .
+        "                  LEFT JOIN (SELECT TournamentId, COUNT(*) AS Play FROM poker_result WHERE buyinPaid = 'Y' AND Place > 0 GROUP BY TournamentId) b ON t2.TournamentId = b.TournamentId " .
+        "                  LEFT JOIN (SELECT r.TournamentId, SUM(r.rebuyCount) AS NumRebuys FROM poker_result r WHERE r.rebuyPaid = 'Y' AND r.RebuyCount > 0 GROUP BY r.TournamentId) nr ON t2.TournamentId = nr.TournamentId " .
+        "                  LEFT JOIN (SELECT r.TournamentId, COUNT(*) AS NumAddons FROM poker_result r WHERE r.AddonPaid = 'Y' GROUP BY r.TournamentId) na ON t2.TournamentId = na.TournamentId) zz " .
+        "            GROUP BY seasonStartDate, seasonEndDate) qq ON qq.seasonStartDate = se.seasonStartDate AND qq.seasonEndDate = se.seasonEndDate " .
+        "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
+        "INNER JOIN (SELECT r1.playerId, COUNT(*) AS NumTourneys FROM poker_result r1 INNER JOIN poker_tournament t1 ON r1.tournamentId = t1.tournamentId AND r1.place > 0 INNER JOIN poker_special_type st1 ON t1.specialTypeId = st1.typeId AND st1.typeDescription = 'Championship' GROUP BY r1.playerId) nt ON r.playerId = nt.playerId " .
+        "LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
+        "          FROM (SELECT np.tournamentId, p.payoutId " .
+        "                FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers FROM poker_result r WHERE r.place > 0 AND r.statusCode IN ('" . Constant::$CODE_STATUS_REGISTERED . "','" . Constant::$CODE_STATUS_FINISHED . "') GROUP BY r.tournamentId) np " .
+        "                INNER JOIN poker_tournament t on np.tournamentId = t.tournamentId ";
+      if (isset($params[0]) && isset($params[1])) {
+        $query .=
+          "            AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
+      }
       $query .=
-        "                                   AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-    }
-    $query .=
-      "                                   LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
-      "                                   LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
-      "                                              FROM (SELECT np.tournamentId, p.payoutId " .
-      "                                                    FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers " .
-      "                                                          FROM poker_result r " .
-      "                                                          WHERE r.place > 0 " .
-      "                                                          AND r.statusCode IN ('" . Constant::$CODE_STATUS_REGISTERED . "','" . Constant::$CODE_STATUS_FINISHED . "') " .
-      "                                                          GROUP BY r.tournamentId) np " .
-      "                                                    INNER JOIN poker_tournament t on np.tournamentId = t.tournamentId";
-    if (isset($params[0]) && isset($params[1])) {
-      $query .=
-        "                                                    AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-    }
-    $query .=
-      "                                                    INNER JOIN poker_group_payout gp ON t.GroupId = gp.GroupId " .
-      "                                                    INNER JOIN poker_payout p ON gp.PayoutId = p.PayoutId AND np.numPlayers BETWEEN p.minPlayers AND p.maxPlayers) a " .
-      "                                              INNER JOIN poker_structure s1 ON a.payoutId = s1.payoutId) s ON r.tournamentId = s.tournamentId AND r.place = s.place " .
-      "                                   WHERE r.Place > 0 " .
-      "                                   AND st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "'";
+        "                INNER JOIN poker_group_payout gp ON t.GroupId = gp.GroupId " .
+        "                INNER JOIN poker_payout p ON gp.PayoutId = p.PayoutId AND np.numPlayers BETWEEN p.minPlayers AND p.maxPlayers) a " .
+        "          INNER JOIN poker_structure s1 ON a.payoutId = s1.payoutId) s ON r.tournamentId = s.tournamentId AND r.place = s.place " .
+        "WHERE r.Place > 0 " .
+        "AND st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' ";
     return $query;
   }
   // $where is sql where clause (WHERE or AND)
