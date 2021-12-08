@@ -28,11 +28,11 @@ $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
-  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " 12:00:00");
+  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
   $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
-  $registrationOpen = (($now->getDatabaseFormat() <= $registrationOpenDate->getDatabaseFormat()) == 0);
+  $registrationOpen = ($now <= $registrationOpenDate);
   $url = "registration.php?tournamentId=" . $tournament->getId();
   $output .= "<p>";
   if ($registrationOpen) {
@@ -54,6 +54,9 @@ foreach ($resultList as $tournament) {
     $output .= "<a href=\"" . $url . "\">";
   }
   $output .= $description[0];
+  if (null != $tournament->getSpecialType()->getDescription()) {
+    $output .= " (" . $tournament->getSpecialType()->getDescription() . ")";
+  }
   if ($registrationOpen) {
     $output .= "</a>";
   }
