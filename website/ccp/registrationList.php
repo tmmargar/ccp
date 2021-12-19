@@ -28,6 +28,7 @@ $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
+  $startTime = $tournament->getStartTime()->getDisplayAmPmFormat();
   $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
   $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
@@ -61,7 +62,7 @@ foreach ($resultList as $tournament) {
     $output .= "</a>";
   }
   $output .= "<br />\n";
-  $output .= $tournament->getDate()->getDisplayFormat() ." " . $tournament->getStartTime()->getDisplayAmPmFormat();
+  $output .= $tournament->getDate()->getDisplayFormat() ." " . $startTime;
   $output .= "</p>\n<div class=\"small\" style=\"clear: both;\">\n";
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";
