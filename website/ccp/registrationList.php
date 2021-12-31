@@ -33,7 +33,7 @@ foreach ($resultList as $tournament) {
   $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
-  $registrationOpen = ($now <= $registrationOpenDate);
+  $registrationOpen = ($now >= $registrationOpenDate);
   $url = "registration.php?tournamentId=" . $tournament->getId();
   $output .= "<p>";
   if ($registrationOpen) {
