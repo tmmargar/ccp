@@ -911,6 +911,8 @@ class DatabaseResult extends Root {
             if ("earningsTotalForSeason" != $dataName && "earningsAverageForSeason" != $dataName && "earningsTotalForChampionship" != $dataName) {
               $whereClause = "WHERE u.id = " . $userId;
               $query .= " WHERE u.id = " . $userId;
+            } else {
+              $query .= " WHERE u.active = '" . Constant::$FLAG_YES_DATABASE . "'";
             }
             if ("earningsTotalAndAverageForUser" != $dataName && "earningsTotalAndAverageForSeasonForUser" != $dataName) {
               $query .= " ORDER BY ";
@@ -1036,6 +1038,8 @@ class DatabaseResult extends Root {
           if ("knockoutsTotalForSeason" != $dataName && "knockoutsAverageForSeason" != $dataName) {
             $whereClause = "WHERE u.id = " . $userId;
             $query .= " WHERE u.id = " . $userId;
+          } else {
+            $query .= " WHERE u.active = '" . Constant::$FLAG_YES_DATABASE . "'";
           }
           if ("knockoutsTotalAndAverageForSeasonForUser" != $dataName && "knockoutsTotalAndAverageForUser" != $dataName) {
             $query .= " ORDER BY ";
@@ -1187,6 +1191,8 @@ class DatabaseResult extends Root {
           if ("pointsTotalForSeason" != $dataName && "pointsAverageForSeason" != $dataName) {
             $whereClause = "WHERE u.id = " . $userId;
             $query .= " WHERE u.id = " . $userId;
+          } else {
+            $query .= " WHERE u.active = '" . Constant::$FLAG_YES_DATABASE . "'";
           }
           if ("pointsTotalAndAverageForUser" != $dataName && "pointsTotalAndAverageForSeasonForUser" != $dataName) {
             $query .= " ORDER BY ";
