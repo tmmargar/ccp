@@ -86,7 +86,8 @@ $outputHome .=
   "   <div id=\"widget5\">\n";
 $reportId = "bountiesForSeason";
 $parentObjectId = "widget5";
-$outputHome .= include "top5.php";
+//$outputHome .= include "top5.php";
+$outputHome .= "No Bounties";
 $outputHome .=
   "   </div>\n";
 $outputHome .= include "chartGauge.php";
