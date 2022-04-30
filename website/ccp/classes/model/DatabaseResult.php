@@ -1631,7 +1631,7 @@ class DatabaseResult extends Root {
             "                             FROM (" . $this->buildChampionship(params: $params) .
             "                                   GROUP BY id, yr) xx " .
             "                             GROUP BY xx.id, xx.name) cc " .
-            "                       GROUP BY id, name) b ON a.Id = b.Id) d " .
+            "                       GROUP BY id, name) b ON a.Id = b.Id WHERE b.Id IN (SELECT DISTINCT playerId FROM poker_result WHERE statusCode = '" . Constant::$CODE_STATUS_FINISHED . "')) d " .
 //             "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN (c.tournamentDesc IS NULL OR c.tournamentDesc <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "') THEN " .
             "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN " .
             "                                                      CASE WHEN c.place BETWEEN 1 AND 8 THEN " .
@@ -1683,10 +1683,7 @@ class DatabaseResult extends Root {
           }
           $query .=
             "                            GROUP BY rb1.TournamentId, rb1.PlayerId) b ON a.TournamentId = b.TournamentId AND a.PlayerId = b.PlayerId) c " .
-            "           GROUP BY c.PlayerId) e ON d.Id = e.PlayerId " .
-            "WHERE e.playerId IN (SELECT DISTINCT playerId " .
-            "                     FROM poker_result " .
-            "                     WHERE statusCode = '" . Constant::$CODE_STATUS_FINISHED . "') ";
+            "           GROUP BY c.PlayerId) e ON d.Id = e.PlayerId ";
           if ("resultAllOrderedSummary" == $dataName) {
             $query .= "ORDER BY ROUND(d.earnings, 0) DESC";
           }
@@ -3269,12 +3266,12 @@ class DatabaseResult extends Root {
             "SET typeDescription = " . (strlen(trim($params[1])) == 0 ? "null" : "'" . $params[1] . "'") .
             " WHERE typeId = " . $params[0];
           break;
-          case "userUpdateReset":
-          $selector = bin2hex(str: random_bytes(length: 8));
+        case "userUpdateReset":
+          $selector = bin2hex(random_bytes(length: 8));
           $token = random_bytes(length: 32);
-          $expires = new \DateTime(time: "NOW");
+          $expires = new \DateTime("NOW");
           // $expires->add(new DateInterval("PT01H")); // 1 hour
-          $expires->add(new \DateInterval(interval_spec: "P1D")); // 1 day
+          $expires->add(new \DateInterval("P1D")); // 1 day
 //           $query = "UPDATE poker_user " . "SET reset_selector = '" . $selector . "', reset_token = '" . hash('sha256', $token) . "', reset_expires = " . $expires->format('U') . " WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "'";
           $query = "UPDATE poker_user " . "SET selector = '" . $selector . "', token = '" . hash('sha256', $token) . "', expires = " . $expires->format('U') . " WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "'";
           break;
