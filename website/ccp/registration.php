@@ -167,7 +167,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
         if ($tournament->getDescription() == "Championship") {
           $registeredCount = 0;
         } else {
-          if ($now->getDatabaseFormat() < $dateTimeRegistrationClose->getDatabaseFormat()) {
+          if ($now < $dateTimeRegistrationClose) {
             $registeredCount = ($tournament->getRegisteredCount() <= $maxPlayers) ? ($maxPlayers - $tournament->getRegisteredCount()) : 0;
           } else {
             $registeredCount = 0;

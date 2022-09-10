@@ -145,6 +145,7 @@ class Constant {
   public static string $VALUE_DEFAULT_CHECKBOX                = "on";
   private static string $FOLDER_SESSION                       = "sessions";
   private static string $FOLDER_MAP                           = "maps";
+  private static string $PATH_HOME_LOCAL                      = "C:/Users/n082832/git/ccp/website";
   private static string $PATH_HOME_SERVER                     = "/home/chipch5/public_html";
   public static function CONTEXT_ROOT() {
     return self::FLAG_LOCAL() ? "/ccp/" : "/new/";
@@ -160,6 +161,9 @@ class Constant {
   }
   public static function PATH_MAP() {
     return (self::FLAG_LOCAL() ? "" : self::$PATH_HOME_SERVER . self::CONTEXT_ROOT()) . self::$FOLDER_MAP;
+  }
+  public static function PATH_ROOT() {
+    return (self::FLAG_LOCAL() ? self::$PATH_HOME_LOCAL : self::$PATH_HOME_SERVER) . self::CONTEXT_ROOT();
   }
   public static function PATH_SESSION() {
     return (self::FLAG_LOCAL() ? "" : self::$PATH_HOME_SERVER . self::CONTEXT_ROOT()) . self::$FOLDER_SESSION;

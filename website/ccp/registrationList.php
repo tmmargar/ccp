@@ -26,7 +26,8 @@ if (null == $limitCount) {
 }
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
-$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, limitCount: $limitCount);
+$paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
   $startTime = $tournament->getStartTime()->getDisplayAmPmFormat();
   $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
