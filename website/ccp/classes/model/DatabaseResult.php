@@ -282,7 +282,7 @@ class DatabaseResult extends Root {
     return $this->getData(dataName: "tournamentAll", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getTournament(array $params) {
-    return $this->getData(dataName: "tournamentSelectAll", params: null, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
+    return $this->getData(dataName: "tournamentSelectAll", params: null, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
   }
   public function getTournamentIdMax(array $params) {
     return $this->getData(dataName: "tournamentIdMax", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -293,8 +293,8 @@ class DatabaseResult extends Root {
   public function getTournamentsForEmailNotifications(array $params) {
     return $this->getData(dataName: "tournamentsSelectForEmailNotifications", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentByDateAndStartTime($params, $limitCount) {
-    return $this->getData(dataName: "tournamentSelectAllByDateAndStartTime", params: $params, orderBy: null, returnQuery: false, limitCount: $limitCount, rank: false);
+  public function getTournamentByDateAndStartTime($params, $paramsNested, $limitCount) {
+    return $this->getData(dataName: "tournamentSelectAllByDateAndStartTime", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: $limitCount, rank: false);
   }
   public function getTournamentById(array $params) {
     return $this->getData(dataName: "tournamentSelectOneById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -558,11 +558,12 @@ class DatabaseResult extends Root {
   }
   // $dataName is name of the query
   // $params is array of input parameters
+  // $paramsNested is array of input parameters
   // $orderBy is array of fields to order by
   // $returnQuery is boolean (true returns query instead of results, false returns results)
   // $limitCount is number to limit the results by
   // $rank is boolean (true means ranking, false means no ranking)
-  private function getData(string $dataName, array|null $params, array|string|null $orderBy = null, bool $returnQuery = false, int|null $limitCount = null, bool $rank = false) {
+  private function getData(string $dataName, array|null $params, array|null $paramsNested = null, array|string|null $orderBy = null, bool $returnQuery = false, int|null $limitCount = null, bool $rank = false) {
 //     try {
       $resultList = array();
       switch ($dataName) {
@@ -725,10 +726,10 @@ class DatabaseResult extends Root {
             "            FROM poker_result " .
             "            WHERE place > 0 " .
             "            GROUP BY tournamentid) np ON r.tournamentid = np.tournamentid " .
-            "WHERE nt.numTourneys >= " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY);
-          if (isset($params[2])) {
-            $query .= " AND u.id NOT IN (" . $params[2] . ")";
-          }
+            "WHERE nt.numTourneys >= " . $params[2];
+//           if (isset($params[2])) {
+//             $query .= " AND u.id NOT IN (" . $params[2] . ")";
+//           }
           $query .=
             " GROUP BY r.playerid " .
             "ORDER BY points DESC";
@@ -2602,8 +2603,9 @@ class DatabaseResult extends Root {
                     $maxPlayers = (int) $row["max players"];
                   } else {
                     $databaseResult = new DatabaseResult($this->isDebug());
-                    $params = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat());
-                    $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers(params: $params));
+                    //TODO: move sessionutility to callers
+                    //$params = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+                    $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers(params: $paramsNested));
                   }
                   if ("tournamentsWonByPlayerId" != $dataName) {
                     $group = new Group($this->isDebug(), $row["groupId"], $row["name"]);

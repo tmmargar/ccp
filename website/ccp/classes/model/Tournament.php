@@ -205,7 +205,7 @@ class Tournament extends Base {
     $output .= "], rake = ";
     $output .= $this->rake;
     $output .= ", registrationClose = ";
-    $output .= $this->registrationClose->getDisplayAmPmFormat();
+    $output .= $this->getRegistrationClose()->getDisplayAmPmFormat();
 //     $output .= ", directions = '";
 //     $output .= $this->directions;
     $output .= "', registeredCount = ";

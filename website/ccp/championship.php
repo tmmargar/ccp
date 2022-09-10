@@ -53,7 +53,7 @@ $aryPosition[6] = 4;
 $aryPosition[7] = 3;
 $aryPosition[8] = 2;
 
-$params = array($startDate, $endDate);
+$params = array($startDate, $endDate, SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
 $count = count($resultList) - count($aryAbsentIds);
 if (0 < $count) {
