@@ -11,7 +11,7 @@ use ccp\classes\model\HtmlTable;
 use ccp\classes\utility\SessionUtility;
 use PDO;
 require_once "init.php";
-define("TOURNAMENT_ID_FIELD_LABEL", "Tournament id");
+define("TOURNAMENT_ID_FIELD_LABEL", "Tournament");
 define("TOURNAMENT_PLAYER_ID_FIELD_LABEL", "Player id");
 define("TOURNAMENT_REBUY_FIELD_LABEL", "Rebuy");
 define("TOURNAMENT_ADDON_FIELD_LABEL", "Addon");
@@ -35,6 +35,7 @@ define("DEFAULT_VALUE_TOURNAMENT_ID", "0");
 define("DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT", 0);
 $smarty->assign("title", "Manage Results");
 $smarty->assign("heading", "Manage Results");
+$smarty->assign("style", "<link href=\"css/manageResults.css\" rel=\"stylesheet\">");
 $tournamentKnockoutBys = isset($_POST[SELECTED_ROWS_TOURNAMENT_KNOCKOUT_BY_FIELD_NAME]) ? $_POST[SELECTED_ROWS_TOURNAMENT_KNOCKOUT_BY_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 $tournamentIdString = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID;
 // id::rebuy count::addon amount (100:1:0)
@@ -43,16 +44,9 @@ $tournamentId = $tournamentIdVals[0];
 $tournamentPlace = isset($_POST[TOURNAMENT_PLACE_FIELD_NAME]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 $tournamentRebuyCount = isset($_POST[TOURNAMENT_REBUY_FIELD_NAME]) ? $_POST[TOURNAMENT_REBUY_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT;
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
-  $resultList2 = $databaseResult->getBounty();
-  if (count($resultList2) > 0) {
-    $ctr = 0;
-    while ($ctr < count($resultList2)) {
-      $aryBountyName[$ctr] = $resultList2[$ctr]->getName();
-      $ctr ++;
-    }
-  }
   $params = array($tournamentId);
-  $resultList2 = $databaseResult->getTournamentById(params: $params);
+  $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+  $resultList2 = $databaseResult->getTournamentById(params: $params, paramsNested: $paramsNested);
   if (count($resultList2) > 0) {
     $maxPlayers = $resultList2[0]->getBuyinsPaid();
     $rebuyFlag = $resultList2[0]->getRebuyAmount() == 0 ? true : false;
@@ -66,7 +60,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   }
   $orderBy .= " ORDER BY t.tournamentDate DESC, t.startTime DESC";
   $params = array($orderBy, false);
-  $resultList2 = $databaseResult->getTournament(params: $params);
+  $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+  $resultList2 = $databaseResult->getTournament(params: $params, paramsNested: $paramsNested);
   if (count($resultList2) > 0) {
     if ($mode == Constant::$MODE_CREATE) {
       $rowCount = 1;
@@ -75,10 +70,11 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     }
     $ctr = 0;
     if ($ctr < $rowCount) {
-      $output .= "    " . TOURNAMENT_ID_FIELD_LABEL . ": \n    ";
+      $output .= " <div class=\"responsive responsive--3cols responsive--collapse\">";
+      $output .= "  <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_ID_FIELD_NAME . "\">" . TOURNAMENT_ID_FIELD_LABEL . ": </label></div>\n";
       //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
       $selectTournament = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_TOURNAMENT_ID, class: null, disabled: false, id: TOURNAMENT_ID_FIELD_NAME, multiple: false, name: TOURNAMENT_ID_FIELD_NAME, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
-      $output .= $selectTournament->getHtml();
+      $output .= "  <div class=\"responsive-cell responsive-cell-value\">" . $selectTournament->getHtml();
       //     $debug, $class, $disabled, $id, $name, $selectedValue, $suffix, $text, $value) {
       $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_TOURNAMENT_ID);
       $output .= $option->getHtml();
@@ -104,74 +100,32 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         $output .= $option->getHtml();
         $cnt ++;
       }
-      $output .= "    </select>\n";
+      $output .= "   </select>\n";
+      $output .= "  </div>\n";
+      $output .= "  <div class=\"responsive-cell responsive-cell-button\">\n";
       // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
       $buttonGo = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_GO, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_GO, maxLength: null, name: Constant::$TEXT_GO, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_GO, wrap: null);
       $output .= $buttonGo->getHtml();
+      $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+      $output .= $buttonCancel->getHtml();
+      $output .= "  </div>\n";
+      $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+      $output .= $hiddenMode->getHtml();
+      //       $output .= " </div>\n";
       if (DEFAULT_VALUE_TOURNAMENT_ID != $tournamentId) {
-        if (Constant::$MODE_MODIFY != $mode) {
-          $resultList3 = $databaseResult->getResultPaidUserCount();
-          // if there are registered people restrict to those otherwise use everyone
-          if (count($resultList3) > 0) {
-            $params = array(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), $endDateTemp->getDatabaseFormat());
-            $resultList4 = $databaseResult->getResultBountyCurrent(params: $params);
-            if (count($resultList4) > 0) {
-              $ctrTemp = 0;
-              while ($ctrTemp < count($resultList4)) {
-                // $aryBounty[$resultList4[$ctrTemp][0]] = $resultList4[$ctrTemp][1];
-                $aryData[$ctrTemp] = array($resultList4[$ctrTemp][0], $resultList4[$ctrTemp][1]);
-                $ctrTemp ++;
-              }
-            }
-            // if bounty a and bounty b match then move bounty a to next
-            if (isset($aryData[2][1]) && $aryData[0][1] == $aryData[2][1]) {
-              // array, index, length
-              array_splice($aryData, 0, 1);
-            }
-            // need to handle first tournament where no bounties
-            if (isset($aryData)) {
-              $aryBounty[1] = $aryData[0][1];
-              if (isset($aryData[2][1])) {
-                $aryBounty[2] = $aryData[2][1];
-              } else {
-                $aryBounty[2] = $aryData[1][1];
-              }
-            }
-          }
-        }
-        $params = array($tournamentId);
-        $resultList5 = $databaseResult->getTournamentBountyByTournamentId(params: $params);
-        if (count($resultList5) > 0) {
-          $ctrTemp = 0;
-          while ($ctrTemp < count($resultList5)) {
-            $tournamentBounty = $resultList5[$ctrTemp];
-            $tournamentBountyId = isset($_POST[$tournamentBounty->getBounty()->getId()]) ? $_POST[$tournamentBounty->getBounty()->getId()] : "";
-            $output .= "<div style=\"float: left; width: 250px;\">" . $tournamentBounty->getBounty()->getName() . " (" . $tournamentBounty->getBounty()->getDescription() . "):</div>\n";
-            //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
-            $selectBounty = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_BOUNTY, class: null, disabled: false, id: $tournamentBounty->getBounty()->getName(), multiple: false, name: $tournamentBounty->getBounty()->getName(), onClick: null, readOnly: false, size: 1, suffix: null, value: null);
-            $output .= "<div style=\"float: left;\">" . $selectBounty->getHtml();
-            //     $debug, $class, $disabled, $id, $name, $selectedValue, $suffix, $text, $value) {
-            $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentBountyId, suffix: null, text: Constant::$TEXT_NONE, value: "");
-            $output .= $option->getHtml();
-            $params = array($tournamentId);
-            $resultList6 = $databaseResult->getUserPaidByTournamentId($params);
-            if (count($resultList6) > 0) {
-              $ctrTemp2 = 0;
-              while ($ctrTemp2 < count($resultList6)) {
-                $user = $resultList6[$ctrTemp2];
-                $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: isset($aryBounty) ? $aryBounty[$tournamentBounty->getBounty()->getId()] : $tournamentBounty->getUser()->getId(), suffix: null, text: $user->getName(), value: $user->getId());
-                $output .= $option->getHtml();
-                $ctrTemp2 ++;
-              }
-            }
-            $output .= "</select>\n";
-            $output .= "</div>\n";
-            $output .= "<div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-            $hiddenBounty = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: $tournamentBounty->getBounty()->getName() . "Name", maxLength: null, name: $tournamentBounty->getBounty()->getName() . "Name", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: null, wrap: null);
-            $output .= $hiddenBounty->getHtml();
-            $ctrTemp ++;
-          }
-        }
+        $output .= " </div>\n";
+        $output .= " <div class=\"buttons center\">\n";
+        $buttonAddRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_ADD_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_ADD_ROW . "_2", maxLength: null, name: Constant::$TEXT_ADD_ROW . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_ADD_ROW, wrap: null);
+        $output .= $buttonAddRow->getHtml();
+        $buttonRemoveRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REMOVE_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_REMOVE_ROW . "_2", maxLength: null, name: Constant::$TEXT_REMOVE_ROW . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_REMOVE_ROW, wrap: null);
+        $output .= $buttonRemoveRow->getHtml();
+        $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_SAVE . "_2", maxLength: null, name: Constant::$TEXT_SAVE . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
+        $output .= $buttonSave->getHtml();
+        $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET . "_2", maxLength: null, name: Constant::$TEXT_RESET . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
+        $output .= $buttonReset->getHtml();
+        $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+        $output .= $buttonCancel->getHtml();
+        $output .= "  </div>\n";
         $params = array(Constant::$MODE_MODIFY == $mode ? $tournamentId : 0, true);
         $query = $databaseResult->getResultFinishedByTournamentId(params: $params);
         $queryResult = $databaseResult->getConnection()->query($query);
@@ -181,22 +135,22 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           $rowCount = $queryResult->rowCount();
         }
         $hideColIndexes = array(0, 1, 3, 4, 5, 6, 7, 8, 11, 13, 15, 16, 17);
-        $output .= "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display\" id=\"" . Constant::$ID_TABLE_INPUT . "\" style=\"margin: 0;\" width=\"50%\">\n";
+        $output .= "   <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display\" id=\"" . Constant::$ID_TABLE_INPUT . "\" style=\"margin: 0;\" width=\"100%\">\n";
         $ctrTemp = 0;
         while ($ctrTemp < $rowCount) {
           if ($ctrTemp == 0) {
             $queryTemp = $databaseResult->getResultPaidByTournamentId(params: $params, returnQuery: true);
             $resultTemp = $databaseResult->getConnection()->query($queryTemp);
-            $output .= " <thead>\n";
-            $output .= " <tr>\n";
+            $output .= "    <thead>\n";
+            $output .= "     <tr>\n";
             for ($idx = 0; $idx < $resultTemp->columnCount(); $idx ++) {
               if (! in_array($idx, $hideColIndexes)) {
-                $output .= "       <th>" . ucwords($resultTemp->getColumnMeta($idx)["name"]) . "</th>\n";
+                $output .= "      <th>" . ucwords($resultTemp->getColumnMeta($idx)["name"]) . "</th>\n";
               }
             }
-            $output .= "      </tr>\n";
-            $output .= "     </thead>\n";
-            $output .= "     <tbody>\n";
+            $output .= "     </tr>\n";
+            $output .= "    </thead>\n";
+            $output .= "    <tbody>\n";
           }
           $row = $queryResult->fetch(PDO::FETCH_BOTH);
           $ctrTemp ++;
@@ -206,7 +160,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
             }
             $ids .= $ctrTemp;
           }
-          $output .= "      <tr>\n";
+          $output .= "     <tr>\n";
           $params = array($tournamentId);
           $resultList7 = $databaseResult->getResultPaidByTournamentId(params: $params, returnQuery: false);
           if (count($resultList7) > 0) {
@@ -219,7 +173,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           }
           if (count($aryPlayerInfo) > 0) {
             $index = 0;
-            $output .= "       <td class=\"center\">\n";
+            $output .= "      <td class=\"center\">\n";
             $selectPlayer = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PLAYER_ID, class: null, disabled: false, id: TOURNAMENT_PLAYER_ID_FIELD_NAME . "_" . $ctrTemp, multiple: false, name: TOURNAMENT_PLAYER_ID_FIELD_NAME . "_" . $ctrTemp, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
             $output .= $selectPlayer->getHtml();
             $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: DEFAULT_VALUE_BLANK, suffix: null, text: Constant::$TEXT_NONE, value: $row !== false ? $row[1] : "");
@@ -229,33 +183,33 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
               $output .= $option->getHtml();
               $index ++;
             }
-            $output .= "        </select>\n";
-            $output .= "       </td>\n";
+            $output .= "       </select>\n";
+            $output .= "      </td>\n";
           }
-          $output .= "       <td class=\"center\">\n";
+          $output .= "      <td class=\"center\">\n";
           $booleanString = new BooleanString(value: $row !== false ? $row[8] : "");
           $checkboxRebuy = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: $booleanString->getBoolean(), class: null, cols: null, disabled: $rebuyFlag, id: TOURNAMENT_REBUY_FIELD_NAME . "_" . $ctrTemp, maxLength: null, name: TOURNAMENT_REBUY_FIELD_NAME . "_" . $ctrTemp, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: null, wrap: null);
-          $output .= "        " . $checkboxRebuy->getHtml();
+          $output .= $checkboxRebuy->getHtml();
           $textBoxRebuyCount = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REBUY_COUNT, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: ($row !== false && 0 == $row[9] ? true : false), id: TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctrTemp, maxLength: 2, name: TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctrTemp, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $row !== false ? $row[9] : "", wrap: null);
-          $output .= "        " . $textBoxRebuyCount->getHtml();
-          $output .= "       </td>\n";
-          $output .= "       <td class=\"center\">\n";
+          $output .= $textBoxRebuyCount->getHtml();
+          $output .= "      </td>\n";
+          $output .= "      <td class=\"center\">\n";
           $booleanString = new BooleanString(value: $row !== false ? $row[10] : "");
           $checkboxAddon = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: $booleanString->getBoolean(), class: null, cols: null, disabled: $addonFlag, id: TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctrTemp, maxLength: null, name: TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctrTemp, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: Constant::$FLAG_YES, wrap: null);
-          $output .= "        " . $checkboxAddon->getHtml();
-          $output .= "       </td>\n";
+          $output .= $checkboxAddon->getHtml();
+          $output .= "      </td>\n";
           if ($row === false || "" == $row[1]) {
             $player = 0;
           } else {
             $player = $row[1];
           }
-          $output .= "       <td class=\"center\">\n";
-          $textBoxPlace = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, maxLength: 2, name: TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) (isset($row[12]) ? $row[12] : $maxPlayers), wrap: null);
-          $output .= "        " . $textBoxPlace->getHtml();
-          $output .= "       </td>\n";
+          $output .= "      <td class=\"center\">\n";
+          $textBoxPlace = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, maxLength: 2, name: TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctrTemp, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) (isset($row[12]) ? $row[12] : $maxPlayers), wrap: null);
+          $output .= $textBoxPlace->getHtml();
+          $output .= "      </td>\n";
           if (count($aryPlayerInfo) > 0) {
             $index = 0;
-            $output .= "       <td class=\"center\">\n";
+            $output .= "      <td class=\"center\">\n";
             $selectPlayer = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_KNOCKOUT_ID, class: null, disabled: false, id: TOURNAMENT_KNOCKOUT_BY_FIELD_NAME . "_" . $ctrTemp, multiple: false, name: TOURNAMENT_KNOCKOUT_BY_FIELD_NAME . "_" . $ctrTemp, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
             $output .= $selectPlayer->getHtml();
             $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $row !== false ? $row[13] : "", suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_BLANK);
@@ -265,13 +219,14 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
               $output .= $option->getHtml();
               $index ++;
             }
-            $output .= "        </select>\n";
-            $output .= "       </td>\n";
+            $output .= "       </select>\n";
+            $output .= "      </td>\n";
           }
-          $output .= "      </tr>\n";
+          $output .= "     </tr>\n";
         }
-        $output .= "     </tbody>\n";
-        $output .= "    </table>\n";
+        $output .= "    </tbody>\n";
+        $output .= "   </table>\n";
+        $output .= " <div class=\"buttons center\">\n";
         $buttonAddRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_ADD_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_ADD_ROW, maxLength: null, name: Constant::$TEXT_ADD_ROW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_ADD_ROW, wrap: null);
         $output .= $buttonAddRow->getHtml();
         $buttonRemoveRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REMOVE_ROW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_REMOVE_ROW, maxLength: null, name: Constant::$TEXT_REMOVE_ROW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: Constant::$TEXT_REMOVE_ROW, wrap: null);
@@ -282,6 +237,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         $output .= $buttonReset->getHtml();
         $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
         $output .= $buttonCancel->getHtml();
+        $output .= " </div>\n";
       }
     } else {
       $output .= "The tournament selected does not have any entered results to modify.\n";
@@ -294,8 +250,6 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonCancel->getHtml();
   }
-  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
-  $output .= $hiddenMode->getHtml();
   $hiddenSelectedRowsPlayerId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: null, wrap: null);
   $output .= $hiddenSelectedRowsPlayerId->getHtml();
   $hiddenRebuys = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: MAX_REBUYS_FIELD_NAME, maxLength: null, name: MAX_REBUYS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: null, wrap: null);
@@ -303,26 +257,6 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $hiddenAddonAmount = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: ADDON_AMOUNT_FIELD_NAME, maxLength: null, name: ADDON_AMOUNT_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: null, wrap: null);
   $output .= $hiddenAddonAmount->getHtml();
 } elseif ($mode == Constant::$MODE_SAVE_CREATE || $mode == Constant::$MODE_SAVE_MODIFY) {
-  $resultList2 = $databaseResult->getBounty();
-  if (count($resultList2) > 0) {
-    $ctr = 0;
-    while ($ctr < count($resultList2)) {
-      $aryBountyId[$ctr] = $resultList2[$ctr]->getId();
-      $aryBountyName[$ctr] = Base::build($resultList2[$ctr]->getName(), null);
-      $ctr ++;
-    }
-  }
-  for ($index = 0; $index < count($aryBountyName); $index ++) {
-    if (isset($_POST[$aryBountyName[$index]])) {
-      $tournamentBountyPlayerId = $_POST[$aryBountyName[$index]];
-      $params = array($tournamentId, $aryBountyId[$index]);
-      $rowCount = $databaseResult->deleteTournamentBountyByTournamentIdAndBountyId(params: $params);
-      if ("" != $tournamentBountyPlayerId) {
-        array_push($params, $tournamentBountyPlayerId);
-        $rowCount = $databaseResult->insertTournamentBounty(params: $params);
-      }
-    }
-  }
   $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
   // clear all rows
   $params = array(null, null, null, Constant::$CODE_STATUS_PAID, 0, "null", $tournamentId); // , $maxPlace);
@@ -360,13 +294,6 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     // instead of a normal INSERT so CREATE AND MODIFY are the same
     $params = array($tournamentRebuyCount, ($tournamentRebuyCount == 0 ? Constant::$FLAG_NO : Constant::$FLAG_YES), $tournamentAddonAmount, Constant::$CODE_STATUS_FINISHED, $tournamentPlace, $tournamentTempKnockout, $tournamentId, $tournamentTempPlayerId);
     $rowCount = $databaseResult->updateResult(params: $params);
-    for ($index = 0; $index < count($aryBountyName); $index ++) {
-      if (isset($_POST[$aryBountyName[$index] . "_" . $ctr]) && Constant::$FLAG_YES == $_POST[$aryBountyName[$index] . "_" . $ctr]) {
-        $params = array($tournamentId, $aryBountyId[$index], $tournamentTempPlayerId);
-        $rowCount = $databaseResult->tournamentBountyDeleteByPlayerId(params: $params);
-        $rowCount = $databaseResult->insertTournamentBounty(params: $params);
-      }
-    }
     $ctr ++;
   }
   $ids = DEFAULT_VALUE_BLANK;
@@ -375,8 +302,6 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
 if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode == Constant::$MODE_CONFIRM) {
   if ($mode == Constant::$MODE_CONFIRM) {
     if ($tournamentId != DEFAULT_VALUE_TOURNAMENT_ID) {
-      $params = array($tournamentId);
-      $rowCount = $databaseResult->deleteTournamentBountyByTournamentId(params: $params);
       $params = array(0, Constant::$FLAG_NO, Constant::$FLAG_NO, Constant::$CODE_STATUS_PAID, 0, "null", $tournamentId, $ids);
       $rowCount = $databaseResult->updateResult(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
@@ -385,11 +310,13 @@ if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode ==
     $mode = Constant::$MODE_VIEW;
   }
   $params = array(false);
-  $resultList = $databaseResult->getTournamentOrdered(params: $params);
+  $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+  $resultList = $databaseResult->getTournamentOrdered(params: $params, paramsNested: $paramsNested);
   if (0 < count($resultList)) {
-    $output .= "    " . TOURNAMENT_ID_FIELD_LABEL . ": \n    ";
+    $output .= " <div class=\"responsive responsive--3cols responsive--collapse\">";
+    $output .= "  <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_ID_FIELD_NAME . "\">" . TOURNAMENT_ID_FIELD_LABEL . ": </label></div>\n";
     $selectTournament = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_TOURNAMENT_ID, class: null, disabled: false, id: TOURNAMENT_ID_FIELD_NAME, multiple: false, name: TOURNAMENT_ID_FIELD_NAME, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
-    $output .= $selectTournament->getHtml();
+    $output .= "  <div class=\"responsive-cell responsive-cell-value\">" . $selectTournament->getHtml();
     $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId, suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
     $cnt = 0;
@@ -410,47 +337,40 @@ if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode ==
       $output .= $option->getHtml();
       $cnt ++;
     }
-    $output .= "    </select>\n";
+    $output .= "   </select>\n";
+    $output .= "  </div>\n";
+    $output .= "  <div class=\"responsive-cell responsive-cell-button\">\n";
     if ($mode == Constant::$MODE_VIEW) {
-      $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_VIEW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_VIEW, maxLength: null, name: Constant::$TEXT_VIEW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_VIEW, wrap: null);
-      $output .= $buttonCancel->getHtml();
-      $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MODIFY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_MODIFY, maxLength: null, name: Constant::$TEXT_MODIFY, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_MODIFY, wrap: null);
-      $output .= $buttonCancel->getHtml();
+      $buttonView = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_VIEW, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_VIEW, maxLength: null, name: Constant::$TEXT_VIEW, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_VIEW, wrap: null);
+      $output .= $buttonView->getHtml();
+      $buttonModify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MODIFY, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_MODIFY, maxLength: null, name: Constant::$TEXT_MODIFY, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_MODIFY, wrap: null);
+      $output .= $buttonModify->getHtml();
       if (DEFAULT_VALUE_TOURNAMENT_ID != $tournamentId) {
-        $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_DELETE, maxLength: null, name: Constant::$TEXT_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_DELETE, wrap: null);
-        $output .= $buttonCancel->getHtml();
+        $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_DELETE, maxLength: null, name: Constant::$TEXT_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_DELETE, wrap: null);
+        $output .= $buttonDelete->getHtml();
       }
-      $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
-      $output .= $buttonCancel->getHtml();
+      $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
+      $output .= $buttonCreate->getHtml();
     }
     if ($mode == Constant::$MODE_DELETE) {
-      $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
-      $output .= $buttonCancel->getHtml();
+      $buttonConfirmDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
+      $output .= $buttonConfirmDelete->getHtml();
       $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
       $output .= $buttonCancel->getHtml();
-      $output .= "<br />";
     }
-    $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
-    $output .= $hiddenMode->getHtml();
+    $output .= "  </div>\n";
+    if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE) {
+      $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+      $output .= $hiddenMode->getHtml();
+    }
     $hiddenPlayerId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
     $output .= $hiddenPlayerId->getHtml();
     $hiddenKnockout = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $tournamentKnockoutBys, wrap: null);
     $output .= $hiddenKnockout->getHtml();
   }
+  $output .= " </div>\n";
   if ($tournamentId != DEFAULT_VALUE_TOURNAMENT_ID) {
     $params = array($tournamentId);
-    $resultList = $databaseResult->getTournamentBountyByTournamentId(params: $params);
-    if (0 < count($resultList)) {
-      $cnt = 0;
-      while ($cnt < count($resultList)) {
-        $tournamentBounty = $resultList[$cnt];
-        if (0 < $cnt) {
-          $output .= "     <br />\n";
-        }
-        $output .= $tournamentBounty->getBounty()->getName() . "(" . $tournamentBounty->getBounty()->getDescription() . "): " . $tournamentBounty->getUser()->getName() . "\n";
-        $cnt ++;
-      }
-    }
     if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE) {
       $params = array($tournamentId);
       $query = $databaseResult->getResultPaidByTournamentId(params: $params, returnQuery: true);
@@ -462,9 +382,10 @@ if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode ==
     $hiddenAdditional = array(array("tournamentPlayerId", 1));
     $hideColIndexes = array(0, 1, 3, 4, 6, 7, 8, 11, 13, 15, 16, 17);
     //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-    $htmlTable = new HtmlTable(caption: null, class: array("override50"), colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "50%");
+    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
     $output .= $htmlTable->getHtml();
   }
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

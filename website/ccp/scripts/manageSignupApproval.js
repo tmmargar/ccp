@@ -25,7 +25,7 @@ $(document).on("click", "#rejectUserCheckAll", function(event) {
   inputLocal.enableSave();
   event.stopImmediatePropagation();
 });
-$(document).on("click", "input[id^='approveUser_']", function(event) {
+$(document).on("click", "[id^='approveUser_']", function(event) {
   if ($(this).prop("checked")) {
     const values = $(this).prop("id").split("_");
     input.checkboxToggleSingle("rejectUser_" + values[1], false);
@@ -36,7 +36,7 @@ $(document).on("click", "input[id^='approveUser_']", function(event) {
   inputLocal.enableSave();
   input.countUpdate("approveUser");
 });
-$(document).on("click", "input[id^='rejectUser_']", function(event) {
+$(document).on("click", "[id^='rejectUser_']", function(event) {
   if ($(this).prop("checked")) {
     const values = $(this).prop("id").split("_");
     input.checkboxToggleSingle("approveUser_" + values[1], false);
@@ -49,7 +49,7 @@ $(document).on("click", "input[id^='rejectUser_']", function(event) {
 });
 const inputLocal = {
   enableSave : function() {
-    $("#save").prop("disabled", $("input[id^='approveUser_']:checked").length == 0 && $("input[id^='rejectUser_']:checked").length == 0);
+    $("[id^='save']").prop("disabled", $("[id^='approveUser_']:checked").length == 0 && $("[id^='rejectUser_']:checked").length == 0);
   },
   initializeTable : function() {
     dataTable.initialize("dataTblSignupApproval", [ { "type" : "name" }, null, null, null, { "type" : "name" }, { "sortable": false }, { "sortable": false } ]);

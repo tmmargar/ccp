@@ -17,6 +17,9 @@ $(document).on("click", "#register", function(event) {
   }
 });
 const inputLocal = {
+  enableRegister : function(id) {
+    return $(".selected").count() == 0;
+  },
   initializeDataTable : function() {
     dataTable.initialize("dataTbl", [{ "type" : "name" }, null, { "type" : "registerOrder" }, {"searchable": false, "visible": false } ], [ [ 1, "desc" ], [ 2, "asc" ], [ 0, "asc" ] ]);
   },
@@ -24,7 +27,7 @@ const inputLocal = {
     input.enableView();
   },
   setDefaults : function() {
-    input.insertSelectedAfter("Tournament", "tournamentId", "view");
+    input.insertSelectedBefore("Tournament", "tournamentId", "mode");
   },
   setPlayerIds : function() {
     let playerIds = "";
@@ -42,5 +45,6 @@ const inputLocal = {
     if (!selected) {
       $(row).addClass("selected");
     }
+    input.enable("register", inputLocal.enableRegister);
   }
 };

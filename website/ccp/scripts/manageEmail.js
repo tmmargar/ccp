@@ -15,12 +15,13 @@ $(document).on("blur click keyup paste", "#subject, #body", function(event) {
   inputLocal.validate();
   inputLocal.enableEmail();
 });
-$(document).on("click", "#email", function(event) {
+$(document).on("click", "[id^='email']", function(event) {
   $("#mode").val(this.value.toLowerCase());
+  $("#body").val("<pre>" + $("#body").val() + "</pre>");
 });
 const inputLocal = {
   enableEmail : function() {
-    $("#email").prop("disabled", ($("#subject").val().length == 0) || ($("#body").val().length == 0));
+    $("[id^='email']").prop("disabled", ($("#subject").val().length == 0) || ($("#body").val().length == 0));
   },
   initializeSelectize : function(selectValues) {
     let options = [];
@@ -29,6 +30,7 @@ const inputLocal = {
     });
     $("#to").append(options);
     $("#to").selectize({
+      dropdownParent: 'body',
       valueField: "email",
       labelField: "name",
       searchField: ["name", "email"],
@@ -39,7 +41,7 @@ const inputLocal = {
       },
       render: {
         item: function(item, escape) {
-          return "<div>" + (item.name ? "<span class='name'>" + escape(item.name) + "</span>" : "") + (item.email ? "<span class='email'> &lt;" + escape(item.email) + "&gt;</span>" : "") + "</div>";
+          return "<div class=\"item\">" + (item.name ? "<span class='name'>" + escape(item.name) + "</span>" : "") + (item.email ? "<span class='email'> &lt;" + escape(item.email) + "&gt;</span>" : "") + "</div>";
         },
         option: function(item, escape) {
           const label = item.name || item.email;

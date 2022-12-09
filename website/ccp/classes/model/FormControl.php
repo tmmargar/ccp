@@ -31,30 +31,37 @@ class FormControl extends FormBase {
   public function getHtml() {
 //     echo "<br>" . $this->getId() . " -- " . $this->getValue() . " -> " . ("" !== $this->getValue());
 //     echo "<br>" . $this->getId() . " -- " . $this->isDisabled() . " -> " . $this->readOnly;
-    return (self::$TYPE_INPUT_TEXTAREA == $this->type ? "<textarea" : "<input") .
+    return (self::$TYPE_INPUT_TEXTAREA == $this->type ? "<textarea" : (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type ? "<button" : "<input")) .
       (isset($this->accessKey) ? " accesskey=\"" . $this->accessKey . "\"" : "") .
-      (isset($this->autoComplete) && $this->autoComplete == true ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
+//       (isset($this->autoComplete) && $this->autoComplete == true ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
+//       (isset($this->autoComplete) ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
+//       (isset($this->autoComplete) ? " autocomplete=\"off\"" : "") .
       (isset($this->autoFocus) && $this->autoFocus ? " autofocus" : "") .
       (isset($this->checked) && $this->checked ? " checked" : "") .
       ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") .
       (isset($this->cols) ? " cols=\"" . $this->cols . "\"" : "") .
+//       data-mask-clearifnotmatch=\"true\"
+//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"1 (000) 000-0000\"" : "") .
       (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") .
       " id=\"" . $this->getId() . "\"" .
       (isset($this->maxLength) ? " maxlength=\"" . $this->maxLength . "\"" : "") .
       " name=\"" . $this->getName() . "\"" .
-      (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : "") .
+      (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[\(]\d{3}[\)] \d{3}[\-]\d{4}\"" : "") .
+      (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : (self::$TYPE_INPUT_TELEPHONE == $this->type ? " placeholder=\"(999) 999-9999\"" : "")) .
       (isset($this->readOnly) && $this->readOnly ? " readonly" : "") .
       (isset($this->required) ? " required=\"" . $this->required . "\"" : "") .
       (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") .
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
-//       " type=\"" . $this->type . "\"" .
-      " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TEXTBOX : $this->type) . "\"" .
-      (null !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+      " type=\"" . $this->type . "\"" .
+//     " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TELEPHONE : $this->type) . "\"" .
+      (self::$TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
+      (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type || self::$TYPE_INPUT_HIDDEN == $this->type || self::$TYPE_INPUT_CHECKBOX == $this->type ? "" : " onfocus=\"this.select();\"") .
 //       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" placeholder=\"(999) 999-9999\"" : "") .
-      (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"(999) 999-9999\"" : "") .
-      (self::$TYPE_INPUT_TEXTAREA == $this->type ? "></textarea>\n" : " />\n");
+//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"1 (000) 000-0000\"" : "") .
+    (self::$TYPE_INPUT_TEXTAREA == $this->type ? ">" . $this->getValue() . "</textarea>\n" : 
+      (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type ? ">" . $this->getValue() . "</button>" : " />\n"));
   }
   public function getMaxLength() {
     return $this->maxLength;

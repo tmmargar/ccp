@@ -23,13 +23,13 @@ const dataTable = {
   getSelectedRowsData : function(objTableApi) {
     return objTableApi.rows(".selected").data();
   },
-  initialize : function(tableId, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "300px", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
+  initialize : function(tableId, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
     dataTable.initializeCommon("#" + tableId, aryColumns, aryOrder, searching, aryRowGroup, scrollY, autoWidth, paging, scrollResize, scrollCollapse);
   },
-  initializeCommon : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "300px", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
+  initializeCommon : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
     $(tableSelector).DataTable({ "autoWidth": autoWidth, "columns": aryColumns, "destroy": true, "order": aryOrder, "paging": paging, "rowGroup": aryRowGroup, "scrollY": scrollY, "scrollResize": scrollResize, "scrollCollapse": scrollCollapse, "searching": searching });
   },
-  initializeBySelector : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "300px", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
+  initializeBySelector : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
     dataTable.initializeCommon(tableSelector, aryColumns, aryOrder, searching, aryRowGroup, scrollY, autoWidth, paging, scrollResize, scrollCollapse);
   }
 };
@@ -44,9 +44,9 @@ const display = {
   },
   formatPhone : function(str) {
     //Filter only numbers from the input
-    cleaned = ('' + str).replace(/\D/g, '');
+    const cleaned = ('' + str).replace(/\D/g, '');
     //Check if the input is of correct
-    match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+    const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
       //Remove the matched extension code
       //Change this to format for any country code.
@@ -56,7 +56,7 @@ const display = {
     return null;
   },
   showErrors : function(aryErrors) {
-    let output = "Errors:<br />";
+    let output = "<span class=\"boldHeader\">Errors:</span>";
     //for (let idx = 0; idx < aryErrors.length; idx++) {
     for (let err of aryErrors) {
       //if (idx > 0) {
@@ -71,7 +71,7 @@ const display = {
     $("#errors").show();
   },
   showMessages : function(aryMessages) {
-    let output = "Messages:<br />";
+    let output = "<span class=\"boldHeader\">Messages:</span>";
     //for (let idx = 0; idx < aryMessages.length; idx++) {
     for (let msg of aryMessages) {
       //if (idx > 0) {
@@ -156,6 +156,9 @@ const input = {
     // check all inputs starting with same name
     $("#" + inputId).prop("checked", checked);
   },
+  compareDate : function(date1, date2) {
+    return new Date(date1) < new Date(date2);
+  },
   countChecked : function(prefix, prefixAdditional) {
     let count = 0;
     $("input[id^='" + prefix + "_']").each(function(index) {
@@ -194,10 +197,12 @@ const input = {
     return false;
   },
   enable : function(objId, functionName) {
-    if ($("#" + objId).length > 0 &&  $("#ids").length > 0) {
+    //if ($("#" + objId).length > 0 && $("#ids").length > 0) {
+      if ($("[id^=" + objId + "]").length > 0 && $("#ids").length > 0) {
       const aryId = $("#ids").val().split(", ");
       for (let id of aryId) {
-        $("#" + objId).prop("disabled", functionName.call(this, id));
+        //$("#" + objId).prop("disabled", functionName.call(this, id));
+        $("[id^=" + objId + "]").prop("disabled", functionName.call(this, id));
       }
     }
   },
@@ -268,11 +273,13 @@ const input = {
       timeFormat = aryFormatOriginal.slice(1).join(" ");
     }
     //$(".timePicker").datetimepicker({allowTimes: allowTimes, disabledWeekDays: disabledWeekDays, format: format, formatDate: aryFormatOriginal[0], formatTime: timeFormat, lazyInit: true, mask: input.maskDateTime(), timepicker: timePicker, validateOnBlur: false, yearStart: firstYear});
-    $(".timePicker").datetimepicker({allowTimes: allowTimes, disabledWeekDays: disabledWeekDays, format: format, formatDate: aryFormatOriginal[0], formatTime: timeFormat, lazyInit: true, timepicker: timePicker, validateOnBlur: false, yearStart: input.firstYear()});
+    $(".timePicker").datetimepicker({allowTimes: allowTimes, disabledWeekDays: disabledWeekDays, format: format, formatDate: aryFormatOriginal[0], formatTime: timeFormat, lazyInit: true, mask: true, timepicker: timePicker, validateOnBlur: false, yearStart: input.firstYear()});
   },
-  insertSelectedAfter : function(text, objIdSelected, objIdAfter) {
+  //insertSelectedAfter : function(text, objIdSelected, objIdAfter) {
+    insertSelectedBefore : function(text, objIdSelected, objIdAfter) {
     if ($("#selectedTournamentText").length == 0) {
-      $("<p id=\"selectedTournamentText\">" + text + " selected: " + $("#" + objIdSelected + " :selected").text() + "</p>").insertAfter($("#" + objIdAfter));
+      //$("<div class=\"responsive-cell responsive-cell-value\"><p id=\"selectedTournamentText\">" + text + " selected: " + $("#" + objIdSelected + " :selected").text() + "</p></div>\n").insertAfter($("#" + objIdAfter));
+      $("<div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"selectedTournamentText\">" + "Selected:</div>\n<div class=\"responsive-cell responsive-cell-value\"><p id=\"selectedTournamentText\">" + $("#" + objIdSelected + " :selected").text() + "</p></div><div class=\"responsive-cell responsive-cell-button\"></div>\n").insertBefore($("#" + objIdAfter));
     }
   },
   invalid : function(jQueryObj) {
@@ -303,10 +310,12 @@ const input = {
     $("#ids").val(ids);
   },
   showDialog : function(name, heightVal, titleVal, positionVal) {
-    $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, position: positionVal });
+    //$("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, position: positionVal });
+    document.getElementById("dialog" + name).showModal();
   },
   showDialogWithWidth : function(name, heightVal, titleVal, widthVal, positionVal) {
-    $("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal, position: positionVal });
+    //$("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal, position: positionVal });
+    document.getElementById("dialog" + name).showModal();
   },
   showHideToggle : function(aryId, idFocus) {
     // does not work for IE 
@@ -371,14 +380,14 @@ const input = {
           jQueryObj.trigger("focus");
         }
       } else {
-        display.clearErrorsAndMessages();
+        //display.clearErrorsAndMessages();
         jQueryObj.removeClass("errors");
       }
     }
     return result;
   },
   validateLetterOnly : function(jQueryObj, e) {
-    input.validateCommon(jQueryObj, e, /^[a-zA-Z]+$/g);
+    input.validateCommon(jQueryObj, e, /^[a-zA-Z ]+$/g);
   },
   validateNumberOnly : function(jQueryObj, e, storeValue) {
     input.validateCommon(jQueryObj, e, /^-?\d+$/g, null, storeValue);

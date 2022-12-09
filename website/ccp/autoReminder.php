@@ -77,6 +77,7 @@ if (isset($_GET[Constant::$FIELD_NAME_MODE])) {
   $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
   $smarty->assign("formName", "frmAutoReminder");
   $smarty->assign("content", $output);
+  $smarty->assign("footerClass", "footer");
   $smarty->display("base.tpl");
 } else {
   echo $output;

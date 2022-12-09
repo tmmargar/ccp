@@ -1,4 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lora:400,700);
+body {
+  font-size: .9rem;
+}
 nav {
  font-size: .8em;
 }
@@ -7,6 +10,7 @@ nav {
 }
 #modeDisplay {
   color: green;
+  text-align: center;
 }
 /*#messages {*/
 #messages, .messages {
@@ -25,9 +29,10 @@ p {
 }
 h1 {
   margin: 1px;
+  text-align: center;
 }
 .center {
- text-align:center;
+  text-align: center;
 }
 .hide {
  display: none;
@@ -72,63 +77,33 @@ table.dataTable.display tbody tr.inactive > .sorting_2 {
 .highlight {
   background-color: yellow !important;
 }
-div.label {
-  flex: 20%;
-  padding-bottom: 5px;
-  /* unsetting to override bootstrap */
-  color: unset;
-  font-size: unset;
-  font-weight: unset;
-  padding: unset;
-}
-div.input, div.textarea {
-  flex: 80%;
-  padding-bottom: 5px;
-}
 .form_content {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
+  row-gap: 5px;
 }
 caption {
  text-align: left;
 }
-/* everything below is for sticky footer */
-/*html, body {
-  height: 100%;
-}*/
-/*body {
-  display: flex;
-  flex-direction: column;
-}
-div#content {
-  flex: 1 0 auto;
-}*/
-/*nav {*/
-div#leftContent {
-  float: left;
-  width: 6.5%;
-}
-div#seasonInfo {
+#seasonInfo {
   text-align: center;
 }
-div#contentTop, div#content {
-  float: left;
-  width: 93.5%;
-}
-div#contentTop {
+#header {
   font-size: 1.5em;
   font-weight: bold;
   text-align: center;
 }
-.footer {
+.footer, .footerMini, .footerSmall, .footerMedium, .footerLarge {
   /*flex-shrink: 0;
   padding: 10px;*/
   /*position: fixed;
   left: 0;
   bottom: 0;*/
   clear: both;
-  width: 100%;
+  padding-top: 5px;
   text-align: center;
+  width: 100%;
 }
 td {
   text-align: center;
@@ -136,3 +111,56 @@ td {
 .textAlignUnset {
  text-align: unset;
 }
+/* Inserting this collapsed row between two flex items will make the flex item that comes after it break to a new row */
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+.bold {
+ font-weight: bold;
+}
+.boldUnderline {
+ font-weight: bold;
+ text-decoration: underline;
+}
+.boldHeader {
+ font-size: 1.1em;
+ font-weight: bold;
+}
+div.center {
+ margin: 0 auto;
+}
+a:focus {
+  outline: .1rem solid black;
+}
+.title {
+  font-weight: bold;
+}
+button, input[type="submit"], input[type="reset"] {
+  background-color: #5e68df;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  /*font-size: 1.2rem;
+  margin: 4px 2px;*/
+  margin: 1px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+}
+/* Darker background on mouse-over */
+button:hover:enabled, input[type="submit"]:hover:enabled, input[type="reset"]:hover:enabled {
+  background-color: #274CE0;
+  font-weight: bold;
+}
+button:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+#selectedTournamentText {
+  font-size: .85rem;
+}
+/*#info {
+  text-align: center;
+}*/

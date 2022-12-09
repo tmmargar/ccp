@@ -2,24 +2,28 @@
 $(document).ready(function() {
   input.initialize();
 });
-$(document).on("keyup paste", "input[id^='tournamentDescription_']", function(event) {
+$(document).on("keyup paste", "[id^='tournamentDescription_']", function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("change", "select[id^='tournamentLimitTypeId_'], select[id^='tournamentGameTypeId_'], select[id^='tournamentLocationId_'], select[id^='tournamentGroupId_']", function(event) {
+$(document).on("change", "[id^='tournamentLimitTypeId_'], [id^='tournamentGameTypeId_'], [id^='tournamentLocationId_'], [id^='tournamentGroupId_']", function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("keyup paste", "input[id^='tournamentChipCount_'], input[id^='tournamentMaxPlayers_']", function(event) {
-  input.validateNumberOnlyGreaterZero($(this), event);
+$(document).on("keyup paste", "[id^='tournamentChipCount_'], [id^='tournamentMaxPlayers_']", function(event) {
+  if ($("#tournamentSpecialTypeId_ :selected").text() == "Championship") {
+    input.validateNumberOnly($(this), event);
+  } else {
+    input.validateNumberOnlyGreaterZero($(this), event);
+  }
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("change keyup paste", "input[id^='tournamentStartDateTime_']", function(event) {
+$(document).on("change keyup paste", "[id^='tournamentStartDateTime_']", function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("keyup paste", "input[id^='tournamentBuyinAmount_'], input[id^='tournamentRebuyAmount_'], input[id^='tournamentAddonAmount_']", function(event) {
+$(document).on("keyup paste", "[id^='tournamentBuyinAmount_'], [id^='tournamentRebuyAmount_'], [id^='tournamentAddonAmount_']", function(event) {
   if ($(this).prop("id").search(/tournamentBuyinAmount_/g) == -1) {
     input.validateNumberOnly($(this), event, false);
   } else {
@@ -34,7 +38,7 @@ $(document).on("keyup paste", "input[id^='tournamentBuyinAmount_'], input[id^='t
   }
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("keyup paste", "input[id^='tournamentRebuys_'], input[id^='tournamentAddonChipCount_']", function(event) {
+$(document).on("keyup paste", "[id^='tournamentRebuys_'], [id^='tournamentAddonChipCount_']", function(event) {
   input.validateNumberOnly($(this), event, true);
   input.validateLength($(this), 1, false);
   if ($(this).prop("id").search(/tournamentRebuys_/g) != -1) {
@@ -45,7 +49,7 @@ $(document).on("keyup paste", "input[id^='tournamentRebuys_'], input[id^='tourna
   }
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("keyup paste", "input[id^='tournamentRake_']", function(event) {
+$(document).on("keyup paste", "[id^='tournamentRake_']", function(event) {
   input.validatePercentOnly($(this), event);
   input.validateLength($(this), $(this).val().indexOf("$") == -1 ? 1 : 2, false);
   input.enable("save", inputLocal.enableSave);
@@ -120,7 +124,7 @@ const inputLocal = {
       { "width": "5%" }, { "orderable": false, "width": "1%" }, { "type": "date", "width": "6%" }, { "type": "time", "width": "4%" }, { "width": "5%" },
       { "width": "4%" }, { "type": "currency", "width": "4%" }, { "width": "4%" }, { "type": "currency", "width": "4%" }, { "type": "currency", "width": "4%" },
       { "type": "number", "width": "4%" }, { "width": "4%" }, { "type": "percentage", "width": "4%" }, { "orderable": false, "visible": false, "width": "3%" }, { "orderable": false, "visible": false }],
-    [[ 7, "desc"], [8, "desc" ]]);
+    [[ 7, "desc"], [8, "desc" ]], true, false, "375px");
   },
   save : function(event) {
     let result = true;
@@ -137,21 +141,21 @@ const inputLocal = {
     return result;
   },
   setDefaults : function() {
-    input.initializeTimePicker("m/d/Y H:i", true, [0, 1, 2, 3, 4, 5], ['14:00', '15:00', '17:30', '19:30']);
+    input.initializeTimePicker("m/d/Y H:i", true, [0, 1, 2, 3, 4, 5], ['14:00', '15:00', '17:00', '19:30']);
     if ($("#mode").val() == "create") {
       $("#tournamentDescription_").val(inputLocal.defaultDescription());
       $("#tournamentLimitTypeId_").val(3);
       $("#tournamentGameTypeId_").val(1);
-      $("#tournamentChipCount_").val(3000);
+      $("#tournamentChipCount_").val(10000);
       const d = new Date();
       d.setDate(d.getDate() + (6 - d.getDay()));
-      $('#tournamentStartDateTime_').val($.datepicker.formatDate("mm/dd/yy", d) + " 14:00");
-      $("#tournamentMaxPlayers_").val(27);
+      $('#tournamentStartDateTime_').val($.datepicker.formatDate("mm/dd/yy", d) + " 17:00");
+      $("#tournamentMaxPlayers_").val(36);
       $("#tournamentBuyinAmount_").val("25");
       $("#tournamentMaxRebuys_").val(0);
-      $("#tournamentRebuyAmount_").val("25");
-      $("#tournamentRebuys_").val(99);
-      $("#tournamentAddonAmount_").val("15");
+      $("#tournamentRebuyAmount_").val(0);
+      $("#tournamentRebuys_").val(0);
+      $("#tournamentAddonAmount_").val("10");
       $("#tournamentAddonChipCount_").val(1500);
       $("#tournamentRake_").val("20");
       $("#tournamentGroupId_").val(2);

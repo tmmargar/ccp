@@ -108,11 +108,11 @@ class HtmlTable extends HtmlBase {
                 // if not found in col span indexes
                 if (isset($this->colspan[1]) && FALSE === array_search($index, $this->colspan[1])) {
                   $output .= "1";
-                  $thStyle = " style=\"border-right: 1px solid black;\"";
+//                   $thStyle = " style=\"border-right: 1px solid black;\"";
                 } else {
                   $output .= count($this->colspan[2][$colSpanIndex]) + 1;
                   $colSpanIndex++;
-                  $thStyle = " style=\"border-right: 1px solid black;\"";
+//                   $thStyle = " style=\"border-right: 1px solid black;\"";
                 }
                 $output .= "\" rowspan=\"";
                 // if not found in col span indexes
@@ -139,13 +139,13 @@ class HtmlTable extends HtmlBase {
             if (!isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
               // if found in all col span indexes
               if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE !== array_search($index, $colSpanAllIndexes))) {
-                $output .= "       <th colspan=\"1\" rowspan=\"1\" style=\"border-right: 1px solid black;\">" . ucwords($result->getColumnMeta($index)["name"]) . "</th>\n";
+                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords($result->getColumnMeta($index)["name"]) . "</th>\n";
               }
             }
           }
           if (isset($this->html)) {
             for ($idx = 0; $idx < count($this->html[1]); $idx ++) {
-              $output .= "     <th colspan=\"1\" rowspan=\"1\" style=\"border-right: 1px solid black;\">" . $this->html[1][$idx] . "</th>\n";
+              $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] . "</th>\n";
             }
           }
           if (isset($this->hiddenAdditional)) {

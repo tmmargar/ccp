@@ -15,13 +15,6 @@ define("NAME_FIELD_REMEMBER_ME", "rememberMe");
 define("NAME_FIELD_LOGIN", "login");
 $smarty->assign("title", "Chip Chair and a Prayer Login");
 $smarty->assign("heading", "Login");
-$style =
-  "<style type=\"text/css\">" .
-  ".form_content {" .
-  "  width: 30%;" .
-  "}" .
-"</style>";
-$smarty->assign("style", $style);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmLogin");
 $output = "";
@@ -41,42 +34,30 @@ if (Constant::$MODE_LOGIN == $mode) {
     $output .=
       "<script type=\"text/javascript\">" .
       "  display.showErrors([ \"Login failed. Please try again\" ]);" .
-      "</script>";
+    "</script>";
   }
 }
-$output .= "<div class=\"form_content\">";
-$output .= " <div class=\"label\">Username:</div>";
-$output .= " <div class=\"input\">";
+$output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
 $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_USERNAME, maxLength: 30, name: NAME_FIELD_USERNAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
-$output .= $textBoxUsername->getHtml();
-$output .= " </div>";
-$output .= " <div class=\"label\">Password:</div>";
-$output .= " <div class=\"input\">";
+$output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
+$output .= " <div class=\"responsive-cell\">" . $textBoxUsername->getHtml() . "</div>";
 $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "current-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_PASSWORD, maxLength: null, name: NAME_FIELD_PASSWORD, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: null, wrap: null);
-$output .= $textBoxPassword->getHtml();
-$output .= " </div>";
+$output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxPassword->getId() . "\">Password:</label></div>";
+$output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "</div>";
 // $output .= "<div class=\"label\">Remember Me:</div>";
 // $output .= "<div class=\"input\">";
 // $output .= HtmlUtility::buildCheckbox(false, false, false, null, false, Base::build(NAME_FIELD_REMEMBER_ME, null), Base::build(NAME_FIELD_REMEMBER_ME, null), null, null);
 // $output .= "</div>";
 // $output .= "<div class=\"clear\"></div>";
-$output .= " <div class=\"label\">&nbsp;</div>";
-$output .= " <div class=\"input\">";
-$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
+$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("far", "fa-caret-square-right"), cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: "&nbsp;" . ucwords(NAME_FIELD_LOGIN), wrap: null);
 $output .= $buttonLogin->getHtml();
-$output .= "&nbsp;&nbsp;<a href=\"resetPassword.php\">Forgot Password</a>";
-$output .= "&nbsp;&nbsp;<a href=\"signup.php\">New User</a>";
-$output .= " </div>";
+$output .= " <div class=\"responsive-cell responsive-cell-empty\"></div>";
+$output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a></div>";
+$output .= " <div class=\"responsive-cell\"><a href=\"signup.php\">New User</a></div>";
 $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();
 $output .= "</div>";
-// $configTidy = [ "clean" => true, "coerce-endtags" => true, "doctype" => "omit", "drop-proprietary-attributes" => true, "indent" => true, "indent-spaces" => 1, "output-html" => true, "show-body-only" => true, "sort-attributes" => "alpha", "wrap" => 0 ];
-// $outputTidy = new tidy;
-// $outputTidy->parseString($output, $configTidy, "utf8");
-// $outputTidy->cleanRepair();
 $smarty->assign("content", $output);
-// $smarty->assign("content", $outputTidy);
-//$smarty->display("login.tpl");
 $outputTemplate = $smarty->fetch("login.tpl");
 $outputTidy = new tidy;
 $outputTidy->parseString($outputTemplate, $configTidy, "utf8");

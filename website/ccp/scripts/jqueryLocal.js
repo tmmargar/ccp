@@ -1,7 +1,4 @@
 "use script";
-$(function() {
-  $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
-});
 $.fn.setCursorPosition = function(pos) {
   this.each(function(index, elem) {
     if (elem.setSelectionRange) {
@@ -37,8 +34,8 @@ $(document).on("focus", "form", function(event) {
   $("#" + event.target.id).val(value);
 });
 $(document).on("click", "#dataTbl tr", function(event) {
-  $("#modify").prop("disabled", $(this).hasClass("selected"));
-  $("#delete").prop("disabled", $(this).hasClass("selected"));
+  $("[id^='modify']").prop("disabled", $(this).hasClass("selected"));
+  $("[id^='delete']").prop("disabled", $(this).hasClass("selected"));
   const selected = $(this).hasClass("selected");
   // if 1 row is already selected
   if (selected || $("#dataTbl tr.selected").length == 1) {
@@ -55,11 +52,11 @@ $(document).on("click", "#dataTbl tr", function(event) {
     }
   }
 });
-$(document).on("click", "#create", function(event) {
+$(document).on("click", "[id^='create']", function(event) {
   $("#mode").val(this.value.toLowerCase());
   $("#ids").val("");
 });
-$(document).on("click", "#modify", function(event) {
+$(document).on("click", "[id^='modify']", function(event) {
   let result = true;
   try {
     result = inputLocal.modify(this);
@@ -87,7 +84,7 @@ $(document).on("click", "#modify", function(event) {
     $("#mode").val(this.value.toLowerCase());
   }
 });
-$(document).on("click", "#delete", function(event) {
+$(document).on("click", "[id^='delete']", function(event) {
   let result = true;
   try {
     result = inputLocal.delete(this);
@@ -111,10 +108,10 @@ $(document).on("click", "#delete", function(event) {
     $("#mode").val(this.value.toLowerCase());
   }
 });
-$(document).on("click", "#confirmDelete", function(event) {
+$(document).on("click", "[id^='confirmDelete']", function(event) {
   $("#mode").val("confirm");
 });
-$(document).on("click", "#save", function(event) {
+$(document).on("click", "[id^='save']", function(event) {
   let result = true;
   try {
     result = inputLocal.save(event);
@@ -128,7 +125,7 @@ $(document).on("click", "#save", function(event) {
     $("#mode").val("save" + $("#mode").val());
   }
 });
-$(document).on("click", "#resetButton", function(event) {
+$(document).on("click", "[id^='resetButton']", function(event) {
   $("input, select, textarea").each(function(index) {
     $(this).removeClass("errors");
   });
@@ -173,6 +170,6 @@ $(function() {
     });
   }
 });
-$(document).on("click", "#cancel", function(event) {
+$(document).on("click", "[id^='cancel']", function(event) {
   $("#mode").val("view");
 });

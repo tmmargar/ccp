@@ -69,8 +69,8 @@ const reportsInputLocal = {
         if ($("#" + dataTableId).length > 0) {
           dataTable.initialize(dataTableId, [{ "sType" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [ [ 1,'desc'], [0, "asc" ] ]);
         }
-      } else if (reportId == "locationsHostedCount") {
-        dataTable.initialize(dataTableId, [null, { "type" : "name" }, null, null, null, { "type" : "number" }, null, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], "type" : "number", }], [ [8, "desc" ], [1, "asc" ] ]);
+//      } else if (reportId == "locationsHostedCount") {
+//        dataTable.initialize(dataTableId, [null, { "type" : "name" }, null, null, null, { "type" : "number" }, null, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], "type" : "number", }], [ [8, "desc" ], [1, "asc" ] ]);
       } else if (reportId == "championship") {
         const params = new URLSearchParams(window.location.search);
         const aryParam = params.get("sort").split(",");

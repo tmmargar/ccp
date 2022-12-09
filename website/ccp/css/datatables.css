@@ -27,6 +27,11 @@ table.dataTable {
    */
 }
 table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tbody td {
+  font-size: .8rem;
+}
+table.dataTable thead th,
 table.dataTable tfoot th {
   font-weight: bold;
   text-align: center;
@@ -82,9 +87,8 @@ table.dataTable.display tbody tr.selected.inactive > .sorting_1,
 table.dataTable.display tbody tr.selected.inactive > .sorting_2 {
   background-color: #B0BED9;
 }
-table.dataTable tbody th,
+table.dataTable thead th,
 table.dataTable tbody td {
-  /*padding: 8px 10px; */
   padding: 4px 4px;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
@@ -1261,7 +1265,7 @@ div.dataTables_wrapper span.select-item {
   }
 }
 .dataTable, .dataTables_filter, .dataTables_info {
-  font-size: .75em;
+  font-size: .8rem;
 }
 .dataTables_scrollFoot {
   display: none;

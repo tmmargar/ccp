@@ -2,7 +2,7 @@
 $(document).ready(function() {
   input.initialize();
 });
-$(document).on("click keyup paste", 'input[id^="groupName_"]', function(event) {
+$(document).on("click keyup paste", '[id^="groupName_"]', function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });

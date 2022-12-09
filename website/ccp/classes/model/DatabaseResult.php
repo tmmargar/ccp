@@ -120,12 +120,12 @@ class DatabaseResult extends Root {
   public function getLocationById(array $params) {
     return $this->getData(dataName: "locationSelectById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getLocationMaxId() {
-    return $this->getData(dataName: "locationSelectMaxId", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getLocationsHostedCount() {
-    return $this->getData(dataName: "locationSelectAllCount", params: null, orderBy: null, returnQuery: true, limitCount: null, rank: false);
-  }
+//   public function getLocationMaxId() {
+//     return $this->getData(dataName: "locationSelectMaxId", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+//   }
+//   public function getLocationsHostedCount() {
+//     return $this->getData(dataName: "locationSelectAllCount", params: null, orderBy: null, returnQuery: true, limitCount: null, rank: false);
+//   }
   public function getLogin($userName) {
     return $this->getData(dataName: "login", params: array($userName, "Super Users"), orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
@@ -257,6 +257,9 @@ class DatabaseResult extends Root {
   public function getSeasonActiveCount() {
     return $this->getData(dataName: "seasonActiveCount", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
+  public function getSeasonChampionships() {
+    return $this->getData(dataName: "seasonSelectAllChampionship", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  }
   public function getSeasonDateCheckCount(array $params) {
     return $this->getData(dataName: "seasonDateCheckCount", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
@@ -278,26 +281,26 @@ class DatabaseResult extends Root {
   public function getStructurePayout(array $params) {
     return $this->getData(dataName: "structurePayout", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
+  public function getTournament(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentSelectAll", params: null, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
+  }
   public function getTournamentAll(array $params) {
     return $this->getData(dataName: "tournamentAll", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getTournament(array $params) {
-    return $this->getData(dataName: "tournamentSelectAll", params: null, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
   }
   public function getTournamentIdMax(array $params) {
     return $this->getData(dataName: "tournamentIdMax", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentOrdered(array $params) {
-    return $this->getData(dataName: "tournamentSelectAllOrdered", params: null, orderBy: null, returnQuery: $params[0], limitCount: null, rank: false);
+  public function getTournamentOrdered(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentSelectAllOrdered", params: null, paramsNested: $paramsNested, orderBy: null, returnQuery: $params[0], limitCount: null, rank: false);
   }
   public function getTournamentsForEmailNotifications(array $params) {
     return $this->getData(dataName: "tournamentsSelectForEmailNotifications", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentByDateAndStartTime($params, $paramsNested, $limitCount) {
+  public function getTournamentByDateAndStartTime(array $params, array $paramsNested, $limitCount) {
     return $this->getData(dataName: "tournamentSelectAllByDateAndStartTime", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: $limitCount, rank: false);
   }
-  public function getTournamentById(array $params) {
-    return $this->getData(dataName: "tournamentSelectOneById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  public function getTournamentById(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentSelectOneById", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getTournamentBounty() {
     return $this->getData(dataName: "tournamentBountySelectAll", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -308,17 +311,14 @@ class DatabaseResult extends Root {
   public function getTournamentDuring() {
     return $this->getData(dataName: "tournamentSelectAllDuring", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getSeasonChampionships() {
-    return $this->getData(dataName: "seasonSelectAllChampionship", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-}
   public function getTournamentYearsPlayed(array $params) {
     return $this->getData(dataName: "tournamentSelectAllYearsPlayed", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentForRegistration(array $params) {
-    return $this->getData(dataName: "tournamentSelectAllForRegistration", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  public function getTournamentForRegistration(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentSelectAllForRegistration", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentForBuyins(array $params) {
-    return $this->getData(dataName: "tournamentSelectAllForBuyins", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  public function getTournamentForBuyins(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentSelectAllForBuyins", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getTournamentForRegistrationStatus(array $params) {
     return $this->getData(dataName: "tournamentSelectAllRegistrationStatus", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: false);
@@ -1070,9 +1070,8 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectAll":
           $query =
-            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, l.active, u.active AS userActive, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
-            "FROM poker_location l " .
-            "INNER JOIN poker_user u ON l.playerId = u.id ";
+            "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, u.active, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
+            "FROM poker_location l INNER JOIN poker_user u ON l.playerId = u.id ";
           if ($params[1]) {
             $query .= " AND l.active = '" . Constant::$FLAG_YES . "'";
           }
@@ -1082,24 +1081,24 @@ class DatabaseResult extends Root {
           break;
         case "locationSelectById":
           $query =
-            "SELECT locationId AS id, locationName AS name, playerId, address, city, UPPER(state) AS state, zipCode AS zip, active " .
-            "FROM poker_location " .
-            "WHERE locationId IN (" . $params[0] . ")";
+            "SELECT l.locationId AS id, l.locationName AS name, l.playerId, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, u.active " .
+            "FROM poker_location l INNER JOIN poker_user u ON l.playerId = u.id " .
+            "WHERE l.locationId IN (" . $params[0] . ")";
           break;
-        case "locationSelectMaxId":
-          $query =
-            "SELECT MAX(locationId) AS id " .
-            "FROM poker_location";
-          break;
-        case "locationSelectAllCount":
-          $query =
-            "SELECT l.locationId AS id, l.locationName AS location, l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, l.state, l.zipCode AS zip, l.active, u.active AS userActive, COUNT(*) AS count " .
-            "FROM poker_tournament t " .
-            "INNER JOIN poker_location l ON t.locationId = l.locationId " .
-            "INNER JOIN poker_user u ON l.playerId = u.id " .
-            "GROUP BY l.locationId " .
-            "ORDER BY count DESC";
-          break;
+//         case "locationSelectMaxId":
+//           $query =
+//             "SELECT MAX(locationId) AS id " .
+//             "FROM poker_location";
+//           break;
+//         case "locationSelectAllCount":
+//           $query =
+//             "SELECT l.locationId AS id, l.locationName AS location, l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, l.state, l.zipCode AS zip, l.active, u.active AS userActive, COUNT(*) AS count " .
+//             "FROM poker_tournament t " .
+//             "INNER JOIN poker_location l ON t.locationId = l.locationId " .
+//             "INNER JOIN poker_user u ON l.playerId = u.id " .
+//             "GROUP BY l.locationId " .
+//             "ORDER BY count DESC";
+//           break;
         case "login":
           $query =
             "SELECT password " .
@@ -2327,22 +2326,20 @@ class DatabaseResult extends Root {
                   break;
                 case "locationSelectAll":
                 case "locationSelectById":
-                case "locationSelectAllCount":
+//                 case "locationSelectAllCount":
                   if ("locationSelectById" != $dataName) {
                     $name = explode(" ", $row["host"]);
-                    $active = $row["userActive"];
                   } else {
                     $name = array("", "");
-                    $active = 0; // fix
                   }
                   $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zip"]);
-                  $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $active, $address, null, null, null, null, null, null);
-                  $location = new Location($this->isDebug(), $row["id"], "locationSelectAllCount" == $dataName ? $row["location"] : $row["name"], $user, "locationSelectAllCount" == $dataName ? $row["count"] : 0, (int) $row["active"], null, null, "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
+                  $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $row["active"], $address, null, null, null, null, null, null);
+                  $location = new Location($this->isDebug(), $row["id"], $row["name"], $user, 0, (int) $row["active"], null, null, "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
                   array_push($resultList, $location);
                   break;
-                case "locationSelectMaxId":
-                  array_push($resultList, (int) $row["id"]);
-                  break;
+//                 case "locationSelectMaxId":
+//                   array_push($resultList, (int) $row["id"]);
+//                   break;
                 case "login":
                   array_push($resultList, $row["password"]);
                   break;
@@ -2951,7 +2948,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_group_payout(groupId, payoutId) VALUES(" . $params[0] . ", " . $params[1] . ")";
           break;
         case "locationInsert":
-          $query = "INSERT INTO poker_location(locationId, locationName, playerId, address, city, state, zipCode, active) " . "SELECT IFNULL(MAX(locationId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", '" . $params[2] . "', '" . $params[3] . "', UPPER('" . $params[4] . "'), " . $params[5] . ", '" . ($params[6] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' FROM poker_location";
+          $query = "INSERT INTO poker_location(locationId, locationName, playerId, address, city, state, zipCode) " . "SELECT IFNULL(MAX(locationId), 0) + 1, '" . $params[0] . "', " . $params[1] . ", '" . $params[2] . "', '" . $params[3] . "', UPPER('" . $params[4] . "'), " . $params[5] . " FROM poker_location";
           break;
         case "notificationInsert":
           $query = "INSERT INTO poker_notification(id, description, startDate, endDate) " . "SELECT IFNULL(MAX(id), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "' FROM poker_notification";
@@ -2981,7 +2978,7 @@ class DatabaseResult extends Root {
 //           $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires) " .
           $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, selector, token, expires) " .
           // "SELECT MAX(id) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', '" . password_hash($params[3], PASSWORD_DEFAULT) . "', '" . $params[4] . "', 0, CURRENT_TIMESTAMP, null, null, null, null, 0, null, null, null, null, null, null FROM poker_user";
-            "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . $params[6] . ", " . (isset($params[7]) ? $params[7] : "0") . ", " . (isset($params[8]) ? null : "CURRENT_TIMESTAMP") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "null") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? "'" . $params[11] . "'" : "null") . ", " . (isset($params[12]) ? $params[12] : "null") . ", " . (isset($params[13]) ? $params[13] : "0") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
+          "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . $params[6] . ", " . (isset($params[7]) ? $params[7] : "0") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "CURRENT_TIMESTAMP") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "CURRENT_TIMESTAMP") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? "'" . $params[11] . "'" : "null") . ", " . (isset($params[12]) ? $params[12] : "null") . ", " . (isset($params[13]) ? $params[13] : "0") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
           break;
       }
       if ($this->isDebug()) {
@@ -3038,8 +3035,7 @@ class DatabaseResult extends Root {
             "', city = '" . $params[3] .
             "', state = UPPER('" . $params[4] .
             "'), zipCode = " . $params[5] .
-            ", active = '" . ($params[6] ? Constant::$FLAG_YES : Constant::$FLAG_NO) . "' " .
-            "WHERE locationId = " . $params[7];
+            " WHERE locationId = " . $params[6];
           break;
         case "notificationUpdate":
           $query =

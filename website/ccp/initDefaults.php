@@ -5,7 +5,7 @@ use ccp\classes\model\Constant;
 use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
 use ccp\classes\utility\SessionUtility;
-$outputTop = "";
+$header = "";
 $databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
 // $databaseResult = new DatabaseResult(true);
 if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false) {
@@ -14,13 +14,13 @@ if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["S
   $params = array($now->getDatabaseDateTimeFormat());
   $resultList = $databaseResult->getNotification(params: $params, returnQuery: false);
   foreach ($resultList as $notification) {
-    if ("" != $outputTop) {
-      $outputTop .= "<br>";
+    if ("" != $header) {
+      $header .= "<br>";
     }
-    $outputTop .= "***" . $notification->getDescription() . "***";
+    $header .= "***" . $notification->getDescription() . "***";
   }
 }
-$smarty->assign("contentTop", $outputTop);
+$smarty->assign("header", $header);
 $aryScriptFull = explode("/", $_SERVER["SCRIPT_NAME"]);
 $scriptName = $aryScriptFull[count($aryScriptFull) - 1];
 $aryScript = explode(".", $scriptName);
