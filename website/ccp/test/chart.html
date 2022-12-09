@@ -1,0 +1,59 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Chip Chair and a Prayer Events</title>
+ <link href="../images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" type="image/png">
+ <link href="../images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+ <link href="../images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+ <link href="../images/site.webmanifest" rel="manifest">
+ <link href="../css/jquery-ui.css" rel="stylesheet">
+ <link href="../css/jquery.datetimepicker.css" rel="stylesheet">
+ <link href="../css/datatables.css" rel="stylesheet">
+ <link href="../css/display.css" rel="stylesheet">
+ <link href="../css/menu.css" rel="stylesheet">
+ <link href="../css/home.css" rel="stylesheet">
+ <script src="../scripts/jquery/jquery.js"></script>
+ <script src="../scripts/jquery/jquery-ui.js"></script>
+ <script src="../scripts/jquery/jquery-migrate.js"></script>
+ <script src="../scripts/jquery/datatables.js"></script>
+ <script src="../scripts/jquery/jquery.datetimepicker.full.js"></script>
+ <script src="../scripts/jquery/jquery.mask.js"></script>
+ <script src="../scripts/scripts.js"></script>
+ <script src="../scripts/jqueryLocal.js"></script>
+ <script src="../scripts/dataTablesLocal.js"></script>
+ <script src="../scripts/urlSearchParams.js"></script>
+ <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+ <script src="../scripts/top5.js"></script>
+</head>
+<body>
+  <div class="responsive-cell">
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ <script type="text/javascript">
+  google.charts.load('current', {'packages':['gauge']});
+  google.charts.setOnLoadCallback(drawGauge);
+  function drawGauge() {
+  var gaugeOptions = {min: 0, max: 27, yellowFrom: 4, yellowTo: 8, redFrom: 0, redTo: 4, majorTicks: ["0", "6.75", "13.5", "20.25", "27"], minorTicks: 5, greenFrom: 8, greenTo: 27, height: 400};
+  var gaugeOptions2 = {min: 0, max: 27, yellowFrom: 0, yellowTo: 13.5, redFrom: 13.5, redTo: 27, majorTicks: ["0", "6.75", "13.5", "20.25", "27"], minorTicks: 2, height: 400};
+   gaugeData = new google.visualization.DataTable();
+   gaugeData.addColumn('number', 'Play');
+   gaugeData.addRows(1);
+   gaugeData.setCell(0, 0, 4);
+   var gauge = new google.visualization.Gauge(document.getElementById('gaugePlayed'));
+   gauge.draw(gaugeData, gaugeOptions);
+   gaugeData2 = new google.visualization.DataTable();
+   gaugeData2.addColumn('number', 'Need');
+   gaugeData2.addRows(1);
+   gaugeData2.setCell(0, 0, (8 - 4 > 0 ? 8 - 4 : 0));
+   var gauge2 = new google.visualization.Gauge(document.getElementById('gaugeNeed'));
+   gauge2.draw(gaugeData2, gaugeOptions2);
+  }
+ $(window).resize(function(){drawGauge();});
+ </script>
+   <div class="title">Championship Qualification</div>
+   <div class="center" id="gaugeNeed" style="width: 700px;"></div>
+   <div class="center" id="gaugePlayed" style="width: fit-content;"></div>
+ </div>
+</body>
+</html>

@@ -2,11 +2,11 @@
 $(document).ready(function() {
   input.initialize();
 });
-$(document).on("click keyup paste", 'input[id^="payoutName_"], input[id^="bonusPoints_"], input[id^="minPlayers_"], input[id^="maxPlayers_"]', function(event) {
+$(document).on("click keyup paste", '[id^="payoutName_"], [id^="bonusPoints_"], [id^="minPlayers_"], [id^="maxPlayers_"]', function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("click keyup paste", 'input[id^="percentage_"]', function(event) {
+$(document).on("click keyup paste", '[id^="percentage_"]', function(event) {
   inputLocal.calculateTotal(this.id);
   input.enable("save", inputLocal.enableSave);
 });
@@ -58,7 +58,7 @@ const inputLocal = {
   },
   calculateTotal : function(objId) {
     let total = 0;
-    $("input[id^='percentage_']").each(function(index) {
+    $("[id^='percentage_']").each(function(index) {
       if ($(this).val() == "") {
         $(this).val(0);
       }
@@ -69,10 +69,20 @@ const inputLocal = {
         $("#" + objId).val($("#" + objId).data("previousValue"));
       }
     } else {
-      $("#percentageTotal").val(total);
-      if (undefined != objId) {
-        $("#" + objId).data("previousValue", $("#" + objId).val());
-      }
+      //TODO: validate previous and next to make sure largest to smallest
+      /*const id = objId.split("_");
+      // check to make sure less than previous value
+      //if (this.value != "" && parseInt(this.value) != 0) {
+        //console.log(this.value + " >= " + $("#percentage_" + id[1] + "_" + (id[2] - 1)).val());
+      if (id[2] > 0 && parseInt($("#" + objId).val()) >= parseInt($("#percentage_" + id[1] + "_" + (id[2] - 1)).val())) {
+        console.log("invalid");
+        $("#" + objId).val($("#" + objId).data("previousValue"));
+      } else {*/
+        $("#percentageTotal").val(total);
+        if (undefined != objId) {
+          $("#" + objId).data("previousValue", $("#" + objId).val());
+        }
+      //}
     }
   },
   enableButtons : function() {
@@ -105,7 +115,7 @@ const inputLocal = {
     });
   },
   save : function() {
-    $("input[id^='place_']").each(function(index) {
+    $("[id^='place_']").each(function(index) {
       $(this).prop("disabled", false);
     });
     return true;

@@ -1,7 +1,6 @@
 "use script";
 $(document).ready(function() {
-  //inputLocal.validate();
-  inputLocal.enableSendRequest();
+  inputLocal.validate();
 });
 $(document).on("click keyup paste", "#username, #email", function(event) {
   inputLocal.validate();
@@ -19,11 +18,8 @@ $(document).on("click", "#resetPassword", function(event) {
 const inputLocal = {
 	enableSendRequest : function() {
     if ($("#username").length > 0) {
-    	if (($("#username").val().length == 0) || ($("#email").val().length == 0)) {
-	      $("#sendRequest").prop("disabled", true);
-	    } else {
-	      $("#sendRequest").prop("disabled", false);
-	    }
+      let result = ($("#username").val().length == 0) || ($("#email").val().length == 0);
+      $("#sendRequest").prop("disabled", result);
     }
   },
   validate : function() {

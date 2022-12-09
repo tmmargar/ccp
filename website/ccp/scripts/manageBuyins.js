@@ -19,20 +19,20 @@ $(document).on("click", "#addonCheckAll, #bountyACheckAll, #bountyBCheckAll", fu
   input.toggleCheckboxes(id, id);
   input.countUpdate(id, id + "Count");
 });
-$(document).on("click", "input[id^='buyin_'], input[id^='rebuy_']", function(event) {
+$(document).on("click", "[id^='buyin_'], [id^='rebuy_']", function(event) {
   const id = this.id.substring(0, this.id.indexOf("_"));
   input.toggleCheckAll(id, id);
 });
-$(document).on("click", "input[id^='buyin_']", function(event) {
+$(document).on("click", "[id^='buyin_']", function(event) {
   inputLocal.postProcessing();
 });
-$(document).on("click", "input[id^='rebuy_']", function(event) {
+$(document).on("click", "[id^='rebuy_']", function(event) {
   const values = $(this).attr("id").split("_");
   $("#rebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
   $("#rebuyCount_" + values[1]).val(($(this).prop("checked") ? 1 : 0));
   input.countUpdate("rebuy", "rebuyCount");
 });
-$(document).on("keyup paste", "input[id^='rebuyCount_']", function(event) {
+$(document).on("keyup paste", "[id^='rebuyCount_']", function(event) {
   input.validateNumberOnly($(this), event, false);
   if ($(this).val() == "" || parseInt($(this).val()) > parseInt($("#rebuyFlag").val())) {
     $(this).val($(this).data("previousValue"));
@@ -44,15 +44,15 @@ $(document).on("keyup paste", "input[id^='rebuyCount_']", function(event) {
     input.countUpdate("rebuy", "rebuyCount");
   }
 });
-$(document).on("click", "input[id^='addon_']", function(event) {
+$(document).on("click", "[id^='addon_']", function(event) {
   input.toggleCheckAll("addon", "addon");
   input.countUpdate("addon");
 });
-$(document).on("click", "input[id^='bountyA_']", function(event) {
+$(document).on("click", "[id^='bountyA_']", function(event) {
   input.toggleCheckAll("bountyA", "bountyA");
   input.countUpdate("bountyA");
 });
-$(document).on("click", "input[id^='bountyB_']", function(event) {
+$(document).on("click", "[id^='bountyB_']", function(event) {
   input.toggleCheckAll("bountyB", "bountyB");
   input.countUpdate("bountyB");
 });
@@ -63,15 +63,15 @@ const inputLocal = {
     const objAllRebuy = $("#rebuyPaid");
     const objAllRebuyCount = $("#rebuyCount");
     const objAllAddon = $("#addonPaid");
-    const objAllBountyA = $("#bountyA");
-    const objAllBountyB = $("#bountyB");
+    //const objAllBountyA = $("#bountyA");
+    //const objAllBountyB = $("#bountyB");
     objPlayers.val("");
     objAllPaid.val("");
     objAllRebuy.val("");
     objAllRebuyCount.val("");
     objAllAddon.val("");
-    objAllBountyA.val("");
-    objAllBountyB.val("");
+    //objAllBountyA.val("");
+    //objAllBountyB.val("");
     // if mode is create or modify then build list of player ids for paid, rebuy, addon, bounty A and bounty B
     if (("create" == mode) || ("modify" == mode)) {
       // for each table row except header
@@ -83,8 +83,8 @@ const inputLocal = {
           objAllRebuy.val(objAllRebuy.val() + (0 < objAllRebuy.val().length ? ", " : "") + $("#rebuy_" + playerId).prop("checked"));
           objAllRebuyCount.val(objAllRebuyCount.val() + (0 < objAllRebuyCount.val().length ? ", " : "") + $("#rebuyCount_" + playerId).val());
           objAllAddon.val(objAllAddon.val() + (0 < objAllAddon.val().length ? ", " : "") +$("#addon_" + playerId).prop("checked"));
-          objAllBountyA.val(objAllBountyA.val() + (0 < objAllBountyA.val().length ? ", " : "") + $("#bountyA_" + playerId).prop("checked"));
-          objAllBountyB.val(objAllBountyB.val() + (0 < objAllBountyB.val().length ? ", " : "") + $("#bountyB_" + playerId).prop("checked"));
+          //objAllBountyA.val(objAllBountyA.val() + (0 < objAllBountyA.val().length ? ", " : "") + $("#bountyA_" + playerId).prop("checked"));
+          //objAllBountyB.val(objAllBountyB.val() + (0 < objAllBountyB.val().length ? ", " : "") + $("#bountyB_" + playerId).prop("checked"));
           objPlayers.val(objPlayers.val() + (0 < objPlayers.val().length ? ", " : "") + playerId);
         }
       });
@@ -108,7 +108,8 @@ const inputLocal = {
     return false;
   },
   initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
+    //dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
+    dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
   },
   markCheckboxes : function(hasFlag, obj, name, id) {
     // if need to check flag and flag is set or no need to check flag then mark checkbox and check check all checkbox appropriately
@@ -120,7 +121,7 @@ const inputLocal = {
   postProcessing : function() {
     let countNotCheckedPaid = 0;
     // for each paid checkbox
-    $('input[id^="buyin_"]').each(function(index) {
+    $('[id^="buyin_"]').each(function(index) {
       // parse out number from id to use for other objects 
       const id = $(this).attr("id");
       const values = id.split("_");
@@ -142,7 +143,7 @@ const inputLocal = {
     });
     inputLocal.processAllCheckAll(countNotCheckedPaid);
     input.enableView();
-    $("input[id^='rebuy_']").each(function(index) {
+    $("[id^='rebuy_']").each(function(index) {
       const id = $(this).attr("id");
       const values = id.split("_");
       $("#rebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
@@ -150,7 +151,7 @@ const inputLocal = {
         $("#rebuyCount_" + values[1]).val(0);
       }
     });
-    $("input[id^='rebuyCount_']").each(function(index) {
+    $("[id^='rebuyCount_']").each(function(index) {
       $(this).data("previousValue", $(this).val());
     });
     input.countUpdate("buyin");
@@ -171,14 +172,14 @@ const inputLocal = {
     inputLocal.disableCheckboxAll(false, "bountyB", countNotCheckedPaid);
   },
   setDefaults : function() {
-    input.insertSelectedAfter("Tournament", "tournamentId", "view");
+    input.insertSelectedBefore("Tournament", "tournamentId", "mode");
   },
   tableRowClick : function(obj) {
     $(obj).removeClass("selected");
   },
   toggleRebuy : function(checked) {
     let disabled = false;
-    $("input[id^='rebuy_']").each(function(index) {
+    $("[id^='rebuy_']").each(function(index) {
       if ($(this).prop("disabled")) {
         disabled = true;
       } else {

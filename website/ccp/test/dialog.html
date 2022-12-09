@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chip Chair and a Prayer Dialog Test</title>
+  <style>
+  #main-dialog::backdrop, #live-dialog::backdrop {
+    background-color: #5e68df;
+    opacity: 0.7;
+  }
+  #main-dialog, #live-dialog {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
+  }
+  #main-dialog header, #live-dialog header {
+    align-items: center;
+    background-color: #5e68df;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+  }
+  #main-dialog header h2, #live-dialog header h2 {
+    margin-block: 0px;
+  }
+  #main-dialog footer menu, #live-dialog footer menu {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin: 0;
+  }
+  #main-dialog button, #live-dialog button {
+    background: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  footer #dialog-footer--confirm-btn {
+    background: #5e68df;
+    color: white;
+  }
+  footer #dialog-footer--confirm-btn:hover {
+    background: #959cea;
+  }
+  footer #dialog-footer--cancel-btn:hover {
+    background: #f7f3f3;
+  }
+  #dialog-header--cancel-btn {
+    border: 0;
+    color: white;
+    font-weight: bold;
+    height: fit-content;
+  }
+  #main-dialog form {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 1.5rem;
+  }
+  </style>
+  <link href="../css/jquery-ui.css" rel="stylesheet">
+  <link href="../css/datatables.css" rel="stylesheet">
+  <link href="../css/display.css" rel="stylesheet">
+  <script src="../scripts/jquery/jquery.js" type="text/javascript"></script>
+  <script src="../scripts/jquery/jquery-ui.js" type="text/javascript"></script>
+  <script src="../scripts/jquery/jquery-migrate.js"></script>
+  <script src="../scripts/jquery/datatables.js" type="text/javascript"></script>
+  <script src="../scripts/jquery/jquery.datetimepicker.full.js" type="text/javascript"></script>
+  <script src="../scripts/jquery/jquery.smartmenus.js" type="text/javascript"></script>
+  <script src="../scripts/jquery/jquery.mask.js" type="text/javascript"></script>
+  <script src="../scripts/scripts.js" type="text/javascript"></script>
+  <script src="../scripts/jqueryLocal.js" type="text/javascript"></script>
+  <script src="../scripts/dataTablesLocal.js" type="text/javascript"></script>
+  <script src="../scripts/urlSearchParams.js" type="text/javascript"></script>
+  <script src="../scripts/top5.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    const updateButton = document.getElementById('updateDetails');
+    const favDialog = document.getElementById('favDialog');
+    const outputBox = document.getElementById('outMain');
+    const selectEl = document.getElementById('selectMain');
+    const confirmBtn = document.getElementById('confirmBtn');
+    updateButton.addEventListener('click', () => {
+      if (typeof favDialog.showModal === "function") {
+        favDialog.showModal();
+      } else {
+        outputBox.value = "Sorry, the <dialog> API is not supported by this browser.";
+      }
+    });
+    selectEl.addEventListener('change', (e) => {
+      confirmBtn.value = selectEl.value;
+    });
+    favDialog.addEventListener('close', () => {
+      outputBox.value = `${favDialog.returnValue} button clicked - ${(new Date()).toString()}`;
+    });
+    
+    const outputBox2 = document.getElementById('outMain2');
+    const selectEl2 = document.getElementById('selectMain2');
+    const confirmBtn2 = document.getElementById('dialog-footer--confirm-btn');
+    const openBtn = document.getElementById("open-dialog-btn");
+    const dialog = document.getElementById("main-dialog");
+    openBtn.addEventListener("click", () => {
+      dialog.showModal();
+    });
+    selectEl2.addEventListener('change', (e) => {
+      confirmBtn2.value = selectEl2.value;
+    });
+    dialog.addEventListener("close", () => {
+      outputBox2.value = `${dialog.returnValue} button clicked - ${(new Date()).toString()}`;
+    });
+    
+    const openBtn2 = document.getElementById("open-live-dialog-btn");
+    const dialog2 = document.getElementById("live-dialog");
+    openBtn2.addEventListener("click", () => {
+      dialog2.showModal();
+    });
+  });
+  </script>
+ </head>
+ <body>
+  <dialog id="favDialog">
+   <form method="dialog">
+    <p>
+     <label>Favorite animal:
+      <select id="selectMain">
+       <option value="default">Choose…</option>
+       <option>Brine shrimp</option>
+       <option>Red panda</option>
+       <option>Spider monkey</option>
+      </select>
+     </label>
+    </p>
+    <div>
+     <button value="cancel">Cancel</button>
+     <button id="confirmBtn" value="default">Confirm</button>
+    </div>
+   </form>
+  </dialog>
+  <p>
+   <button id="updateDetails">Update details</button>
+  </p>
+  <output id="outMain"></output>
+  <main id="app">
+   <button id="open-dialog-btn">Open dialog</button>
+  </main>
+  <dialog id="main-dialog">
+    <form method="dialog">
+      <header>
+        <h2>Dialog header</h2>
+        <button id="dialog-header--cancel-btn">X</button>
+      </header>
+      <main>
+       <label>Favorite animal:
+        <select id="selectMain2">
+         <option value="default">Choose…</option>
+         <option>Brine shrimp</option>
+         <option>Red panda</option>
+         <option>Spider monkey</option>
+        </select>
+       </label>
+      </main>
+      <footer>
+        <menu>
+          <button value="Cancel" id="dialog-footer--cancel-btn">Cancel</button>
+          <button value="Confirm" id="dialog-footer--confirm-btn">Confirm</button>
+        </menu>
+      </footer>
+    </form>
+  </dialog>
+  <output id="outMain2"></output>
+  <main id="app">
+   <button id="open-live-dialog-btn">Open live dialog</button>
+  </main>
+  <dialog id="live-dialog" style="width: 450px;">
+    <form method="dialog">
+      <header>
+        <h2>Dialog header</h2>
+        <button id="dialog-header--cancel-btn">X</button>
+      </header>
+      <main>
+       <table border="0" cellpadding="0" cellspacing="0" class="display " id="dataTblRankLifetimePoints" style="width: 100%;">
+        <thead>
+         <tr>
+          <th colspan="1" rowspan="1">Rank</th>
+          <th colspan="1" rowspan="1">Name</th>
+          <th colspan="1" rowspan="1">Pts</th>
+          <th colspan="1" rowspan="1">Trnys</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td>1</td>
+          <td>David Wojtanowski</td>
+          <td>5,620</td>
+          <td>401</td>
+        </tr>
+         <tr>
+          <td>2</td>
+          <td>David Hatch</td>
+          <td>5,098</td>
+          <td>361</td>
+        </tr>
+         <tr>
+          <td>3</td>
+          <td>Greg Wiland</td>
+          <td>5,061</td>
+          <td>390</td>
+        </tr>
+         <tr>
+          <td>4</td>
+          <td>Sanjay Kuchipudi</td>
+          <td>4,726</td>
+          <td>356</td>
+        </tr>
+         <tr>
+          <td>5</td>
+          <td>Todd Margarita</td>
+          <td>4,389</td>
+          <td>291</td>
+        </tr>
+         <tr>
+          <td>6</td>
+          <td>Mark Forster</td>
+          <td>4,162</td>
+          <td>304</td>
+        </tr>
+         <tr>
+          <td>7</td>
+          <td>Francine Gottler</td>
+          <td>4,124</td>
+          <td>324</td>
+        </tr>
+         <tr>
+          <td>8</td>
+          <td>Brent Johnston</td>
+          <td>3,986</td>
+          <td>282</td>
+        </tr>
+         <tr>
+          <td>9</td>
+          <td>Jim Lee</td>
+          <td>3,952</td>
+          <td>295</td>
+        </tr>
+         <tr>
+          <td>10</td>
+          <td>Eric Pritzl</td>
+          <td>3,744</td>
+          <td>266</td>
+        </tr>
+         <tr>
+          <td>11</td>
+          <td>Kent Hurlburt</td>
+          <td>3,708</td>
+          <td>319</td>
+        </tr>
+         <tr>
+          <td>12</td>
+          <td>Jason Nantais</td>
+          <td>3,468</td>
+          <td>290</td>
+        </tr>
+         <tr>
+          <td>13</td>
+          <td>Pam Ennis</td>
+          <td>3,461</td>
+          <td>229</td>
+        </tr>
+         <tr>
+          <td>14</td>
+          <td>Tom Murray</td>
+          <td>3,269</td>
+          <td>265</td>
+        </tr>
+         <tr>
+          <td>15</td>
+          <td>Eric Nemeth</td>
+          <td>3,172</td>
+          <td>219</td>
+        </tr>
+         <tr>
+          <td>16</td>
+          <td>Brent Micallef</td>
+          <td>2,989</td>
+          <td>207</td>
+        </tr>
+         <tr>
+          <td>17</td>
+          <td>Joe Villarosa</td>
+          <td>2,908</td>
+          <td>256</td>
+        </tr>
+         <tr>
+          <td>18</td>
+          <td>George Abuamsha</td>
+          <td>2,698</td>
+          <td>236</td>
+        </tr>
+         <tr>
+          <td>19</td>
+          <td>Mark Larson</td>
+          <td>2,596</td>
+          <td>172</td>
+        </tr>
+         <tr>
+          <td>20</td>
+          <td>Jeffrey Merritt</td>
+          <td>2,337</td>
+          <td>197</td>
+        </tr>
+         <tr>
+          <td>21</td>
+          <td>Tony Abuamsha</td>
+          <td>2,280</td>
+          <td>164</td>
+        </tr>
+         <tr>
+          <td>22</td>
+          <td>Jeff Brautigan</td>
+          <td>2,155</td>
+          <td>132</td>
+        </tr>
+         <tr>
+          <td>23</td>
+          <td>Barry Fletcher</td>
+          <td>2,053</td>
+          <td>125</td>
+        </tr>
+         <tr>
+          <td>24</td>
+          <td>Jon Quigley</td>
+          <td>1,994</td>
+          <td>157</td>
+        </tr>
+         <tr>
+          <td>25</td>
+          <td>Randy Nelson</td>
+          <td>1,851</td>
+          <td>125</td>
+        </tr>
+         <tr>
+          <td>26</td>
+          <td>Lisa Moore</td>
+          <td>1,779</td>
+          <td>140</td>
+        </tr>
+         <tr>
+          <td>27</td>
+          <td>Gregory McKay</td>
+          <td>1,556</td>
+          <td>143</td>
+        </tr>
+         <tr>
+          <td>28</td>
+          <td>Chuck Perrone</td>
+          <td>1,550</td>
+          <td>117</td>
+        </tr>
+         <tr>
+          <td>29</td>
+          <td>Eric Spencer</td>
+          <td>1,535</td>
+          <td>131</td>
+        </tr>
+         <tr>
+          <td>30</td>
+          <td>Greg Lang</td>
+          <td>1,466</td>
+          <td>94</td>
+        </tr>
+         <tr>
+          <td>31</td>
+          <td>Dex Wiles</td>
+          <td>1,407</td>
+          <td>91</td>
+        </tr>
+         <tr>
+          <td>32</td>
+          <td>Brian Pritzl</td>
+          <td>1,335</td>
+          <td>90</td>
+        </tr>
+         <tr>
+          <td>33</td>
+          <td>Mark Ahern</td>
+          <td>1,318</td>
+          <td>131</td>
+        </tr>
+         <tr>
+          <td>34</td>
+          <td>David Brock</td>
+          <td>1,311</td>
+          <td>124</td>
+        </tr>
+         <tr>
+          <td>35</td>
+          <td>Artie Gutowski</td>
+          <td>1,152</td>
+          <td>83</td>
+        </tr>
+         <tr>
+          <td>36</td>
+          <td>Dan Sultana</td>
+          <td>1,040</td>
+          <td>107</td>
+        </tr>
+         <tr>
+          <td>37</td>
+          <td>Nick Greeley</td>
+          <td>957</td>
+          <td>72</td>
+        </tr>
+         <tr>
+          <td>38</td>
+          <td>Mark Kirby</td>
+          <td>944</td>
+          <td>72</td>
+        </tr>
+         <tr>
+          <td>39</td>
+          <td>Jason Kline</td>
+          <td>926</td>
+          <td>101</td>
+        </tr>
+         <tr>
+          <td>40</td>
+          <td>Dan McClung</td>
+          <td>883</td>
+          <td>75</td>
+        </tr>
+         <tr>
+          <td>41</td>
+          <td>Tim Wilson</td>
+          <td>867</td>
+          <td>68</td>
+        </tr>
+         <tr>
+          <td>42</td>
+          <td>Paul Sandhu</td>
+          <td>813</td>
+          <td>69</td>
+        </tr>
+         <tr>
+          <td>43</td>
+          <td>Kevin Ennis</td>
+          <td>789</td>
+          <td>52</td>
+        </tr>
+         <tr>
+          <td>44</td>
+          <td>Matthew Modrzejewski</td>
+          <td>714</td>
+          <td>59</td>
+        </tr>
+         <tr>
+          <td>45</td>
+          <td>Raymond Turnbull</td>
+          <td>674</td>
+          <td>47</td>
+        </tr>
+         <tr>
+          <td>46</td>
+          <td>Dean Miller</td>
+          <td>670</td>
+          <td>42</td>
+        </tr>
+         <tr>
+          <td>47</td>
+          <td>John Safranski</td>
+          <td>640</td>
+          <td>50</td>
+        </tr>
+         <tr>
+          <td>48</td>
+          <td>Brandy Dahl</td>
+          <td>635</td>
+          <td>55</td>
+        </tr>
+         <tr>
+          <td>49</td>
+          <td>Michelle Nemeth</td>
+          <td>627</td>
+          <td>49</td>
+        </tr>
+         <tr>
+          <td>50</td>
+          <td>Tammy Larson</td>
+          <td>602</td>
+          <td>46</td>
+        </tr>
+         <tr>
+          <td>51</td>
+          <td>Steve Cummings</td>
+          <td>562</td>
+          <td>54</td>
+        </tr>
+         <tr>
+          <td>52</td>
+          <td>April Turnbull</td>
+          <td>555</td>
+          <td>38</td>
+        </tr>
+         <tr>
+          <td>53</td>
+          <td>Rich Austreng</td>
+          <td>544</td>
+          <td>52</td>
+        </tr>
+         <tr>
+          <td>54</td>
+          <td>Adam Kline</td>
+          <td>519</td>
+          <td>59</td>
+        </tr>
+         <tr>
+          <td>55</td>
+          <td>Michael Moore</td>
+          <td>466</td>
+          <td>29</td>
+        </tr>
+         <tr>
+          <td>56</td>
+          <td>Scott Margarita</td>
+          <td>421</td>
+          <td>30</td>
+        </tr>
+         <tr>
+          <td>57</td>
+          <td>M.A. Wiland</td>
+          <td>400</td>
+          <td>60</td>
+        </tr>
+         <tr>
+          <td>58</td>
+          <td>Dustin Fern</td>
+          <td>387</td>
+          <td>35</td>
+        </tr>
+         <tr>
+          <td>59</td>
+          <td>Tim Wiles</td>
+          <td>370</td>
+          <td>34</td>
+        </tr>
+         <tr>
+          <td>60</td>
+          <td>Jim Clifford</td>
+          <td>351</td>
+          <td>18</td>
+        </tr>
+         <tr>
+          <td>61</td>
+          <td>Nyal Bischoff</td>
+          <td>298</td>
+          <td>31</td>
+        </tr>
+         <tr>
+          <td>62</td>
+          <td>George Lang</td>
+          <td>287</td>
+          <td>23</td>
+        </tr>
+         <tr>
+          <td>63</td>
+          <td>David Weishaar</td>
+          <td>272</td>
+          <td>22</td>
+        </tr>
+         <tr>
+          <td>64</td>
+          <td>David Codd</td>
+          <td>259</td>
+          <td>34</td>
+        </tr>
+         <tr>
+          <td>65</td>
+          <td>Timothy Cummings</td>
+          <td>255</td>
+          <td>27</td>
+        </tr>
+         <tr>
+          <td>66</td>
+          <td>Anthony Quigley</td>
+          <td>219</td>
+          <td>24</td>
+        </tr>
+         <tr>
+          <td>67</td>
+          <td>Kunal Choksi</td>
+          <td>215</td>
+          <td>17</td>
+        </tr>
+         <tr>
+          <td>68</td>
+          <td>Jim Cardinal</td>
+          <td>213</td>
+          <td>15</td>
+        </tr>
+         <tr>
+          <td>69</td>
+          <td>Anjali Puri</td>
+          <td>211</td>
+          <td>13</td>
+        </tr>
+         <tr>
+          <td>70</td>
+          <td>Bian Knowles</td>
+          <td>209</td>
+          <td>12</td>
+        </tr>
+         <tr>
+          <td>71</td>
+          <td>Aaron Powell</td>
+          <td>208</td>
+          <td>17</td>
+        </tr>
+         <tr>
+          <td>72</td>
+          <td>Andy McEvoy</td>
+          <td>207</td>
+          <td>19</td>
+        </tr>
+         <tr>
+          <td>73</td>
+          <td>Vincent Kazimierczuk</td>
+          <td>206</td>
+          <td>15</td>
+        </tr>
+         <tr>
+          <td>74</td>
+          <td>Paul Tower</td>
+          <td>196</td>
+          <td>27</td>
+        </tr>
+         <tr>
+          <td>75</td>
+          <td>Nick Kunyckyj</td>
+          <td>186</td>
+          <td>12</td>
+        </tr>
+         <tr>
+          <td>76</td>
+          <td>Steve Trammell</td>
+          <td>181</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>77</td>
+          <td>Kyle Richardson</td>
+          <td>176</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>78</td>
+          <td>David Starzacher</td>
+          <td>173</td>
+          <td>14</td>
+        </tr>
+         <tr>
+          <td>79</td>
+          <td>Ed Christie</td>
+          <td>170</td>
+          <td>13</td>
+        </tr>
+         <tr>
+          <td>80</td>
+          <td>Dan Nickols</td>
+          <td>168</td>
+          <td>16</td>
+        </tr>
+         <tr>
+          <td>81</td>
+          <td>Judi Nickols</td>
+          <td>166</td>
+          <td>16</td>
+        </tr>
+         <tr>
+          <td>82</td>
+          <td>Martha Sultana</td>
+          <td>158</td>
+          <td>16</td>
+        </tr>
+         <tr>
+          <td>83</td>
+          <td>Chazz Worlow</td>
+          <td>153</td>
+          <td>14</td>
+        </tr>
+         <tr>
+          <td>84</td>
+          <td>Matthew Wolfe</td>
+          <td>147</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>85</td>
+          <td>Matt Keffler</td>
+          <td>137</td>
+          <td>12</td>
+        </tr>
+         <tr>
+          <td>86</td>
+          <td>Perry Abbey</td>
+          <td>135</td>
+          <td>16</td>
+        </tr>
+         <tr>
+          <td>87</td>
+          <td>Karl Anderson</td>
+          <td>126</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>88</td>
+          <td>Jeremy Ling</td>
+          <td>124</td>
+          <td>12</td>
+        </tr>
+         <tr>
+          <td>89</td>
+          <td>Brian Richardson</td>
+          <td>122</td>
+          <td>11</td>
+        </tr>
+         <tr>
+          <td>90</td>
+          <td>Chris Bouza</td>
+          <td>120</td>
+          <td>10</td>
+        </tr>
+         <tr>
+          <td>91</td>
+          <td>Bill Wertz</td>
+          <td>119</td>
+          <td>10</td>
+        </tr>
+         <tr>
+          <td>92</td>
+          <td>John Gordon</td>
+          <td>112</td>
+          <td>11</td>
+        </tr>
+         <tr>
+          <td>92</td>
+          <td>Keri Powell</td>
+          <td>112</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>94</td>
+          <td>Allen Filipski</td>
+          <td>111</td>
+          <td>10</td>
+        </tr>
+         <tr>
+          <td>95</td>
+          <td>Clay Richeson</td>
+          <td>110</td>
+          <td>10</td>
+        </tr>
+         <tr>
+          <td>95</td>
+          <td>Gabe Quigley</td>
+          <td>110</td>
+          <td>14</td>
+        </tr>
+         <tr>
+          <td>97</td>
+          <td>Lami Samona</td>
+          <td>102</td>
+          <td>8</td>
+        </tr>
+         <tr>
+          <td>98</td>
+          <td>Brian Flogaus</td>
+          <td>98</td>
+          <td>6</td>
+        </tr>
+         <tr>
+          <td>99</td>
+          <td>Mike Roberts</td>
+          <td>93</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>100</td>
+          <td>Dean Singer</td>
+          <td>90</td>
+          <td>12</td>
+        </tr>
+         <tr>
+          <td>101</td>
+          <td>Dave Otremba</td>
+          <td>82</td>
+          <td>8</td>
+        </tr>
+         <tr>
+          <td>102</td>
+          <td>Lance Alan</td>
+          <td>80</td>
+          <td>5</td>
+        </tr>
+         <tr>
+          <td>103</td>
+          <td>Joe Sharpe</td>
+          <td>79</td>
+          <td>6</td>
+        </tr>
+         <tr>
+          <td>104</td>
+          <td>Paul Kula</td>
+          <td>78</td>
+          <td>8</td>
+        </tr>
+         <tr>
+          <td>105</td>
+          <td>Sridharan Sundaram</td>
+          <td>75</td>
+          <td>8</td>
+        </tr>
+         <tr>
+          <td>106</td>
+          <td>Jerry Thompson</td>
+          <td>74</td>
+          <td>9</td>
+        </tr>
+         <tr>
+          <td>107</td>
+          <td>Brad Busch</td>
+          <td>73</td>
+          <td>6</td>
+        </tr>
+         <tr>
+          <td>107</td>
+          <td>Joe Bush</td>
+          <td>73</td>
+          <td>7</td>
+        </tr>
+         <tr>
+          <td>109</td>
+          <td>Mike Rossetti</td>
+          <td>68</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>110</td>
+          <td>Lori Stratford</td>
+          <td>62</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>111</td>
+          <td>Robert Quigley</td>
+          <td>56</td>
+          <td>5</td>
+        </tr>
+         <tr>
+          <td>112</td>
+          <td>Scott Buryta</td>
+          <td>51</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>113</td>
+          <td>Mike Schmidt</td>
+          <td>50</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>114</td>
+          <td>Mike Brockett</td>
+          <td>49</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>114</td>
+          <td>Robert Spadoni</td>
+          <td>49</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>116</td>
+          <td>Joe Moon</td>
+          <td>48</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>117</td>
+          <td>Andy Korby</td>
+          <td>46</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>117</td>
+          <td>Sam Richeson</td>
+          <td>46</td>
+          <td>6</td>
+        </tr>
+         <tr>
+          <td>119</td>
+          <td>Conner Harris</td>
+          <td>45</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>120</td>
+          <td>Jeff Calvird</td>
+          <td>42</td>
+          <td>5</td>
+        </tr>
+         <tr>
+          <td>120</td>
+          <td>Mike Hrecznyj</td>
+          <td>42</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>122</td>
+          <td>Bob Wilson</td>
+          <td>38</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>123</td>
+          <td>Joey Villarosa</td>
+          <td>37</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>124</td>
+          <td>Roger Wilhelmi</td>
+          <td>36</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>124</td>
+          <td>Swami Balasubramanian</td>
+          <td>36</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>126</td>
+          <td>Fred Eppensteiner</td>
+          <td>35</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>126</td>
+          <td>Ruth Gianotta</td>
+          <td>35</td>
+          <td>5</td>
+        </tr>
+         <tr>
+          <td>126</td>
+          <td>Sonia Scappaticci</td>
+          <td>35</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>129</td>
+          <td>Greg Price</td>
+          <td>31</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>130</td>
+          <td>Rodney Stratford</td>
+          <td>30</td>
+          <td>4</td>
+        </tr>
+         <tr>
+          <td>131</td>
+          <td>Hussein Alalawi</td>
+          <td>29</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>131</td>
+          <td>Tom Wehrmeister</td>
+          <td>29</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>133</td>
+          <td>Axel Rose</td>
+          <td>28</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>134</td>
+          <td>Kevin Howe</td>
+          <td>27</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>135</td>
+          <td>Matt Towers</td>
+          <td>26</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>135</td>
+          <td>Mike Oatney</td>
+          <td>26</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>135</td>
+          <td>Mike Schmidt</td>
+          <td>26</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>135</td>
+          <td>tbd tbd</td>
+          <td>26</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>139</td>
+          <td>Kim Bolin</td>
+          <td>24</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>139</td>
+          <td>Mike Foster</td>
+          <td>24</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>141</td>
+          <td>Bob Boyd</td>
+          <td>22</td>
+          <td>3</td>
+        </tr>
+         <tr>
+          <td>141</td>
+          <td>Dola Nelson</td>
+          <td>22</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>141</td>
+          <td>Kevin Pritzl</td>
+          <td>22</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>144</td>
+          <td>Becky Price</td>
+          <td>21</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>144</td>
+          <td>Dan_J McDermott</td>
+          <td>21</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>146</td>
+          <td>Brandon Trygg</td>
+          <td>20</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>146</td>
+          <td>David Codd Jr.</td>
+          <td>20</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>146</td>
+          <td>Luis Romero</td>
+          <td>20</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>149</td>
+          <td>Dan_T McDermott</td>
+          <td>19</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>149</td>
+          <td>Greg Stucki</td>
+          <td>19</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>149</td>
+          <td>James Kupras</td>
+          <td>19</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>149</td>
+          <td>Sylvain Calemme</td>
+          <td>19</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>153</td>
+          <td>Alden Ingram</td>
+          <td>18</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>153</td>
+          <td>Floyd Shinn</td>
+          <td>18</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>153</td>
+          <td>Jenny Torony</td>
+          <td>18</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>153</td>
+          <td>Van Karson</td>
+          <td>18</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>157</td>
+          <td>Keven Johnson</td>
+          <td>17</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>158</td>
+          <td>Mike Hudak</td>
+          <td>16</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>159</td>
+          <td>Brian Degiorgio</td>
+          <td>15</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>159</td>
+          <td>Duane Litwa</td>
+          <td>15</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>159</td>
+          <td>Michael Hrecznyj</td>
+          <td>15</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>162</td>
+          <td>Cary Pesci</td>
+          <td>14</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>163</td>
+          <td>Jim Ryan</td>
+          <td>13</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>163</td>
+          <td>Sandy Timmer</td>
+          <td>13</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>165</td>
+          <td>Jennifer McEvoy</td>
+          <td>12</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>165</td>
+          <td>Kevin Quigley</td>
+          <td>12</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>167</td>
+          <td>John McCausland</td>
+          <td>11</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>167</td>
+          <td>Justin Bashi</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>167</td>
+          <td>Kevin Tomko</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>167</td>
+          <td>Sean Caughlin</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>167</td>
+          <td>Tom Stocker</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>172</td>
+          <td>Bev Tanner</td>
+          <td>10</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>172</td>
+          <td>Deborah Hansen</td>
+          <td>10</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>172</td>
+          <td>Jonathon Brinkerhoff</td>
+          <td>10</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>172</td>
+          <td>Pat Stankus</td>
+          <td>10</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>176</td>
+          <td>James Spencer</td>
+          <td>9</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>176</td>
+          <td>Todd Sorenson</td>
+          <td>9</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>178</td>
+          <td>Dale Kelly</td>
+          <td>8</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>178</td>
+          <td>Matt Kasmerski</td>
+          <td>8</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>178</td>
+          <td>Mike Pearce</td>
+          <td>8</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Craig Kruszewski</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Doug McClure</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Gary Bennett</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Karen Pearson</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Randy Dawley</td>
+          <td>7</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>181</td>
+          <td>Steve Loop</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>187</td>
+          <td>Anna Samuels</td>
+          <td>6</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>187</td>
+          <td>Steve MacGregor</td>
+          <td>6</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>189</td>
+          <td>Jim Palmer</td>
+          <td>5</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>189</td>
+          <td>Joe Santiello</td>
+          <td>5</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>189</td>
+          <td>null null</td>
+          <td>5</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>189</td>
+          <td>Srini Reddy</td>
+          <td>5</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>193</td>
+          <td>Bob Harabedian</td>
+          <td>4</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>193</td>
+          <td>Cara Besh</td>
+          <td>4</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>193</td>
+          <td>Norb Giczewski</td>
+          <td>4</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>193</td>
+          <td>Scott Mcanally</td>
+          <td>4</td>
+          <td>2</td>
+        </tr>
+         <tr>
+          <td>197</td>
+          <td>marc castro</td>
+          <td>3</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>197</td>
+          <td>Rodney Mcclellan</td>
+          <td>3</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>199</td>
+          <td>Ken Sahl</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>200</td>
+          <td>Denise Setser</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>200</td>
+          <td>Jeff Brohl</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>200</td>
+          <td>Robert Speed</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>A B</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>a b</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>de f</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>delete me</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>delete me</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>fn ln</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>fn ln</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>fn ln</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>George Lang</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Jeff Laskowski</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>joe schmoe</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Joe Villarosa</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Julie nickoloff</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Mark Larson</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Mark Larson</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>null null</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Ram Sankaranarayanan</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Raymond Turnbull</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Ryan Wright</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>tbd tbd</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Test User</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>test1 </td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>test2 2</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Todd Margarita (Test)</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>vladimir konstantinov</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+         <tr>
+          <td>203</td>
+          <td>Wayne White</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        </tbody>
+       </table>
+      </main>
+      <footer>
+      </footer>
+    </form>
+  </dialog>
+ </body>
+</html>

@@ -19,6 +19,7 @@ define("TOURNAMENT_PLAYER_NAME_FIELD_NAME", "tournamentPlayerName");
 define("TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME", "tournamentKnockoutByName");
 $smarty->assign("title", "Manage Results During");
 $smarty->assign("heading", "Manage Results During");
+$smarty->assign("style", "<link href=\"css/manageResultsDuring.css\" rel=\"stylesheet\">");
 if ($mode == Constant::$MODE_SAVE_VIEW) {
   $output .= "<script type=\"text/javascript\">\n aryErrors = [];\n aryMessages = [];\n";
   $tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_BLANK;
@@ -29,20 +30,6 @@ if ($mode == Constant::$MODE_SAVE_VIEW) {
   $playerName = isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME]) ? $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
   $playerNameTemp = isset($_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"]) ? $_POST[TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp"] : DEFAULT_VALUE_BLANK;
   $knockoutName = isset($_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME]) ? $_POST[TOURNAMENT_KNOCKOUT_BY_NAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
-  $bountyA = isset($_POST["bountyA"]) ? $_POST["bountyA"] : null;
-  $bountyAName = isset($_POST["bountyAName"]) ? $_POST["bountyAName"] : null;
-  $bountyB = isset($_POST["bountyB"]) ? $_POST["bountyB"] : null;
-  $bountyBName = isset($_POST["bountyBName"]) ? $_POST["bountyBName"] : null;
-  if (isset($bountyA)) {
-    $params = array($tournamentId, 1, $bountyA);
-    $databaseResult->insertTournamentBounty(params: $params);
-    $output .= "  aryMessages.push(\"Bounty A is " . $bountyAName . "\");\n";
-  }
-  if (isset($bountyB)) {
-    $params = array($tournamentId, 2, $bountyB);
-    $databaseResult->insertTournamentBounty(params: $params);
-    $output .= "  aryMessages.push(\"Bounty B is " . $bountyBName . "\");\n";
-  }
   if (isset($playerId)) {
     $params = array(Constant::$CODE_STATUS_FINISHED, $place, $knockoutId, $tournamentId, $playerId);
     $databaseResult->updateResultDuring(params: $params);
@@ -61,6 +48,7 @@ if ($mode == Constant::$MODE_SAVE_VIEW) {
 }
 $resultList = $databaseResult->getTournamentDuring();
 if (count($resultList) > 0) {
+  $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
   $tournamentId = $resultList[0];
   $totalPlayers = $resultList[4];
   $params = array($tournamentId);
@@ -74,24 +62,18 @@ if (count($resultList) > 0) {
     $lastEnteredName = $resultList2[1];
   }
   if ($place != 1) {
-    $output .= "    <div style=\"float: left; width: 150px;\">" . TOURNAMENT_ID_FIELD_LABEL . ":</div>\n";
-    $output .= "    <div style=\"float: left;\">" . $resultList[0] . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    $output .= "    <div style=\"float: left; width: 150px;\">Date:</div>\n";
-    $output .= "    <div style=\"float: left;\">" . $resultList[1]->getDisplayFormat() . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    $output .= "    <div style=\"float: left; width: 150px;\">Time:</div>\n";
-    $output .= "    <div style=\"float: left;\">" . $resultList[2]->getDisplayAmPmFormat() . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    $output .= "    <div style=\"float: left; width: 150px;\">Location:</div>\n";
-    $output .= "    <div style=\"float: left;\">" . $resultList[3] . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    $output .= "    <div style=\"float: left; width: 150px;\">Total paid:</div>\n";
-    $output .= "    <div style=\"float: left;\">" . $resultList[4] . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-    $output .= "    <div style=\"float: left; width: 150px;\">Last player entered:</div>\n";
-    $output .= "    <div style=\"float: left;\">" . ($place > 0 ? $lastEnteredName : "None") . "</div>\n";
-    $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">" . TOURNAMENT_ID_FIELD_LABEL . ":</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $resultList[0] . "</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">Date:</label></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $resultList[1]->getDisplayFormat() . "</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">Time:</label></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $resultList[2]->getDisplayAmPmFormat() . "</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">Location:</label></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $resultList[3] . "</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">Total paid:</label></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $resultList[4] . "</div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">Last player entered:</label></div>\n";
+    $output .= " <div class=\"responsive-cell responsive-cell-value\">" . ($place > 0 ? $lastEnteredName : "None") . "</div>\n";
     $totalPlayers = $resultList[4];
     if ($place == 0) {
       $place = $totalPlayers;
@@ -109,8 +91,8 @@ if (count($resultList) > 0) {
       }
     }
     if (isset($aryPlayerInfo) && count($aryPlayerInfo) > 0) {
-      $output .= "    <div style=\"float: left; width: 100px;\">" . TOURNAMENT_PLAYER_ID_FIELD_LABEL . ":</div>\n";
-      $output .= "    <div style=\"float: left;\">\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">" . TOURNAMENT_PLAYER_ID_FIELD_LABEL . ":</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">";
       $selectPlayer = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PLAYER_ID, class: null, disabled: false, id: TOURNAMENT_PLAYER_ID_FIELD_NAME, multiple: false, name: TOURNAMENT_PLAYER_ID_FIELD_NAME, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
       $output .= $selectPlayer->getHtml();
       $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: DEFAULT_VALUE_BLANK, suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_BLANK);
@@ -123,9 +105,8 @@ if (count($resultList) > 0) {
       }
       $output .= "     </select>\n";
       $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 100px;\">" . TOURNAMENT_KNOCKOUT_BY_FIELD_LABEL . ":</div>\n";
-      $output .= "    <div style=\"float: left;\">\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">" . TOURNAMENT_KNOCKOUT_BY_FIELD_LABEL . ":</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">";
       $selectPlayer = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_KNOCKOUT_ID, class: null, disabled: false, id: TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, multiple: false, name: TOURNAMENT_KNOCKOUT_BY_FIELD_NAME, onClick: null, readOnly: false, size: 1, suffix: null, value: null);
       $output .= $selectPlayer->getHtml();
       $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: DEFAULT_VALUE_BLANK, suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_BLANK);
@@ -136,12 +117,10 @@ if (count($resultList) > 0) {
         $output .= $option->getHtml();
         $index ++;
       }
-      $output .= "     </select>\n";
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 100px;\">" . TOURNAMENT_PLACE_FIELD_LABEL . ":</div>\n";
-      $output .= "    <div style=\"float: left;\">" . $place . "\n</div>\n";
-      $output .= "    <div style=\"clear: both; height: 0px; overflow: hidden;\"></div>\n";
+      $output .= "  </select>\n";
+      $output .= " </div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\">" . TOURNAMENT_PLACE_FIELD_LABEL . ":</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $place . "\n</div>\n";
     }
     $hiddenPlace = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: TOURNAMENT_PLACE_FIELD_NAME, maxLength: null, name: TOURNAMENT_PLACE_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: (string) $place, wrap: null);
     $output .= $hiddenPlace->getHtml();
@@ -153,14 +132,17 @@ if (count($resultList) > 0) {
     $output .= $hiddenPlayerId->getHtml();
     $hiddenPlayerNameTemp = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp", maxLength: null, name: TOURNAMENT_PLAYER_NAME_FIELD_NAME . "Temp", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: null, wrap: null);
     $output .= $hiddenPlayerNameTemp->getHtml();
+    $output .= " <div class=\"buttons center\">\n";
     $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
     $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
     $output .= $buttonReset->getHtml();
+    $output .= " </div>\n";
     $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
     $output .= $hiddenMode->getHtml();
     $hiddenTournamentId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: TOURNAMENT_ID_FIELD_NAME, maxLength: null, name: TOURNAMENT_ID_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: (string) $tournamentId, wrap: null);
     $output .= $hiddenTournamentId->getHtml();
+    $output .= "</div>\n";
   } else {
     $output .= "No tournaments found without results for today\n";
   }
@@ -168,4 +150,5 @@ if (count($resultList) > 0) {
   $output .= "No tournaments found with paid buyins for today\n";
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

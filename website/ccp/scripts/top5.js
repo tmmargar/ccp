@@ -1,7 +1,7 @@
 "use strict";
 $(document).ready(function() {
-  inputLocal.rebuildTableForDialog("Nemesis");
-  inputLocal.rebuildTableForDialog("Bully");
+  inputLocal.rebuildTableForDialog("Nemesis", "Nemesis");
+  inputLocal.rebuildTableForDialog("Bullies", "Bully");
   inputLocal.rebuildTableForDialog("LocationsHosted");
   inputLocal.initializeDataTable();
 });
@@ -29,11 +29,16 @@ const inputLocal = {
     });
     $("table[id^='dataTblRank']").each(function(index) {
       const tableId = $(this).prop("id");
-      if ("dataTblRankTournamentsPlayed" == tableId) {
+      if ("dataTblRankLifetimeTourneys" == tableId) {
         dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [0, "asc" ] ], false, false, "");
       } else {
         const reportId = $(this).siblings(".reportId").val();
         dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number" }, { "orderSequence": [ "desc", "asc" ],  "type" : "number" }], [ [0, "asc" ] ], false, false, "");
+        const suffix = tableId.replace("dataTblRank", "");
+        $(document).on("click", "#dialogRankAll" + suffix + "-header--cancel-btn", function(event) {
+          document.getElementById("dialogRankAll" + suffix).close();
+          return false;
+        });
       }
     });
     let previousValue = "";
@@ -47,27 +52,27 @@ const inputLocal = {
       }
     });
   },
-  rebuildTableForDialog : function(name) {
+  rebuildTableForDialog : function(dialogName, tableName) {
     const queryString = new URLSearchParams(window.location.search);
-    if (queryString.get("navigation") != "Y") {
+    //if (queryString.get("navigation") != "Y") {
       // if dialog exists
-      if ($("#dialog" + name).length > 0) {
+      if ($("#dialogRankAll" + dialogName).length > 0) {
         // header row + 5 data rows
-        if ($("#dataTbl" + name + " tr").length > 6) {
+        if ($("#dataTbl" + tableName + " tr").length > 6) {
           // clone table and change id
-          const table = $("#dataTbl" + name).clone();
-          table.attr("id", "dataTblAll" + name);
+          const table = $("#dataTbl" + tableName).clone();
+          table.attr("id", "dataTblAll" + tableName);
           table.attr("width", "100%");
           table.css("width", "100%");
           table.find("th").each(function(index) {
             $(this).css("width", "100%");
           });
-          $("#dialog" + name).html(table);
+          $("#dialog" + dialogName).html(table);
           // remove all rows except header and first 5
-          $("#dataTbl" + name + " tr:gt(5)").remove();
+          $("#dataTbl" + tableName + " tr:gt(5)").remove();
         }
       }
-    }
+    //}
   },
   resetDialog : function(title) {
     const re = /\s/gi;
@@ -75,17 +80,18 @@ const inputLocal = {
     objTable.order([[0,"asc"]]).draw();
   },
   // position is [100,100]
-  showFullList : function(title, height, width, positionParent) {
+  showFullList : function(obj, title, height, width, positionParent) {
     const re = /\s/gi;
     input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
+    //$("#dialogRankAll" + title.replace(re, "")).insertAfter($(obj));
   },
-  showFullListBully : function(title, positionParent) {
-    input.showDialog("Bully", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
+  showFullListBullies : function(title, positionParent) {
+    input.showDialog("RankAllBullies", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   showFullListLocationsHosted : function(title, positionParent) {
     input.showDialogWithWidth("LocationsHosted", 400, title, 650, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   },
   showFullListNemesis : function(title, positionParent) {
-    input.showDialog("Nemesis", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
+    input.showDialog("RankAllNemesis", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
   }
 };

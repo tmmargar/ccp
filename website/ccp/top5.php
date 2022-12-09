@@ -116,25 +116,22 @@ $smarty->assign("heading", "");
 if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : "";
 }
+if (!isset($parentObjectId)) {
+  $output = "<div class=\"contentTop5";
+  // $footerClass = PRIZE_POOL_FOR_SEASON == $reportId || POINTS_TOTAL_FOR_SEASON == $reportId || POINTS_AVERAGE_FOR_SEASON == $reportId || KNOCKOUTS_TOTAL_FOR_SEASON == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON == $reportId || EARNINGS_TOTAL_FOR_SEASON == $reportId || EARNINGS_AVERAGE_FOR_SEASON == $reportId || WINNERS_FOR_SEASON == $reportId ? "Mini" : "Medium";
+  $footerClass = TOURNAMENTS_WON_FOR_USER == $reportId || TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER == $reportId ? "Small" : "Mini";
+  // (REPORT_ID_TOTAL_POINTS == $reportId || REPORT_ID_EARNINGS == $reportId || REPORT_ID_EARNINGS_CHAMPIONSHIP == $reportId || REPORT_ID_KNOCKOUTS == $reportId || REPORT_ID_WINNERS == $reportId ? "Small" : (REPORT_ID_SUMMARY == $reportId ? "Large" : "Medium"));
+  $output .= $footerClass . "\">\n";
+} else {
+  $output = "";
+  $footerClass = "";
+}
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
 if (!isset($navigation)) {
   $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : null;
 }
 if (isset($navigation)) {
-  $style = 
-    "<style type=\"text/css\">\n" .
-    " div {\n" .
-    "   text-align: center;\n" .
-    " }\n" .
-    " div.title {\n" .
-    "   font-size: 1.5em;\n" .
-    "   font-weight: bold;\n" .
-    " }\n" .
-    " div#container {\n" .
-    "   width: 35%;\n" .
-    " }\n" .
-    " </style>\n";
-  $smarty->assign("style", $style);
+  $smarty->assign("style", "");
   $smarty->assign("formName", "frmTop5");
   $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 }
@@ -142,7 +139,6 @@ if (!isset($parentObjectId)) {
   $parentObjectId = "container";
 }
 $classNames = array();
-$output = "";
 switch ($reportId) {
   case PRIZE_POOL_FOR_SEASON:
     $title = "Prize pool for season";
@@ -486,9 +482,9 @@ if (!isset($reportId) || "" == $reportId) {
     array_push($classNames, "top5");
     $headerRow = true;
   }
-  if (isset($navigation)) {
-    $output .= "<div id=\"container\">\n";
-  }
+//   if (isset($navigation)) {
+//     $output .= "<div id=\"container\">\n";
+//   }
   if (BOUNTIES_FOR_SEASON == $reportId) {
     $ctr = 1;
     foreach ($resultList as $resultBounty) {
@@ -509,13 +505,13 @@ if (!isset($reportId) || "" == $reportId) {
       // array, index, length
       array_splice($aryData, 1, 1);
     }
-    $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
+    $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
     foreach ($aryData as $data) {
       $output .= "<div style=\"float:left; text-align: left; width: 40%;\">" . $data[0] . "</div>\n<div style=\"float:left; text-align: left; width: 60%;\">" . $data[1] . "</div>\n";
     }
   } else if (PRIZE_POOL_FOR_SEASON == $reportId) {
-    $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-    $output .= "<span class=\"number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</span>\n";
+    $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
+    $output .= "<div class=\"center number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</div>\n";
   } else {
     $mode = "";
     $caption = "";
@@ -614,15 +610,15 @@ if (!isset($reportId) || "" == $reportId) {
         } else if (WINS_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(5, "percentage", 2));
           $hideColIndexes = array(0, 2, 5);
-          $dialogParameters = array("Total Wins", 500, 400, $parentObjectId);
+          $dialogParameters = array("Lifetime Wins", 500, 400, $parentObjectId);
           $titleText = "Lifetime Wins";
         } else if (TOURNAMENTS_PLAYED_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0));
           $hideColIndexes = array(0, 2);
-          $dialogParameters = array("Tournaments Played", 500, 400, $parentObjectId);
+          $dialogParameters = array("Lifetime Tourneys", 500, 400, $parentObjectId);
           $titleText = "Lifetime Tourneys";
         }
-        $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
+        $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $suffix = str_replace(" ", "", $dialogParameters[0]);
         // if format provided then adjust indexes to add 1 for rownum used for ranking
         if (isset($value[1])) {
@@ -647,8 +643,19 @@ if (!isset($reportId) || "" == $reportId) {
           $rowUser[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowUser[$value[3]]);
           $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowUser[$value[3]] . "</div>\n";
           $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowUser[$rank[3]]);
-          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"javascript:inputLocal.showFullList('" . $dialogParameters[0] . "', " . $dialogParameters[1] . ", " . $dialogParameters[2] . ", '" . $dialogParameters[3] . "');\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
-          $output .= "<div id=\"dialogRankAll" . $suffix . "\" style=\"display: none;\">" . $outputTemp . "</div>";
+          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"javascript:inputLocal.showFullList('rank_" . $userId . "', '" . $dialogParameters[0] . "', " . $dialogParameters[1] . ", " . $dialogParameters[2] . ", '" . $dialogParameters[3] . "');\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
+          $output .= 
+            "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
+            " <form method=\"dialog\">\n" .
+            "  <header>\n" .
+            "   <h2>" . $titleText . "</h2>\n" .
+            "   <button class=\"dialogButton\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "-header--cancel-btn\">X</button>\n" .
+            "  </header>\n" .
+            "  <main>\n" .
+            $outputTemp .
+            "  </main>\n" .
+            " </form>\n" .
+            "</dialog>\n";
         }
         $result->closeCursor();
         if (isset($navigation)) {
@@ -657,7 +664,7 @@ if (!isset($reportId) || "" == $reportId) {
         break;
       case TOURNAMENTS_WON_FOR_USER:
         $titleText = "Tournaments Won";
-        $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
+        $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $params = array($userId);
         $resultList = $databaseResult->getTournamentsWonByPlayerId(params: $params);
         if (0 < count($resultList)) {
@@ -672,11 +679,11 @@ if (!isset($reportId) || "" == $reportId) {
         break;
       case TOURNAMENTS_PLAYED_FIRST_FOR_USER:
         $titleText = "Member since";
-        $output .= "<div class=\"title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
+        $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $params = array($userId);
         $resultList = $databaseResult->getTournamentsPlayedFirstByPlayerId(params: $params);
         if (0 < count($resultList)) {
-          $output .= "<div>Member since " . $resultList[0]->getDisplayFormat() . "</div>\n";
+          $output .= "<div class=\"center\">Member since " . $resultList[0]->getDisplayFormat() . "</div>\n";
         }
         break;
       default:
@@ -692,27 +699,49 @@ if (!isset($reportId) || "" == $reportId) {
         } else {
           $tableIdSuffix = ucfirst($reportId);
         }
-        $output .= "<div class=\"title\" id=\"title" . $tableIdSuffix . "\">" . $titleText . "</div>\n";
+        $output .= "<div class=\"center title\" id=\"title" . $tableIdSuffix . "\">" . $titleText . "</div>\n";
         $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: $tableIdSuffix, width: $width);
         $output .= $htmlTable->getHtml();
+        $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
+        $outputTemp = $htmlTable2->getHtml();
         if (NEMESIS_FOR_USER == $reportId || BULLY_FOR_USER == $reportId) {
           if (NEMESIS_FOR_USER == $reportId) {
             $title = "Nemesises";
+            $tableIdSuffix = "Nemesis";
+            $titleText = "Nemesis";
           } else if (BULLY_FOR_USER == $reportId) {
             $title = "Bullies";
+            $tableIdSuffix = "Bullies";
+            $titleText = "Bullies";
           }
-          $output .= "<div id=\"showList\"><a id=\"showFullList" . $tableIdSuffix . "\" href=\"javascript:inputLocal.showFullList" . $tableIdSuffix . "('" . $title . "', '" . $parentObjectId . "');\">See full list</a></div>";
+          $output .= "<div class=\"center\" id=\"showList\"><a id=\"showFullList" . $tableIdSuffix . "\" href=\"javascript:inputLocal.showFullList" . $tableIdSuffix . "('showFullList" . $tableIdSuffix . "', '" . $title . "', '" . $parentObjectId . "');\">See full list</a></div>";
           // this div is used for modal dialog
-          $output .= "<div id=\"dialog" . $tableIdSuffix . "\" style=\"display: none;\"></div>";
+//           $output .= "<div id=\"dialog" . $tableIdSuffix . "\" style=\"display: none;\"></div>";
+          $output .=
+          "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
+          " <form method=\"dialog\">\n" .
+          "  <header>\n" .
+          "   <h2>" . $titleText . "</h2>\n" .
+          "   <button class=\"dialogButton\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "-header--cancel-btn\">X</button>\n" .
+          "  </header>\n" .
+          "  <main>\n" .
+          $outputTemp .
+          "  </main>\n" .
+          " </form>\n" .
+          "</dialog>\n";
         }
         break;
     }
   }
   $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_PARAM_NAME), cols: null, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: null, name: REPORT_ID_PARAM_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
   $output .= $hiddenReportId->getHtml();
+  if (!isset($parentObjectId)) {
+    $output .= "</div>\n";
+  }
 }
 if (isset($navigation)) {
   $smarty->assign("content", $output);
+  $smarty->assign("footerClass", "footer" . $footerClass);
   $smarty->display("top5.tpl");
 } else {
   return $output;

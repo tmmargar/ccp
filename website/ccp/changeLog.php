@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace ccp;
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Change Log");
+$smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
@@ -72,4 +73,5 @@ $outputChange =
   " </ul>\n" .
   "</section>\n";
 $smarty->assign("content", $outputChange);
+$smarty->assign("footerClass", "footer");
 $smarty->display("changeLog.tpl");

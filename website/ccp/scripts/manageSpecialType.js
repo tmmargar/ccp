@@ -2,7 +2,7 @@
 $(document).ready(function() {
   input.initialize("specialTypeDescription_");
 });
-$(document).on("keyup paste", "input[id^='specialTypeDescription_'], input[id^='specialTypeStartDate_'], input[id^='specialTypeEndDate_']", function(event) {
+$(document).on("keyup paste", "[id^='specialTypeDescription_'], [id^='specialTypeStartDate_'], [id^='specialTypeEndDate_']", function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });

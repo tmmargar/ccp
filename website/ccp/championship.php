@@ -124,11 +124,11 @@ if (0 < $count) {
   }
   // echo "<br>maxPlayers -> " . print_r($aryMaxPlayers, true);
   $topThird = ceil($playerCount / 3);
-  $topThirdChipCount = 5500;
+  $topThirdChipCount = 11000;
   $middleThird = floor($playerCount / 3);
-  $middleThirdChipCount = 5000;
+  $middleThirdChipCount = 10000;
   $bottomThird = floor($playerCount / 3);
-  $bottomThirdChipCount = 4500;
+  $bottomThirdChipCount = 9000;
   $ctr = 0;
   while ($ctr < count($aryNames)) {
     if ($ctr < $topThird) {
@@ -194,19 +194,19 @@ if (0 < $count) {
     }
     $ctr ++;
   }
-  $output .= "    <h3 style='margin: 0;'>Total payout of $" . number_format(num: (float) $prizePool, decimals: 0) . "</h3>\n";
-  $output .= "    <h4 style='margin: 0;'>Exact amounts below subject to change</h4>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong>Top " . $topThird . "</strong></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong>Middle " . $middleThird . "</strong></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong>Bottom " . $bottomThird . "</strong></div>\n";
-  $output .= "    <div style='clear: both;'></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'>" . $topThirdChipCount . " chips</div>\n";
-  $output .= "    <div style='float: left; width: 125px;'>" . $middleThirdChipCount . " chips</div>\n";
-  $output .= "    <div style='float: left; width: 125px;'>" . $bottomThirdChipCount . " chips</div>\n";
-  $output .= "    <div style='clear: both;'></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong><i>Position<br />(% of total)</i></strong></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong><i>Payout</i></strong></div>\n";
-  $output .= "    <div style='clear: both;'></div>\n";
+  $output .= "    <h3>Total payout of $" . number_format(num: (float) $prizePool, decimals: 0) . "</h3>\n";
+  $output .= "    <h4>Exact amounts below subject to change</h4>\n";
+  $output .= "    <div class='column'><strong>Top " . $topThird . "</strong></div>\n";
+  $output .= "    <div class='column'><strong>Middle " . $middleThird . "</strong></div>\n";
+  $output .= "    <div class='column'><strong>Bottom " . $bottomThird . "</strong></div>\n";
+  $output .= "    <div class='clear'></div>\n";
+  $output .= "    <div class='column'>" . $topThirdChipCount . " chips</div>\n";
+  $output .= "    <div class='column'>" . $middleThirdChipCount . " chips</div>\n";
+  $output .= "    <div class='column'>" . $bottomThirdChipCount . " chips</div>\n";
+  $output .= "    <div class='clear'></div>\n";
+  $output .= "    <div class='column'><strong><i>Position<br />(% of total)</i></strong></div>\n";
+  $output .= "    <div class='column'><strong><i>Payout</i></strong></div>\n";
+  $output .= "    <div class='clear'></div>\n";
   $params = array(1, 1);
   $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (0 < count($resultList)) {
@@ -216,57 +216,53 @@ if (0 < $count) {
       $payouts = $groupPayout->getPayouts();
       $structures = $payouts[0]->getStructures();
       foreach ($structures as $structure) {
-        $output .= "    <div style='float: left; width: 125px;'>" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
-        $output .= "    <div style='float: left; width: 125px;'>$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
-        $output .= "    <div style='clear: both;'></div>\n";
+        $output .= "    <div class='column'>" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
+        $output .= "    <div class='column'>$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
+        $output .= "    <div class='clear'></div>\n";
       }
       $ctr ++;
     }
   }
   $output .= "    <br />\n";
-  $output .= "    <div style='float: center; width: 180px; text-align: center;'><strong>Table Collapse</strong></div>\n";
-  $output .= "    <div style='float: center; width: 180px; text-align: center;'>1 and 4</div>\n";
-  $output .= "    <div style='float: center; width: 180px; text-align: center;'>2 and 3</div>\n";
+  $output .= "    <div class='heading'><strong>Table Collapse</strong></div>\n";
+  $output .= "    <div class='heading'>1 and 4</div>\n";
+  $output .= "    <div class='heading'>2 and 3</div>\n";
   $output .= "    <br />\n";
-  $output .= "    <div style='float: center; width: 180px; text-align: center;'><strong>Unable to attend</strong></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong><i>Name</i></strong></div>\n";
-  $output .= "    <div style='float: left; width: 125px;'><strong><i>Original seat</i></strong></div>\n";
-  $output .= "    <div style='clear: both;'></div>\n";
+  $output .= "    <div class='heading'><strong>Unable to attend</strong></div>\n";
+  $output .= "    <div class='column'><strong><i>Name</i></strong></div>\n";
+  $output .= "    <div class='column'><strong><i>Original seat</i></strong></div>\n";
+  $output .= "    <div class='clear'></div>\n";
   $ctr = 0;
 //   echo "<br>aryAbsentNames " . print_r($aryAbsentNames, true);
 //   echo "<br>aryAbsentSeeds " . print_r($aryAbsentSeeds, true);
 //   echo print_r($aryPosition, true);
   foreach ($aryAbsentNames as $absentName) {
-    $output .= "    <div style='float: left; width: 125px;'>" . $absentName . "</div>\n";
-//     $output .= "    <div style='float: left; width: 125px;'>Table " . ($aryAbsentSeeds[$ctr] % $numTables) . " Seat " . floor($aryAbsentSeeds[$ctr] / $numTables) . "</div>\n";
+    $output .= "    <div class='column'>" . $absentName . "</div>\n";
     $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
     $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[$aryAbsentSeeds[$absentName] / $numTables];
 //     echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
-    $output .= "    <div style='float: left; width: 125px;'>Table " . $tableNum . " Position " . $positionNum . "</div>\n";
-    $output .= "    <div style='clear: both;'></div>\n";
+    $output .= "    <div class='column'>Table " . $tableNum . " Position " . $positionNum . "</div>\n";
+    $output .= "    <div class='clear'></div>\n";
     $ctr ++;
   }
   $output .= "    <br />\n";
-  $output .= "    <div style='float: center; width: 180px; text-align: center;'><strong>* represent winners</strong></div>\n";
+  $output .= "    <div class='heading'><strong>* represent winners</strong></div>\n";
   $ctr = 0;
   while ($ctr < count($table)) {
     $ctr ++;
     $ctr2 = 0;
     while ($ctr2 < count($table[$ctr])) {
       $ctr2 ++;
-      $output .= "    <div style='clear: both;'></div>\n";
-      // $output .= "<div style='float: left; width: 500px;'>table[".$ctr."][".$ctr2."][1] = " . $table[$ctr][$ctr2][1];
-      // $output .= " AND table[".$ctr."][".$ctr2."][0] = " . $table[$ctr][$ctr2][0] . "</div>\n";
-      // $output .= " <div style='clear: both;'></div>\n";
+      $output .= "    <div class='clear'></div>\n";
       if ($ctr2 == 1) {
-        $output .= "    <div style='float: center; width: 180px; text-align: center;'><strong>Table $ctr</strong></div>\n";
-        $output .= "    <div style='float: left; width: 125px;'><strong><i>Position</i></strong></div>\n";
-        $output .= "    <div style='float: left; width: 125px;'><strong><i>Name</i></strong></div>\n";
-        $output .= "    <div style='clear: both;'></div>\n";
+        $output .= "    <div class='heading'><strong>Table $ctr</strong></div>\n";
+        $output .= "    <div class='column'><strong><i>Position</i></strong></div>\n";
+        $output .= "    <div class='column'><strong><i>Name</i></strong></div>\n";
+        $output .= "    <div class='clear'></div>\n";
       }
-      $output .= "    <div style='float: left; width: 125px;'>" . $table[$ctr][$ctr2][1] . "</div>\n";
-      $output .= "    <div style='float: left; width: 125px;'>" . isset($table[$ctr][$ctr2]) ? $table[$ctr][$ctr2][0] : "" . "</div>\n";
-      $output .= "    <div style='clear: both;'></div>\n";
+      $output .= "    <div class='column'>" . $table[$ctr][$ctr2][1] . "</div>\n";
+      $output .= "    <div class='column'>" . isset($table[$ctr][$ctr2]) ? $table[$ctr][$ctr2][0] : "" . "</div>\n";
+      $output .= "    <div class='clear'></div>\n";
     }
   }
 } else {

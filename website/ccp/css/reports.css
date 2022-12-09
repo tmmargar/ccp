@@ -1,0 +1,29 @@
+.contentReportMini, .footerMini {
+  width: 10%;
+}
+.contentReportSmall, .footerSmall {
+  width: 20%;
+}
+.contentReportMedium, .footerMedium {
+  width: 35%;
+}
+.contentReportLarge, .footerLarge {
+  width: 50%;
+}
+.link {
+  text-decoration: none;
+}
+.linkText {
+  vertical-align: super;
+}
+.footerMini, .footerSmall, .footerMedium, .footerLarge {
+  text-align: center;
+}
+@media all and (max-width: 600px) {
+  .contentReportMini, .contentReportSmall, .contentReportMedium, .contentReportLarge, .footerMini, .footerSmall, .footerMedium, .footerLarge {
+    width: 100%;
+  }
+  .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+   text-align: right !important;
+  }
+}

@@ -16,36 +16,38 @@ define("NOTIFICATION_START_DATE_FIELD_NAME", "notificationStartDate");
 define("NOTIFICATION_END_DATE_FIELD_NAME", "notificationEndDate");
 $smarty->assign("title", "Manage Notification");
 $smarty->assign("heading", "Manage Notification");
+$smarty->assign("style", "<link href=\"css/manageNotification.css\" rel=\"stylesheet\">");
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $params = Constant::$MODE_MODIFY == $mode ? array($ids) : array(0);
   $resultList = $databaseResult->getNotificationById(params: $params);
+  $output .= " <div class=\"buttons center\">\n";
+  $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE . "_2", maxLength: null, name: Constant::$TEXT_SAVE . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
+  $output .= $buttonSave->getHtml();
+  $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET . "_2", maxLength: null, name: Constant::$TEXT_RESET . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
+  $output .= $buttonReset->getHtml();
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+  $output .= $buttonCancel->getHtml();
+  $output .= " </div>\n";
+  $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
   if (Constant::$MODE_CREATE == $mode || (Constant::$MODE_MODIFY == $mode && DEFAULT_VALUE_BLANK != $ids)) {
     $ctr = 0;
     $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
     foreach ($ary as $id) {
-      $output .= "    <div style=\"float: left; width: 140px; height: 25px;\">" . NOTIFICATION_DESCRIPTION_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id . "\">" . NOTIFICATION_DESCRIPTION_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>";
       // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
-      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DESCRIPTION, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id, maxLength: 200, name: NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 100, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getDescription() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 140px; height: 25px;\">" . NOTIFICATION_START_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DESCRIPTION, autoComplete: null, autoFocus: true, checked: null, class: null, cols: 40, disabled: false, id: NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id, maxLength: 200, name: NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: 5, size: 100, suffix: null, type: FormControl::$TYPE_INPUT_TEXTAREA, value: ((count($resultList) > 0) ? $resultList[$ctr]->getDescription() : ""), wrap: null);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id . "\">" . NOTIFICATION_START_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>";
       $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getStartDate()->getDisplayDateTimePickerFormat() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= " \n</div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 140px; height: 25px;\">" . NOTIFICATION_END_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id . "\">" . NOTIFICATION_END_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>";
       $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEndDate()->getDisplayDateTimePickerFormat() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= " \n</div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
       $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: null, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), wrap: null);
       $output .= $hiddenRow->getHtml();
       $ctr++;
     }
+    $output .= "<div class=\"buttons center\">\n";
     $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
     $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
@@ -53,10 +55,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   }
   $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
   $output .= $buttonCancel->getHtml();
+  $output .= "</div>\n";
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
+  $output .= "</div>\n";
 } elseif (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
@@ -92,6 +96,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     }
     $mode = Constant::$MODE_VIEW;
   }
+  $output .= "<div class=\"buttons center\">\n";
   if (Constant::$MODE_VIEW == $mode) {
     $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
     $output .= $buttonCreate->getHtml();
@@ -105,6 +110,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonDelete->getHtml();
   }
+  $output .= "</div>\n";
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
@@ -119,4 +125,5 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   $output .= $htmlTable->getHtml();
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

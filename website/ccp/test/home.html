@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+   Chip Chair and a Prayer Home
+  </title>
+ <link href="../css/jquery-ui.css" rel="stylesheet">
+ <link href="../css/jquery.datetimepicker.css" rel="stylesheet">
+ <link href="../css/datatables.css" rel="stylesheet">
+ <link href="../css/display.css" rel="stylesheet">
+ <link href="../css/home.css" rel="stylesheet">
+ <link href="../css/menu.css" rel="stylesheet">
+ <script src="../scripts/jquery/jquery.js"></script>
+ <script src="../scripts/jquery/jquery-ui.js"></script>
+ <script src="../scripts/jquery/jquery-migrate.js"></script>
+ <script src="../scripts/jquery/datatables.js"></script>
+ <script src="../scripts/jquery/jquery.datetimepicker.full.js"></script>
+ <script src="../scripts/jquery/jquery.mask.js"></script>
+ <script src="../scripts/scripts.js"></script>
+ <script src="../scripts/jqueryLocal.js"></script>
+ <script src="../scripts/dataTablesLocal.js"></script>
+ <script src="../scripts/urlSearchParams.js"></script>
+ <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+ <script src="../scripts/top5.js"></script>
+  <style>
+/* Variables
+================================== */
+/* Tables
+================================== */
+.responsive {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 3em 0;
+  padding: 0;
+}
+.responsive-cell {
+  background: rgba(112, 128, 144, 0.2);
+  /*border: solid 3px white;*/
+  box-sizing: border-box;
+  flex-grow: 1;
+  list-style: none;
+  overflow: hidden;
+  padding: 0.4em 0.6em;
+  width: 100%;
+}
+.responsive-cell > h1,
+.responsive-cell > h2,
+.responsive-cell > h3,
+.responsive-cell > h4,
+.responsive-cell > h5,
+.responsive-cell > h6 {
+  margin: 0;
+}
+/* Table column sizing
+================================== */
+.responsive--2cols > .responsive-cell {
+  width: 50%;
+}
+.responsive--3cols > .responsive-cell {
+  width: 33.33%;
+}
+.responsive--4cols > .responsive-cell {
+  width: 25%;
+}
+.responsive--5cols > .responsive-cell {
+  width: 20%;
+}
+.responsive--6cols > .responsive-cell {
+  width: 16.6%;
+}
+html {
+  height: 100%;
+  background-color: #EEE;
+}
+body {
+  background-color: white;
+  border: double 3px #DDD;
+  border-bottom: none;
+  border-top: none;
+  box-sizing: border-box;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.2em;
+  margin: 0 auto;
+  /*max-width: 500px;*/
+  min-height: 100%;
+  /*padding: 2em;*/
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+}
+.responsive {
+  left: 3px;
+  position: relative;
+  top: 3px;
+}
+.responsive-cell {
+  background-color: white;
+  border-color: #e2e6e9;
+  margin: -3px 0 5px -3px;
+}
+.responsive-cell--head {
+  background-color: #74828F;
+  /*border-color: #5a6673;*/
+  color: white;
+}
+.responsive-cell--head > h1,
+.responsive-cell--head > h2,
+.responsive-cell--head > h3,
+.responsive-cell--head > h4,
+.responsive-cell--head > h5,
+.responsive-cell--head > h6 {
+  color: white;
+}
+#leftContent {
+  float: left;
+  width: 10%;
+}
+@media all and (max-width: 600px) {
+  body {
+    max-width: unset;
+  }
+  .responsive-cell-empty {
+    display: none;
+  }
+  .responsive--collapse {
+    display: block;
+  }
+  /*.responsive--collapse > .responsive-cell {
+    width: 100% !important;
+  }*/
+  .responsive--collapse > .responsive-cell--foot {
+    margin-bottom: 1em;
+  }
+  #leftContent {
+    float: left;
+    width: 20%;
+  }
+  .responsive--3cols > .responsive-cell {
+    width: unset;
+  }
+}
+.no-flexbox .responsive {
+  display: block;
+}
+.no-flexbox .responsive > .responsive-cell {
+  width: 100%;
+}
+.no-flexbox .responsive > .responsive-cell--foot {
+  margin-bottom: 1em;
+}
+button {
+  background-color: #96C0CE;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 6px 8px;
+}
+/* Darker background on mouse-over */
+button:hover {
+  background-color: #274CE0;
+}
+  </style>
+ </head>
+ <body>
+  <nav id="main-nav">
+   <input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
+   <label class="m-menu__toggle" for="menu">
+    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+   </label>
+   <label class="m-menu__overlay" for="menu"></label>
+   <div class="m-menu">
+    <div class="m-menu__header">
+     <label class="m-menu__toggle" for="menu">
+      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+       <line x1="18" y1="6" x2="6" y2="18"></line>
+       <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+     </label>
+     <span>MENU</span>
+    </div>
+    <ul>
+     <li><label><a href="home.php" tabindex="-1">Home</a></label></li>
+     <li><label><a href="registrationList.php" tabindex="-1">Events</a></label></li>
+     <li><label><a href="championship.php" tabindex="-1">Championship Seating</a></label></li>
+     <li>
+      <label class="a-label__chevron" for="item-Results">Results</label>
+      <input type="checkbox" id="item-Results" name="item-Results" class="m-menu__checkbox">
+      <div class="m-menu">
+       <div class="m-menu__header">
+        <label class="m-menu__toggle" for="item-Results">
+         <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <path d="M19 12H6M12 5l-7 7 7 7"/>
+         </svg>
+        </label>
+        <span>Results</span>
+       </div>
+       <ul>
+        <li>
+         <label class="a-label__chevron" for="item-Seasons 17 to 13">Seasons 17 to 13</label>
+         <input type="checkbox" id="item-Seasons 17 to 13" name="item-Seasons 17 to 13" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Seasons 17 to 13">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Seasons 17 to 13</span>
+          </div>
+          <ul>
+           <li>
+            <label class="a-label__chevron" for="item-2022 (Season 17)">2022 (Season 17)</label>
+            <input type="checkbox" id="item-2022 (Season 17)" name="item-2022 (Season 17)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2022 (Season 17)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2022 (Season 17)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=468" tabindex="-1">T27 (Dec 03, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=467" tabindex="-1">T26 (Nov 19, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=466" tabindex="-1">T25 (Nov 19, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=465" tabindex="-1">T24 (Oct 29, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=464" tabindex="-1">T23 (Oct 29, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=463" tabindex="-1">T22 (Oct 08, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=462" tabindex="-1">T21 (Oct 08, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=461" tabindex="-1">T20 (Sep 17, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=460" tabindex="-1">T19 (Sep 17, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=459" tabindex="-1">T18 (Aug 27, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=458" tabindex="-1">T17 (Aug 13, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=457" tabindex="-1">T16 (Jul 16, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=456" tabindex="-1">T15 (Jun 25, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=455" tabindex="-1">T14 (Jun 04, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=454" tabindex="-1">T13 (May 14, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=453" tabindex="-1">T12 (Apr 23, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=452" tabindex="-1">T11 (Apr 23, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=451" tabindex="-1">T10 (Apr 02, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=450" tabindex="-1">T9 (Apr 02, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=449" tabindex="-1">T8 (Mar 12, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=448" tabindex="-1">T7 (Mar 12, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=447" tabindex="-1">T6 (Feb 19, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=446" tabindex="-1">T5 (Feb 19, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=445" tabindex="-1">T4 (Jan 29, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=444" tabindex="-1">T3 (Jan 29, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=443" tabindex="-1">T2 (Jan 15, 2022)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=442" tabindex="-1">T1 (Jan 15, 2022)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2021 (Season 16)">2021 (Season 16)</label>
+            <input type="checkbox" id="item-2021 (Season 16)" name="item-2021 (Season 16)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2021 (Season 16)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2021 (Season 16)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=441" tabindex="-1">T27 (Dec 04, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=439" tabindex="-1">T26 (Nov 20, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=438" tabindex="-1">T25 (Nov 20, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=437" tabindex="-1">T24 (Nov 06, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=436" tabindex="-1">T23 (Nov 06, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=435" tabindex="-1">T22 (Oct 23, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=434" tabindex="-1">T21 (Oct 23, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=433" tabindex="-1">T20 (Oct 02, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=432" tabindex="-1">T19 (Oct 02, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=431" tabindex="-1">T18 (Sep 11, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=430" tabindex="-1">T17 (Sep 11, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=429" tabindex="-1">T16 (Aug 14, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=428" tabindex="-1">T15 (Aug 14, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=427" tabindex="-1">T14 (Jul 17, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=426" tabindex="-1">T13 (Jul 17, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=425" tabindex="-1">T12 (Jun 26, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=424" tabindex="-1">T11 (Jun 26, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=423" tabindex="-1">T10 (May 29, 2021)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=422" tabindex="-1">T9 (May 29, 2021)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2020 (Season 15)">2020 (Season 15)</label>
+            <input type="checkbox" id="item-2020 (Season 15)" name="item-2020 (Season 15)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2020 (Season 15)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2020 (Season 15)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=421" tabindex="-1">T8 (Mar 14, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=420" tabindex="-1">T7 (Mar 14, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=419" tabindex="-1">T6 (Feb 22, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=418" tabindex="-1">T5 (Feb 22, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=417" tabindex="-1">T4 (Jan 25, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=416" tabindex="-1">T3 (Jan 25, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=415" tabindex="-1">T2 (Jan 04, 2020)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=414" tabindex="-1">T1 (Jan 04, 2020)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2019 (Season 14)">2019 (Season 14)</label>
+            <input type="checkbox" id="item-2019 (Season 14)" name="item-2019 (Season 14)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2019 (Season 14)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2019 (Season 14)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=413" tabindex="-1">T33 (Dec 07, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=412" tabindex="-1">T32 (Nov 09, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=411" tabindex="-1">T31 (Nov 09, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=410" tabindex="-1">T30 (Oct 19, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=409" tabindex="-1">T29 (Oct 19, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=408" tabindex="-1">T28 (Oct 05, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=407" tabindex="-1">T27 (Oct 05, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=406" tabindex="-1">T26 (Sep 14, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=405" tabindex="-1">T25 (Sep 14, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=404" tabindex="-1">T24 (Aug 24, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=403" tabindex="-1">T23 (Aug 24, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=402" tabindex="-1">T22 (Aug 10, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=401" tabindex="-1">T21 (Aug 10, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=400" tabindex="-1">T20 (Jul 13, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=399" tabindex="-1">T19 (Jul 13, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=398" tabindex="-1">T18 (Jun 22, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=397" tabindex="-1">T17 (Jun 22, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=396" tabindex="-1">T16 (Jun 01, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=395" tabindex="-1">T15 (Jun 01, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=394" tabindex="-1">T14 (May 11, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=393" tabindex="-1">T13 (May 11, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=392" tabindex="-1">T12 (Apr 13, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=391" tabindex="-1">T11 (Apr 13, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=390" tabindex="-1">T10 (Mar 30, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=389" tabindex="-1">T9 (Mar 30, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=388" tabindex="-1">T8 (Mar 09, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=387" tabindex="-1">T7 (Mar 09, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=386" tabindex="-1">T6 (Feb 16, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=385" tabindex="-1">T5 (Feb 16, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=384" tabindex="-1">T4 (Jan 26, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=383" tabindex="-1">T3 (Jan 26, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=381" tabindex="-1">T2 (Jan 05, 2019)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=380" tabindex="-1">T1 (Jan 05, 2019)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2018 (Season 13)">2018 (Season 13)</label>
+            <input type="checkbox" id="item-2018 (Season 13)" name="item-2018 (Season 13)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2018 (Season 13)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2018 (Season 13)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=379" tabindex="-1">T32 (Dec 08, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=378" tabindex="-1">T31 (Nov 10, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=377" tabindex="-1">T30 (Nov 10, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=376" tabindex="-1">T29 (Oct 27, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=375" tabindex="-1">T28 (Oct 27, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=374" tabindex="-1">T27 (Oct 06, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=373" tabindex="-1">T26 (Oct 06, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=372" tabindex="-1">T25 (Sep 15, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=371" tabindex="-1">T25 (Sep 15, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=370" tabindex="-1">T24 (Aug 25, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=369" tabindex="-1">T23 (Aug 25, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=368" tabindex="-1">T22 (Aug 11, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=367" tabindex="-1">T21 (Aug 11, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=366" tabindex="-1">T20 (Jul 01, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=365" tabindex="-1">T19 (Jul 01, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=364" tabindex="-1">T18 (Jun 23, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=363" tabindex="-1">T17 (Jun 23, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=362" tabindex="-1">T16 (Jun 02, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=361" tabindex="-1">T15 (Jun 02, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=360" tabindex="-1">T14 (May 12, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=359" tabindex="-1">T13 (May 12, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=358" tabindex="-1">T12 (Apr 21, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=357" tabindex="-1">T11 (Apr 21, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=355" tabindex="-1">T10 (Mar 24, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=354" tabindex="-1">T9 (Mar 24, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=353" tabindex="-1">T8 (Mar 10, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=352" tabindex="-1">T7 (Mar 10, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=356" tabindex="-1">2018 Joe V Invitational (2017 Winners) (Mar 03, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=351" tabindex="-1">T6 (Feb 17, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=350" tabindex="-1">T5 (Feb 17, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=349" tabindex="-1">T4 (Jan 27, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=348" tabindex="-1">T3 (Jan 27, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=347" tabindex="-1">T2 (Jan 06, 2018)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=346" tabindex="-1">T1 (Jan 06, 2018)</a></label></li>
+             </ul>
+            </div>
+           </li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Seasons 12 to 8">Seasons 12 to 8</label>
+         <input type="checkbox" id="item-Seasons 12 to 8" name="item-Seasons 12 to 8" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Seasons 12 to 8">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Seasons 12 to 8</span>
+          </div>
+          <ul>
+           <li>
+            <label class="a-label__chevron" for="item-2017 (Season 12)">2017 (Season 12)</label>
+            <input type="checkbox" id="item-2017 (Season 12)" name="item-2017 (Season 12)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2017 (Season 12)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2017 (Season 12)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=344" tabindex="-1">T33 (Dec 09, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=343" tabindex="-1">T32 (Nov 18, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=342" tabindex="-1">T31 (Nov 18, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=341" tabindex="-1">T30 (Oct 28, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=340" tabindex="-1">T29 (Oct 28, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=339" tabindex="-1">T28 (Oct 14, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=338" tabindex="-1">T27 (Oct 14, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=336" tabindex="-1">T25 (Sep 23, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=335" tabindex="-1">T24 (Aug 26, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=334" tabindex="-1">T23 (Aug 26, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=333" tabindex="-1">T22 (Aug 12, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=332" tabindex="-1">T21 (Aug 12, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=331" tabindex="-1">T20 (Jul 15, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=330" tabindex="-1">T19 (Jul 15, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=328" tabindex="-1">T17 (Jun 24, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=327" tabindex="-1">T16 (Jun 03, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=326" tabindex="-1">T15 (Jun 03, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=325" tabindex="-1">T14 (May 13, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=324" tabindex="-1">T13 (May 13, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=323" tabindex="-1">T12 (Apr 22, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=322" tabindex="-1">T11 (Apr 22, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=321" tabindex="-1">T10 (Apr 01, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=320" tabindex="-1">T9 (Apr 01, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=345" tabindex="-1">T (Mar 17, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=319" tabindex="-1">T8 (Mar 11, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=318" tabindex="-1">T7 (Mar 11, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=317" tabindex="-1">T6 (Feb 18, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=316" tabindex="-1">T5 (Feb 18, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=315" tabindex="-1">T4 (Jan 28, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=314" tabindex="-1">T3 (Jan 28, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=313" tabindex="-1">T2 (Jan 07, 2017)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=312" tabindex="-1">T1 (Jan 07, 2017)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2016 (Season 11)">2016 (Season 11)</label>
+            <input type="checkbox" id="item-2016 (Season 11)" name="item-2016 (Season 11)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2016 (Season 11)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2016 (Season 11)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=311" tabindex="-1">T31 (Dec 03, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=310" tabindex="-1">T30 (Nov 19, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=309" tabindex="-1">T29 (Nov 19, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=308" tabindex="-1">T28 (Oct 29, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=307" tabindex="-1">T27 (Oct 29, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=306" tabindex="-1">T26 (Oct 08, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=305" tabindex="-1">T25 (Oct 08, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=304" tabindex="-1">T24 (Sep 10, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=303" tabindex="-1">T23 (Sep 10, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=302" tabindex="-1">T22 (Aug 13, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=301" tabindex="-1">T21 (Aug 13, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=300" tabindex="-1">T20 (Jul 23, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=299" tabindex="-1">T19 (Jul 23, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=298" tabindex="-1">T18 (Jul 09, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=297" tabindex="-1">T17 (Jul 09, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=296" tabindex="-1">T16 (Jun 11, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=295" tabindex="-1">T15 (Jun 11, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=294" tabindex="-1">T14 (May 21, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=293" tabindex="-1">T13 (May 21, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=292" tabindex="-1">T12 (Apr 30, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=291" tabindex="-1">T11 (Apr 30, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=290" tabindex="-1">T10 (Apr 09, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=289" tabindex="-1">T9 (Apr 09, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=288" tabindex="-1">T8 (Mar 19, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=287" tabindex="-1">T7 (Mar 19, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=286" tabindex="-1">T6 (Feb 27, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=285" tabindex="-1">T5 (Feb 27, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=284" tabindex="-1">T4 (Feb 06, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=283" tabindex="-1">T3 (Feb 06, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=282" tabindex="-1">T2 (Jan 23, 2016)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=281" tabindex="-1">T1 (Jan 23, 2016)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2015 (Season 10)">2015 (Season 10)</label>
+            <input type="checkbox" id="item-2015 (Season 10)" name="item-2015 (Season 10)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2015 (Season 10)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2015 (Season 10)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=280" tabindex="-1">T31 (Dec 05, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=279" tabindex="-1">T30 (Nov 21, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=278" tabindex="-1">T29 (Nov 21, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=277" tabindex="-1">T28 (Oct 24, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=276" tabindex="-1">T27 (Oct 24, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=275" tabindex="-1">T26 (Oct 03, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=274" tabindex="-1">T25 (Oct 03, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=273" tabindex="-1">T24 (Sep 12, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=272" tabindex="-1">T23 (Sep 12, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=271" tabindex="-1">T22 (Aug 22, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=270" tabindex="-1">T21 (Aug 22, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=269" tabindex="-1">T20 (Aug 08, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=268" tabindex="-1">T19 (Aug 08, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=267" tabindex="-1">T18 (Jul 11, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=266" tabindex="-1">T17 (Jul 11, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=265" tabindex="-1">T16 (Jun 20, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=264" tabindex="-1">T15 (Jun 20, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=263" tabindex="-1">T14 (May 30, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=262" tabindex="-1">T13 (May 30, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=261" tabindex="-1">T12 (May 02, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=260" tabindex="-1">T11 (May 02, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=259" tabindex="-1">T10 (Apr 11, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=258" tabindex="-1">T9 (Apr 11, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=257" tabindex="-1">T8 (Mar 21, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=256" tabindex="-1">T7 (Mar 21, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=255" tabindex="-1">T6 (Feb 28, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=254" tabindex="-1">T5 (Feb 28, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=253" tabindex="-1">T4 (Feb 07, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=252" tabindex="-1">T3 (Feb 07, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=251" tabindex="-1">T2 (Jan 17, 2015)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=250" tabindex="-1">T1 (Jan 17, 2015)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2014 (Season 9)">2014 (Season 9)</label>
+            <input type="checkbox" id="item-2014 (Season 9)" name="item-2014 (Season 9)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2014 (Season 9)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2014 (Season 9)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=248" tabindex="-1">T29 (Dec 06, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=247" tabindex="-1">T28 (Nov 08, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=246" tabindex="-1">T27 (Nov 08, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=245" tabindex="-1">T26 (Oct 18, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=244" tabindex="-1">T25 (Oct 18, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=243" tabindex="-1">T24 (Sep 27, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=242" tabindex="-1">T23 (Sep 27, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=241" tabindex="-1">T22 (Sep 06, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=240" tabindex="-1">T21 (Sep 06, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=239" tabindex="-1">T20 (Aug 09, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=238" tabindex="-1">T19 (Aug 09, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=237" tabindex="-1">T18 (Jul 19, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=236" tabindex="-1">T17 (Jul 19, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=235" tabindex="-1">T16 (Jun 28, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=234" tabindex="-1">T15 (Jun 28, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=233" tabindex="-1">T14 (May 31, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=232" tabindex="-1">T13 (May 31, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=231" tabindex="-1">T12 (May 03, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=230" tabindex="-1">T11 (May 03, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=229" tabindex="-1">T10 (Apr 12, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=228" tabindex="-1">T9 (Apr 12, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=227" tabindex="-1">T8 (Mar 22, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=226" tabindex="-1">T7 (Mar 22, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=225" tabindex="-1">T6 (Mar 01, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=224" tabindex="-1">T5 (Mar 01, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=223" tabindex="-1">T4 (Feb 08, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=222" tabindex="-1">T3 (Feb 08, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=249" tabindex="-1">Winners Invitational (Non CCP Event) (Feb 01, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=221" tabindex="-1">T2 (Jan 18, 2014)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=220" tabindex="-1">T1 (Jan 18, 2014)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2013 (Season 8)">2013 (Season 8)</label>
+            <input type="checkbox" id="item-2013 (Season 8)" name="item-2013 (Season 8)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2013 (Season 8)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2013 (Season 8)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=219" tabindex="-1">T30 (Dec 07, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=218" tabindex="-1">T29 (Nov 09, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=217" tabindex="-1">T28 (Oct 19, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=216" tabindex="-1">T27 (Oct 19, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=215" tabindex="-1">T26 (Sep 28, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=214" tabindex="-1">T25 (Sep 28, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=213" tabindex="-1">T24 (Sep 07, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=212" tabindex="-1">T23 (Sep 07, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=211" tabindex="-1">T22 (Aug 17, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=210" tabindex="-1">T21 (Aug 17, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=209" tabindex="-1">T20 (Jul 20, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=208" tabindex="-1">T19 (Jul 20, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=207" tabindex="-1">T18 (Jun 29, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=206" tabindex="-1">T17 (Jun 29, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=205" tabindex="-1">T16 (Jun 08, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=204" tabindex="-1">T15 (Jun 08, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=203" tabindex="-1">T14 (May 18, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=202" tabindex="-1">T13 (May 18, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=201" tabindex="-1">T12 (Apr 27, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=200" tabindex="-1">T11 (Apr 27, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=199" tabindex="-1">T10 (Apr 06, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=198" tabindex="-1">T9 (Apr 06, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=197" tabindex="-1">T8 (Mar 16, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=196" tabindex="-1">T7<br>(standard pineapple which means you are dealt 3 hole cards and discard one before betting starts) (Mar 16, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=195" tabindex="-1">T6 (Feb 23, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=194" tabindex="-1">T5 (Feb 23, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=193" tabindex="-1">T4 (Feb 02, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=192" tabindex="-1">T3 (Feb 02, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=191" tabindex="-1">T2 (Jan 12, 2013)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=190" tabindex="-1">T1 (Jan 12, 2013)</a></label></li>
+             </ul>
+            </div>
+           </li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Seasons 7 to 3">Seasons 7 to 3</label>
+         <input type="checkbox" id="item-Seasons 7 to 3" name="item-Seasons 7 to 3" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Seasons 7 to 3">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Seasons 7 to 3</span>
+          </div>
+          <ul>
+           <li>
+            <label class="a-label__chevron" for="item-2012 (Season 7)">2012 (Season 7)</label>
+            <input type="checkbox" id="item-2012 (Season 7)" name="item-2012 (Season 7)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2012 (Season 7)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2012 (Season 7)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=186" tabindex="-1">T30 (Dec 01, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=185" tabindex="-1">T29 (Nov 10, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=184" tabindex="-1">T28 (Oct 27, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=183" tabindex="-1">T27 (Oct 27, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=182" tabindex="-1">T26 (Oct 06, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=181" tabindex="-1">T25 (Oct 06, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=180" tabindex="-1">T24 (Sep 15, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=179" tabindex="-1">T23 (Sep 15, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=178" tabindex="-1">T22 (Aug 18, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=177" tabindex="-1">T21 (Aug 18, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=176" tabindex="-1">T20 (Aug 04, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=175" tabindex="-1">T19 (Aug 04, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=174" tabindex="-1">T18 (Jul 14, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=173" tabindex="-1">T17 (Jul 14, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=172" tabindex="-1">T16 (Jun 23, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=171" tabindex="-1">T15 (Jun 23, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=170" tabindex="-1">T14 (Jun 02, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=169" tabindex="-1">T13 (Jun 02, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=168" tabindex="-1">T12 (May 12, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=167" tabindex="-1">T11 (May 12, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=166" tabindex="-1">T10 (Apr 21, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=165" tabindex="-1">T9 (Apr 21, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=164" tabindex="-1">T8 (Mar 31, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=163" tabindex="-1">T7 (Mar 31, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=162" tabindex="-1">T6 (Mar 10, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=161" tabindex="-1">T5 (Mar 10, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=160" tabindex="-1">T4 (Feb 18, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=159" tabindex="-1">T3 (Feb 18, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=158" tabindex="-1">T2 (Jan 28, 2012)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=157" tabindex="-1">T1 (Jan 28, 2012)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2011 (Season 6)">2011 (Season 6)</label>
+            <input type="checkbox" id="item-2011 (Season 6)" name="item-2011 (Season 6)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2011 (Season 6)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2011 (Season 6)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=156" tabindex="-1">T30 (Dec 10, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=155" tabindex="-1">T29 (Nov 12, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=154" tabindex="-1">T28 (Oct 22, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=153" tabindex="-1">T27 (Oct 22, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=152" tabindex="-1">T26 (Oct 01, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=151" tabindex="-1">T25 (Oct 01, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=150" tabindex="-1">T24 (Sep 10, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=149" tabindex="-1">T23 (Sep 10, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=148" tabindex="-1">T22 (Aug 13, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=147" tabindex="-1">T21 (Aug 13, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=146" tabindex="-1">T20 (Jul 16, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=145" tabindex="-1">T19 (Jul 16, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=144" tabindex="-1">T18 (Jun 25, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=143" tabindex="-1">T17 (Jun 25, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=142" tabindex="-1">T16 (Jun 04, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=141" tabindex="-1">T15 (Jun 04, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=140" tabindex="-1">T14 (May 21, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=139" tabindex="-1">T13 (May 21, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=138" tabindex="-1">T12 (Apr 30, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=137" tabindex="-1">T11 (Apr 30, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=136" tabindex="-1">T10 (Apr 02, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=135" tabindex="-1">T9 (Apr 02, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=134" tabindex="-1">T8 (Mar 12, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=133" tabindex="-1">T7 (Mar 12, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=132" tabindex="-1">T6 (Feb 19, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=131" tabindex="-1">T5 (Feb 19, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=130" tabindex="-1">T4 (Jan 29, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=129" tabindex="-1">T3 (Jan 29, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=128" tabindex="-1">T2 (Jan 08, 2011)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=127" tabindex="-1">T1 (Jan 08, 2011)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2010 (Season 5)">2010 (Season 5)</label>
+            <input type="checkbox" id="item-2010 (Season 5)" name="item-2010 (Season 5)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2010 (Season 5)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2010 (Season 5)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=107" tabindex="-1">T32 (Dec 11, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=106" tabindex="-1">T31 (Nov 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=105" tabindex="-1">T30 (Oct 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=104" tabindex="-1">T29 (Oct 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=103" tabindex="-1">T28 (Oct 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=102" tabindex="-1">T27 (Oct 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=101" tabindex="-1">T26 (Sep 18, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=100" tabindex="-1">T25 (Sep 18, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=99" tabindex="-1">T24 (Aug 28, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=98" tabindex="-1">T23 (Aug 28, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=97" tabindex="-1">T22 (Aug 07, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=96" tabindex="-1">T21 (Aug 07, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=95" tabindex="-1">T20 (Jul 17, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=94" tabindex="-1">T19 (Jul 17, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=93" tabindex="-1">T18 (Jun 26, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=92" tabindex="-1">T17 (Jun 26, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=91" tabindex="-1">T16 (Jun 05, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=90" tabindex="-1">T15 (Jun 05, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=89" tabindex="-1">T14 (May 15, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=88" tabindex="-1">T13 (May 15, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=87" tabindex="-1">T12 (May 01, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=86" tabindex="-1">T11 (May 01, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=85" tabindex="-1">T10 (Apr 10, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=84" tabindex="-1">T9 (Apr 10, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=83" tabindex="-1">S5. T8 (Mar 13, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=82" tabindex="-1">T7 (Mar 13, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=81" tabindex="-1">T6 (Feb 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=80" tabindex="-1">T5 (Feb 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=79" tabindex="-1">T4 (Jan 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=78" tabindex="-1">T3 (Jan 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=77" tabindex="-1">T2 (Jan 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=76" tabindex="-1">T1 (Jan 09, 2010)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2009 (Season 4)">2009 (Season 4)</label>
+            <input type="checkbox" id="item-2009 (Season 4)" name="item-2009 (Season 4)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2009 (Season 4)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2009 (Season 4)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=73" tabindex="-1">T18 (Dec 05, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=72" tabindex="-1">T17 (Nov 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=71" tabindex="-1">T16 (Oct 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=70" tabindex="-1">T15 (Oct 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=69" tabindex="-1">T14 (Sep 19, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=68" tabindex="-1">T13 (Sep 19, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=67" tabindex="-1"> (Aug 29, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=66" tabindex="-1"> (Aug 29, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=65" tabindex="-1">T12 (Aug 01, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=64" tabindex="-1">T11 (Aug 01, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=63" tabindex="-1">T10 (Jul 11, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=62" tabindex="-1">T9 (Jul 11, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=60" tabindex="-1">T8 (Jun 20, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=61" tabindex="-1">T7 (Jun 20, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=75" tabindex="-1">Big Stack (May 16, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=74" tabindex="-1"> (May 16, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=59" tabindex="-1">Big Stack (Apr 26, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=58" tabindex="-1"> (Apr 26, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=57" tabindex="-1">T6 (Mar 28, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=56" tabindex="-1">T5 (Mar 28, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=55" tabindex="-1">T4 (Mar 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=54" tabindex="-1">T3 (Mar 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=53" tabindex="-1">T2 (Feb 21, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=52" tabindex="-1">T1 (Feb 21, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=51" tabindex="-1"> (Jan 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=50" tabindex="-1"> (Jan 17, 2009)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2008 (Season 3)">2008 (Season 3)</label>
+            <input type="checkbox" id="item-2008 (Season 3)" name="item-2008 (Season 3)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2008 (Season 3)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2008 (Season 3)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=49" tabindex="-1">T18 (Dec 06, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=48" tabindex="-1">T17 (Nov 22, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=47" tabindex="-1">T16 (Oct 18, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=46" tabindex="-1">T15 (Oct 18, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=45" tabindex="-1">1/2 rebuy (Sep 27, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=44" tabindex="-1"> (Sep 27, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=43" tabindex="-1">T14 (Aug 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=42" tabindex="-1">T13 (Aug 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=41" tabindex="-1">T12 (Aug 02, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=40" tabindex="-1">T11 (Aug 02, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=39" tabindex="-1">T10 (Jul 12, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=38" tabindex="-1">T9 (Jul 12, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=37" tabindex="-1">T8 (Jun 14, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=36" tabindex="-1">T7 (Jun 14, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=35" tabindex="-1">T6 (May 17, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=34" tabindex="-1">T5 (May 17, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=33" tabindex="-1">T4 (Apr 26, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=32" tabindex="-1">T3 (Apr 26, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=31" tabindex="-1">T2 (Apr 05, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=30" tabindex="-1">T1 (Apr 05, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=29" tabindex="-1"> (Mar 15, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=28" tabindex="-1"> (Mar 15, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=27" tabindex="-1"> (Feb 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=26" tabindex="-1"> (Feb 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=25" tabindex="-1"> (Jan 19, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=24" tabindex="-1"> (Jan 19, 2008)</a></label></li>
+             </ul>
+            </div>
+           </li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Seasons 2 to -2">Seasons 2 to -2</label>
+         <input type="checkbox" id="item-Seasons 2 to -2" name="item-Seasons 2 to -2" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Seasons 2 to -2">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Seasons 2 to -2</span>
+          </div>
+          <ul>
+           <li>
+            <label class="a-label__chevron" for="item-2007 (Season 2)">2007 (Season 2)</label>
+            <input type="checkbox" id="item-2007 (Season 2)" name="item-2007 (Season 2)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2007 (Season 2)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2007 (Season 2)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=23" tabindex="-1">T23 (Dec 08, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=22" tabindex="-1">T22 (Nov 10, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=21" tabindex="-1">S2 T21 (Nov 10, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=20" tabindex="-1">S2 T20 (Oct 20, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=19" tabindex="-1">S2 T19 (Oct 20, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=18" tabindex="-1">S2 T18 (Sep 29, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=17" tabindex="-1">S2 T17 (Sep 29, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=16" tabindex="-1">S2 T16 (Aug 18, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=15" tabindex="-1">S2 T15 (Aug 18, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=14" tabindex="-1">S2 T14 (Jul 07, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=13" tabindex="-1">S2 T13 (Jul 07, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=12" tabindex="-1">S2 T12 (Jun 02, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=11" tabindex="-1">S2 T11 (Jun 02, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=10" tabindex="-1">S2 T10 (May 12, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=9" tabindex="-1">S2 T9 (May 12, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=8" tabindex="-1">S2 T8 (Apr 14, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=7" tabindex="-1">S2 T7 (Apr 14, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=6" tabindex="-1">S2 T6 (Mar 24, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=5" tabindex="-1">S2 T5 (Mar 24, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=4" tabindex="-1">S2 T4 (Feb 10, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=3" tabindex="-1">S2 T3 (Feb 10, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=2" tabindex="-1">S2 T2 (Jan 27, 2007)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=1" tabindex="-1">S2 T1 (Jan 27, 2007)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2006 (Season 1)">2006 (Season 1)</label>
+            <input type="checkbox" id="item-2006 (Season 1)" name="item-2006 (Season 1)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2006 (Season 1)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2006 (Season 1)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=189" tabindex="-1">T15 (Dec 08, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=188" tabindex="-1">T14 (Nov 10, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=187" tabindex="-1">T13 (Nov 10, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=126" tabindex="-1">T12 (Oct 27, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=125" tabindex="-1">T11 (Oct 27, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=124" tabindex="-1">T10 (Sep 29, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=123" tabindex="-1"> (Aug 18, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=121" tabindex="-1"> (Aug 18, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=120" tabindex="-1">T9 (Jul 09, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=119" tabindex="-1">T8 (Jul 09, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=118" tabindex="-1">T7 (Jun 02, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=117" tabindex="-1">T6 (May 12, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=116" tabindex="-1">T5 (May 12, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=115" tabindex="-1">T4 (Apr 14, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=114" tabindex="-1">T3 (Apr 14, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=113" tabindex="-1"> (Mar 24, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=112" tabindex="-1"> (Mar 24, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=111" tabindex="-1"> (Feb 10, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=110" tabindex="-1"> (Feb 10, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=109" tabindex="-1">T2 (Jan 21, 2006)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=108" tabindex="-1">T1 (Jan 21, 2006)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2010 (Season 5)">2010 (Season 5)</label>
+            <input type="checkbox" id="item-2010 (Season 5)" name="item-2010 (Season 5)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2010 (Season 5)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2010 (Season 5)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=107" tabindex="-1">T32 (Dec 11, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=106" tabindex="-1">T31 (Nov 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=105" tabindex="-1">T30 (Oct 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=104" tabindex="-1">T29 (Oct 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=103" tabindex="-1">T28 (Oct 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=102" tabindex="-1">T27 (Oct 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=101" tabindex="-1">T26 (Sep 18, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=100" tabindex="-1">T25 (Sep 18, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=99" tabindex="-1">T24 (Aug 28, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=98" tabindex="-1">T23 (Aug 28, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=97" tabindex="-1">T22 (Aug 07, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=96" tabindex="-1">T21 (Aug 07, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=95" tabindex="-1">T20 (Jul 17, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=94" tabindex="-1">T19 (Jul 17, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=93" tabindex="-1">T18 (Jun 26, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=92" tabindex="-1">T17 (Jun 26, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=91" tabindex="-1">T16 (Jun 05, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=90" tabindex="-1">T15 (Jun 05, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=89" tabindex="-1">T14 (May 15, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=88" tabindex="-1">T13 (May 15, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=87" tabindex="-1">T12 (May 01, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=86" tabindex="-1">T11 (May 01, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=85" tabindex="-1">T10 (Apr 10, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=84" tabindex="-1">T9 (Apr 10, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=83" tabindex="-1">S5. T8 (Mar 13, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=82" tabindex="-1">T7 (Mar 13, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=81" tabindex="-1">T6 (Feb 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=80" tabindex="-1">T5 (Feb 20, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=79" tabindex="-1">T4 (Jan 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=78" tabindex="-1">T3 (Jan 30, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=77" tabindex="-1">T2 (Jan 09, 2010)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=76" tabindex="-1">T1 (Jan 09, 2010)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2009 (Season 4)">2009 (Season 4)</label>
+            <input type="checkbox" id="item-2009 (Season 4)" name="item-2009 (Season 4)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2009 (Season 4)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2009 (Season 4)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=73" tabindex="-1">T18 (Dec 05, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=72" tabindex="-1">T17 (Nov 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=71" tabindex="-1">T16 (Oct 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=70" tabindex="-1">T15 (Oct 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=69" tabindex="-1">T14 (Sep 19, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=68" tabindex="-1">T13 (Sep 19, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=67" tabindex="-1"> (Aug 29, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=66" tabindex="-1"> (Aug 29, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=65" tabindex="-1">T12 (Aug 01, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=64" tabindex="-1">T11 (Aug 01, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=63" tabindex="-1">T10 (Jul 11, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=62" tabindex="-1">T9 (Jul 11, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=60" tabindex="-1">T8 (Jun 20, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=61" tabindex="-1">T7 (Jun 20, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=75" tabindex="-1">Big Stack (May 16, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=74" tabindex="-1"> (May 16, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=59" tabindex="-1">Big Stack (Apr 26, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=58" tabindex="-1"> (Apr 26, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=57" tabindex="-1">T6 (Mar 28, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=56" tabindex="-1">T5 (Mar 28, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=55" tabindex="-1">T4 (Mar 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=54" tabindex="-1">T3 (Mar 07, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=53" tabindex="-1">T2 (Feb 21, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=52" tabindex="-1">T1 (Feb 21, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=51" tabindex="-1"> (Jan 17, 2009)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=50" tabindex="-1"> (Jan 17, 2009)</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-2008 (Season 3)">2008 (Season 3)</label>
+            <input type="checkbox" id="item-2008 (Season 3)" name="item-2008 (Season 3)" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2008 (Season 3)">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>2008 (Season 3)</span>
+             </div>
+             <ul>
+              <li><label><a href="reports.php?reportId=results&tournamentId=49" tabindex="-1">T18 (Dec 06, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=48" tabindex="-1">T17 (Nov 22, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=47" tabindex="-1">T16 (Oct 18, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=46" tabindex="-1">T15 (Oct 18, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=45" tabindex="-1">1/2 rebuy (Sep 27, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=44" tabindex="-1"> (Sep 27, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=43" tabindex="-1">T14 (Aug 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=42" tabindex="-1">T13 (Aug 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=41" tabindex="-1">T12 (Aug 02, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=40" tabindex="-1">T11 (Aug 02, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=39" tabindex="-1">T10 (Jul 12, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=38" tabindex="-1">T9 (Jul 12, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=37" tabindex="-1">T8 (Jun 14, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=36" tabindex="-1">T7 (Jun 14, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=35" tabindex="-1">T6 (May 17, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=34" tabindex="-1">T5 (May 17, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=33" tabindex="-1">T4 (Apr 26, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=32" tabindex="-1">T3 (Apr 26, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=31" tabindex="-1">T2 (Apr 05, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=30" tabindex="-1">T1 (Apr 05, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=29" tabindex="-1"> (Mar 15, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=28" tabindex="-1"> (Mar 15, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=27" tabindex="-1"> (Feb 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=26" tabindex="-1"> (Feb 23, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=25" tabindex="-1"> (Jan 19, 2008)</a></label></li>
+              <li><label><a href="reports.php?reportId=results&tournamentId=24" tabindex="-1"> (Jan 19, 2008)</a></label></li>
+             </ul>
+            </div>
+           </li>
+          </ul>
+         </div>
+        </li>
+       </ul>
+      </div>
+     </li>
+     <li>
+      <label class="a-label__chevron" for="item-Stats">Stats</label>
+      <input type="checkbox" id="item-Stats" name="item-Stats" class="m-menu__checkbox">
+      <div class="m-menu">
+       <div class="m-menu__header">
+        <label class="m-menu__toggle" for="item-Stats">
+         <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <path d="M19 12H6M12 5l-7 7 7 7"/>
+         </svg>
+        </label>
+        <span>Stats</span>
+       </div>
+       <ul>
+        <li><label><a href="personalize.php" tabindex="-1">My Stats</a></label></li>
+        <li>
+         <label class="a-label__chevron" for="item-Other Users">Other Users</label>
+         <input type="checkbox" id="item-Other Users" name="item-Other Users" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Other Users">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Other Users</span>
+          </div>
+          <ul>
+           <li>
+            <label class="a-label__chevron" for="item-Users 1 to 10">Users 1 to 10</label>
+            <input type="checkbox" id="item-Users 1 to 10" name="item-Users 1 to 10" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 1 to 10">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 1 to 10</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=151" tabindex="-1">test1 's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=152" tabindex="-1">test2 2's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=114" tabindex="-1">Perry Abbey's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=77" tabindex="-1">George Abuamsha's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=64" tabindex="-1">Tony Abuamsha's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=84" tabindex="-1">Mark Ahern's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=97" tabindex="-1">Hussein Alalawi's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=92" tabindex="-1">Lance Alan's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=16" tabindex="-1">Karl Anderson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=121" tabindex="-1">Rich Austreng's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 11 to 20">Users 11 to 20</label>
+            <input type="checkbox" id="item-Users 11 to 20" name="item-Users 11 to 20" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 11 to 20">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 11 to 20</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=187" tabindex="-1">a b's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=230" tabindex="-1">a b's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=186" tabindex="-1">A B's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=229" tabindex="-1">a b's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=231" tabindex="-1">a b's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=87" tabindex="-1">Swami Balasubramanian's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=226" tabindex="-1">Justin Bashi's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=162" tabindex="-1">Gary Bennett's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=62" tabindex="-1">Cara Besh's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=161" tabindex="-1">Nyal Bischoff's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 21 to 30">Users 21 to 30</label>
+            <input type="checkbox" id="item-Users 21 to 30" name="item-Users 21 to 30" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 21 to 30">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 21 to 30</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=93" tabindex="-1">Kim Bolin's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=96" tabindex="-1">Chris Bouza's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=61" tabindex="-1">Bob Boyd's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=34" tabindex="-1">Jeff Brautigan's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=118" tabindex="-1">Jonathon Brinkerhoff's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=94" tabindex="-1">David Brock's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=119" tabindex="-1">Mike Brockett's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=139" tabindex="-1">Jeff Brohl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=221" tabindex="-1">Scott Buryta's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=72" tabindex="-1">Brad Busch's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 31 to 40">Users 31 to 40</label>
+            <input type="checkbox" id="item-Users 31 to 40" name="item-Users 31 to 40" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 31 to 40">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 31 to 40</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=220" tabindex="-1">Joe Bush's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=125" tabindex="-1">Sylvain Calemme's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=134" tabindex="-1">Jeff Calvird's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=130" tabindex="-1">Jim Cardinal's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=156" tabindex="-1">marc castro's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=169" tabindex="-1">Sean Caughlin's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=46" tabindex="-1">Kunal Choksi's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=83" tabindex="-1">Ed Christie's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=30" tabindex="-1">Jim Clifford's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=20" tabindex="-1">David Codd's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 41 to 50">Users 41 to 50</label>
+            <input type="checkbox" id="item-Users 41 to 50" name="item-Users 41 to 50" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 41 to 50">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 41 to 50</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=207" tabindex="-1">David Codd's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=126" tabindex="-1">Steve Cummings's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=128" tabindex="-1">Timothy Cummings's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=112" tabindex="-1">Brandy Dahl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=164" tabindex="-1">Randy Dawley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=110" tabindex="-1">Brian Degiorgio's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=8" tabindex="-1">Kevin Ennis's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=13" tabindex="-1">Pam Ennis's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=142" tabindex="-1">Fred Eppensteiner's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=210" tabindex="-1">de f's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 51 to 60">Users 51 to 60</label>
+            <input type="checkbox" id="item-Users 51 to 60" name="item-Users 51 to 60" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 51 to 60">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 51 to 60</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=54" tabindex="-1">Dustin Fern's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=163" tabindex="-1">Allen Filipski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=50" tabindex="-1">Barry Fletcher's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=146" tabindex="-1">Brian Flogaus's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=22" tabindex="-1">Mark Forster's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=136" tabindex="-1">Mike Foster's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=202" tabindex="-1">Ruth Gianotta's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=143" tabindex="-1">Norb Giczewski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=90" tabindex="-1">John Gordon's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=7" tabindex="-1">Francine Gottler's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 61 to 70">Users 61 to 70</label>
+            <input type="checkbox" id="item-Users 61 to 70" name="item-Users 61 to 70" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 61 to 70">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 61 to 70</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=6" tabindex="-1">Nick Greeley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=14" tabindex="-1">Artie Gutowski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=141" tabindex="-1">Deborah Hansen's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=204" tabindex="-1">Bob Harabedian's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=179" tabindex="-1">Conner Harris's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=17" tabindex="-1">David Hatch's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=196" tabindex="-1">Kevin Howe's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=132" tabindex="-1">Michael Hrecznyj's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=222" tabindex="-1">Mike Hrecznyj's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=131" tabindex="-1">Mike Hudak's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 71 to 80">Users 71 to 80</label>
+            <input type="checkbox" id="item-Users 71 to 80" name="item-Users 71 to 80" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 71 to 80">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 71 to 80</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=27" tabindex="-1">Kent Hurlburt's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=138" tabindex="-1">Alden Ingram's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=160" tabindex="-1">Keven Johnson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=33" tabindex="-1">Brent Johnston's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=208" tabindex="-1">Van Karson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=75" tabindex="-1">Matt Kasmerski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=68" tabindex="-1">Vincent Kazimierczuk's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=51" tabindex="-1">Matt Keffler's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=108" tabindex="-1">Dale Kelly's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=106" tabindex="-1">Mark Kirby's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 81 to 90">Users 81 to 90</label>
+            <input type="checkbox" id="item-Users 81 to 90" name="item-Users 81 to 90" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 81 to 90">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 81 to 90</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=135" tabindex="-1">Adam Kline's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=65" tabindex="-1">Jason Kline's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=67" tabindex="-1">Bian Knowles's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=148" tabindex="-1">vladimir konstantinov's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=82" tabindex="-1">Andy Korby's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=147" tabindex="-1">Craig Kruszewski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=59" tabindex="-1">Sanjay Kuchipudi's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=129" tabindex="-1">Paul Kula's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=48" tabindex="-1">Nick Kunyckyj's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=216" tabindex="-1">James Kupras's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 91 to 100">Users 91 to 100</label>
+            <input type="checkbox" id="item-Users 91 to 100" name="item-Users 91 to 100" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 91 to 100">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 91 to 100</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=235" tabindex="-1">p l's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=36" tabindex="-1">George Lang's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=154" tabindex="-1">George Lang's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=24" tabindex="-1">Greg Lang's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=2" tabindex="-1">Mark Larson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=4" tabindex="-1">Mark Larson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=1" tabindex="-1">Mark Larson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=15" tabindex="-1">Tammy Larson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=174" tabindex="-1">Jeff Laskowski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=29" tabindex="-1">Jim Lee's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 101 to 110">Users 101 to 110</label>
+            <input type="checkbox" id="item-Users 101 to 110" name="item-Users 101 to 110" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 101 to 110">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 101 to 110</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=95" tabindex="-1">Jeremy Ling's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=192" tabindex="-1">Duane Litwa's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=184" tabindex="-1">fn ln's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=181" tabindex="-1">fn ln's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=185" tabindex="-1">fn ln's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=213" tabindex="-1">Steve Loop's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=178" tabindex="-1">Steve MacGregor's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=38" tabindex="-1">Scott Margarita's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=35" tabindex="-1">Todd Margarita's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=73" tabindex="-1">Todd Margarita's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 111 to 120">Users 111 to 120</label>
+            <input type="checkbox" id="item-Users 111 to 120" name="item-Users 111 to 120" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 111 to 120">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 111 to 120</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=199" tabindex="-1">Scott Mcanally's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=71" tabindex="-1">John McCausland's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=200" tabindex="-1">Rodney Mcclellan's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=55" tabindex="-1">Dan McClung's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=214" tabindex="-1">Doug McClure's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=228" tabindex="-1">Dan_J McDermott's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=227" tabindex="-1">Dan_T McDermott's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=158" tabindex="-1">Andy McEvoy's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=219" tabindex="-1">Jennifer McEvoy's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=103" tabindex="-1">Gregory McKay's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 121 to 130">Users 121 to 130</label>
+            <input type="checkbox" id="item-Users 121 to 130" name="item-Users 121 to 130" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 121 to 130">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 121 to 130</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=183" tabindex="-1">delete me's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=182" tabindex="-1">delete me's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=21" tabindex="-1">Jeffrey Merritt's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=23" tabindex="-1">Brent Micallef's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=12" tabindex="-1">Dean Miller's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=10" tabindex="-1">Matthew Modrzejewski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=168" tabindex="-1">Joe Moon's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=18" tabindex="-1">Lisa Moore's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=19" tabindex="-1">Michael Moore's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=40" tabindex="-1">Tom Murray's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 131 to 140">Users 131 to 140</label>
+            <input type="checkbox" id="item-Users 131 to 140" name="item-Users 131 to 140" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 131 to 140">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 131 to 140</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=63" tabindex="-1">Jason Nantais's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=109" tabindex="-1">Dola Nelson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=56" tabindex="-1">Randy Nelson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=60" tabindex="-1">Eric Nemeth's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=86" tabindex="-1">Michelle Nemeth's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=124" tabindex="-1">Julie nickoloff's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=70" tabindex="-1">Dan Nickols's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=69" tabindex="-1">Judi Nickols's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=180" tabindex="-1">null null's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=150" tabindex="-1">null null's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 141 to 150">Users 141 to 150</label>
+            <input type="checkbox" id="item-Users 141 to 150" name="item-Users 141 to 150" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 141 to 150">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 141 to 150</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=234" tabindex="-1">p o's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=105" tabindex="-1">Mike Oatney's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=66" tabindex="-1">Dave Otremba's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=203" tabindex="-1">Jim Palmer's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=57" tabindex="-1">Mike Pearce's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=173" tabindex="-1">Karen Pearson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=41" tabindex="-1">Chuck Perrone's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=98" tabindex="-1">Cary Pesci's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=9" tabindex="-1">Aaron Powell's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=32" tabindex="-1">Keri Powell's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 151 to 160">Users 151 to 160</label>
+            <input type="checkbox" id="item-Users 151 to 160" name="item-Users 151 to 160" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 151 to 160">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 151 to 160</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=89" tabindex="-1">Becky Price's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=88" tabindex="-1">Greg Price's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=31" tabindex="-1">Brian Pritzl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=37" tabindex="-1">Eric Pritzl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=80" tabindex="-1">Kevin Pritzl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=76" tabindex="-1">Anjali Puri's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=120" tabindex="-1">Anthony Quigley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=211" tabindex="-1">Gabe Quigley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=107" tabindex="-1">Jon Quigley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=171" tabindex="-1">Kevin Quigley's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 161 to 170">Users 161 to 170</label>
+            <input type="checkbox" id="item-Users 161 to 170" name="item-Users 161 to 170" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 161 to 170">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 161 to 170</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=218" tabindex="-1">Robert Quigley's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=123" tabindex="-1">Srini Reddy's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=47" tabindex="-1">Brian Richardson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=42" tabindex="-1">Kyle Richardson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=74" tabindex="-1">Clay Richeson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=58" tabindex="-1">Sam Richeson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=49" tabindex="-1">Mike Roberts's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=85" tabindex="-1">Luis Romero's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=127" tabindex="-1">Axel Rose's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=101" tabindex="-1">Mike Rossetti's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 171 to 180">Users 171 to 180</label>
+            <input type="checkbox" id="item-Users 171 to 180" name="item-Users 171 to 180" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 171 to 180">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 171 to 180</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=153" tabindex="-1">Jim Ryan's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=133" tabindex="-1">John Safranski's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=177" tabindex="-1">Ken Sahl's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=159" tabindex="-1">Anna Samuels's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=155" tabindex="-1">Paul Sandhu's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=166" tabindex="-1">Ram Sankaranarayanan's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=198" tabindex="-1">Joe Santiello's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=81" tabindex="-1">Sonia Scappaticci's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=190" tabindex="-1">Mike Schmidt's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=165" tabindex="-1">Mike Schmidt's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 181 to 190">Users 181 to 190</label>
+            <input type="checkbox" id="item-Users 181 to 190" name="item-Users 181 to 190" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 181 to 190">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 181 to 190</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=149" tabindex="-1">joe schmoe's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=191" tabindex="-1">Denise Setser's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=117" tabindex="-1">Joe Sharpe's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=176" tabindex="-1">Floyd Shinn's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=225" tabindex="-1">Dean Singer's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=140" tabindex="-1">Todd Sorenson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=201" tabindex="-1">Robert Spadoni's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=197" tabindex="-1">Robert Speed's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=28" tabindex="-1">Eric Spencer's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=122" tabindex="-1">James Spencer's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 191 to 200">Users 191 to 200</label>
+            <input type="checkbox" id="item-Users 191 to 200" name="item-Users 191 to 200" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 191 to 200">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 191 to 200</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=215" tabindex="-1">Pat Stankus's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=91" tabindex="-1">David Starzacher's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=206" tabindex="-1">Lori Stratford's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=205" tabindex="-1">Rodney Stratford's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=217" tabindex="-1">Greg Stucki's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=113" tabindex="-1">Dan Sultana's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=116" tabindex="-1">Martha Sultana's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=145" tabindex="-1">Sridharan Sundaram's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=189" tabindex="-1">Bev Tanner's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=194" tabindex="-1">tbd tbd's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 201 to 210">Users 201 to 210</label>
+            <input type="checkbox" id="item-Users 201 to 210" name="item-Users 201 to 210" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 201 to 210">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 201 to 210</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=209" tabindex="-1">tbd tbd's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=100" tabindex="-1">Jerry Thompson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=137" tabindex="-1">Sandy Timmer's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=111" tabindex="-1">Kevin Tomko's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=102" tabindex="-1">Jenny Torony's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=52" tabindex="-1">Paul Tower's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=224" tabindex="-1">Matt Towers's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=39" tabindex="-1">Steve Trammell's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=195" tabindex="-1">Brandon Trygg's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=44" tabindex="-1">April Turnbull's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 211 to 220">Users 211 to 220</label>
+            <input type="checkbox" id="item-Users 211 to 220" name="item-Users 211 to 220" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 211 to 220">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 211 to 220</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=43" tabindex="-1">Raymond Turnbull's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=172" tabindex="-1">Raymond Turnbull's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=5" tabindex="-1">Test User's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=223" tabindex="-1">Joe Villarosa's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=25" tabindex="-1">Joe Villarosa's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=175" tabindex="-1">Joey Villarosa's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=232" tabindex="-1">q w's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=233" tabindex="-1">q w's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=78" tabindex="-1">Tom Wehrmeister's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=144" tabindex="-1">David Weishaar's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 221 to 230">Users 221 to 230</label>
+            <input type="checkbox" id="item-Users 221 to 230" name="item-Users 221 to 230" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 221 to 230">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 221 to 230</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=157" tabindex="-1">Bill Wertz's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=170" tabindex="-1">Wayne White's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=3" tabindex="-1">Greg Wiland's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=11" tabindex="-1">M.A. Wiland's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=53" tabindex="-1">Dex Wiles's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=79" tabindex="-1">Tim Wiles's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=193" tabindex="-1">Roger Wilhelmi's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=104" tabindex="-1">Bob Wilson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=99" tabindex="-1">Tim Wilson's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=26" tabindex="-1">David Wojtanowski's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+           <li>
+            <label class="a-label__chevron" for="item-Users 231 to 240">Users 231 to 240</label>
+            <input type="checkbox" id="item-Users 231 to 240" name="item-Users 231 to 240" class="m-menu__checkbox">
+            <div class="m-menu">
+             <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-Users 231 to 240">
+               <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                <path d="M19 12H6M12 5l-7 7 7 7"/>
+               </svg>
+              </label>
+              <span>Users 231 to 240</span>
+             </div>
+             <ul>
+              <li><label><a href="personalize.php?userId=45" tabindex="-1">Matthew Wolfe's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=115" tabindex="-1">Chazz Worlow's stats</a></label></li>
+              <li><label><a href="personalize.php?userId=167" tabindex="-1">Ryan Wright's stats</a></label></li>
+             </ul>
+            </div>
+           </li>
+          </ul>
+         </div>
+        </li>
+       </ul>
+      </div>
+     </li>
+     <li>
+      <label class="a-label__chevron" for="item-Reports">Reports</label>
+      <input type="checkbox" id="item-Reports" name="item-Reports" class="m-menu__checkbox">
+      <div class="m-menu">
+       <div class="m-menu__header">
+        <label class="m-menu__toggle" for="item-Reports">
+         <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <path d="M19 12H6M12 5l-7 7 7 7"/>
+         </svg>
+        </label>
+        <span>Reports</span>
+       </div>
+       <ul>
+        <li>
+         <label class="a-label__chevron" for="item-Standard">Standard</label>
+         <input type="checkbox" id="item-Standard" name="item-Standard" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Standard">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Standard</span>
+          </div>
+          <ul>
+           <li><label><a href="reports.php?reportId=results&tournamentId=451" tabindex="-1">Results</a></label></li>
+           <li><label><a href="reports.php?reportId=pointsTotal&seasonSelection=show" tabindex="-1">Total pts</a></label></li>
+           <li><label><a href="reports.php?reportId=earnings&seasonSelection=show" tabindex="-1">Earnings</a></label></li>
+           <li><label><a href="reports.php?reportId=earningsChampionship&seasonSelection=show" tabindex="-1">Earnings (Championship)</a></label></li>
+           <li><label><a href="reports.php?reportId=knockouts&seasonSelection=show" tabindex="-1">KOs</a></label></li>
+           <li><label><a href="reports.php?reportId=summary&seasonSelection=show" tabindex="-1">Summary</a></label></li>
+           <li><label><a href="reports.php?reportId=winners&seasonSelection=show" tabindex="-1">Winners</a></label></li>
+           <li><label><a href="reports.php?reportId=finishes&seasonSelection=show" tabindex="-1">Finishes</a></label></li>
+           <li><label><a href="reports.php?reportId=bounties&seasonSelection=show" tabindex="-1">Bounties</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Season">Season</label>
+         <input type="checkbox" id="item-Season" name="item-Season" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Season">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Season</span>
+          </div>
+          <ul>
+           <li><label><a href="top5.php?reportId=prizePoolForSeason&navigation=Y" tabindex="-1">Prize pool</a></label></li>
+           <li><label><a href="top5.php?reportId=pointsTotalForSeason&navigation=Y" tabindex="-1">Total points</a></label></li>
+           <li><label><a href="top5.php?reportId=pointsAverageForSeason&navigation=Y" tabindex="-1">Average points</a></label></li>
+           <li><label><a href="top5.php?reportId=earningsTotalForSeason&navigation=Y" tabindex="-1">Total Earnings</a></label></li>
+           <li><label><a href="top5.php?reportId=earningsAverageForSeason&navigation=Y" tabindex="-1">Average Earnings</a></label></li>
+           <li><label><a href="top5.php?reportId=knockoutsTotalForSeason&navigation=Y" tabindex="-1">Total knockouts</a></label></li>
+           <li><label><a href="top5.php?reportId=knockoutsAverageForSeason&navigation=Y" tabindex="-1">Average knockouts</a></label></li>
+           <li><label><a href="top5.php?reportId=bountiesForSeason&navigation=Y" tabindex="-1">Bounties</a></label></li>
+           <li><label><a href="top5.php?reportId=winnersForSeason&navigation=Y" tabindex="-1">Winners</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Championship">Championship</label>
+         <input type="checkbox" id="item-Championship" name="item-Championship" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Championship">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Championship</span>
+          </div>
+          <ul>
+           <li><label><a href="reports.php?reportId=championship&sort=0 desc,2 desc" tabindex="-1">By year by earnings</a></label></li>
+           <li><label><a href="reports.php?reportId=championship&sort=1 asc,0 desc" tabindex="-1">By name by year</a></label></li>
+           <li><label><a href="reports.php?reportId=championship&sort=1 asc,2 desc" tabindex="-1">By name by earnings by year</a></label></li>
+           <li><label><a href="reports.php?reportId=championship&sort=2 desc,1 asc&group=true" tabindex="-1">By name by earnings</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Ranking">Ranking</label>
+         <input type="checkbox" id="item-Ranking" name="item-Ranking" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Ranking">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Ranking</span>
+          </div>
+          <ul>
+           <li><label><a href="top5.php?reportId=pointsTotalForUser&navigation=Y" tabindex="-1">Total pts</a></label></li>
+           <li><label><a href="top5.php?reportId=pointsAverageForUser&navigation=Y" tabindex="-1">Average points</a></label></li>
+           <li><label><a href="top5.php?reportId=knockoutsTotalForUser&navigation=Y" tabindex="-1">Total KOs</a></label></li>
+           <li><label><a href="top5.php?reportId=knockoutsAverageForUser&navigation=Y" tabindex="-1">Average KOs</a></label></li>
+           <li><label><a href="top5.php?reportId=earningsTotalForSeason&navigation=Y" tabindex="-1">Total earnings</a></label></li>
+           <li><label><a href="top5.php?reportId=earningsTotalForUser&navigation=Y" tabindex="-1">Avg earnings</a></label></li>
+           <li><label><a href="top5.php?reportId=winsForUser&navigation=Y" tabindex="-1">Wins</a></label></li>
+           <li><label><a href="top5.php?reportId=nemesisForUser&navigation=Y" tabindex="-1">Nemesis</a></label></li>
+           <li><label><a href="top5.php?reportId=bullyForUser&navigation=Y" tabindex="-1">Bully</a></label></li>
+           <li><label><a href="top5.php?reportId=tournamentsWonForUser&navigation=Y" tabindex="-1">Won</a></label></li>
+           <li><label><a href="top5.php?reportId=finishesForUser&navigation=Y" tabindex="-1">Finishes</a></label></li>
+           <li><label><a href="top5.php?reportId=tournamentsPlayedForUser&navigation=Y" tabindex="-1">Played count</a></label></li>
+           <li><label><a href="top5.php?reportId=tournamentsPlayedByTypeForUser&navigation=Y" tabindex="-1">Played by type</a></label></li>
+           <li><label><a href="top5.php?reportId=tournamentsPlayedFirstForUser&navigation=Y" tabindex="-1">Member since</a></label></li>
+          </ul>
+         </div>
+        </li>
+       </ul>
+      </div>
+     </li>
+     <li>
+      <label class="a-label__chevron" for="item-Administration">Administration</label>
+      <input type="checkbox" id="item-Administration" name="item-Administration" class="m-menu__checkbox">
+      <div class="m-menu">
+       <div class="m-menu__header">
+        <label class="m-menu__toggle" for="item-Administration">
+         <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <path d="M19 12H6M12 5l-7 7 7 7"/>
+         </svg>
+        </label>
+        <span>Administration</span>
+       </div>
+       <ul>
+        <li>
+         <label class="a-label__chevron" for="item-Games">Games</label>
+         <input type="checkbox" id="item-Games" name="item-Games" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Games">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Games</span>
+          </div>
+          <ul>
+           <li><label><a href="manageNotification.php" tabindex="-1">Notifcations</a></label></li>
+           <li><label><a href="manageSeason.php" tabindex="-1">Seasons</a></label></li>
+           <li><label><a href="manageTournament.php" tabindex="-1">Tournaments</a></label></li>
+           <li><label><a href="manageRegistration.php" tabindex="-1">Registration</a></label></li>
+           <li><label><a href="manageBuyins.php" tabindex="-1">Buyins</a></label></li>
+           <li><label><a href="manageResultsDuring.php" tabindex="-1">Results - during</a></label></li>
+           <li><label><a href="manageResults.php" tabindex="-1">Results</a></label></li>
+           <li><label><a href="manageSpecialType.php" tabindex="-1">Special type</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Users">Users</label>
+         <input type="checkbox" id="item-Users" name="item-Users" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Users">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Users</span>
+          </div>
+          <ul>
+           <li><label><a href="manageLocation.php" tabindex="-1">Locations</a></label></li>
+           <li><label><a href="manageUser.php" tabindex="-1">Users</a></label></li>
+           <li><label><a href="manageSignupApproval.php" tabindex="-1">New user approval</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li>
+         <label class="a-label__chevron" for="item-Payouts">Payouts</label>
+         <input type="checkbox" id="item-Payouts" name="item-Payouts" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Payouts">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Payouts</span>
+          </div>
+          <ul>
+           <li><label><a href="manageGroup.php" tabindex="-1">Groups</a></label></li>
+           <li><label><a href="managePayout.php" tabindex="-1">Payouts</a></label></li>
+           <li><label><a href="manageGroupPayout.php" tabindex="-1">Payout groups</a></label></li>
+          </ul>
+         </div>
+        </li>
+        <li><label><a href="manageEmail.php" tabindex="-1">Send email</a></label></li>
+        <li>
+         <label class="a-label__chevron" for="item-Scheduled Jobs">Scheduled Jobs</label>
+         <input type="checkbox" id="item-Scheduled Jobs" name="item-Scheduled Jobs" class="m-menu__checkbox">
+         <div class="m-menu">
+          <div class="m-menu__header">
+           <label class="m-menu__toggle" for="item-Scheduled Jobs">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+             <path d="M19 12H6M12 5l-7 7 7 7"/>
+            </svg>
+           </label>
+           <span>Scheduled Jobs</span>
+          </div>
+          <ul>
+           <li><label><a href="autoRegisterHost.php?mode=view" tabindex="-1">Run auto register host</a></label></li>
+           <li><label><a href="autoReminder.php?mode=view" tabindex="-1">Run auto reminder</a></label></li>
+          </ul>
+         </div>
+        </li>
+       </ul>
+      </div>
+     </li>
+     <li>
+      <label class="a-label__chevron" for="item-My profile">My profile</label>
+      <input type="checkbox" id="item-My profile" name="item-My profile" class="m-menu__checkbox">
+      <div class="m-menu">
+       <div class="m-menu__header">
+        <label class="m-menu__toggle" for="item-My profile">
+         <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <path d="M19 12H6M12 5l-7 7 7 7"/>
+         </svg>
+        </label>
+        <span>My profile</span>
+       </div>
+       <ul>
+        <li><label><a href="manageUser.php?mode=modify&userId=35" tabindex="-1">Edit my profile</a></label></li>
+        <li><label><a href="logout.php" tabindex="-1">Logout</a></label></li>
+        <li><label><a href="resetPassword.php?nav=Y" tabindex="-1">Password reset</a></label></li>
+       </ul>
+      </div>
+     </li>
+    </ul>
+   </div>
+   <span style="color: white; font-size: 1.25em;">Jan 01, 2022&nbsp;-&nbsp;Dec 31, 2022&nbsp;(8 to qualify)  </span>
+  </nav>
+  <header id="header">***test this long notiication on where you see it and how it looks on mobile***</header>
+  <div id="content">
+   <h1></h1>
+   <div class="hide" id="info">
+    <div class="hide" id="errors"></div>
+    <div class="hide" id="messages"></div>
+   </div>
+   <div class="responsive responsive--3cols responsive--collapse">
+    <div class="responsive-cell"></div>
+    <div class="responsive-cell">
+     <div class="title" id="titlePrizePoolForSeason">Prize Pool</div>
+     <div class="center number positive">$893</div>
+     <input class="reportId" id="reportId" name="reportId" type="hidden" value="prizePoolForSeason" />
+    </div>
+    <div class="responsive-cell"></div>
+    <div class="responsive-cell">
+     <div class="title" id="titlePointsTotalForSeason">Top 5 Points</div>
+     <table border="0" cellpadding="0" cellspacing="0" class="display top5" id="dataTblPointsTotalForSeason" style="width: 100%;">
+      <caption></caption>
+      <thead>
+       <tr>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Name</th>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Pts</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>David Wojtanowski</td>
+        <td>112</td>
+      </tr>
+       <tr>
+        <td>Greg Wiland</td>
+        <td>82</td>
+      </tr>
+       <tr>
+        <td>Sanjay Kuchipudi</td>
+        <td>71</td>
+      </tr>
+       <tr>
+        <td>Dan Sultana</td>
+        <td>68</td>
+      </tr>
+       <tr>
+        <td>Jeffrey Merritt</td>
+        <td>60</td>
+      </tr>
+      </tbody>
+     </table>
+     <input class="reportId" id="reportId" name="reportId" type="hidden" value="pointsTotalForSeason" />
+    </div>
+    <div class="responsive-cell">
+     <div class="title" id="titleEarningsTotalForSeason">Top 5 Money</div>
+     <table border="0" cellpadding="0" cellspacing="0" class="display top5" id="dataTblEarningsTotalForSeason" style="width: 100%;">
+      <caption></caption>
+      <thead>
+       <tr>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Name</th>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Earns</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>Joe Bush</td>
+        <td class="number positive">$562</td>
+      </tr>
+       <tr>
+        <td>Greg Wiland</td>
+        <td class="number positive">$517</td>
+      </tr>
+       <tr>
+        <td>David Wojtanowski</td>
+        <td class="number positive">$476</td>
+      </tr>
+       <tr>
+        <td>Dan Sultana</td>
+        <td class="number positive">$348</td>
+      </tr>
+       <tr>
+        <td>Sanjay Kuchipudi</td>
+        <td class="number positive">$279</td>
+      </tr>
+      </tbody>
+     </table>
+     <input class="reportId" id="reportId" name="reportId" type="hidden" value="earningsTotalForSeason" />
+    </div>
+    <div class="responsive-cell">
+     <div class="title" id="titleKnockoutsTotalForSeason">Top 5 KO</div>
+     <table border="0" cellpadding="0" cellspacing="0" class="display top5" id="dataTblKnockoutsTotalForSeason" style="width: 100%;">
+      <caption></caption>
+      <thead>
+       <tr>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Name</th>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">KO</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>Joe Bush</td>
+        <td>14</td>
+      </tr>
+       <tr>
+        <td>Dan Sultana</td>
+        <td>12</td>
+      </tr>
+       <tr>
+        <td>Greg Wiland</td>
+        <td>9</td>
+      </tr>
+       <tr>
+        <td>Sanjay Kuchipudi</td>
+        <td>8</td>
+      </tr>
+       <tr>
+        <td>Nyal Bischoff</td>
+        <td>7</td>
+      </tr>
+      </tbody>
+     </table>
+     <input class="reportId" id="reportId" name="reportId" type="hidden" value="knockoutsTotalForSeason" />
+    </div>
+    <div class="responsive-cell">
+     <div class="title" id="titleWinnersForSeason">Season Winners</div>
+     <table border="0" cellpadding="0" cellspacing="0" class="display top5" id="dataTblWinnersForSeason" style="width: 100%;">
+      <caption></caption>
+      <thead>
+       <tr>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Name</th>
+        <th colspan="1" rowspan="1" style="border-right: 1px solid black;">Wins</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>Joe Bush</td>
+        <td>2</td>
+      </tr>
+       <tr>
+        <td>Dan Sultana</td>
+        <td>2</td>
+      </tr>
+       <tr>
+        <td>Greg Wiland</td>
+        <td>2</td>
+      </tr>
+       <tr>
+        <td>Francine Gottler</td>
+        <td>1</td>
+      </tr>
+       <tr>
+        <td>Sanjay Kuchipudi</td>
+        <td>1</td>
+      </tr>
+      </tbody>
+     </table>
+     <input class="reportId" id="reportId" name="reportId" type="hidden" value="winnersForSeason" />
+    </div>
+    <div class="responsive-cell">
+    </div>
+    <div class="responsive-cell">
+     <div class="title">Upcoming Events</div>
+     <p><a href="registration.php?tournamentId=462"></a></p><p><a href="registration.php?tournamentId=462">T21</a><br />
+     Oct 08, 2022 14:00</p>
+     <div class="small" style="clear: both;">
+     <a href="registration.php?tournamentId=462">Crazy Pineapple+r+a<br />
+     Farmington Hills - Quigley<br />
+     Seating 0 of 27 claimed</a>
+     </div>
+     <hr /><p><a href="registration.php?tournamentId=463"></a></p><p><a href="registration.php?tournamentId=463">T22</a><br />
+     Oct 08, 2022 19:30</p>
+     <div class="small" style="clear: both;">
+     <a href="registration.php?tournamentId=463">No Limit (NL) Hold 'Em +a<br />
+     Farmington Hills - Quigley<br />
+     Seating 0 of 27 claimed</a>
+     </div>
+     <hr /><p></p><p>T23<br />
+     Oct 29, 2022 14:00</p>
+     <div class="small" style="clear: both;">
+     No Limit (NL) Hold 'Em+r+a<br />
+     Farmington Hills - Quigley<br />
+     Registration Begins Oct 15 @ Noon</div>
+     <hr /><p></p><p>T24<br />
+     Oct 29, 2022 19:30</p>
+     <div class="small" style="clear: both;">
+     No Limit (NL) Hold 'Em +a<br />
+     Farmington Hills - Quigley<br />
+     Registration Begins Oct 15 @ Noon</div>
+     <hr />
+    </div>
+   </div>
+  </div>   
+  <footer class="footer"><a href="changeLog.php">Change Log</a></footer>
+ </body>
+</html>

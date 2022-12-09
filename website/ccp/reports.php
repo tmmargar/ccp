@@ -24,7 +24,7 @@ define("REPORT_ID_SUMMARY", "summary");
 define("REPORT_ID_WINNERS", "winners");
 define("REPORT_ID_FINISHES", "finishes");
 define("REPORT_ID_BOUNTIES", "bounties");
-define("REPORT_ID_LOCATIONS_HOSTED_COUNT", "locationsHostedCount");
+// define("REPORT_ID_LOCATIONS_HOSTED_COUNT", "locationsHostedCount");
 define("REPORT_ID_CHAMPIONSHIP", "championship");
 define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
@@ -34,10 +34,12 @@ define("ALL_USERS_INFO", "allUsersInfo");
 define("REPORT_ID_FIELD_NAME", "reportId");
 define("SEASON_START_DATE_FIELD_NAME", "seasonStartDate");
 define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
-$output = "";
 if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : null;
 }
+$output = "<div class=\"contentReport";
+$footerClass = REPORT_ID_FINISHES == $reportId ? "Mini" : (REPORT_ID_TOTAL_POINTS == $reportId || REPORT_ID_EARNINGS == $reportId || REPORT_ID_EARNINGS_CHAMPIONSHIP == $reportId || REPORT_ID_KNOCKOUTS == $reportId || REPORT_ID_WINNERS == $reportId || REPORT_ID_CHAMPIONSHIP == $reportId ? "Small" : (REPORT_ID_SUMMARY == $reportId ? "Large" : "Medium"));
+$output .= $footerClass . "\">\n";
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid");
 if (!isset($tournamentId)) {
   $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : null;
@@ -159,13 +161,13 @@ if (!isset($reportId)) {
       if (0 < count($resultList)) {
         $tournament = $resultList[0];
         $arrayIndex = array_keys($resultListIds, $tournament->getId());
-        $width = "50%";
+        $width = "100%";
         $output .= "<div class=\"center\" style=\"width: " . $width . ";\">\n";
         if (count($arrayIndex) > 0) {
-          $output .= "<a title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><i class=\"material-icons\">chevron_left</i></a>\n";
+          $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><span class=\"linkText\">Previous</span><i class=\"material-icons\">chevron_left</i></a>\n";
         }
         if ($arrayIndex[0] < (count($resultListIds) - 1)) {
-          $output .= "<a title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><i class=\"material-icons\">chevron_right</i></a>\n";
+          $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><i class=\"material-icons\">chevron_right</i><span class=\"linkText\">Next</span></a>\n";
         }
         $output .= "</div>\n<br>\n";
         $output .= "<strong>Game details: " . $tournament->getDescription() . ", " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . $tournament->getComment() . " at " . $tournament->getLocation()->getName() . "</strong>";
@@ -180,28 +182,28 @@ if (!isset($reportId)) {
       $query = $databaseResult->getResultOrderedTotalPoints(params: $params);
       $colFormats = array(array(1, "number", 0), array(2, "number", 2), array(3, "number", 0));
       $hideColIndexes = array(4);
-      $width = "28%";
+      $width = "100%";
       break;
     case REPORT_ID_EARNINGS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
       $query = $databaseResult->getResultOrderedEarnings(params: $params);
       $colFormats = array(array(1, "currency", 0), array(2, "currency", 2), array(3, "currency", 0), array(4, "number", 0));
       $hideColIndexes = array(5);
-      $width = "35%";
+      $width = "100%";
       break;
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
       $params = array("ALL" == $seasonId ? null : $year);
       $query = $databaseResult->getEarningsTotalForChampionship(params: $params);
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0);
-      $width = "20%";
+      $width = "100%";
       break;
     case REPORT_ID_KNOCKOUTS:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
       $query = $databaseResult->getResultOrderedKnockouts(params: $params);
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0), array(5, "number", 0));
       $hideColIndexes = array(0, 6);
-      $width = "30%";
+      $width = "100%";
       break;
     case REPORT_ID_SUMMARY:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
@@ -216,14 +218,14 @@ if (!isset($reportId)) {
       $query = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: null);
       $colFormats = array(array(2, "number", 0), array(3, "percentage", 2), array(4, "number", 0));
       $hideColIndexes = array( 0, 5);
-      $width = Constant::FLAG_LOCAL() ? "25%" : "75%";
+      $width = "100%";
       break;
     case REPORT_ID_FINISHES:
       $params = array($userId, $startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
       $query = $databaseResult->getFinishesForUser(params: $params);
       $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
       $caption = "";
-      $width = "15%";
+      $width = "100%";
       break;
     case REPORT_ID_BOUNTIES:
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
@@ -231,24 +233,24 @@ if (!isset($reportId)) {
       $colFormats = array(array(2, "currency", 0), array(3, "currency,negative", 0));
       $hideColIndexes = array(0, 4, 5);
       $caption = "";
-      $width = "25%";
+      $width = "100%";
       break;
-    case REPORT_ID_LOCATIONS_HOSTED_COUNT:
-      $query = $databaseResult->getLocationsHostedCount();
-      $colFormats = array(array(10, "number", 0));
-      $hideColIndexes = array(0, 2);
-      $width = "65%";
-      break;
+//     case REPORT_ID_LOCATIONS_HOSTED_COUNT:
+//       $query = $databaseResult->getLocationsHostedCount();
+//       $colFormats = array(array(10, "number", 0));
+//       $hideColIndexes = array(0, 2);
+//       $width = "100%";
+//       break;
     case REPORT_ID_CHAMPIONSHIP:
       $params = array(null, null, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
       $query = $databaseResult->getChampionshipByYearByEarnings(params: $params);
       $colFormats = array(array($group ? 1 : 3, "currency", 0));
       $hideColIndexes = $group ? array(2, 3) : array(1, 4, 5);
-      $width = "30%";
+      $width = "100%";
       break;
   }
   if ("show" == $seasonSelection) {
-    $output .= "<div>\n";
+    $output .= "<div class=\"center\">\n";
     $selectSeason = new FormSelect(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SEASON, class: null, disabled: false, id: Base::build("season", null), multiple: false, name: Base::build("season", null), onClick: null, readOnly: false, size: 1, suffix: null, value: null);
     $output .= "Season: " . $selectSeason->getHtml();
     $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: "", suffix: null, text: "Overall", value: "ALL");
@@ -281,6 +283,8 @@ if (!isset($reportId)) {
   }
   $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_FIELD_NAME . "2"), cols: null, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: null, name: REPORT_ID_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
   $output .= $hiddenReportId->getHtml();
+  $output .= "</div>\n";
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer" . $footerClass);
 $smarty->display("reports.tpl");

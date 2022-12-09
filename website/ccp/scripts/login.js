@@ -6,11 +6,13 @@ $(document).on("blur click keyup paste", "#username, #password", function(event)
   inputLocal.validate();
 });
 $(document).on("click", "#login", function(event) {
-  $("#mode").val(this.value.toLowerCase());
+  $("#mode").val(this.innerText.trim().toLowerCase());
+  $("#frmLogin").submit();
 });
 const inputLocal = {
   enableLogin : function() {
-    $("#login").prop("disabled", $("#username").val().length == 0 || $("#password").val().length == 0);
+    let result = $("#username").val().length == 0 || $("#password").val().length == 0;
+    $("#login").prop("disabled", result);
   },
   validate : function() {
     input.validateLength($("#username"), 1, false);

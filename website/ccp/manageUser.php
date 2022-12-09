@@ -38,122 +38,95 @@ define("REJECTION_DATE_FIELD_NAME", "rejectionDate");
 define("REJECTION_USER_FIELD_NAME", "rejectionUser");
 // define("SELECT_COLUMN_PREFIX_FIELD_NAME", "select");
 define("DEFAULT_VALUE_ADMINISTRATOR", "0");
+define("DEFAULT_VALUE_PHONE", "0");
 // define("DEFAULT_VALUE_REGISTRATION_DATE", "");
 // define("DEFAULT_VALUE_APPROVAL_DATE", "");
 // define("DEFAULT_VALUE_APPROVAL_USER", "");
 // define("DEFAULT_VALUE_REJECTION_DATE", "");
 // define("DEFAULT_VALUE_REJECTION_USER", "");
+define("DEFAULT_VALUE_ACTIVE_CREATE", "1");
 define("DEFAULT_VALUE_ACTIVE", "0");
+// define("DEFAULT_VALUE_AUTOCOMPLETE", "off");
 define("DEFAULT_VALUE_NUM_ROWS", 20);
 $smarty->assign("title", "Manage User");
 $smarty->assign("heading", "Manage User");
+$smarty->assign("style", "<link href=\"css/manageUser.css\" rel=\"stylesheet\">");
 if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $ids = isset($_GET[USER_ID_FIELD_NAME]) ? $_GET[USER_ID_FIELD_NAME] : $ids;
   $params = Constant::$MODE_MODIFY == $mode ? array($ids) : array(0);
   $resultList = $databaseResult->getUserById(params: $params);
+  $output .= " <div class=\"buttons center\">\n";
+  $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE . "_2", maxLength: null, name: Constant::$TEXT_SAVE . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
+  $output .= $buttonSave->getHtml();
+  $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET . "_2", maxLength: null, name: Constant::$TEXT_RESET . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
+  $output .= $buttonReset->getHtml();
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+  $output .= $buttonCancel->getHtml();
+  $output .= " </div>\n";
+  $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
   if (Constant::$MODE_CREATE == $mode || (Constant::$MODE_MODIFY == $mode && $ids != DEFAULT_VALUE_BLANK)) {
     $ctr = 0;
     $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
     foreach ($ary as $id) {
-      $output = "    <div style=\"float: left; width: 175px; height: 25px;\">" . FIRST_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . FIRST_NAME_FIELD_NAME . "_" . $id . "\">" . FIRST_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
       $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FIRST_NAME, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: FIRST_NAME_FIELD_NAME . "_" . $id, maxLength: 30, name: FIRST_NAME_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getFirstName() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . LAST_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . LAST_NAME_FIELD_NAME . "_" . $id . "\">" . LAST_NAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LAST_NAME, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: LAST_NAME_FIELD_NAME . "_" . $id, maxLength: 30, name: LAST_NAME_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getLastName() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . USERNAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . USERNAME_FIELD_NAME . "_" . $id . "\">" . USERNAME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOCATION_NAME, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: USERNAME_FIELD_NAME . "_" . $id, maxLength: 30, name: USERNAME_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getUsername() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . PASSWORD_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
-      $output .= "     <div id=\"passwordDiv\"" . (Constant::$MODE_MODIFY == $mode ? " style=\"display: none;\"" : "") . ">\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . PASSWORD_FIELD_NAME . "_" . $id . "\">" . PASSWORD_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PASSWORD_FIELD_NAME . "_" . $id, maxLength: null, name: PASSWORD_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: "", wrap: null);
-      $output .= $textBoxPassword->getHtml();
-      $output .= "     </div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" .
+                 "  <div id=\"passwordDiv\"" . (Constant::$MODE_MODIFY == $mode ? " style=\"display: none;\"" : "") . ">" . $textBoxPassword->getHtml() . "</div>\n";
       if (Constant::$MODE_MODIFY == $mode) {
-        $output .= "     <div id=\"passwordLinkDiv\">";
-        $output .= "      <a href=\"javascript:input.showHideToggle(['passwordLinkDiv', 'passwordDiv'], '" . PASSWORD_FIELD_NAME . "_" . $id . "');\">Click to enter new password</a>\n";
-        $output .= "     </div>\n";
+        $output .= " <div id=\"passwordLinkDiv\">";
+        $output .= "  <a href=\"javascript:input.showHideToggle(['passwordLinkDiv', 'passwordDiv'], '" . PASSWORD_FIELD_NAME . "_" . $id . "');\">Click to enter new password</a>\n";
+        $output .= " </div>\n";
       }
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . EMAIL_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME . "_" . $id, maxLength: 100, name: EMAIL_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 100, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEmail() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
-      $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $output .= "    <div style=\"float: left;\">\n     ";
-      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: 10, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPhone()->getValue() : ""), wrap: null);
-      $output .= $textBoxName->getHtml();
-      $output .= "    </div>\n";
-      $output .= "    <div style=\"clear: both;\"></div>\n";
+      $output .= " </div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . EMAIL_FIELD_NAME . "_" . $id . "\">" . EMAIL_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+      $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME . "_" . $id, maxLength: 100, name: EMAIL_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEmail() : ""), wrap: null);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxEmail->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . PHONE_FIELD_NAME . "_" . $id . "\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+      $textBoxPhone = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: 10, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 12, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPhone()->getValue() == 0 ? "" : $resultList[$ctr]->getPhone()->getValue() : ""), wrap: null);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxPhone->getHtml() . "</div>";
       if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) == 1) {
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . ADMINISTRATOR_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . ADMINISTRATOR_FIELD_NAME . "_" . $id . "\">" . ADMINISTRATOR_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $checkboxAdministrator = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getAdministrator() ? true : false), class: null, cols: null, disabled: false, id: ADMINISTRATOR_FIELD_NAME . "_" . $id, maxLength: null, name: ADMINISTRATOR_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
-        $output .= "        " . $checkboxAdministrator->getHtml();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
-        $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), class: null, cols: null, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
-        $output .= "        " . $checkboxActive->getHtml();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $checkboxAdministrator->getHtml() . "</div>";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . ACTIVE_FIELD_NAME . "_" . $id . "\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+        $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: (((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() || Constant::$MODE_CREATE == $mode) ? true : false), class: null, cols: null, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $checkboxActive->getHtml() . "</div>";
       }
       if (Constant::$MODE_MODIFY == $mode) {
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . REGISTRATION_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . REGISTRATION_DATE_FIELD_NAME . "_" . $id . "\">" . REGISTRATION_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $registrationDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $resultList[$ctr]->getRegistrationDate());
 //         $debug, $class, $disabled, $id, $name, $suffix, $value) {
         $textRegistrationDate = new FormBase(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: true, id: REGISTRATION_DATE_FIELD_NAME . "_" . $id, name: REGISTRATION_DATE_FIELD_NAME . "_" . $id, suffix: null, value: $registrationDateTime->getDisplayFormat());
-        $output .= "        " . $textRegistrationDate->getValue();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . APPROVAL_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textRegistrationDate->getValue() . "</div>";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . APPROVAL_DATE_FIELD_NAME . "_" . $id . "\">" . APPROVAL_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $approvalDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $resultList[$ctr]->getApprovalDate());
         $textApprovalDate = new FormBase(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: true, id: APPROVAL_DATE_FIELD_NAME . "_" . $id, name: APPROVAL_DATE_FIELD_NAME . "_" . $id, suffix: null, value: $approvalDateTime->getDisplayFormat());
-        $output .= "        " . $textApprovalDate->getValue();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . APPROVAL_USER_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textApprovalDate->getValue() . "</div>";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . APPROVAL_USER_FIELD_NAME . "_" . $id . "\">" . APPROVAL_USER_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $textApprovalUser = new FormBase(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: true, id: APPROVAL_USER_FIELD_NAME . "_" . $id, name: APPROVAL_USER_FIELD_NAME . "_" . $id, suffix: null, value: $resultList[$ctr]->getApprovalName());
-        $output .= "        " . $textApprovalUser->getValue();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . REJECTION_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textApprovalUser->getValue() . "</div>";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . REJECTION_DATE_FIELD_NAME . "_" . $id . "\">" . REJECTION_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $rejectionDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $resultList[$ctr]->getRejectionDate());
         $textRejectionDate = new FormBase(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: true, id: REJECTION_DATE_FIELD_NAME . "_" . $id, name: REJECTION_DATE_FIELD_NAME . "_" . $id, suffix: null, value: $rejectionDateTime->getDisplayFormat());
-        $output .= "        " . $textRejectionDate->getValue();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
-        $output .= "    <div style=\"float: left; width: 175px; height: 25px;\">" . REJECTION_USER_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-        $output .= "    <div style=\"float: left;\">\n     ";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textRejectionDate->getValue() . "</div>";
+        $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . REJECTION_USER_FIELD_NAME . "_" . $id . "\">" . REJECTION_USER_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
         $textRejectionUser = new FormBase(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: true, id: REJECTION_USER_FIELD_NAME . "_" . $id, name: REJECTION_USER_FIELD_NAME . "_" . $id, suffix: null, value: $resultList[$ctr]->getRejectionName());
-        $output .= "        " . $textRejectionUser->getValue();
-        $output .= "    </div>\n";
-        $output .= "    <div style=\"clear: both;\"></div>\n";
+        $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textRejectionUser->getValue() . "</div>";
       }
-      $output .= "    <div style=\"float: left;\">\n     ";
       $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: null, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), wrap: null);
       $output .= $hiddenRow->getHtml();
-      $output .= "    <div style==\"clear: both;\"></div>\n";
       $ctr ++;
     }
+    $output .= " <div class=\"buttons center\">\n";
     $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SAVE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_SAVE, maxLength: null, name: Constant::$TEXT_SAVE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_SAVE, wrap: null);
     $output .= $buttonSave->getHtml();
     $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
@@ -161,10 +134,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   }
   $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
   $output .= $buttonCancel->getHtml();
+  $output .= " </div>\n";
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
+  $output .= "</div>\n";
 } elseif (Constant::$MODE_SAVE_CREATE == $mode || Constant::$MODE_SAVE_MODIFY == $mode) {
   $ctr = 0;
   $ary = explode(Constant::$DELIMITER_DEFAULT, $ids);
@@ -174,14 +149,15 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $username = isset($_POST[USERNAME_FIELD_NAME . "_" . $id]) ? $_POST[USERNAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $password = isset($_POST[PASSWORD_FIELD_NAME . "_" . $id]) ? $_POST[PASSWORD_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $email = isset($_POST[EMAIL_FIELD_NAME . "_" . $id]) ? $_POST[EMAIL_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? preg_replace("/[^0-9]/", "", $_POST[PHONE_FIELD_NAME . "_" . $id]) : DEFAULT_VALUE_BLANK;
+    $phone = (isset($_POST[PHONE_FIELD_NAME . "_" . $id])) ? preg_replace("/[^0-9]/", "", $_POST[PHONE_FIELD_NAME . "_" . $id]) : DEFAULT_VALUE_PHONE;
+    $phone = $phone == "" ? DEFAULT_VALUE_PHONE : $phone;
     $administrator = isset($_POST[ADMINISTRATOR_FIELD_NAME . "_" . $id]) ? $_POST[ADMINISTRATOR_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_ADMINISTRATOR;
-    $active = isset($_POST[ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_ACTIVE;
+    $active = isset($_POST[ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : (Constant::$MODE_SAVE_CREATE == $mode ? DEFAULT_VALUE_ACTIVE_CREATE : DEFAULT_VALUE_ACTIVE);
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       // $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTime::createFromFormat(DateTimeUtility::$DATE_FORMAT_PICKER_DISPLAY_DEFAULT, "12/25/2019")), SessionUtility::getValue("userid"), null, null, "1", null, null, null, null, null, null);
       // $params = array(null, $firstName, $lastName, $username, $password, $email, $administrator == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, DateTimeUtility::getDateDatabaseFormat(DateTimeUtility::createDate(null, null)), SessionUtility::getValue("userid"), null, null, $active == Constant::$VALUE_DEFAULT_CHECKBOX ? 1 : 0, null, null, null, null, null, null);
       $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
-      $params = array(null, $firstName, $lastName, $username, $password, $email, $phone, $administrator, null, $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, $active, null, null, null);
+      $params = array(null, $firstName, $lastName, $username, $password, $email, $phone, $administrator, $dateTime->getDatabaseFormat(), $dateTime->getDatabaseFormat(), SessionUtility::getValue("userid"), null, null, $active, null, null, null);
       $databaseResult->insertUser(params: $params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       // $userId = (isset($_POST[USER_ID_FIELD_NAME . "_" . $id])) ? $_POST[USER_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
@@ -203,6 +179,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     }
     $mode = Constant::$MODE_VIEW;
   }
+  $output .= "<div class=\"buttons center\">\n";
   if (Constant::$MODE_VIEW == $mode) {
     $buttonCreate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CREATE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CREATE, maxLength: null, name: Constant::$TEXT_CREATE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CREATE, wrap: null);
     $output .= $buttonCreate->getHtml();
@@ -214,6 +191,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
     $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
     $output .= $buttonCancel->getHtml();
   }
+  $output .= "</div>\n";
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
@@ -229,4 +207,5 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   $output .= $htmlTable->getHtml();
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");
