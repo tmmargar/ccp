@@ -23,7 +23,6 @@ $outputChange =
   "  </li>\n" .
   " </ul>\n" .
   "</section>\n" .
-  "<h1>Change Log</h1>\n" .
   "<section class=\"version\" id=\"1.1.0\">" .
   " <h3>Version 1.1.0</h3>\n" .
   " <b><time datetime=\"2021-05-22\">May 22, 2021</time></b>\n" .

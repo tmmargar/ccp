@@ -59,7 +59,7 @@ body {
   border-top: none;
   box-sizing: border-box;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.2em;
+  /*font-size: 1.2em;*/
   margin: 0 auto;
   min-height: 100%;
   padding: .4em;
@@ -122,9 +122,9 @@ h6 {
   .responsive--3cols > .responsive-cell, .responsive--4cols > .responsive-cell {
     width: unset;
   }
-  dialog {
+  /*dialog {
     width: auto;
-  }
+  }*/
   h1,
   h2,
   h3,
@@ -132,6 +132,7 @@ h6 {
   h5,
   h6 {
     display: inline-block;
+    font-size: 1.3em;
     width: 90%;
   }
 }
@@ -156,26 +157,11 @@ button {
 button:hover {
   background-color: #274CE0;
 }
-.contentTop5Mini, .footerMini {
-  width: 10%;
-}
-.contentTop5Small, .footerSmall {
-  width: 20%;
-}
-.contentTop5Medium, .footerMedium {
-  width: 35%;
-}
-.contentTop5Large, .footerLarge {
-  width: 50%;
-}
 .link {
   text-decoration: none;
 }
 .linkText {
   vertical-align: super;
-}
-.footerMini, .footerSmall, .footerMedium, .footerLarge {
-  text-align: center;
 }
 #live-dialog::backdrop, .dialog::backdrop {
   background-color: #5e68df;
@@ -185,8 +171,10 @@ button:hover {
   border: none;
   border-radius: 8px;
   box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
-  margin: 100px;
-  width: 500px;
+  /*margin: 100px;
+  width: 500px;*/
+  overflow: hidden;
+  width: 20vw;
 }
 #live-dialog header, .dialog header {
   align-items: center;
@@ -216,10 +204,10 @@ button:hover {
   padding: 5px;
 }
 @media all and (max-width: 600px) {
-  .contentTop5Mini, .contentTop5Small, .contentTop5Medium, .contentTop5Large, .footerMini, .footerSmall, .footerMedium, .footerLarge {
-    width: 100%;
-  }
   .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
    text-align: right !important;
+  }
+  #live-dialog, .dialog {
+    width: 80vw;
   }
 }

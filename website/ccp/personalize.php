@@ -18,7 +18,6 @@ if ($userId == "" || SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME
   $heading .= $resultList[0]->getName() . "'s";
 }
 $heading .= " Stats";
-$smarty->assign("heading", $heading);
 $outputPersonalize .=
   " <div class=\"responsive-cell\">\n";
 $reportId = "tournamentsPlayedForUser";
@@ -99,9 +98,10 @@ $outputPersonalize .= include "top5.php";
 $outputPersonalize .= 
   " </div>\n" .
   " <div class=\"responsive-cell\">\n" .
-  " </div>\n" .
-  " <div class=\"responsive-cell\">\n" .
+//   " </div>\n" .
+//   " <div class=\"responsive-cell\">\n" .
   " </div>\n";
+$smarty->assign("heading", $heading);
 $smarty->assign("content", $outputPersonalize);
 $smarty->assign("footerClass", "footer");
 $smarty->display("personalize.tpl");

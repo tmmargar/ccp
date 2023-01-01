@@ -173,3 +173,7 @@ $(function() {
 $(document).on("click", "[id^='cancel']", function(event) {
   $("#mode").val("view");
 });
+/*$(document).on("order.dt", ".dataTable", function(event) {
+  const dt = $(this).DataTable();
+  console.log(dt.order());
+});*/

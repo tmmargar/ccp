@@ -27,53 +27,55 @@ const reportsInputLocal = {
       if (reportId == "results") {
         dataTableId = "dataTblTournamentResults";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ] }, { "type" : "name" }, { "searchable": false, "visible": false }], [ [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ] }, { "type" : "name" }, { "searchable": false, "visible": false }], [[0, "asc" ]], false, false, "600px", true);
         }
       } else if (reportId == "pointsTotal") {
         dataTableId = "dataTblTotalPoints";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
         }
       } else if (reportId == "earnings") {
         dataTableId = "dataTblEarnings";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
         }
       } else if (reportId == "earningsChampionship") {
         dataTableId = "dataTblEarnings\\(Championship\\)";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
         }
       } else if (reportId == "knockouts") {
         dataTableId = "dataTblKnockouts";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
         }
       } else if (reportId == "summary") {
         dataTableId = "dataTblSummary";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], [ [ 12, "desc"], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], [[ 12, "desc"], [0, "asc"]], false, false, "600px", true);
         }
       } else if (reportId == "winners") {
         dataTableId = "dataTblWinners";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc"]], false, false, "600px", true);
         }
       } else if (reportId == "finishes") {
         dataTableId = "dataTblFinishes";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }]);
+          dataTable.initialize(dataTableId, [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }], [], false, false, "600px", true);
         }
       } else if (reportId == "bounties") {
         dataTableId = "dataTblBounties";
         if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "sType" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [ [ 1,'desc'], [0, "asc" ] ]);
+          dataTable.initialize(dataTableId, [{ "sType" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [[ 1,'desc'], [0, "asc"]], false, false, "600px", true);
         }
 //      } else if (reportId == "locationsHostedCount") {
-//        dataTable.initialize(dataTableId, [null, { "type" : "name" }, null, null, null, { "type" : "number" }, null, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], "type" : "number", }], [ [8, "desc" ], [1, "asc" ] ]);
+//        dataTable.initialize(dataTableId, [null, { "type" : "name" }, null, null, null, { "type" : "number" }, null, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], "type" : "number", }], [[8, "desc" ], [1, "asc" ]]);
       } else if (reportId == "championship") {
         const params = new URLSearchParams(window.location.search);
-        const aryParam = params.get("sort").split(",");
+        // website blocking desc in parameter so passing up and down and replacing here
+        const paramsSort = params.get("sort").replace("up", "asc").replace("down", "desc");
+        const aryParam = paramsSort.split(",");
         let aryNew = [];
         aryParam.forEach(function(item, index, array) {
           const aryItem = item.split(" ");

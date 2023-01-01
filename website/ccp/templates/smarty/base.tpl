@@ -7,11 +7,11 @@
  <link href="images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
  <link href="images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
  <link href="images/site.webmanifest" rel="manifest">
- <link href="css/jquery-ui.css" rel="stylesheet">
- <link href="css/jquery.datetimepicker.css" rel="stylesheet">
- <link href="css/datatables.css" rel="stylesheet">
- <link href="css/display.css" rel="stylesheet">
- <link href="css/menu.css" rel="stylesheet">
+ <link href="css/jquery-ui.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/jquery.datetimepicker.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/datatables.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  {block name=style}{/block}
  <script src="scripts/jquery/jquery.js"></script>
  <script src="scripts/jquery/jquery-ui.js"></script>
@@ -23,7 +23,7 @@
  <script src="scripts/jqueryLocal.js"></script>
  <script src="scripts/dataTablesLocal.js"></script>
  <script src="scripts/urlSearchParams.js"></script>
- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+ <script src="https://kit.fontawesome.com/c9cf137722.js" crossorigin="anonymous"></script>
  {block name=script}{/block}
 </head>
 <body>

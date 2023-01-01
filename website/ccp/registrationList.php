@@ -36,15 +36,13 @@ foreach ($resultList as $tournament) {
   $registrationOpenDateTemp->sub($interval);
   $registrationOpen = ($now >= $registrationOpenDate);
   $url = "registration.php?tournamentId=" . $tournament->getId();
-  $output .= "<p>";
+  $output .= "<div class=\"small\">";
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";
   }
   if ($registrationOpen) {
     $output .= "</a>";
   }
-  $output .= "</p>";
-  $output .= "<p>";
   $description = explode(", ", $tournament->getDescription());
   if (count($description) == 1) {
     $description = explode(" - ", $tournament->getDescription());
@@ -64,7 +62,7 @@ foreach ($resultList as $tournament) {
   }
   $output .= "<br />\n";
   $output .= $tournament->getDate()->getDisplayFormat() ." " . $startTime;
-  $output .= "</p>\n<div class=\"small\" style=\"clear: both;\">\n";
+  $output .= "<br />\n";
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";
     $output .= $tournament->getLimitType()->getName();
@@ -110,5 +108,6 @@ if (isset($parentObjectId)) {
   return $output;
 } else {
   $smarty->assign("content", $output);
+  $smarty->assign("footerClass", "footer");
   $smarty->display("home.tpl");
 }

@@ -54,7 +54,7 @@ body {
   border-top: none;
   box-sizing: border-box;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.2em;
+  /*font-size: 1.2em;*/
   margin: 0 auto;
   max-width: 500px;
   min-height: 100%;
@@ -124,8 +124,4 @@ button {
   cursor: pointer;
   font-size: 1.2rem;
   padding: 2.5px 5px 5px 5px;
-}
-/* Darker background on mouse-over */
-button:hover {
-  background-color: #274CE0;
 }
