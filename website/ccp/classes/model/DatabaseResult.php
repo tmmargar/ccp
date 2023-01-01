@@ -326,8 +326,8 @@ class DatabaseResult extends Root {
   public function getTournamentsPlayedByPlayerIdAndDateRange(array $params) {
     return $this->getData(dataName: "tournamentsPlayedByPlayerIdAndDateRange", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getTournamentsWonByPlayerId(array $params) {
-    return $this->getData(dataName: "tournamentsWonByPlayerId", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  public function getTournamentsWonByPlayerId(array $params, array $paramsNested) {
+    return $this->getData(dataName: "tournamentsWonByPlayerId", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getTournamentsPlayed(array $params) {
     return $this->getData(dataName: "tournamentsPlayed", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: true);
@@ -1327,7 +1327,8 @@ class DatabaseResult extends Root {
             "        WHEN s.Percentage IS NULL THEN 0 " .
             "        ELSE s.Percentage " .
             "    END AS earnings, " .
-            "       CASE WHEN t.tournamentDesc LIKE '%Championship%' THEN 0 " .
+//             "       CASE WHEN t.tournamentDesc LIKE '%Championship%' THEN 0 " .
+            "       CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN 0" .
             "       ELSE " .
             "        CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
             "         CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
@@ -1836,8 +1837,9 @@ class DatabaseResult extends Root {
             $query .= " WHERE seasonid = " . $params[0];
           } else if ("seasonSelectOneByIdAndDesc" == $dataName) {
             $query .=
-              " INNER JOIN poker_tournament t " .
-              " WHERE t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate AND t.tournamentId = " . $params[0] . " AND t.tournamentDesc LIKE '%" . $params[1] . "%'";
+              " INNER JOIN poker_tournament t" .
+              " LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
+              " WHERE t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate AND t.tournamentId = " . $params[0] . " AND st.typeDescription = '" . $params[1] . "'";
           } else if ("seasonSelectOneByActive" == $dataName) {
             $query .= " WHERE seasonActive = " . $params[0];
           }
@@ -2026,7 +2028,9 @@ class DatabaseResult extends Root {
           $query =
             "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, u.active, COUNT(*) AS tourneys " .
             "FROM poker_user u " .
-            "INNER JOIN poker_result r ON u.id = r.playerId AND r.place > 0 " .
+//             "INNER JOIN poker_result r ON u.id = r.playerId AND r.place > 0 " .
+            "LEFT OUTER JOIN poker_result r ON u.id = r.playerId AND r.place > 0 " .
+            "WHERE u.active = '" . Constant::$FLAG_YES_DATABASE . "' " .
             "GROUP BY u.id <REPLACE>";
           if ($rank) {
             $whereClause = "<REPLACE>";

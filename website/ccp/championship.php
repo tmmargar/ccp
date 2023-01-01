@@ -196,17 +196,17 @@ if (0 < $count) {
   }
   $output .= "    <h3>Total payout of $" . number_format(num: (float) $prizePool, decimals: 0) . "</h3>\n";
   $output .= "    <h4>Exact amounts below subject to change</h4>\n";
-  $output .= "    <div class='column'><strong>Top " . $topThird . "</strong></div>\n";
-  $output .= "    <div class='column'><strong>Middle " . $middleThird . "</strong></div>\n";
-  $output .= "    <div class='column'><strong>Bottom " . $bottomThird . "</strong></div>\n";
-  $output .= "    <div class='clear'></div>\n";
-  $output .= "    <div class='column'>" . $topThirdChipCount . " chips</div>\n";
-  $output .= "    <div class='column'>" . $middleThirdChipCount . " chips</div>\n";
-  $output .= "    <div class='column'>" . $bottomThirdChipCount . " chips</div>\n";
-  $output .= "    <div class='clear'></div>\n";
-  $output .= "    <div class='column'><strong><i>Position<br />(% of total)</i></strong></div>\n";
-  $output .= "    <div class='column'><strong><i>Payout</i></strong></div>\n";
-  $output .= "    <div class='clear'></div>\n";
+  $output .= "    <div class=\"column\"><strong>Top " . $topThird . "</strong></div>\n";
+  $output .= "    <div class=\"column\"><strong>Middle " . $middleThird . "</strong></div>\n";
+  $output .= "    <div class=\"column\"><strong>Bottom " . $bottomThird . "</strong></div>\n";
+  $output .= "    <div class=\"clear\"></div>\n";
+  $output .= "    <div class=\"column\">" . $topThirdChipCount . " chips</div>\n";
+  $output .= "    <div class=\"column\">" . $middleThirdChipCount . " chips</div>\n";
+  $output .= "    <div class=\"column\">" . $bottomThirdChipCount . " chips</div>\n";
+  $output .= "    <div class=\"clear\"></div>\n";
+  $output .= "    <div class=\"column\"><strong><i>Position<br />(% of total)</i></strong></div>\n";
+  $output .= "    <div class=\"column\"><strong><i>Payout</i></strong></div>\n";
+  $output .= "    <div class=\"clear\"></div>\n";
   $params = array(1, 1);
   $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (0 < count($resultList)) {
@@ -216,57 +216,54 @@ if (0 < $count) {
       $payouts = $groupPayout->getPayouts();
       $structures = $payouts[0]->getStructures();
       foreach ($structures as $structure) {
-        $output .= "    <div class='column'>" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
-        $output .= "    <div class='column'>$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
-        $output .= "    <div class='clear'></div>\n";
+        $output .= "    <div class=\"column\">" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
+        $output .= "    <div class=\"column\">$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
+        $output .= "    <div class=\"clear\"></div>\n";
       }
       $ctr ++;
     }
   }
   $output .= "    <br />\n";
-  $output .= "    <div class='heading'><strong>Table Collapse</strong></div>\n";
-  $output .= "    <div class='heading'>1 and 4</div>\n";
-  $output .= "    <div class='heading'>2 and 3</div>\n";
-  $output .= "    <br />\n";
-  $output .= "    <div class='heading'><strong>Unable to attend</strong></div>\n";
-  $output .= "    <div class='column'><strong><i>Name</i></strong></div>\n";
-  $output .= "    <div class='column'><strong><i>Original seat</i></strong></div>\n";
-  $output .= "    <div class='clear'></div>\n";
+  $output .= "    <div class=\"heading\"><strong>Unable to attend</strong></div>\n";
+  $output .= "    <div class=\"column\"><strong><i>Name</i></strong></div>\n";
+  $output .= "    <div><strong><i>Original seat</i></strong></div>\n";
+  $output .= "    <div class=\"clear\"></div>\n";
   $ctr = 0;
 //   echo "<br>aryAbsentNames " . print_r($aryAbsentNames, true);
 //   echo "<br>aryAbsentSeeds " . print_r($aryAbsentSeeds, true);
 //   echo print_r($aryPosition, true);
   foreach ($aryAbsentNames as $absentName) {
-    $output .= "    <div class='column'>" . $absentName . "</div>\n";
+    $output .= "    <div class=\"column\">" . $absentName . "</div>\n";
     $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
     $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[$aryAbsentSeeds[$absentName] / $numTables];
 //     echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
-    $output .= "    <div class='column'>Table " . $tableNum . " Position " . $positionNum . "</div>\n";
-    $output .= "    <div class='clear'></div>\n";
+    $output .= "    <div class=\"column2\">Table " . $tableNum . " Position " . $positionNum . "</div>\n";
+    $output .= "    <div class=\"clear\"></div>\n";
     $ctr ++;
   }
   $output .= "    <br />\n";
-  $output .= "    <div class='heading'><strong>* represent winners</strong></div>\n";
+  $output .= "    <div class=\"heading\"><strong>* represent winners</strong></div>\n";
   $ctr = 0;
   while ($ctr < count($table)) {
     $ctr ++;
     $ctr2 = 0;
     while ($ctr2 < count($table[$ctr])) {
       $ctr2 ++;
-      $output .= "    <div class='clear'></div>\n";
+      $output .= "    <div class=\"clear\"></div>\n";
       if ($ctr2 == 1) {
-        $output .= "    <div class='heading'><strong>Table $ctr</strong></div>\n";
-        $output .= "    <div class='column'><strong><i>Position</i></strong></div>\n";
-        $output .= "    <div class='column'><strong><i>Name</i></strong></div>\n";
-        $output .= "    <div class='clear'></div>\n";
+        $output .= "    <div class=\"heading\"><strong>Table $ctr</strong></div>\n";
+        $output .= "    <div class=\"column\"><strong><i>Position</i></strong></div>\n";
+        $output .= "    <div class=\"column2\"><strong><i>Name</i></strong></div>\n";
+        $output .= "    <div class=\"clear\"></div>\n";
       }
-      $output .= "    <div class='column'>" . $table[$ctr][$ctr2][1] . "</div>\n";
-      $output .= "    <div class='column'>" . isset($table[$ctr][$ctr2]) ? $table[$ctr][$ctr2][0] : "" . "</div>\n";
-      $output .= "    <div class='clear'></div>\n";
+      $output .= "    <div class=\"column\">" . $table[$ctr][$ctr2][1] . "</div>\n";
+      $output .= "    <div class=\"column2\">" . (isset($table[$ctr][$ctr2]) ? $table[$ctr][$ctr2][0] : "") . "</div>\n";
+      $output .= "    <div class=\"clear\"></div>\n";
     }
   }
 } else {
   $output .= "No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y");
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("championship.tpl");

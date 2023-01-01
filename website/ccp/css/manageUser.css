@@ -39,10 +39,10 @@ table {
 /* Table column sizing
 ================================== */
 .responsive--2cols > .responsive-cell-label {
-  width: 25%;
+  width: 50%;
 }
 .responsive--2cols > .responsive-cell-value {
-  width: 75%;
+  width: 50%;
 }
 .responsive--3cols > .responsive-cell {
   width: 33.33%;
@@ -67,9 +67,9 @@ body {
   border-top: none;
   box-sizing: border-box;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.2em;
+  /*font-size: 1.2em;*/
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 550px;
   /*min-height: 100%;*/
   padding: 1em;
 }
@@ -104,8 +104,14 @@ h6 {
 .responsive-cell--head > h6 {
   color: white;
 }
+@media all and (max-width: 1100px) {
+  body {
+    font-size: .8em;
+  }
+}
 @media all and (max-width: 600px) {
   body {
+    font-size: .8em;
     max-width: unset;
   }
   .responsive-cell-empty {
@@ -129,7 +135,4 @@ h6 {
 }
 .no-flexbox .responsive > .responsive-cell--foot {
   margin-bottom: 1em;
-}
-#content {
-  height: 570px;
 }

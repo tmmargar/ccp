@@ -10,7 +10,7 @@ define("USERNAME_FIELD_NAME", "username");
 define("EMAIL_FIELD_NAME", "email");
 define("PASSWORD_FIELD_NAME", "password");
 define("CONFIRM_PASSWORD_FIELD_NAME", "confirmPassword");
-define("SEND_REQUEST_FIELD_NAME", "sendRequest");
+define("SEND_REQUEST_FIELD_NAME", "send");
 define("RESET_PASSWORD_FIELD_NAME", "resetPassword");
 $smarty->assign("title", "Chip Chair and a Prayer Reset Password");
 $smarty->assign("heading", "Reset Password");
@@ -49,12 +49,12 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
       $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
       $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PASSWORD_FIELD_NAME, maxLength: null, name: PASSWORD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: $password, wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxPassword->getId() . "\">New:</label></div>";
-      $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxPassword->getHtml() . "</div>";
       $textBoxConfirmPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: CONFIRM_PASSWORD_FIELD_NAME, maxLength: null, name: CONFIRM_PASSWORD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: null, wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxConfirmPassword->getId() . "\">Confirm New:</label></div>";
-      $output .= " <div class=\"responsive-cell\">" . $textBoxConfirmPassword->getHtml() . "</div>";
+      $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxConfirmPassword->getHtml() . "</div>";
       $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: RESET_PASSWORD_FIELD_NAME, maxLength: null, name: RESET_PASSWORD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(implode(" ", preg_split('/(?=[A-Z])/', RESET_PASSWORD_FIELD_NAME))), wrap: null);
-      $output .= " <div class=\"responsive-cell\">" . $buttonReset->getHtml() . "</div>";
+      $output .= $buttonReset->getHtml();
       $output .= "</div>";
     } else {
       $output .= "  aryErrors.push(\"Username <strong><u>" . $username . "</u></strong> and email <strong><u>" . $emailAddress . "</u></strong> are not a valid combination. Please try again.\");";
@@ -79,14 +79,15 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
 }
 if (Constant::$MODE_VIEW == $mode) {
   $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
-  $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $username, wrap: null);
+  $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 15, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $username, wrap: null);
   $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
-  $output .= " <div class=\"responsive-cell\">" . $textBoxUsername->getHtml() . "</div>";
-  $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: null);
+  $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxUsername->getHtml() . "</div>";
+  $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 15, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: null);
   $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxEmail->getId() . "\">Email:</label></div>";
-  $output .= " <div class=\"responsive-cell\">" . $textBoxEmail->getHtml() . "</div>";
-  $buttonEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SIGN_UP, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: SEND_REQUEST_FIELD_NAME, maxLength: null, name: SEND_REQUEST_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(implode(" ", preg_split('/(?=[A-Z])/', SEND_REQUEST_FIELD_NAME))), wrap: null);
-  $output .= " <div class=\"responsive-cell\">" . $buttonEmail->getHtml() . "</div>";
+  $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxEmail->getHtml() . "</div>";
+  $output .= " <div class=\"responsive-cell\">\n";
+  $buttonEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_SIGN_UP, autoComplete: null, autoFocus: false, checked: null, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: null, disabled: true, id: SEND_REQUEST_FIELD_NAME, maxLength: null, name: SEND_REQUEST_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(implode(" ", preg_split('/(?=[A-Z])/', SEND_REQUEST_FIELD_NAME))), wrap: null);
+  $output .= $buttonEmail->getHtml() . "</div>\n";
   $output .= "</div>";
 }
 $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);

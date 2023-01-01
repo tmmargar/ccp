@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+   Chip Chair and a Prayer Login
+  </title>
+  <script src="https://kit.fontawesome.com/c9cf137722.js" crossorigin="anonymous"></script>
+  <style>
+button {
+  border: none;
+  border-radius: 4px;
+}
+.button-icon {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  font-weight: 700;
+  outline: none;
+  padding: 4px 10px 4px 40px;
+  position: relative;
+  transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+.button-icon:after {
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  z-index: -1;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+.button-icon:before {
+  font-family: 'FontAwesome';
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  position: relative;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+}
+.button-icon-separator:before {
+  background: rgba(0,0,0,0.15);
+}
+.button-icon {
+  background: #3498db;
+  color: #fff;
+}
+.button-icon:hover {
+  background: #2980b9;
+}
+.button-icon:active {
+  background: #2980b9;
+  top: 2px;
+}
+.button-icon:before {
+  height: 100%;
+  left: 0;
+  line-height: 1.5;
+  position: absolute;
+  top: 0;
+  width: 30px;
+}
+.icon-border-caret-right:before {
+  content: "\f152";
+}
+  </style>
+ </head>
+ <body>
+  <button class="button-icon button-icon-separator icon-border-caret-right">Button</button>
+ </body>
+</html>

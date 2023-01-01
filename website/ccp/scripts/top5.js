@@ -10,37 +10,44 @@ const inputLocal = {
     $(".reportId").each(function(index) {
       const reportId = $(this).val();
       if ("pointsTotalForSeason" == reportId || "pointsAverageForSeason" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false, false, "600px", true);
       } else if ("earningsTotalForSeason" == reportId || "earningsAverageForSeason" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency", "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency", "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false, false, "600px", true);
       } else if ("knockoutsTotalForSeason" == reportId || "knockoutsAverageForSeason" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "75%" }, { "orderSequence": [ "desc", "asc" ], "width": "25%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "75%" }, { "orderSequence": [ "desc", "asc" ], "width": "25%" }], [ [ 1, "desc"], [0, "asc" ] ], false, false, "600px", true);
       } else if ("winnersForSeason" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], [ [ 1, "desc"], [0, "asc" ] ], false, false, "600px", true);
       } else if ("finishesForUser" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%" }], [], false, false, "200px");
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "type": "percentage", "width": "30%" }], [], false, false, "600px", true);
       } else if ("tournamentsPlayedByTypeForUser" == reportId) {
-        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "25%" }, { "width": "25%" }, { "orderSequence": [ "desc", "asc" ], "width": "17%" }, { "orderSequence": [ "desc", "asc" ], "width": "18%" }, { "orderSequence": [ "desc", "asc" ], "width": "15%" }], [ [4, "desc" ], [1, "asc" ], [0, "asc" ], [2, "desc" ], [3, "asc" ] ], false);
+        dataTable.initialize("dataTbl" + input.ucwords(reportId), [{ "width": "25%" }, { "width": "25%" }, { "orderSequence": [ "desc", "asc" ], "width": "17%" }, { "orderSequence": [ "desc", "asc" ], "width": "18%" }, { "orderSequence": [ "desc", "asc" ], "width": "15%" }], [ [4, "desc" ], [1, "asc" ], [0, "asc" ], [2, "desc" ], [3, "asc" ] ], false, false, "600px", true);
       } else if ("nemesisForUser" == reportId) {
-        dataTable.initializeBySelector("table[id*='Nemesis']", [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "");
+        dataTable.initializeBySelector("table[id*='Nemesis']", [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "600px", true);
       } else if ("bullyForUser" == reportId) {
-        dataTable.initializeBySelector("table[id*='Bully']", [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "");
+        dataTable.initializeBySelector("table[id*='Bully']", [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [1, "desc" ], [0, "asc" ] ], false, false, "600px", true);
       }
     });
     $("table[id^='dataTblRank']").each(function(index) {
       const tableId = $(this).prop("id");
       if ("dataTblRankLifetimeTourneys" == tableId) {
-        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [0, "asc" ] ], false, false, "");
+        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [0, "asc" ] ], false, false, "600px", true);
       } else {
         const reportId = $(this).siblings(".reportId").val();
-        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number" }, { "orderSequence": [ "desc", "asc" ],  "type" : "number" }], [ [0, "asc" ] ], false, false, "");
-        const suffix = tableId.replace("dataTblRank", "");
+        dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number" }, { "orderSequence": [ "desc", "asc" ],  "type" : "number" }], [ [0, "asc" ] ], false, false, "600px", true);
+        /*const suffix = tableId.replace("dataTblRank", "");
         $(document).on("click", "#dialogRankAll" + suffix + "-header--cancel-btn", function(event) {
           document.getElementById("dialogRankAll" + suffix).close();
           return false;
-        });
+        });*/
       }
     });
+    /*$("table[id^='dataTblNemesis'], table[id^='dataTblBully']").each(function(index) {
+      const suffix = tableId.replace("dataTbl", "");
+      $(document).on("click", "#dialogRankAll" + suffix + "-header--cancel-btn", function(event) {
+        document.getElementById("dialogRankAll" + suffix).close();
+        return false;
+      });
+    });*/
     let previousValue = "";
     // for ranking tables only
     $("table[id^='dataTblRank'] tr td:first-child").each(function(index) {
@@ -73,11 +80,6 @@ const inputLocal = {
         }
       }
     //}
-  },
-  resetDialog : function(title) {
-    const re = /\s/gi;
-    const objTable = $("#dataTblRank" + title.replace(re, "")).DataTable();
-    objTable.order([[0,"asc"]]).draw();
   },
   // position is [100,100]
   showFullList : function(obj, title, height, width, positionParent) {

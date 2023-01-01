@@ -49,11 +49,10 @@ $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "<
 // $output .= HtmlUtility::buildCheckbox(false, false, false, null, false, Base::build(NAME_FIELD_REMEMBER_ME, null), Base::build(NAME_FIELD_REMEMBER_ME, null), null, null);
 // $output .= "</div>";
 // $output .= "<div class=\"clear\"></div>";
-$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("far", "fa-caret-square-right"), cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: "&nbsp;" . ucwords(NAME_FIELD_LOGIN), wrap: null);
+$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
 $output .= $buttonLogin->getHtml();
-$output .= " <div class=\"responsive-cell responsive-cell-empty\"></div>";
-$output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a></div>";
-$output .= " <div class=\"responsive-cell\"><a href=\"signup.php\">New User</a></div>";
+$output .= " <br /><div class=\"responsive-cell\"></div>";
+$output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a>&nbsp;&nbsp;&nbsp;<a href=\"signup.php\">New User</a></div>";
 $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();
 $output .= "</div>";

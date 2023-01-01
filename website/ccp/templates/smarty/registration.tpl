@@ -4,6 +4,6 @@
 {block name=script}<script src="scripts/registration.js" type="text/javascript"></script>{/block}
 {block name=content}
  <form action="{$action}" method="post" id="{$formName}" name="{$formName}">
-  <fieldset>{$content}</fieldset>
+  {$content}
  </form>
 {/block}

@@ -87,9 +87,6 @@ if (!defined("WINS_TOTAL_FOR_SEASON_FOR_USER")) {
 if (!defined("WINS_AVERAGE_FOR_SEASON_FOR_USER")) {
   define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForUser");
 }
-if (!defined("BOUNTIES_FOR_SEASON")) {
-  define("BOUNTIES_FOR_SEASON", "bountiesForSeason");
-}
 if (!defined("NEMESIS_FOR_USER")) {
   define("NEMESIS_FOR_USER", "nemesisForUser");
 }
@@ -118,9 +115,7 @@ if (!isset($reportId)) {
 }
 if (!isset($parentObjectId)) {
   $output = "<div class=\"contentTop5";
-  // $footerClass = PRIZE_POOL_FOR_SEASON == $reportId || POINTS_TOTAL_FOR_SEASON == $reportId || POINTS_AVERAGE_FOR_SEASON == $reportId || KNOCKOUTS_TOTAL_FOR_SEASON == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON == $reportId || EARNINGS_TOTAL_FOR_SEASON == $reportId || EARNINGS_AVERAGE_FOR_SEASON == $reportId || WINNERS_FOR_SEASON == $reportId ? "Mini" : "Medium";
   $footerClass = TOURNAMENTS_WON_FOR_USER == $reportId || TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER == $reportId ? "Small" : "Mini";
-  // (REPORT_ID_TOTAL_POINTS == $reportId || REPORT_ID_EARNINGS == $reportId || REPORT_ID_EARNINGS_CHAMPIONSHIP == $reportId || REPORT_ID_KNOCKOUTS == $reportId || REPORT_ID_WINNERS == $reportId ? "Small" : (REPORT_ID_SUMMARY == $reportId ? "Large" : "Medium"));
   $output .= $footerClass . "\">\n";
 } else {
   $output = "";
@@ -208,9 +203,6 @@ switch ($reportId) {
     break;
   case WINS_AVERAGE_FOR_SEASON_FOR_USER:
     $title = "Average Wins for season for user";
-    break;
-  case BOUNTIES_FOR_SEASON:
-    $title = "Bounties for season";
     break;
   case NEMESIS_FOR_USER:
     $title = "Nemesis for user";
@@ -303,11 +295,6 @@ if (!isset($reportId) || "" == $reportId) {
       $hideColIndexes = array(0, 2, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Top 5 Avg KO";
-      break;
-    case BOUNTIES_FOR_SEASON:
-      $params = array($startDate, $endDate);
-      $resultList = $databaseResult->getBountiesForSeason(params: $params);
-      $titleText = "Bounties";
       break;
     case WINNERS_FOR_SEASON:
       $params = array($startDate, $endDate);
@@ -478,38 +465,11 @@ if (!isset($reportId) || "" == $reportId) {
       $titleText = "Played by type by user";
       break;
   }
-  if (PRIZE_POOL_FOR_SEASON != $reportId && BOUNTIES_FOR_SEASON != $reportId) {
+  if (PRIZE_POOL_FOR_SEASON != $reportId) {
     array_push($classNames, "top5");
     $headerRow = true;
   }
-//   if (isset($navigation)) {
-//     $output .= "<div id=\"container\">\n";
-//   }
-  if (BOUNTIES_FOR_SEASON == $reportId) {
-    $ctr = 1;
-    foreach ($resultList as $resultBounty) {
-      $bounty = $resultBounty->getBounty();
-      $aryData[$ctr] = array($bounty->getName() . " (" . $bounty->getDescription() . ")", $resultBounty->getUser()->getName());
-      $ctr ++;
-    }
-    if (! isset($aryData)) {
-      $aryData[1] = array("Bounty A (points)", "None");
-      $aryData[2] = array("Bounty A (points)", "None");
-      $aryData[3] = array("Bounty B (tourney)", "None");
-    }
-    // if bounty a and bounty b match then move bounty a to next
-    if ($aryData[1][1] == $aryData[3][1]) {
-      // array, index, length
-      array_splice($aryData, 0, 1);
-    } else {
-      // array, index, length
-      array_splice($aryData, 1, 1);
-    }
-    $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-    foreach ($aryData as $data) {
-      $output .= "<div style=\"float:left; text-align: left; width: 40%;\">" . $data[0] . "</div>\n<div style=\"float:left; text-align: left; width: 60%;\">" . $data[1] . "</div>\n";
-    }
-  } else if (PRIZE_POOL_FOR_SEASON == $reportId) {
+  if (PRIZE_POOL_FOR_SEASON == $reportId) {
     $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
     $output .= "<div class=\"center number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</div>\n";
   } else {
@@ -666,19 +626,22 @@ if (!isset($reportId) || "" == $reportId) {
         $titleText = "Tournaments Won";
         $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $params = array($userId);
-        $resultList = $databaseResult->getTournamentsWonByPlayerId(params: $params);
+        $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+        $resultList = $databaseResult->getTournamentsWonByPlayerId(params: $params, paramsNested: $paramsNested);
         if (0 < count($resultList)) {
           $output .= "<script type=\"text/javascript\">$(document).ready(function() {\$(\"#title" . ucfirst($reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count($resultList) . " + ')');});</script>\n";
           $ctr = 0;
           foreach ($resultList as $tournament) {
             $ctr ++;
             $tournamentInfo = $tournament->getDate()->getDisplayFormat() . ", " . $tournament->getStartTime()->getDisplayAmPmFormat() . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played";
-            $output .= "<div style=\"display: inline-block; vertical-align: top; width: 10%;\">" . $ctr . "</div>\n<div style=\"display: inline-block; text-align: left; width: 80%;\">" . $tournamentInfo . "</div>\n";
+            $output .= "<div style=\"display: inline-block; vertical-align: top; width: 10%;\">" . $ctr . "</div>\n<div class=\"fixedWidth\"  style=\"display: inline-block; text-align: left; width: 80%;\">" . $tournamentInfo . "</div>\n";
           }
+        } else {
+          $output .= "<div class=\"center\">No data found</div>\n";
         }
         break;
       case TOURNAMENTS_PLAYED_FIRST_FOR_USER:
-        $titleText = "Member since";
+        $titleText = "";
         $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $params = array($userId);
         $resultList = $databaseResult->getTournamentsPlayedFirstByPlayerId(params: $params);

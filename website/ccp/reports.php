@@ -37,9 +37,7 @@ define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
 if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : null;
 }
-$output = "<div class=\"contentReport";
-$footerClass = REPORT_ID_FINISHES == $reportId ? "Mini" : (REPORT_ID_TOTAL_POINTS == $reportId || REPORT_ID_EARNINGS == $reportId || REPORT_ID_EARNINGS_CHAMPIONSHIP == $reportId || REPORT_ID_KNOCKOUTS == $reportId || REPORT_ID_WINNERS == $reportId || REPORT_ID_CHAMPIONSHIP == $reportId ? "Small" : (REPORT_ID_SUMMARY == $reportId ? "Large" : "Medium"));
-$output .= $footerClass . "\">\n";
+$output = "<div class=\"contentReport\">\n";
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid");
 if (!isset($tournamentId)) {
   $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : null;
@@ -78,7 +76,10 @@ if ("ALL" == $seasonId) {
   }
 }
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
-$style = " <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n";
+$style = "";
+if ($reportId == REPORT_ID_SUMMARY) {
+  $style .= "<style media=\"all\" type=\"text/css\">body {max-width: unset;}</style>\n";
+}
 $smarty->assign("heading", "");
 $smarty->assign("style", $style);
 $smarty->assign("formName", "frmReports");
@@ -121,9 +122,9 @@ if (!isset($reportId)) {
     case REPORT_ID_BOUNTIES:
       $title = "Bounties";
       break;
-    case REPORT_ID_LOCATIONS_HOSTED_COUNT:
-      $title = "Locations hosted count";
-      break;
+//     case REPORT_ID_LOCATIONS_HOSTED_COUNT:
+//       $title = "Locations hosted count";
+//       break;
     case REPORT_ID_CHAMPIONSHIP:
       $title = "Championship";
       break;
@@ -157,19 +158,20 @@ if (!isset($reportId)) {
       $params = array();
       $resultListIds = $databaseResult->getTournamentIdList(params: $params);
       $params = array($tournamentId);
-      $resultList = $databaseResult->getTournamentById(params: $params);
+      $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+      $resultList = $databaseResult->getTournamentById(params: $params, paramsNested: $paramsNested);
       if (0 < count($resultList)) {
         $tournament = $resultList[0];
         $arrayIndex = array_keys($resultListIds, $tournament->getId());
         $width = "100%";
         $output .= "<div class=\"center\" style=\"width: " . $width . ";\">\n";
         if (count($arrayIndex) > 0) {
-          $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><span class=\"linkText\">Previous</span><i class=\"material-icons\">chevron_left</i></a>\n";
+          $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><span class=\"linkText\">Previous</span><i class=\"fa fa-caret-left\"></i></a>\n";
         }
         if ($arrayIndex[0] < (count($resultListIds) - 1)) {
-          $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><i class=\"material-icons\">chevron_right</i><span class=\"linkText\">Next</span></a>\n";
+          $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><i class=\"fa fa-caret-right\"></i><span class=\"linkText\">Next</span></a>\n";
         }
-        $output .= "</div>\n<br>\n";
+        $output .= "</div>\n";
         $output .= "<strong>Game details: " . $tournament->getDescription() . ", " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . $tournament->getComment() . " at " . $tournament->getLocation()->getName() . "</strong>";
       }
       $params = array($prizePool, $tournamentId);
@@ -286,5 +288,5 @@ if (!isset($reportId)) {
   $output .= "</div>\n";
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer" . $footerClass);
+$smarty->assign("footerClass", "footer");
 $smarty->display("reports.tpl");

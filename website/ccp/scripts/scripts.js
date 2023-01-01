@@ -27,7 +27,7 @@ const dataTable = {
     dataTable.initializeCommon("#" + tableId, aryColumns, aryOrder, searching, aryRowGroup, scrollY, autoWidth, paging, scrollResize, scrollCollapse);
   },
   initializeCommon : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
-    $(tableSelector).DataTable({ "autoWidth": autoWidth, "columns": aryColumns, "destroy": true, "order": aryOrder, "paging": paging, "rowGroup": aryRowGroup, "scrollY": scrollY, "scrollResize": scrollResize, "scrollCollapse": scrollCollapse, "searching": searching });
+    const dt = $(tableSelector).DataTable({ "autoWidth": autoWidth, "columns": aryColumns, "destroy": true, "order": aryOrder, "paging": paging, "rowGroup": aryRowGroup, "scrollY": scrollY, "scrollResize": scrollResize, "scrollCollapse": scrollCollapse, "searching": searching, "dom": '<ip<t>ip>' });
   },
   initializeBySelector : function(tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
     dataTable.initializeCommon(tableSelector, aryColumns, aryOrder, searching, aryRowGroup, scrollY, autoWidth, paging, scrollResize, scrollCollapse);
@@ -312,10 +312,12 @@ const input = {
   showDialog : function(name, heightVal, titleVal, positionVal) {
     //$("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, position: positionVal });
     document.getElementById("dialog" + name).showModal();
+     $("table[id^='dataTbl']").DataTable().columns.adjust();
   },
   showDialogWithWidth : function(name, heightVal, titleVal, widthVal, positionVal) {
     //$("#dialog" + name).dialog({ height: heightVal, modal: true, title: titleVal, width: widthVal, position: positionVal });
     document.getElementById("dialog" + name).showModal();
+     $("table[id^='dataTblRank']").DataTable().columns.adjust();
   },
   showHideToggle : function(aryId, idFocus) {
     // does not work for IE 

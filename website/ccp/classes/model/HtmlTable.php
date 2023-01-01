@@ -102,7 +102,8 @@ class HtmlTable extends HtmlBase {
           if (isset($this->colspan)) {
             $output .= "      <tr>\n";
             $colSpanIndex = 0;
-            for ($index = 0; $index < $count; $index ++) {
+//             $sortIndex = -1;
+            for ($index = 0; $index < $count; $index++) {
               if ((! isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) && (! isset($colSpanIgnoreAllIndexes) || (isset($colSpanIgnoreAllIndexes) && FALSE === array_search($index, $colSpanIgnoreAllIndexes)))) {
                 $output .= "       <th colspan=\"";
                 // if not found in col span indexes
@@ -129,23 +130,31 @@ class HtmlTable extends HtmlBase {
                 } else if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE === array_search($index, $colSpanAllIndexes))) {
                   $output .= ucwords($result->getColumnMeta($index)["name"]);
                 }
+//                 $sortIndex++;
+//                 $output .= " <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $sortIndex . "</span>";
                 $output .= "</th>\n";
               }
             }
             $output .= "      </tr>\n";
           }
           $output .= "      <tr>\n";
-          for ($index = 0; $index < $count; $index ++) {
+//           $sortIndex = -1;
+          for ($index = 0; $index < $count; $index++) {
             if (!isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
               // if found in all col span indexes
               if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE !== array_search($index, $colSpanAllIndexes))) {
-                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords($result->getColumnMeta($index)["name"]) . "</th>\n";
+//                 $sortIndex++;
+                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords($result->getColumnMeta($index)["name"]) . 
+//                 "      <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $index . "</span>\n".
+                "</th>\n";
               }
             }
           }
           if (isset($this->html)) {
-            for ($idx = 0; $idx < count($this->html[1]); $idx ++) {
-              $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] . "</th>\n";
+            for ($idx = 0; $idx < count($this->html[1]); $idx++) {
+              $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] . 
+//               "      <span class=\"sortPriority\" id=\"SortPriority" . $idx. "\" aria-hidden=\"true\">" . $index . "</span>\n" .
+              "</th>\n";
             }
           }
           if (isset($this->hiddenAdditional)) {
@@ -333,7 +342,7 @@ class HtmlTable extends HtmlBase {
       $output .= "    </table>\n";
       $result->closeCursor();
     } else {
-      $output .= "<br>No data found";
+      $output .= "<div class=\"center\">No data found</div>\n";
     }
     return $output;
   }

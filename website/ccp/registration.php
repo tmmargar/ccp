@@ -22,13 +22,13 @@ define("UPDATE_REGISTER_TEXT", "Update registration");
 define("WAIT_LIST_COUNT_FIELD_NAME", "waitListCount");
 $smarty->assign("title", "Chip Chair and a Prayer Tournament Registration");
 $output = "";
-$style = 
-  "<style type=\"text/css\">\n" .
-  "  h1, h3 {\n" .
-  "    margin: 0;\n" .
-  "  }\n" .
-  " </style>\n";
-$smarty->assign("style", $style);
+// $style = 
+//   "<style type=\"text/css\">\n" .
+//   "  h1, h3 {\n" .
+//   "    margin: 0;\n" .
+//   "  }\n" .
+//   " </style>\n";
+$smarty->assign("style", "<link href=\"css/registration.css\" rel=\"stylesheet\">");
 $smarty->assign("formName", "frmRegistration");
 $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAMETER_NAME]) ? $_POST[TOURNAMENT_ID_PARAMETER_NAME] : isset($_GET[TOURNAMENT_ID_PARAMETER_NAME])) ? $_GET[TOURNAMENT_ID_PARAMETER_NAME] : "";
 $urlAction = $_SERVER["SCRIPT_NAME"] . "?tournamentId=" . $tournamentId;
@@ -78,7 +78,8 @@ if (!isset($tournamentId) || "" == $tournamentId) {
   }
   if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_SEND_EMAIL) {
     $params = array($tournamentId);
-    $resultList = $databaseResult->getTournamentById(params: $params);
+    $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+    $resultList = $databaseResult->getTournamentById(params: $params, paramsNested: $paramsNested);
     if (0 < count($resultList)) {
       $tournament = $resultList[0];
       $tournamentLocationUser = $tournament->getLocation()->getUser();
@@ -197,7 +198,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
           $output .= "  <div style=\"float: left;\">";
           $food = $resultList[2];
           if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
-            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 50, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
+            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
             $output .= $textBoxName->getHtml();
           } else {
             $output .= $food;
@@ -264,4 +265,5 @@ if (!isset($tournamentId) || "" == $tournamentId) {
   }
 }
 $smarty->assign("content", $output);
+$smarty->assign("footerClass", "footer");
 $smarty->display("registration.tpl");
