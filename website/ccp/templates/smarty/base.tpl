@@ -7,6 +7,7 @@
  <link href="images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
  <link href="images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
  <link href="images/site.webmanifest" rel="manifest">
+ <link href="css/reset.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/jquery-ui.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/jquery.datetimepicker.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/datatables.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
