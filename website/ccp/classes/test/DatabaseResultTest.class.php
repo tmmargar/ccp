@@ -5,11 +5,6 @@ use ccp\classes\model\DatabaseResult;
 //include_once "../init.php";
 //include_once ROOT . "/autoload.php";
 class DatabaseResultTest extends BaseTest {
-  public static function testGetBounty() {
-    $databaseResult = new DatabaseResult();
-    $bountyList = $databaseResult->getBounty();
-    echo "<br>testGetBounty " . ((count($bountyList) == 2) ? self::getPassOutput() : self::getFailOutput());
-  }
   public static function testGetFee() {
     $databaseResult = new DatabaseResult();
     $feeList = $databaseResult->getFee();
@@ -51,11 +46,6 @@ class DatabaseResultTest extends BaseTest {
     $resultList = $databaseResult->getResult();
     echo "<br>testGetResult " . ((count($resultList) >= 100) ? self::getPassOutput() : self::getFailOutput());
   }
-  public static function testGetResultBounty() {
-    $databaseResult = new DatabaseResult();
-    $resultBountyList = $databaseResult->getResultBounty();
-    echo "<br>testGetResultBounty " . ((count($resultBountyList) >= 100) ? self::getPassOutput() : self::getFailOutput());
-  }
   public static function testGetStatus() {
     $databaseResult = new DatabaseResult();
     $statusList = $databaseResult->getStatus();
@@ -71,11 +61,6 @@ class DatabaseResultTest extends BaseTest {
     $params = array(null, false);
     $tournamentList = $databaseResult->getTournament($params);
     echo "<br>testGetTournament " . ((count($tournamentList) >= 100) ? self::getPassOutput() : self::getFailOutput());
-  }
-  public static function testGetTournamentBounty() {
-    $databaseResult = new DatabaseResult();
-    $tournamentBountyList = $databaseResult->getTournamentBounty();
-    echo "<br>testGetTournamentBounty " . ((count($tournamentBountyList) >= 100) ? self::getPassOutput() : self::getFailOutput());
   }
   public static function testGetUser() {
     $databaseResult = new DatabaseResult();
@@ -120,7 +105,6 @@ class DatabaseResultTest extends BaseTest {
     echo "<br>testDeleteLocation " . (($rowCount == 1) ? self::getPassOutput() : self::getFailOutput());
   }
   public static function runAllTests() {
-    DatabaseResultTest::testGetBounty();
     DatabaseResultTest::testGetFee();
     DatabaseResultTest::testGetGameType();
     DatabaseResultTest::testGetGroupPayout();
@@ -129,11 +113,9 @@ class DatabaseResultTest extends BaseTest {
     DatabaseResultTest::testGetLogin();
     DatabaseResultTest::testGetPayout();
     DatabaseResultTest::testGetResult();
-    DatabaseResultTest::testGetResultBounty();
     DatabaseResultTest::testGetStatus();
     DatabaseResultTest::testGetStructure();
     DatabaseResultTest::testGetTournament();
-    DatabaseResultTest::testGetTournamentBounty();
     DatabaseResultTest::testGetUser();
     //DatabaseResultTest::testGetAffectedRowCount();
     //DatabaseResultTest::testGetReturnedRowCount();

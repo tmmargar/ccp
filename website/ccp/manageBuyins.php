@@ -147,16 +147,13 @@ if ($mode == Constant::$MODE_VIEW) {
     $checkboxRebuyButton = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (0 == $maxRebuys ? true : false), id: Constant::$TEXT_REBUY . "_?2", maxLength: null, name: Constant::$TEXT_REBUY . "_?2", onClick: "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_REBUY_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: "_?2", type: FormControl::$TYPE_INPUT_CHECKBOX, value: "?1", wrap: null);
     $checkboxAddonButton = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (0 == $addonAmount ? true : false), id: Constant::$TEXT_ADDON . "_?2", maxLength: null, name: Constant::$TEXT_ADDON . "_?2", onClick: "$('#" . HIDDEN_ROW_FIELD_NAME . "').val('?2'); $('#" . HIDDEN_ROW_STATUS_FIELD_NAME . "').val('?3'); $('#" . HIDDEN_ROW_ADDON_PAID_FIELD_NAME . "').val('?3'); $('#mode').val('" . Constant::$MODE_SAVE_PREFIX . Constant::$MODE_CREATE . "');", placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: "_?2", type: FormControl::$TYPE_INPUT_CHECKBOX, value: "?1", wrap: null);
     $buttons = array("    " . $checkboxBuyinButton->getHtml(), "    " . $checkboxRebuyButton->getHtml() . " " . $textBoxRebuyCount->getHtml(), "    " . $checkboxAddonButton->getHtml());
-//     $allButtons = array_merge($buttons, $aryHtml);
     $allButtons = $buttons;
     $checkboxBuyinColumnName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_BUYIN . "CheckAll", maxLength: null, name: Constant::$TEXT_BUYIN . "CheckAll", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, type: FormControl::$TYPE_INPUT_CHECKBOX, value: null, wrap: null);
     $checkboxRebuyColumnName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (0 == $maxRebuys ? true : false), id: Constant::$TEXT_REBUY . "CheckAll", maxLength: null, name: Constant::$TEXT_REBUY . "CheckAll", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, type: FormControl::$TYPE_INPUT_CHECKBOX, value: null, wrap: null);
     $checkboxAddonColumnName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (0 == $addonAmount ? true : false), id: Constant::$TEXT_ADDON . "CheckAll", maxLength: null, name: Constant::$TEXT_ADDON . "CheckAll", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: Constant::$FIELD_NAME_SUFFIX_CHECKBOX_ALL, type: FormControl::$TYPE_INPUT_CHECKBOX, value: null, wrap: null);
     $columnNames = array(Constant::$TEXT_BUYIN . "<br />" . $checkboxBuyinColumnName->getHtml(), Constant::$TEXT_REBUY . "<br />" . $checkboxRebuyColumnName->getHtml(), Constant::$TEXT_ADDON . "<br />" . $checkboxAddonColumnName->getHtml());
-//     $allColNames = array_merge($columnNames, $aryBountyName);
     $allColNames = $columnNames;
     $colIndexes = array(2, 3, 5);
-//     $allIndexes = array_merge($colIndexes, $aryQueries);
     $allIndexes = $colIndexes;
     $html = array($allButtons, $allColNames, $allIndexes, array(array(Constant::$NAME_STATUS_PAID, "Not paid"), array(Constant::$NAME_STATUS_NOT_PAID, "Paid")), array(0, 4));
     $hideColIndexes = array(0, 2, 3, 4, 5);
@@ -201,9 +198,9 @@ if ($mode == Constant::$MODE_VIEW) {
         $output .= " <div class=\"responsive-cell responsive-cell-value-after-footer\">(" . ($rakePercent[$tournamentId] * 100) . "% x $" . $total[$tournamentId] . ")</div>\n";
       }
       $output .= " <div class=\"responsive-cell responsive-cell-label-footer responsive-cell--head\">Total paid out:</div>\n";
-      $output .= " <div class=\"responsive-cell responsive-cell-value-footer positive\">$" . ceil((- $total[$tournamentId]) - (- $rake[$tournamentId])) . "</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-value-footer positive\">$" . ceil(($total[$tournamentId]) - ($rake[$tournamentId])) . "</div>\n";
       if (!$championshipFlag[$tournamentId]) {
-        $output .= " <div class=\"responsive-cell responsive-cell-value-after-footer\">($" . (- $total[$tournamentId]) . " - $" . (- $rake[$tournamentId]) . ")</div>\n";
+        $output .= " <div class=\"responsive-cell responsive-cell-value-after-footer\">($" . ($total[$tournamentId]) . " - $" . ($rake[$tournamentId]) . ")</div>\n";
       }
       $resultList = $databaseResult->getStatusPaid(params: $params, returnQuery: false);
       $countPaid = 0;
@@ -240,5 +237,4 @@ if ($mode == Constant::$MODE_VIEW) {
   }
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

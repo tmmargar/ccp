@@ -33,9 +33,7 @@ class FormControl extends FormBase {
 //     echo "<br>" . $this->getId() . " -- " . $this->isDisabled() . " -> " . $this->readOnly;
     return (self::$TYPE_INPUT_TEXTAREA == $this->type ? "<textarea" : (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type ? "<button" : "<input")) .
       (isset($this->accessKey) ? " accesskey=\"" . $this->accessKey . "\"" : "") .
-//       (isset($this->autoComplete) && $this->autoComplete == true ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
-//       (isset($this->autoComplete) ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
-//       (isset($this->autoComplete) ? " autocomplete=\"off\"" : "") .
+      (isset($this->autoComplete) ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
       (isset($this->autoFocus) && $this->autoFocus ? " autofocus" : "") .
       (isset($this->checked) && $this->checked ? " checked" : "") .
       ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") .

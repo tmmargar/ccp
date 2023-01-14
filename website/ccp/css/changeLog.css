@@ -1,4 +1,6 @@
-* {
-  margin: revert;
+section ul, section li {
   padding: revert;
+}
+#content {
+  margin: 1em;
 }

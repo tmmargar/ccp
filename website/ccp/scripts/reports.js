@@ -64,13 +64,6 @@ const reportsInputLocal = {
         if ($("#" + dataTableId).length > 0) {
           dataTable.initialize(dataTableId, [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }], [], false, false, "600px", true);
         }
-      } else if (reportId == "bounties") {
-        dataTableId = "dataTblBounties";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "sType" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [[ 1,'desc'], [0, "asc"]], false, false, "600px", true);
-        }
-//      } else if (reportId == "locationsHostedCount") {
-//        dataTable.initialize(dataTableId, [null, { "type" : "name" }, null, null, null, { "type" : "number" }, null, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], "type" : "number", }], [[8, "desc" ], [1, "asc" ]]);
       } else if (reportId == "championship") {
         const params = new URLSearchParams(window.location.search);
         // website blocking desc in parameter so passing up and down and replacing here

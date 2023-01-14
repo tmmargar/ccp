@@ -22,17 +22,16 @@ jQuery(function(){
 $(document).ready(function() {
   input.initialize();
 });
-$(document).on("change keyup paste", "[id^='notificationStartDate_'], [id^='notificationEndDate_']", function(event) {
+$(document).on("change keyup paste", "[id^='notificationDescription_'], [id^='notificationStartDate_'], [id^='notificationEndDate_']", function(event) {
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
-  //$(this).datetimepicker(validate);
 });
 const inputLocal = {
   enableSave : function(id) {
     return (($("#notificationDescription_" + id).val() == "") || ($("#notificationStartDate_" + id).val().length == 0) || ($("#notificationEndDate_" + id).val().length == 0) || input.maskDateTime == $("#notificationStartDate_" + id).val() || input.maskDateTime == $("#notificationEndDate_" + id).val() || !input.compareDate($("[id^='notificationStartDate_']").val(), $("[id^='notificationEndDate_']").val()));
   },
   initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "width": "50%" }, { "width": "20%" }, { "width": "20%" }, { "orderable": false, "visible": false }], [[2, "desc"], [3, "desc"]]);
+    dataTable.initialize("dataTbl", [{ "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "width": "50%" }, { "type": "date", "width": "20%" }, { "type": "date", "width": "20%" }, { "orderable": false, "visible": false }], [[3, "desc"], [2, "desc"]]);
   },
   setDefaults : function() {
     input.initializeTimePicker();

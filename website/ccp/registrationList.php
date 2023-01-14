@@ -14,14 +14,7 @@ if (! isset($limitCount)) {
   $limitCount = (isset($_POST[LIMIT_COUNT_PARAMETER_NAME]) ? $_POST[LIMIT_COUNT_PARAMETER_NAME] : isset($_GET[LIMIT_COUNT_PARAMETER_NAME])) ? $_GET[LIMIT_COUNT_PARAMETER_NAME] : null;
 }
 $output = "";
-if (null == $limitCount) {
-  $style = "<style type=\"text/css\">\n";
-  $style .= " a {\n  line-height: 1.5em;\n }\n";
-  $style .= " p {\n  padding: 0; margin: 0; float: left; font-size: 1.00em;\n }\n";
-  $style .= " div.small {\n  font-size: .75em;\nline-height: 1.5em;\n }\n";
-  $style .= "</style>\n";
-  $smarty->assign("style", $style);
-} else {
+if (null != $limitCount) {
   $output .= "<div class=\"title\">Upcoming Events</div>\n";
 }
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
@@ -30,13 +23,13 @@ $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAM
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
   $startTime = $tournament->getStartTime()->getDisplayAmPmFormat();
-  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
+  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationOpen()->getDisplayAmPmFormat());
   $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
   $registrationOpen = ($now >= $registrationOpenDate);
   $url = "registration.php?tournamentId=" . $tournament->getId();
-  $output .= "<div class=\"small\">";
+  $output .= "<div>";
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";
   }
@@ -108,6 +101,5 @@ if (isset($parentObjectId)) {
   return $output;
 } else {
   $smarty->assign("content", $output);
-  $smarty->assign("footerClass", "footer");
-  $smarty->display("home.tpl");
+  $smarty->display("registrationList.tpl");
 }

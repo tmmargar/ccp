@@ -11,20 +11,20 @@
  <link href="css/jquery-ui.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/jquery.datetimepicker.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/datatables.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
- <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  {block name=style}{/block}
- <script src="scripts/jquery/jquery.js"></script>
- <script src="scripts/jquery/jquery-ui.js"></script>
- <script src="scripts/jquery/jquery-migrate.js"></script>
- <script src="scripts/jquery/datatables.js"></script>
- <script src="scripts/jquery/jquery.datetimepicker.full.js"></script>
- <script src="scripts/jquery/jquery.mask.js"></script>
- <script src="scripts/scripts.js"></script>
- <script src="scripts/jqueryLocal.js"></script>
- <script src="scripts/dataTablesLocal.js"></script>
- <script src="scripts/urlSearchParams.js"></script>
- <script src="https://kit.fontawesome.com/c9cf137722.js" crossorigin="anonymous"></script>
+ <script src="scripts/jquery/jquery.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jquery/jquery-ui.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jquery/jquery-migrate.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jquery/datatables.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jquery/jquery.datetimepicker.full.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jquery/jquery.mask.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/scripts.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/jqueryLocal.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/dataTablesLocal.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="scripts/urlSearchParams.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}"></script>
+ <script src="https://kit.fontawesome.com/c9cf137722.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" crossorigin="anonymous"></script>
  {block name=script}{/block}
 </head>
 <body>
@@ -41,6 +41,6 @@
   </div>
   {block name=content}{$content}{/block}
  </div>
- {block name=footer}<footer class="{block name=footerClass}{$footerClass}{/block}"><a href="changeLog.php" target="_new">Change Log</a></footer>{/block}
+ {block name=footer}<footer class="footer"><a href="changeLog.php" target="_new">Change Log</a></footer>{/block}
 </body>
 </html>

@@ -283,25 +283,7 @@ class HtmlTable extends HtmlBase {
         if (isset($this->html)) {
           // 0 is html, 1 is headers, 2 is index, 3 is status name/button text, 4 is player index
           for ($idx = 0; $idx < count($this->html[0]); $idx ++) {
-            if (is_string($this->html[2][$idx])) {
-              $bountyPaid = $this->html[3][1][0];
-              $queryNested = $this->html[2][$idx];
-              $queryNested = str_replace("?2", $row[$this->html[4][0]], $queryNested);
-              $databaseResult = new DatabaseResult($this->isDebug());
-              $resultNested = $databaseResult->getConnection()->query($queryNested);
-              // existence of record means bounty is paid
-              if ($resultNested && 0 < $resultNested->rowCount()) {
-                // if record exists set to not paid
-                $bountyPaid = $this->html[3][0][0];
-                $resultNested->closeCursor();
-              }
-              for ($idx2 = 0; $idx2 < count($this->html[0]); $idx2 ++) {
-                if ($bountyPaid == $this->html[3][$idx2][0]) {
-                  $temp = $this->html[3][$idx2][1];
-                  break;
-                }
-              }
-            } else {
+            if (!is_string($this->html[2][$idx])) {
               for ($idx2 = 0; $idx2 < count($this->html[0]); $idx2 ++) {
                 if ($row[$this->html[2][$idx]] == $this->html[3][$idx2][0]) {
                   $temp = $this->html[3][$idx2][1];

@@ -17,23 +17,16 @@ define("TOURNAMENT_ID_PARAMETER_NAME", "tournamentId");
 define("USER_ID_PARAMETER_NAME", "userId");
 define("FOOD_FIELD_NAME", "food");
 define("REGISTERED_FIELD_NAME", "registered");
-define("ALREADY_REGISTERED_LABEL", "Already registered");
+define("REGISTERED_LABEL", "Registered");
 define("UPDATE_REGISTER_TEXT", "Update registration");
 define("WAIT_LIST_COUNT_FIELD_NAME", "waitListCount");
-$smarty->assign("title", "Chip Chair and a Prayer Tournament Registration");
+$smarty->assign("title", "Chip Chair and a Prayer Registration");
 $output = "";
-// $style = 
-//   "<style type=\"text/css\">\n" .
-//   "  h1, h3 {\n" .
-//   "    margin: 0;\n" .
-//   "  }\n" .
-//   " </style>\n";
-$smarty->assign("style", "<link href=\"css/registration.css\" rel=\"stylesheet\">");
 $smarty->assign("formName", "frmRegistration");
 $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAMETER_NAME]) ? $_POST[TOURNAMENT_ID_PARAMETER_NAME] : isset($_GET[TOURNAMENT_ID_PARAMETER_NAME])) ? $_GET[TOURNAMENT_ID_PARAMETER_NAME] : "";
 $urlAction = $_SERVER["SCRIPT_NAME"] . "?tournamentId=" . $tournamentId;
 $smarty->assign("action", $urlAction);
-$smarty->assign("heading", "Tournament Registration");
+$smarty->assign("heading", "Registration");
 $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n aryErrors = [];\n";
 if (!isset($tournamentId) || "" == $tournamentId) {
   $output .= " aryErrors.push(\"Unable to identify tournament to register for.\");\n";
@@ -41,7 +34,6 @@ if (!isset($tournamentId) || "" == $tournamentId) {
   $userId = (isset($_POST[USER_ID_PARAMETER_NAME]) ? $_POST[USER_ID_PARAMETER_NAME] : isset($_GET[USER_ID_PARAMETER_NAME])) ? $_GET[USER_ID_PARAMETER_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
   $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW;
   $now = new DateTime(debug: SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
-//   $databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
   $registerText = Constant::$TEXT_REGISTER;
   $registered = false;
   if (isset($_POST[REGISTERED_FIELD_NAME]) && (1 == $_POST[REGISTERED_FIELD_NAME])) {
@@ -126,34 +118,34 @@ if (!isset($tournamentId) || "" == $tournamentId) {
       } else {
         $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n";
         $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
-        $output .= "  <div style=\"float: left; width: 350px;\">" . $tournament->getDescription() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 350px;\">" . $tournament->getComment() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 350px;\">Hosted by " . $tournament->getLocation()->getUser()->getName() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "<div style=\"float: left; width: 350px;\">" . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 350px;\">$" . - $tournament->getBuyinAmount() . " for " . $tournament->getChipCount() . " chips</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 350px;\">" . $tournament->getMaxRebuys() . " rebuy(s) in first hour, $" . - $tournament->getRebuyAmount() . " for " . $tournament->getChipCount() . " chips</div>\n";
+        $output .= "  <div class=\"column2\">" . $tournament->getDescription() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column2\">" . $tournament->getComment() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column2\">Hosted by " . $tournament->getLocation()->getUser()->getName() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column2\">" . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column2\">$" . - $tournament->getBuyinAmount() . " for " . $tournament->getChipCount() . " chips</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column2\">" . $tournament->getMaxRebuys() . " rebuy(s), $" . - $tournament->getRebuyAmount() . " for " . $tournament->getChipCount() . " chips</div>\n";
         if (0 != $tournament->getAddonAmount()) {
-          $output .= "  <div style=\"clear: both;\"></div>\n";
-          $output .= "  <div style=\"float: left; width: 350px;\">addon, $" . - $tournament->getAddonAmount() . " for " . $tournament->getAddonChipCount() . " chips</div>\n";
+          $output .= "  <div class=\"clear\"></div>\n";
+          $output .= "  <div class=\"column2\">addon, $" . - $tournament->getAddonAmount() . " for " . $tournament->getAddonChipCount() . " chips</div>\n";
         }
-        $output .= "  <div style=\"clear: both;\"></div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
         $output .= "  <br />\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Date &amp; Time:</div>\n";
-        $output .= "  <div style=\"float: left;\">" . $tournament->getDate()->getDisplayLongFormat() . " " . $tournament->getStartTime()->getDisplayAmPmFormat() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Map:</div>\n";
-        $output .= "  <div style=\"float: left;\">" . $tournament->getLocation()->buildMapUrl() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Location:</div>\n";
+        $output .= "  <div class=\"column\">Date / Time:</div>\n";
+        $output .= "  <div>" . $tournament->getDate()->getDisplayLongFormat() . " " . $tournament->getStartTime()->getDisplayAmPmFormat() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column\">Map:</div>\n";
+        $output .= "  <div>" . $tournament->getLocation()->buildMapUrl() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column\">Location:</div>\n";
         $phone = new Phone(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_DEBUG), null, (string) $tournamentLocationUser->getPhone()->getValue());
         $output .= "  <div style=\"float: left;\">" . $tournamentAddress->getAddress() . "<br />" . $tournamentAddress->getCity() . ", " . $tournamentAddress->getState() . " " . $tournamentAddress->getZip() . "<br />" . $phone->getDisplayFormatted() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Registrations available:</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column\">Available:</div>\n";
         if ($tournament->getDescription() == "Championship") {
           $maxPlayers = 36;
         } else {
@@ -174,39 +166,39 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             $registeredCount = 0;
           }
         }
-        $output .= "  <div style=\"float: left;\">" . $registeredCount . " out of " . $maxPlayers . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Wait list count:</div>\n";
-        $output .= "  <div style=\"float: left;\">" . $waitListCount . " (if someone un-registers then first person in wait list is automatically moved to registered)</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
-        $output .= "  <div style=\"float: left; width: 175px;\">Registration deadline:</div>\n";
-        // $output .= " <div style=\"float: left;\">" . DateTimeUtility::getDateAndTimeDisplayLongFormat($registrationCloseDate) . "</div>\n";
+        $output .= "  <div>" . $registeredCount . " out of " . $maxPlayers . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column\">Wait list #:</div>\n";
+        $output .= "  <div>" . $waitListCount . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
+        $output .= "  <div class=\"column\">Deadline:</div>\n";
+        // $output .= " <div>" . DateTimeUtility::getDateAndTimeDisplayLongFormat($registrationCloseDate) . "</div>\n";
         // $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $registrationCloseDate);
-        $output .= "  <div style=\"float: left;\">" . $dateTimeRegistrationClose->getDisplayLongTimeFormat() . "</div>\n";
-        $output .= "  <div style=\"clear: both;\"></div>\n";
+        $output .= "  <div>" . $dateTimeRegistrationClose->getDisplayLongTimeFormat() . "</div>\n";
+        $output .= "  <div class=\"clear\"></div>\n";
         $params = array($tournamentId, $userId);
         $resultList = $databaseResult->getFoodByTournamentIdAndPlayerId(params: $params);
         $output .= "  <br />\n";
         if (0 < count($resultList)) {
-          $output .= "  <div style=\"float: left; width: 175px;\">Full Name:</div>\n";
-          $output .= "  <div style=\"float: left;\">" . $resultList[0] . "</div>\n";
-          $output .= "  <div style=\"clear: both;\"></div>\n";
-          $output .= "  <div style=\"float: left; width: 175px;\">Email:</div>\n";
-          $output .= "  <div style=\"float: left;\">" . $resultList[1] . "</div>\n";
-          $output .= "  <div style=\"clear: both;\"></div>\n";
-          $output .= "  <div style=\"float: left; width: 175px;\">Dish to pass:</div>\n";
-          $output .= "  <div style=\"float: left;\">";
+          $output .= "  <div class=\"column\">Name:</div>\n";
+          $output .= "  <div>" . $resultList[0] . "</div>\n";
+          $output .= "  <div class=\"clear\"></div>\n";
+          $output .= "  <div class=\"column\">Email:</div>\n";
+          $output .= "  <div>" . $resultList[1] . "</div>\n";
+          $output .= "  <div class=\"clear\"></div>\n";
+          $output .= "  <div class=\"column\">Dish:</div>\n";
+          $output .= "  <div>";
           $food = $resultList[2];
           if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
-            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 30, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
+            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
             $output .= $textBoxName->getHtml();
           } else {
             $output .= $food;
           }
           $output .= "</div>\n";
-          $output .= "  <div style=\"clear: both;\"></div>\n";
+          $output .= "  <div class=\"clear\"></div>\n";
         }
-        $output2 = "  <h3>" . ALREADY_REGISTERED_LABEL . " (displayed in order of registration)</h3>\n";
+        $output2 = "  <h3>" . REGISTERED_LABEL . "</h3>\n";
         $params = array($tournamentId);
         $resultList = $databaseResult->getResultRegisteredByTournamentId(params: $params);
         if (0 < count($resultList)) {
@@ -219,11 +211,11 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             }
             // wait list goes here
             if ($count == $maxPlayers) {
-              $output2 .= " <h3>Wait List (displayed in order of registration)</h3>";
+              $output2 .= " <h3>Wait List</h3>";
             }
-            $output2 .= "  <div style=\"float: left; width: 175px;\">" . $result->getUser()->getName() . "</div>\n";
-            $output2 .= "  <div style=\"float: left;\">" . null !== $result->getFood() ? $result->getFood() : "" . "</div>\n";
-            $output2 .= "  <div style=\"clear: both; padding-bottom: 2px;\"></div>\n";
+            $output2 .= "  <div class=\"column\">" . $result->getUser()->getName() . "</div>\n";
+            $output2 .= "  <div>" . null !== $result->getFood() ? $result->getFood() : "" . "</div>\n";
+            $output2 .= "  <div class=\"clear\" style=\"padding-bottom: 2px;\"></div>\n";
             $count ++;
           }
         } else {
@@ -265,5 +257,4 @@ if (!isset($tournamentId) || "" == $tournamentId) {
   }
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("registration.tpl");

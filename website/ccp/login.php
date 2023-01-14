@@ -21,7 +21,7 @@ $output = "";
 $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : "";
 if (Constant::$MODE_LOGIN == $mode) {
   $login = new Login(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, username: $_POST["username"], password: $_POST["password"]);
-  $user = new User(false, 0, "", "", "", "", "", null, 0, "", "", 0, "", "", 0, "", 0, null, null, null, null, null, null, null);
+  $user = new User(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: 0, name:"", username: "", password: "", email: "", phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: 0, approvalName: null, rejectionDate: null, rejectionUserid: 0, rejectionName: null, active: 0, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
   $security = new Security(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, login: $login, user: $user);
   if ($security->login()) {
     $pageName = "home.php";
@@ -51,7 +51,7 @@ $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "<
 // $output .= "<div class=\"clear\"></div>";
 $buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
 $output .= $buttonLogin->getHtml();
-$output .= " <br /><div class=\"responsive-cell\"></div>";
+$output .= " <div class=\"responsive-cell\"></div>";
 $output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a>&nbsp;&nbsp;&nbsp;<a href=\"signup.php\">New User</a></div>";
 $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
 $output .= $hiddenMode->getHtml();

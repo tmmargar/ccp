@@ -11,6 +11,11 @@
             "<a href=\"javascript:void(0);\" id=\"selectAll\">Select all</a>\n" +
             "<a href=\"javascript:void(0);\" id=\"deselectAll\">De-select all</a>\n";
           $("#" + options.id).before(html);
+          if ($("#" + options.id).selectize()[0].selectize.items.length == 0) {
+            $("#deselectAll").hide();
+          } else {
+            $("#deselectAll").show();
+          }
           //$(this).before(html);
         };
       })();
