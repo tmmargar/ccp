@@ -150,5 +150,4 @@ if (count($resultList) > 0) {
   $output .= "No tournaments found with paid buyins for today\n";
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

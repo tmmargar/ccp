@@ -1,6 +1,7 @@
 "use strict";
 $(document).ready(function() {
   input.initialize();
+  $("[id^='playerId_']").trigger("focus");
 });
 $(document).on("click keyup paste", "[id^='locationName_'], [id^='playerId_'], [id^='address_']", function(event) {
   input.validateLength($(this), 1, true);
@@ -19,7 +20,10 @@ $(document).on("change", '[id^="states_"]', function(event) {
 $(document).on("click keyup paste", '[id^="zipCode_"]', function(event) {
   // add check to prevent 5 zeroes and handle leading zeroes
   input.validateNumberOnly($(this), event, true);
-  input.validateLength($(this), 5, true, "You have entered " + $(this).val().length + " of 5 digits for zipCode");
+  const result = input.validateLength($(this), 5, true, "You have entered " + $(this).val().length + " of 5 digits for zipCode");
+  if (result == "") {
+    display.clearErrorsAndMessages();
+  }
   input.enable("save", inputLocal.enableSave);
 });
 $(document).on("click", '[id^="active_"]', function(event) {

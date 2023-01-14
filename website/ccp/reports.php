@@ -23,8 +23,6 @@ define("REPORT_ID_KNOCKOUTS", "knockouts");
 define("REPORT_ID_SUMMARY", "summary");
 define("REPORT_ID_WINNERS", "winners");
 define("REPORT_ID_FINISHES", "finishes");
-define("REPORT_ID_BOUNTIES", "bounties");
-// define("REPORT_ID_LOCATIONS_HOSTED_COUNT", "locationsHostedCount");
 define("REPORT_ID_CHAMPIONSHIP", "championship");
 define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
@@ -119,12 +117,6 @@ if (!isset($reportId)) {
     case REPORT_ID_FINISHES:
       $title = "Finishes";
       break;
-    case REPORT_ID_BOUNTIES:
-      $title = "Bounties";
-      break;
-//     case REPORT_ID_LOCATIONS_HOSTED_COUNT:
-//       $title = "Locations hosted count";
-//       break;
     case REPORT_ID_CHAMPIONSHIP:
       $title = "Championship";
       break;
@@ -229,20 +221,6 @@ if (!isset($reportId)) {
       $caption = "";
       $width = "100%";
       break;
-    case REPORT_ID_BOUNTIES:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getBountyEarnings(params: $params);
-      $colFormats = array(array(2, "currency", 0), array(3, "currency,negative", 0));
-      $hideColIndexes = array(0, 4, 5);
-      $caption = "";
-      $width = "100%";
-      break;
-//     case REPORT_ID_LOCATIONS_HOSTED_COUNT:
-//       $query = $databaseResult->getLocationsHostedCount();
-//       $colFormats = array(array(10, "number", 0));
-//       $hideColIndexes = array(0, 2);
-//       $width = "100%";
-//       break;
     case REPORT_ID_CHAMPIONSHIP:
       $params = array(null, null, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
       $query = $databaseResult->getChampionshipByYearByEarnings(params: $params);
@@ -288,5 +266,4 @@ if (!isset($reportId)) {
   $output .= "</div>\n";
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("reports.tpl");

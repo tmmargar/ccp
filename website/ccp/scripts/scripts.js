@@ -14,6 +14,13 @@ const dataTable = {
       cell.text(cell.text() == "1" ? "Yes" : "No");
     });
   },
+  displayHighlightRow : function(tableId, index, value) {
+    //$(tableId + " tr:eq(" + index + ")").addClass("highlightRow");
+    const row = $(tableId + " td").filter(function() {
+      return $(this).text() == value;
+    }).parent();
+    row.addClass("highlightRow");
+  },
   getRowsData : function(objTableApi) {
     return objTableApi.rows().data();
   },
@@ -353,7 +360,7 @@ const input = {
     });
   },
   validateCommon : function(jQueryObj, e, pattern, condition = false, storeValue = true) {
-    if ((jQueryObj.val() != "") && (!pattern.test(jQueryObj.val()) || condition)) {
+    if ((jQueryObj.val() != "") && !(pattern.test(jQueryObj.val()) || condition)) {
       jQueryObj.val(jQueryObj.data("previousValue"));
       e.preventDefault();
       e.stopPropagation();
@@ -392,13 +399,13 @@ const input = {
     input.validateCommon(jQueryObj, e, /^[a-zA-Z ]+$/g);
   },
   validateNumberOnly : function(jQueryObj, e, storeValue) {
-    input.validateCommon(jQueryObj, e, /^-?\d+$/g, null, storeValue);
+    input.validateCommon(jQueryObj, e, /^-?\d+$/g, false, storeValue);
   },
-  validateNumberOnlyGreaterZero : function(jQueryObj, e) {
-    input.validateCommon(jQueryObj, e, /^[1-9]\d*$/g);
+  validateNumberOnlyGreaterZero : function(jQueryObj, e, condition = false, storeValue = true) {
+    input.validateCommon(jQueryObj, e, /^[1-9]\d*$/g, condition, storeValue);
   },
-  validateNumberOnlyLessThanEqualToValue : function(jQueryObj, value, e) {
-    input.validateCommon(jQueryObj, e, /^\d+$/g, jQueryObj.val() > value);
+  validateNumberOnlyGreaterThanEqualToValue : function(jQueryObj, value, e, storeValue) {
+    input.validateCommon(jQueryObj, e, /^\d+$/g, jQueryObj.val() > value, storeValue);
   },
   validatePercentOnly : function(jQueryObj, e) {
     input.validateCommon(jQueryObj, e, /^[0-9]?[0-9]%?$/g);

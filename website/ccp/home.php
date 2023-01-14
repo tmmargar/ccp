@@ -46,5 +46,4 @@ $limitCount = 4;
 $outputHome .= include "registrationList.php";
 $outputHome .= " </div>\n";
 $smarty->assign("content", $outputHome);
-$smarty->assign("footerClass", "footer");
 $smarty->display("home.tpl");

@@ -10,7 +10,6 @@ class Constant {
   public static string $ACCESSKEY_APPROVE                     = "a";
   public static string $ACCESSKEY_BODY                        = "b";
   public static string $ACCESSKEY_BONUS_POINTS                = "b";
-  public static string $ACCESSKEY_BOUNTY                      = "b";
   public static string $ACCESSKEY_BUYIN_AMOUNT                = "b";
   public static string $ACCESSKEY_CANCEL                      = "a";
   public static string $ACCESSKEY_CHIP_COUNT                  = "c";

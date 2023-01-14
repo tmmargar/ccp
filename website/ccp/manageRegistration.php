@@ -42,7 +42,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $userEmail = $resultList[0]->getEmail();
     }
     if ($aryStatus[$index] == Constant::$NAME_STATUS_NOT_REGISTERED) {
-      $params = array($tournamentId, $id, "null");
+      $params = array($tournamentId, $id, "N/A");
       $rowCount = $databaseResult->insertRegistration(params: $params);
       if (! is_numeric($rowCount)) {
         $output .= "  aryMessages.push(\"" . $rowCount . "\");\n";
@@ -111,7 +111,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     // send email to people moved from wait list to registered
     while ($cnt < count($emailInfo)) {
       $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($emailInfo[$cnt][0]), toEmail: array($emailInfo[$cnt][1]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
-      $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip(), phone: null);
+      $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
       $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: $tournament->getId(), description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: $tournament->getDate(), startTime: $tournament->getStartTime(), endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
       $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99) . "\");\n";
       $cnt ++;
@@ -171,14 +171,12 @@ if ($mode == Constant::$MODE_VIEW) {
     $output .= " </div>\n";
     $params = array($tournamentId);
     $query = $databaseResult->getTournamentForRegistrationStatus(params: $params);
-    $caption = "When clicking Register / un-register button above it will act on all rows selected and appropriately register or un-register them";
     $colFormats = array(array(3, "right", 0));
     $hideColIndexes = array(0);
     //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-    $htmlTable = new HtmlTable(caption: $caption, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: TOURNAMENT_PLAYER_ID_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
+    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: TOURNAMENT_PLAYER_ID_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
     $output .= $htmlTable->getHtml();
   }
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

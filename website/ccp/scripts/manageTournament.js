@@ -1,5 +1,8 @@
 "use strict";
 $(document).ready(function() {
+  if ($("#mode").val() == "create" || $("#mode").val() == "modify") {
+    $("body").css("maxWidth", "500px");
+  }
   input.initialize();
 });
 $(document).on("keyup paste", "[id^='tournamentDescription_']", function(event) {
@@ -10,9 +13,24 @@ $(document).on("change", "[id^='tournamentLimitTypeId_'], [id^='tournamentGameTy
   input.validateLength($(this), 1, false);
   input.enable("save", inputLocal.enableSave);
 });
+$(document).on("change", "[id^='tournamentSpecialTypeId_']", function(event) {
+  if ($(this).find(":selected").text() == "Championship") {
+    $("#tournamentChipCount_").val(0);
+    $("#tournamentBuyinAmount_").val(0);
+  } else {
+    if ($("[id^='tournamentChipCount_']").val() == 0) {
+      $("[id^='tournamentChipCount_']").val("");
+      input.validateLength($("[id^='tournamentChipCount_']"), 1, false);
+    }
+    if ($("[id^='tournamentBuyinAmount_']").val() == 0) {
+      $("[id^='tournamentBuyinAmount_']").val("");
+      input.validateLength($("[id^='tournamentBuyinAmount_']"), 1, false);
+    }
+  }
+});
 $(document).on("keyup paste", "[id^='tournamentChipCount_'], [id^='tournamentMaxPlayers_']", function(event) {
-  if ($("#tournamentSpecialTypeId_ :selected").text() == "Championship") {
-    input.validateNumberOnly($(this), event);
+  if ($("[id^='tournamentSpecialTypeId_'] :selected").text() == "Championship") {
+    input.validateNumberOnlyGreaterThanEqualToValue($(this), 0, event, true);
   } else {
     input.validateNumberOnlyGreaterZero($(this), event);
   }
@@ -25,21 +43,23 @@ $(document).on("change keyup paste", "[id^='tournamentStartDateTime_']", functio
 });
 $(document).on("keyup paste", "[id^='tournamentBuyinAmount_'], [id^='tournamentRebuyAmount_'], [id^='tournamentAddonAmount_']", function(event) {
   if ($(this).prop("id").search(/tournamentBuyinAmount_/g) == -1) {
-    input.validateNumberOnly($(this), event, false);
+    if ($(this).prop("id").search(/tournamentRebuyAmount_/g) != -1) {
+      input.validateNumberOnlyGreaterThanEqualToValue($(this), 0, event, true);
+    } else if ($(this).prop("id").search(/tournamentAddonAmount_/g) != -1) {
+      input.validateNumberOnlyGreaterThanEqualToValue($(this), 0, event, true);
+    }
   } else {
-    input.validateNumberOnlyGreaterZero($(this), event);
+    if ($("[id^='tournamentSpecialTypeId_'] :selected").text() == "Championship") {
+      input.validateNumberOnlyGreaterThanEqualToValue($(this), 0, event, true);
+    } else {
+      input.validateNumberOnlyGreaterZero($(this), event);
+    }
   }
   input.validateLength($(this), 1, false);
-  if ($(this).prop("id").search(/tournamentRebuyAmount_/g) != -1) {
-    input.validateLength($("input[id^='tournamentRebuys_']"), 1, false);
-  }
-  if ($(this).prop("id").search(/tournamentAddonAmount_/g) != -1) {
-    input.validateLength($("input[id^='tournamentAddonChipCount_']"), 1, false);
-  }
   input.enable("save", inputLocal.enableSave);
 });
 $(document).on("keyup paste", "[id^='tournamentRebuys_'], [id^='tournamentAddonChipCount_']", function(event) {
-  input.validateNumberOnly($(this), event, true);
+  input.validateNumberOnlyGreaterThanEqualToValue($(this), 0, event, true);
   input.validateLength($(this), 1, false);
   if ($(this).prop("id").search(/tournamentRebuys_/g) != -1) {
     input.validateLength($("input[id^='tournamentRebuyAmount_']"), 1, false);
@@ -74,6 +94,8 @@ const inputLocal = {
           msg.push("You must enter either both the rebuy amount and the max rebuys or 0 for both");
           $("#tournamentRebuys_" + id).addClass("errors");
           $("#tournamentRebuyAmount_" + id).addClass("errors");
+        } else {
+          display.clearErrorsAndMessages();
         }
         const addonAmount = $("#tournamentAddonAmount_" + id).val();
         const addonChipCount = $("#tournamentAddonChipCount_" + id).val();
@@ -151,13 +173,13 @@ const inputLocal = {
       d.setDate(d.getDate() + (6 - d.getDay()));
       $('#tournamentStartDateTime_').val($.datepicker.formatDate("mm/dd/yy", d) + " 17:00");
       $("#tournamentMaxPlayers_").val(36);
-      $("#tournamentBuyinAmount_").val("25");
+      $("#tournamentBuyinAmount_").val(25);
       $("#tournamentMaxRebuys_").val(0);
       $("#tournamentRebuyAmount_").val(0);
       $("#tournamentRebuys_").val(0);
-      $("#tournamentAddonAmount_").val("10");
+      $("#tournamentAddonAmount_").val(10);
       $("#tournamentAddonChipCount_").val(1500);
-      $("#tournamentRake_").val("20");
+      $("#tournamentRake_").val(20);
       $("#tournamentGroupId_").val(2);
     }
   },
@@ -172,6 +194,13 @@ const inputLocal = {
     input.validateLength($("#tournamentLocationId_"), 1, false);
     input.validateLength($("#tournamentStartDateTime_"), 1, false);
     input.validateLength($("#tournamentBuyinAmount_"), 1, false);
+    if ($("#mode").val() == "create" || $("#mode").val() == "modify") {
+      $("[id^='tournamentBuyinAmount_']").data("previousValue", $("[id^='tournamentBuyinAmount_']").val());
+      $("[id^='tournamentRebuyAmount_']").data("previousValue", $("[id^='tournamentRebuyAmount_']").val());
+      $("[id^='tournamentRebuys_']").data("previousValue", $("[id^='tournamentRebuys_']").val());
+      $("[id^='tournamentAddonAmount_']").data("previousValue", $("[id^='tournamentAddonAmount_']").val());
+      $("[id^='tournamentAddonChipCount_']").data("previousValue", $("[id^='tournamentAddonChipCount_']").val());
+    }
     input.validateLength($("#tournamentMaxPlayers_"), 1, false);
     input.validateLength($("#tournamentRebuyAmount_"), 1, false);
     input.validateLength($("#tournamentRebuys_"), 1, false);

@@ -7,14 +7,15 @@ $(document).on("click keyup paste", '[id^="payoutName_"], [id^="bonusPoints_"], 
   input.enable("save", inputLocal.enableSave);
 });
 $(document).on("click keyup paste", '[id^="percentage_"]', function(event) {
+  input.validateNumberOnlyGreaterZero($(this), event, false, false);
   inputLocal.calculateTotal(this.id);
   input.enable("save", inputLocal.enableSave);
 });
-$(document).on("click", "#addRow", function(event) {
+$(document).on("click", '[id^="addRow"]', function(event) {
   inputLocal.addRow("inputs");
   inputLocal.enableButtons();
 });
-$(document).on("click", "#removeRow", function(event) {
+$(document).on("click", '[id^="removeRow"]', function(event) {
   inputLocal.removeRow("inputs");
   inputLocal.enableButtons();
 });
@@ -86,8 +87,8 @@ const inputLocal = {
     }
   },
   enableButtons : function() {
-    $("#addRow").prop("disabled", !$("#inputs tr").length == 2);
-    $("#removeRow").prop("disabled", $("#inputs tr").length == 2);
+    $('[id^="addRow"]').prop("disabled", !$("#inputs tr").length == 2);
+    $('[id^="removeRow"]').prop("disabled", $("#inputs tr").length == 2);
   },
   enableSave : function(id) {
     return $("#payoutName_" + id).val().length == 0 || $("#percentageTotal").val() != 100;

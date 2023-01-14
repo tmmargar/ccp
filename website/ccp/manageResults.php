@@ -387,5 +387,4 @@ if ($mode == Constant::$MODE_VIEW || $mode == Constant::$MODE_DELETE || $mode ==
   }
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

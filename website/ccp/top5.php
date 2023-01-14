@@ -114,12 +114,9 @@ if (!isset($reportId)) {
   $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : "";
 }
 if (!isset($parentObjectId)) {
-  $output = "<div class=\"contentTop5";
-  $footerClass = TOURNAMENTS_WON_FOR_USER == $reportId || TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER == $reportId ? "Small" : "Mini";
-  $output .= $footerClass . "\">\n";
+  $output = "<div class=\"contentTop5\">\n";
 } else {
   $output = "";
-  $footerClass = "";
 }
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
 if (!isset($navigation)) {
@@ -603,7 +600,7 @@ if (!isset($reportId) || "" == $reportId) {
           $rowUser[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowUser[$value[3]]);
           $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowUser[$value[3]] . "</div>\n";
           $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowUser[$rank[3]]);
-          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"javascript:inputLocal.showFullList('rank_" . $userId . "', '" . $dialogParameters[0] . "', " . $dialogParameters[1] . ", " . $dialogParameters[2] . ", '" . $dialogParameters[3] . "');\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
+          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"javascript:inputLocal.showFullList('rank_" . $userId . "', '" . $dialogParameters[0] . "', " . $dialogParameters[1] . ", " . $dialogParameters[2] . ", '" . $dialogParameters[3] . "', " . $rowUser[$rank[3]] . ", '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "');\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
           $output .= 
             "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
             " <form method=\"dialog\">\n" .
@@ -704,7 +701,6 @@ if (!isset($reportId) || "" == $reportId) {
 }
 if (isset($navigation)) {
   $smarty->assign("content", $output);
-  $smarty->assign("footerClass", "footer" . $footerClass);
   $smarty->display("top5.tpl");
 } else {
   return $output;

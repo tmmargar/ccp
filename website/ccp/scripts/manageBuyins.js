@@ -14,7 +14,7 @@ $(document).on("click", "#rebuyCheckAll", function(event) {
   input.toggleCheckboxes(id, id);
   input.countUpdate(id, id + "Count");
 });
-$(document).on("click", "#addonCheckAll, #bountyACheckAll, #bountyBCheckAll", function(event) {
+$(document).on("click", "#addonCheckAll", function(event) {
   const id = this.id.substring(0, this.id.indexOf("CheckAll"));
   input.toggleCheckboxes(id, id);
   input.countUpdate(id, id + "Count");
@@ -48,14 +48,6 @@ $(document).on("click", "[id^='addon_']", function(event) {
   input.toggleCheckAll("addon", "addon");
   input.countUpdate("addon");
 });
-$(document).on("click", "[id^='bountyA_']", function(event) {
-  input.toggleCheckAll("bountyA", "bountyA");
-  input.countUpdate("bountyA");
-});
-$(document).on("click", "[id^='bountyB_']", function(event) {
-  input.toggleCheckAll("bountyB", "bountyB");
-  input.countUpdate("bountyB");
-});
 const inputLocal = {
   buildData : function(objTableId, mode) {
     const objPlayers = $("#ids");
@@ -63,16 +55,12 @@ const inputLocal = {
     const objAllRebuy = $("#rebuyPaid");
     const objAllRebuyCount = $("#rebuyCount");
     const objAllAddon = $("#addonPaid");
-    //const objAllBountyA = $("#bountyA");
-    //const objAllBountyB = $("#bountyB");
     objPlayers.val("");
     objAllPaid.val("");
     objAllRebuy.val("");
     objAllRebuyCount.val("");
     objAllAddon.val("");
-    //objAllBountyA.val("");
-    //objAllBountyB.val("");
-    // if mode is create or modify then build list of player ids for paid, rebuy, addon, bounty A and bounty B
+    // if mode is create or modify then build list of player ids for paid, rebuy, addon
     if (("create" == mode) || ("modify" == mode)) {
       // for each table row except header
       $("#" + objTableId + " tr").slice("1").each(function(index) {
@@ -83,8 +71,6 @@ const inputLocal = {
           objAllRebuy.val(objAllRebuy.val() + (0 < objAllRebuy.val().length ? ", " : "") + $("#rebuy_" + playerId).prop("checked"));
           objAllRebuyCount.val(objAllRebuyCount.val() + (0 < objAllRebuyCount.val().length ? ", " : "") + $("#rebuyCount_" + playerId).val());
           objAllAddon.val(objAllAddon.val() + (0 < objAllAddon.val().length ? ", " : "") +$("#addon_" + playerId).prop("checked"));
-          //objAllBountyA.val(objAllBountyA.val() + (0 < objAllBountyA.val().length ? ", " : "") + $("#bountyA_" + playerId).prop("checked"));
-          //objAllBountyB.val(objAllBountyB.val() + (0 < objAllBountyB.val().length ? ", " : "") + $("#bountyB_" + playerId).prop("checked"));
           objPlayers.val(objPlayers.val() + (0 < objPlayers.val().length ? ", " : "") + playerId);
         }
       });
@@ -129,13 +115,9 @@ const inputLocal = {
       if (!$(this).prop("checked")) {
         inputLocal.markCheckboxes(true, this, "rebuy", values[1]);
         inputLocal.markCheckboxes(true, this, "addon", values[1]);
-        inputLocal.markCheckboxes(false, this, "bountyA", values[1]);
-        inputLocal.markCheckboxes(false, this, "bountyB", values[1]);
       }
       inputLocal.disableCheckboxes(true, this, "rebuy", values[1]);
       inputLocal.disableCheckboxes(true, this, "addon", values[1]);
-      inputLocal.disableCheckboxes(false, this, "bountyA", values[1]);
-      inputLocal.disableCheckboxes(false, this, "bountyB", values[1]);
       // count how many are not checked
       if (!$(this).prop("checked")) {
         countNotCheckedPaid++;
@@ -157,19 +139,13 @@ const inputLocal = {
     input.countUpdate("buyin");
     input.countUpdate("rebuy", "rebuyCount");
     input.countUpdate("addon");
-    input.countUpdate("bountyA");
-    input.countUpdate("bountyB");
   },
   processAllCheckAll : function(countNotCheckedPaid) {
     input.toggleCheckAll("buyin", "buyin");
     input.toggleCheckAll("rebuy", "rebuy");
     input.toggleCheckAll("addon", "addon");
-    input.toggleCheckAll("bountyA", "bountyA");
-    input.toggleCheckAll("bountyB", "bountyB");
     inputLocal.disableCheckboxAll(true, "rebuy", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(true, "addon", countNotCheckedPaid);
-    inputLocal.disableCheckboxAll(false, "bountyA", countNotCheckedPaid);
-    inputLocal.disableCheckboxAll(false, "bountyB", countNotCheckedPaid);
   },
   setDefaults : function() {
     input.insertSelectedBefore("Tournament", "tournamentId", "mode");

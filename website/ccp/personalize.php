@@ -103,5 +103,4 @@ $outputPersonalize .=
   " </div>\n";
 $smarty->assign("heading", $heading);
 $smarty->assign("content", $outputPersonalize);
-$smarty->assign("footerClass", "footer");
 $smarty->display("personalize.tpl");

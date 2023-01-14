@@ -27,18 +27,6 @@ class DatabaseResult extends Root {
   public function getAutoRegisterHost(array $params) {
     return $this->getData(dataName: "autoRegisterHost", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function getBounty() {
-    return $this->getData(dataName: "bountySelectAll", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getBountyCountSelectByTournament(array $params) {
-    return $this->getData(dataName: "bountyCountSelectByTournament", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getBountyEarnings(array $params) {
-    return $this->getData(dataName: "bountyEarnings", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: false);
-  }
-  public function getBountiesForSeason(array $params) {
-    return $this->getData(dataName: "bountiesForSeason", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
   public function getBullyForUser(array $params) {
     return $this->getData(dataName: "bullyForUser", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: false);
   }
@@ -120,12 +108,6 @@ class DatabaseResult extends Root {
   public function getLocationById(array $params) {
     return $this->getData(dataName: "locationSelectById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-//   public function getLocationMaxId() {
-//     return $this->getData(dataName: "locationSelectMaxId", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-//   }
-//   public function getLocationsHostedCount() {
-//     return $this->getData(dataName: "locationSelectAllCount", params: null, orderBy: null, returnQuery: true, limitCount: null, rank: false);
-//   }
   public function getLogin($userName) {
     return $this->getData(dataName: "login", params: array($userName, "Super Users"), orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
@@ -230,17 +212,8 @@ class DatabaseResult extends Root {
     }
     return $resultListSummary;
   }
-  public function getResultBounty() {
-    return $this->getData(dataName: "resultBountySelectAll", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getResultBountyCurrent(array $params) {
-    return $this->getData(dataName: "resultBountyCurrent", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
   public function getResultPaidUserCount() {
     return $this->getData(dataName: "resultPaidUserCount", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getResultBountyByTournamentIdAndBountyId(array $params) {
-    return $this->getData(dataName: "resultBountyByTournamentIdAndBountyId", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: false);
   }
   public function getSeason(array $params) {
     return $this->getData(dataName: "seasonSelectAll", params: $params, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
@@ -301,12 +274,6 @@ class DatabaseResult extends Root {
   }
   public function getTournamentById(array $params, array $paramsNested) {
     return $this->getData(dataName: "tournamentSelectOneById", params: $params, paramsNested: $paramsNested, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getTournamentBounty() {
-    return $this->getData(dataName: "tournamentBountySelectAll", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
-  }
-  public function getTournamentBountyByTournamentId(array $params) {
-    return $this->getData(dataName: "tournamentBountySelectByTournamentId", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getTournamentDuring() {
     return $this->getData(dataName: "tournamentSelectAllDuring", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -386,9 +353,6 @@ class DatabaseResult extends Root {
   public function getUserPasswordReset(array $params) {
     return $this->getData(dataName: "userPasswordReset", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
-  public function deleteBounty(array $params) {
-    return $this->deleteData(dataName: "bountyDelete", params: $params);
-  }
   public function deleteLocation(array $params) {
     return $this->deleteData(dataName: "locationDelete", params: $params);
   }
@@ -410,9 +374,6 @@ class DatabaseResult extends Root {
   public function deleteResult(array $params) {
     return $this->deleteData(dataName: "resultDelete", params: $params);
   }
-  public function deleteResultBounty(array $params) {
-    return $this->deleteData(dataName: "resultBountyDelete", params: $params);
-  }
   public function deleteSeason(array $params) {
     return $this->deleteData(dataName: "seasonDelete", params: $params);
   }
@@ -422,20 +383,8 @@ class DatabaseResult extends Root {
   public function deleteTournament(array $params) {
     return $this->deleteData(dataName: "tournamentDelete", params: $params);
   }
-  public function deleteTournamentBountyByTournamentId(array $params) {
-    return $this->deleteData(dataName: "tournamentBountyDeleteByTournamentId", params: $params);
-  }
-  public function deleteTournamentBountyByTournamentIdAndBountyId(array $params) {
-    return $this->deleteData(dataName: "tournamentBountyDeleteByTournamentIdAndBountyId", params: $params);
-  }
-  public function deleteTournamentBountyByPlayerId(array $params) {
-    return $this->deleteData(dataName: "tournamentBountyDeleteByPlayerId", params: $params);
-  }
   public function deleteSpecialType(array $params) {
     return $this->deleteData(dataName: "specialTypeDelete", params: $params);
-  }
-  public function insertBounty(array $params) {
-    return $this->insertData(dataName: "bountyInsert", params: $params);
   }
   public function insertGroup(array $params) {
     return $this->insertData(dataName: "groupInsert", params: $params);
@@ -463,9 +412,6 @@ class DatabaseResult extends Root {
   }
   public function insertTournament(array $params) {
     return $this->insertData(dataName: "tournamentInsert", params: $params);
-  }
-  public function insertTournamentBounty(array $params) {
-    return $this->insertData(dataName: "tournamentBountyInsert", params: $params);
   }
   public function insertSpecialType(array $params) {
     return $this->insertData(dataName: "specialTypeInsert", params: $params);
@@ -545,7 +491,7 @@ class DatabaseResult extends Root {
       $port = 3306;
       $databaseName = "chipch5_stats";
     }
-    $database = new Database($this->isDebug(), "localhost", $username, $password, $databaseName, $port);
+    $database = new Database(debug: $this->isDebug(), hostName: "localhost", userid: $username, password: $password, databaseName: $databaseName, port: $port);
     return $database;
   }
   private function initializeConnection() {
@@ -576,94 +522,6 @@ class DatabaseResult extends Root {
             "INNER JOIN poker_user u ON l.playerId = u.id " . $this->buildUserActive(where: "AND", alias: "u") .
             " LEFT JOIN poker_result r ON t.tournamentId = r.tournamentId AND u.id = r.playerId " .
             "WHERE r.playerId IS NULL";
-          break;
-        case "bountySelectAll":
-          $query = "SELECT bountyId, bountyName, bountyDesc " . "FROM poker_bounty";
-          break;
-        case "bountyCountSelectByTournament":
-          $query =
-            "SELECT b.bountyName, b.bountyDesc, COUNT(*) AS cnt " .
-            "FROM poker_result_bounty rb " .
-            "INNER JOIN poker_bounty b ON rb.bountyId = b.bountyId AND rb.tournamentId = " . $params[0] .
-            " GROUP BY b.bountyName";
-          break;
-        case "bountyEarnings":
-          $query =
-            "SELECT a.knockedOutBy, a.winner AS name, SUM(a.numPlayers) * 2 AS winnings, (nb.numBounties * 2) AS cost, a.active, a.winnerActive " .
-            "FROM (SELECT r.tournamentid, r.playerid, CONCAT(u.first_name, ' ', u.last_name) AS name, u.active, r.KnockedOutBy, CONCAT(u2.first_name, ' ', u2.last_name) AS winner, u2.active AS winnerActive, tb.BountyId, b.BountyName, np.numPlayers " .
-            "      FROM poker_result r";
-          if (isset($params[0]) && isset($params[1])) {
-            $query .= "       INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "'";
-          }
-          $query .=
-            "      INNER JOIN poker_user u ON r.playerid = u.id " .
-            "      INNER JOIN poker_user u2 ON r.KnockedOutBy = u2.id " .
-          "      INNER JOIN poker_tournament_bounty tb ON r.TournamentId = tb.TournamentId AND r.PlayerId = tb.PlayerId " .
-          "      INNER JOIN poker_bounty b ON tb.BountyId = b.BountyId " .
-          "      INNER JOIN (SELECT rb.tournamentId, rb.bountyId, COUNT(*) AS numPlayers " .
-          "                  FROM poker_result_bounty rb " .
-          "                  GROUP BY rb.tournamentId, rb.bountyId) np ON tb.tournamentId = np.tournamentId AND tb.BountyId = np.bountyId " .
-          "      ORDER BY r.TournamentId, tb.BountyId) a " . "INNER JOIN (SELECT rb1.playerId, COUNT(*) AS numBounties " .
-          "            FROM poker_result_bounty rb1 " .
-//           "            INNER JOIN poker_tournament t1 ON rb1.tournamentId = t1.tournamentId AND (t1.tournamentDesc IS NULL OR t1.tournamentDesc <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "')";
-          "            INNER JOIN poker_tournament t1 ON rb1.tournamentId = t1.tournamentId";
-          if (isset($params[0]) && isset($params[1])) {
-            $query .= "            AND t1.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "'";
-          }
-          $query .=
-            "            LEFT JOIN poker_special_type st ON t1.specialTypeId = st.typeId AND (st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "')" .
-            "            GROUP BY rb1.playerId) nb ON a.KnockedOutBy = nb.playerId " .
-            "GROUP BY a.winner";
-          break;
-        case "bountiesForSeason":
-          $query =
-            "SELECT type, CONCAT(first_name, ' ', last_name) AS name, tournamentDesc, active " .
-            "FROM (SELECT 'points' AS type, g.first_name, g.last_name, g.active, g.tournamentDesc " .
-//             "      FROM (SELECT r.playerId, u.first_name, u.last_name, u.active, SUM(CASE WHEN (t.tournamentDesc IS NULL OR t.tournamentDesc <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "') THEN " .
-            "      FROM (SELECT r.playerId, u.first_name, u.last_name, u.active, SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-            "                                                                         CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-//             "                                                                          CASE WHEN t.tournamentdesc LIKE '%" . Constant::$DESCRIPTION_MAIN_EVENT . "%' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-            "                                                                          CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-            "                                                                         ELSE " .
-//             "                                                                          CASE WHEN t.tournamentdesc LIKE '%" . Constant::$DESCRIPTION_MAIN_EVENT . "%' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-            "                                                                          CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-            "                                          END " . "                                                                         END) AS pts, t.tournamentDesc " .
-            "            FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId " .
-            "            INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' " .
-            "            LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
-            "            INNER JOIN (SELECT tournamentId, COUNT(*) AS numPlayers " .
-            "                        FROM poker_result " .
-            "                        WHERE place > 0 " .
-            "                        GROUP BY tournamentId) np ON r.tournamentId = np.tournamentId " .
-            "            GROUP BY r.playerId) g " .
-            "      ORDER BY pts DESC, " . $this->buildOrderByName(prefix: null) . " LIMIT 2) a " .
-            "UNION " .
-            "SELECT * " .
-            "FROM (SELECT 'tourney' AS type, CONCAT(u.first_name, ' ', u.last_name) AS name, t.tournamentDesc, u.active " .
-            "      FROM poker_tournament t " .
-            "      INNER JOIN poker_result r ON t.tournamentId = r.tournamentId AND r.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "      INNER JOIN poker_user u ON r.playerId = u.id " .
-            "      AND t.tournamentDate = (SELECT MAX(t2.tournamentDate) " .
-            "                              FROM poker_tournament t2 " .
-            "                              INNER JOIN poker_result r2 ON t2.tournamentId = r2.tournamentId AND r2.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "      AND t.startTime = (SELECT MAX(t3.startTime) " .
-            "                         FROM poker_tournament t3 " .
-            "                         INNER JOIN poker_result r3 ON t3.tournamentId = r3.tournamentId AND r3.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                         WHERE t3.tournamentDate = (SELECT MAX(t4.tournamentDate) " . "                                                    FROM poker_tournament t4 " .
-            "                                                    INNER JOIN poker_result r4 ON t4.tournamentId = r4.tournamentId AND r4.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' AND t4.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "')) " .
-            "      AND r.place = (SELECT MIN(place) " .
-            "                     FROM poker_tournament t5 " .
-            "                     INNER JOIN poker_result r5 ON t5.tournamentId = r5.tournamentId AND r5.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                     AND t5.tournamentDate = (SELECT MAX(t6.tournamentDate) " .
-            "                                              FROM poker_tournament t6 INNER JOIN poker_result r6 ON t6.tournamentId = r6.tournamentId AND r6.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' AND t6.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                     AND t5.startTime = (SELECT MAX(t7.startTime) " .
-            "                                         FROM poker_tournament t7 " .
-            "                                         INNER JOIN poker_result r7 on t7.tournamentId = r7.tournamentId AND r7.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                     WHERE t7.tournamentDate = (SELECT MAX(t8.tournamentDate) " .
-            "                                                FROM poker_tournament t8 INNER JOIN poker_result r8 ON t8.tournamentId = r8.tournamentId AND r8.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' AND t8.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                                        ) " .
-            "                    ) " .
-            "      LIMIT 1) b";
           break;
         case "bullyForUser":
           $query =
@@ -1073,10 +931,10 @@ class DatabaseResult extends Root {
             "SELECT l.locationId AS id, l.locationName AS name, u.id as playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, UPPER(l.state) AS state, l.zipCode AS zip, u.active, (SELECT COUNT(*) FROM poker_tournament t WHERE t.LocationId = l.locationId) AS trnys " .
             "FROM poker_location l INNER JOIN poker_user u ON l.playerId = u.id ";
           if ($params[1]) {
-            $query .= " AND l.active = '" . Constant::$FLAG_YES . "'";
+            $query .= " AND u.active = '" . Constant::$FLAG_YES_DATABASE . "'";
           }
           if ($params[2]) {
-            $query .= "ORDER BY l.locationName";
+            $query .= " ORDER BY l.locationName";
           }
           break;
         case "locationSelectById":
@@ -1085,20 +943,6 @@ class DatabaseResult extends Root {
             "FROM poker_location l INNER JOIN poker_user u ON l.playerId = u.id " .
             "WHERE l.locationId IN (" . $params[0] . ")";
           break;
-//         case "locationSelectMaxId":
-//           $query =
-//             "SELECT MAX(locationId) AS id " .
-//             "FROM poker_location";
-//           break;
-//         case "locationSelectAllCount":
-//           $query =
-//             "SELECT l.locationId AS id, l.locationName AS location, l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS host, l.address, l.city, l.state, l.zipCode AS zip, l.active, u.active AS userActive, COUNT(*) AS count " .
-//             "FROM poker_tournament t " .
-//             "INNER JOIN poker_location l ON t.locationId = l.locationId " .
-//             "INNER JOIN poker_user u ON l.playerId = u.id " .
-//             "GROUP BY l.locationId " .
-//             "ORDER BY count DESC";
-//           break;
         case "login":
           $query =
             "SELECT password " .
@@ -1285,8 +1129,8 @@ class DatabaseResult extends Root {
             if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " AND place = 0";
             }
-            //if ("resultSelectPaidByTournamentId" == $dataName || "resultSelectPaidNotEnteredByTournamentId" == $dataName) {
-            if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
+            if ("resultSelectPaidByTournamentId" == $dataName || "resultSelectPaidNotEnteredByTournamentId" == $dataName) {
+            //if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " ORDER BY " . $this->buildOrderByName(prefix: "u");
             }
           }
@@ -1361,8 +1205,6 @@ class DatabaseResult extends Root {
             "           WHERE r2.rebuyCount > 0 GROUP BY r2.tournamentId) nr ON r.tournamentId = nr.tournamentId " .
             "LEFT JOIN (SELECT r3.tournamentId, r3.playerId, CONCAT(p1.first_name, ' ', p1.last_name) AS knockedOutBy, p1.active " .
             "           FROM poker_result r3 INNER JOIN poker_user p1 ON r3.knockedOutBy = p1.id) ko ON r.tournamentId = ko.tournamentId AND r.playerId = ko.playerId " .
-            "LEFT JOIN (SELECT tournamentId, playerId, COUNT(bountyId) AS numBountys " .
-            "           FROM poker_result_bounty GROUP BY tournamentId, playerId) rb ON r.tournamentId = rb.tournamentId AND r.playerId = rb.playerId " .
             "LEFT JOIN (SELECT tournamentId, COUNT(addonPaid) AS numAddons " .
             "           FROM poker_result WHERE addonPaid = '" . Constant::$FLAG_YES . "' GROUP BY tournamentId) na ON r.tournamentId = na.tournamentId " .
             "WHERE r.tournamentId = " . $params[1] .
@@ -1554,10 +1396,11 @@ class DatabaseResult extends Root {
             "name, d.tourneys AS '#', CASE WHEN e.Points IS NULL THEN 0 ELSE e.Points END AS pts, e.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
             "-(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END) AS buyins, -(CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END) AS rebuys, " .
             "-(CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END) AS addons, -(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END) + -(CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END) + -(CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END) AS 'total', " .
-            "CASE WHEN e.NumBountys IS NULL THEN 0 ELSE e.NumBountys * 0 END AS bounties, d.earnings,  " .
-            "d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END - CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END - CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END - CASE WHEN e.numBountys IS NULL THEN 0 ELSE e.numBountys * 0 END AS 'net(+/-)', " .
+            // bounties removed here
+            "d.earnings,  " .
+            "d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END - CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END - CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END AS 'net(+/-)', " .
             "d.earnings / d.numTourneys AS '$ / trny', " .
-            "(d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END - CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END - CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END - CASE WHEN e.numBountys IS NULL THEN 0 ELSE e.numBountys * 0 END) / d.numTourneys AS 'Net / Trny', " .
+            "(d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * e.buyinAmount END - CASE WHEN e.rebuys IS NULL THEN 0 ELSE e.rebuys END - CASE WHEN e.addons IS NULL THEN 0 ELSE e.addons END) / d.numTourneys AS 'Net / Trny', " .
             "active " .
             "FROM (SELECT a.Id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, CASE WHEN b.Earnings IS NULL THEN 0 ELSE b.Earnings END AS Earnings, a.NumTourneys " .
             "      FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE nt.NumTourneys END AS Tourneys, CASE WHEN nft.NumFinalTables IS NULL THEN 0 ELSE nft.NumFinalTables END AS FTs, " .
@@ -1645,8 +1488,8 @@ class DatabaseResult extends Root {
             "                                                     END) END AS Points, " .
             "                                                     SUM(CASE WHEN c.NumRebuys IS NULL THEN 0 ELSE c.NumRebuys END * c.RebuyAmount) AS Rebuys, " .
             "                                                     SUM(CASE WHEN c.NumAddons IS NULL THEN 0 ELSE c.NumAddons END * c.AddonAmount) AS Addons, " .
-            "                                                     SUM(c.NumBountys) AS NumBountys, c.NumRebuys, c.BuyinAmount " .
-            "           FROM (SELECT a.TournamentId, a.tournamentDesc, a.PlayerId, a.Place, a.NumPlayers, CASE WHEN b.NumBountys IS NULL THEN 0 ELSE b.NumBountys END AS NumBountys, a.NumRebuys, a.BuyinAmount, a.RebuyAmount, a.AddonAmount, a.NumAddons, a.typeDescription " .
+            "                                                     c.NumRebuys, c.BuyinAmount " .
+            "           FROM (SELECT a.TournamentId, a.tournamentDesc, a.PlayerId, a.Place, a.NumPlayers, a.NumRebuys, a.BuyinAmount, a.RebuyAmount, a.AddonAmount, a.NumAddons, a.typeDescription " .
             "                 FROM (SELECT r.TournamentId, t.tournamentDesc, r.PlayerId, r.Place, np.NumPlayers, nr.NumRebuys, t.BuyinAmount, t.RebuyAmount, t.AddonAmount, na.NumAddons, st.typeDescription " .
             "                       FROM poker_result r INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId";
           if (isset($params[0]) && isset($params[1])) {
@@ -1675,125 +1518,11 @@ class DatabaseResult extends Root {
             "                                  GROUP BY r4.TournamentId, r4.PlayerId) nr ON r.TournamentId = nr.TournamentId AND r.PlayerId = nr.PlayerId " .
             "                       LEFT JOIN (SELECT TournamentId, PlayerId, COUNT(AddonPaid) AS NumAddons " .
             "                                  FROM poker_result r7 WHERE AddonPaid = '" . Constant::$FLAG_YES . "' GROUP BY TournamentId, PlayerId) na ON r.TournamentId = na.TournamentId AND r.PlayerId = na.PlayerId) a " .
-            "                 LEFT JOIN (SELECT rb1.TournamentId, rb1.PlayerId, COUNT(BountyId) AS NumBountys " .
-            "                            FROM poker_result_bounty rb1 " .
-            "                            INNER JOIN poker_result r8 ON rb1.TournamentId = r8.TournamentId AND rb1.PlayerId = r8.PlayerId " .
-            "                            INNER JOIN poker_tournament t8 ON r8.TournamentId = t8.TournamentId";
-          if (isset($params[0]) && isset($params[1])) {
-            $query .= "                            AND t8.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' ";
-          }
-          $query .=
-            "                            GROUP BY rb1.TournamentId, rb1.PlayerId) b ON a.TournamentId = b.TournamentId AND a.PlayerId = b.PlayerId) c " .
+            "                 ) c " .
             "           GROUP BY c.PlayerId) e ON d.Id = e.PlayerId ";
           if ("resultAllOrderedSummary" == $dataName) {
             $query .= "ORDER BY ROUND(d.earnings, 0) DESC";
           }
-          break;
-        case "resultBountyByTournamentIdAndBountyId":
-          $query =
-            "SELECT 1 " .
-            "FROM poker_result_bounty rb " .
-            "LEFT JOIN poker_bounty b ON rb.bountyId = b.bountyId " .
-            "WHERE rb.tournamentId = " . $params[0] .
-            " AND rb.playerId = ?2 " .
-            "AND rb.bountyId = " . $params[1];
-          break;
-        case "resultBountySelectAll":
-          $query =
-            "SELECT tournamentId, playerId, bountyId " .
-            "FROM poker_result_bounty";
-          break;
-        case "resultBountyCurrent":
-          $query =
-            "SELECT bountyId, playerId " .
-            "FROM (SELECT 1 AS bountyId, playerId " .
-            "      FROM (SELECT r.playerId, CONCAT(u.first_name, ' ', u.last_name) AS name, SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::$DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-            "                                                                                     CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-            "                                                                                       CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-            "                                                                                     ELSE " .
-            "                                                                                       CASE WHEN st.typeDescription = '" . Constant::$DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-            "                                                                                     END " .
-            "                                                                                   END) AS pts " .
-            "            FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId " .
-            "            INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId AND t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "' " .
-            "            LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId" .
-            "            INNER JOIN (SELECT tournamentId, COUNT(*) AS numPlayers FROM poker_result WHERE place > 0 GROUP BY tournamentId) np ON r.tournamentId = np.tournamentId GROUP BY r.playerId) g " .
-            "      INNER JOIN (SELECT u.* " .
-            "                  FROM poker_user u " .
-            "                  INNER JOIN poker_result r ON r.playerId = u.id AND r.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                  INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId " .
-            "                                                AND t.tournamentDate = (SELECT MAX(t9.tournamentDate) " .
-            "                                                                        FROM poker_tournament t9 " .
-            "                                                                        INNER JOIN poker_result r9 ON t9.tournamentId = r9.tournamentId AND r9.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                        AND t9.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                                                                                                                                        AND t.startTime = (SELECT MIN(t10.startTime) " .
-            "                                                                                                                                                           FROM poker_tournament t10 " .
-            "                                                                                                                                                           INNER JOIN poker_result r10 ON t10.tournamentId = r10.tournamentId " .
-            "                                                                                                                                                                                       AND r10.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                                                                       AND t10.tournamentDate = (SELECT MAX(t11.tournamentDate) " .
-            "                                                                                                                                                                                                                 FROM poker_tournament t11 " .
-            "                                                                                                                                                                                                                 INNER JOIN poker_result r11 ON t11.tournamentId = r11.tournamentId " .
-            "                                                                                                                                                                                                                 AND r11.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                                                                                                 AND t11.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "'))) z ON g.playerId = z.id " .
-            "      ORDER BY pts DESC, g.name " .
-            "      LIMIT 2) a " .
-            "UNION " .
-            "SELECT bountyId, id " .
-            "FROM (SELECT 2 AS bountyId, u.id " .
-            "      FROM poker_tournament t " .
-            "      INNER JOIN poker_result r on t.tournamentId = r.tournamentId AND t.tournamentDate = (SELECT MAX(t2.tournamentDate) " .
-            "                                                                                           FROM poker_tournament t2 " .
-            "                                                                                           INNER JOIN poker_result r2 ON t2.tournamentId = r2.tournamentId " .
-            "                                                                                           AND r2.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                           AND t2.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                                                                                           AND t.startTime = (SELECT MAX(t3.startTime) " .
-            "                                                                                                              FROM poker_tournament t3 " .
-            "                                                                                                              INNER JOIN poker_result r3 ON t3.tournamentId = r3.tournamentId " .
-            "                                                                                                                                         AND r3.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                              WHERE t3.tournamentDate = (SELECT MAX(t4.tournamentDate) " .
-            "                                                                                                                                         FROM poker_tournament t4 " .
-            "                                                                                                                                         INNER JOIN poker_result r4 ON t4.tournamentId = r4.tournamentId " .
-            "                                                                                                                                         AND r4.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                                                         AND t4.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "')) " .
-            "                                                                                           AND r.place = (SELECT MIN(place) " .
-            "                                                                                                          FROM poker_tournament t5 " .
-            "                                                                                                          INNER JOIN poker_result r5 ON t5.tournamentId = r5.tournamentId " .
-            "                                                                                                          AND r5.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                          AND t5.tournamentDate = (SELECT MAX(t6.tournamentDate) " .
-            "                                                                                                                                   FROM poker_tournament t6 " .
-            "                                                                                                                                   INNER JOIN poker_result r6 ON t6.tournamentId = r6.tournamentId " .
-            "                                                                                                                                                              AND r6.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                                                                              AND t6.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                                                                                                                                                              AND t5.startTime = (SELECT MAX(t7.startTime) " .
-            "                                                                                                                                                                                  FROM poker_tournament t7 " .
-            "                                                                                                                                                                                  INNER JOIN poker_result r7 ON t7.tournamentId = r7.tournamentId " .
-            "                                                                                                                                                                                  AND r7.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                                                                                                  WHERE t7.tournamentDate = (SELECT MAX(t8.tournamentDate) " .
-            "                                                                                                                                                                                                             FROM poker_tournament t8 " .
-            "                                                                                                                                                                                                             INNER JOIN poker_result r8 ON t8.tournamentId = r8.tournamentId " .
-            "                                                                                                                                                                                                             AND r8.statusCode = '" . Constant::$CODE_STATUS_FINISHED . "' " .
-            "                                                                                                                                                                                                             AND t8.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "')) " .
-            "                                                                                                                                   INNER JOIN (SELECT u.* " .
-            "                                                                                                                                               FROM poker_user u " .
-            "                                                                                                                                               INNER JOIN poker_result r ON r.playerId = u.id " .
-            "                                                                                                                                               INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId " .
-            "                                                                                                                                               AND r.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                               AND t.tournamentDate = (SELECT MAX(t9.tournamentDate) " .
-            "                                                                                                                                                                       FROM poker_tournament t9 " .
-            "                                                                                                                                                                       INNER JOIN poker_result r9 ON t9.tournamentId = r9.tournamentId " .
-            "                                                                                                                                                                       AND r9.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                                                       AND t9.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') " .
-            "                                                                                                                                                                       AND t.startTime = (SELECT MIN(t10.startTime) " .
-            "                                                                                                                                                                                          FROM poker_tournament t10 " .
-            "                                                                                                                                                                                          INNER JOIN poker_result r10 ON t10.tournamentId = r10.tournamentId " .
-            "                                                                                                                                                                                                                      AND r10.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                                                                                                      AND t10.tournamentDate = (SELECT MAX(t11.tournamentDate) " .
-            "                                                                                                                                                                                                                                                FROM poker_tournament t11 " .
-            "                                                                                                                                                                                                                                                INNER JOIN poker_result r11 ON t11.tournamentId = r11.tournamentId " .
-            "                                                                                                                                                                                                                                                AND r11.statusCode IN ('" . Constant::$CODE_STATUS_PAID . "', '" . Constant::$CODE_STATUS_FINISHED . "') " .
-            "                                                                                                                                                                                                                                                AND t11.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "'))) z ON r5.playerId = z.id) " .
-            "                                                                                                                                   INNER JOIN poker_user u ON r.playerId = u.id " .
-            "    LIMIT 1) b";
           break;
         case "resultPaidUserCount":
           $query =
@@ -1938,7 +1667,7 @@ class DatabaseResult extends Root {
             $query .=
               " WHERE (" . $params[0] . " >= t.tournamentDate OR CURRENT_DATE <= " . $params[1] . ")" .
               " AND enteredCount IS NULL" .
-              " ORDER BY t.tournamentDate DESC, t.startTime";
+              " ORDER BY t.tournamentDate, t.startTime";
           } else if ("tournamentSelectAllOrdered" == $dataName) {
             $query .= " ORDER BY t.tournamentDate DESC, t.startTime DESC";
           } else if ("tournamentSelectAll" == $dataName) {
@@ -1988,19 +1717,6 @@ class DatabaseResult extends Root {
             "ORDER BY YEAR(tournamentDate) desc";
           if (isset($orderBy)) {
             $query .= " " . $orderBy;
-          }
-          break;
-        case "tournamentBountySelectAll":
-        case "tournamentBountySelectByTournamentId":
-          $query =
-            "SELECT tb.tournamentId, b.bountyId, b.bountyName, b.bountyDesc, tb.playerId, CASE WHEN tb.playerId IS NULL THEN 'No Name' ELSE CONCAT(p.first_name, ' ', p.last_name) END AS name, p.active " .
-            "FROM poker_bounty b LEFT JOIN poker_tournament_bounty tb ON b.bountyId = tb.bountyId";
-          if ("tournamentBountySelectByTournamentId" == $dataName) {
-            $query .= " AND tb.tournamentId = " . $params[0];
-          }
-          $query .= " LEFT JOIN poker_user p ON tb.playerId = p.id";
-          if ("tournamentBountySelectByTournamentId" == $dataName) {
-            $query .= " ORDER BY b.bountyName";
           }
           break;
         case "tournamentsPlayedByPlayerIdAndDateRange":
@@ -2214,33 +1930,13 @@ class DatabaseResult extends Root {
               $resultListForPerson = array();
               switch ($dataName) {
                 case "autoRegisterHost":
-                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zipCode"]);
-                  $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 0, $address, null, null, null, null, null, null);
-                  $location = new Location($this->isDebug(), null, "", $user, 0, 0, null, null, 0);
-                  $dateTime = new DateTime($this->isDebug(), null, $row["tournamentDate"]);
-                  $dateStartTime = new DateTime($this->isDebug(), null, $row["startTime"]);
-                  $tournament = new Tournament($this->isDebug(), (int) $row["tournamentId"], null, null, null, null, null, 0, $location, $dateTime, $dateStartTime, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
+                  $address = new Address(debug: $this->isDebug(), id: null, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zipCode"]);
+                  $user = new User(debug: $this->isDebug(), id: (int) $row["playerId"], name: $row["name"], username: null, password: null, email: $row["email"], phone: null, administrator: 0, registrationDate:null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires:null);
+                  $location = new Location(debug: $this->isDebug(), id: null, name: "", user: $user, count: 0, active: 0, map: null, mapName: null, tournamentCount: 0);
+                  $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["tournamentDate"]);
+                  $dateStartTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["startTime"]);
+                  $tournament = new Tournament(debug: $this->isDebug(), id: (int) $row["tournamentId"], description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: $location, date: $dateTime, startTime: $dateStartTime, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
                   array_push($resultList, $tournament);
-                  break;
-                case "bountiesForSeason":
-                  $bounty = new Bounty($this->isDebug(), "points" == $row["type"] ? 1 : 2, "points" == $row["type"] ? "Bounty A" : "Bounty B", $row["type"]);
-                  $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), null, $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $row["active"], null, null, null, null, null, null, null);
-                  $resultBounty = new ResultBounty($this->isDebug(), null, null, $bounty, $user);
-                  array_push($resultList, $resultBounty);
-                  break;
-                case "bountyCountSelectByTournament":
-                  $values = array($row["bountyName"], $row["bountyDesc"], $row["cnt"]);
-                  array_push($resultList, $values);
-                  break;
-                case "bountyEarnings":
-                  $values = array($row["knockedOutBy"], $row["name"], $row["winnings"], $row["cost"], $row["active"], $row["winnerActive"]);
-                  array_push($resultList, $values);
-                  break;
-                case "bountySelectAll":
-                  $bounty = new Bounty($this->isDebug(), (int) $row["bountyId"], $row["bountyName"], $row["bountyDesc"]);
-                  array_push($resultList, $bounty);
                   break;
                 case "bullyForUser":
                   array_push($resultList, $row["name"]);
@@ -2295,19 +1991,19 @@ class DatabaseResult extends Root {
                   array_push($resultList, $row["active"]);
                   break;
                 case "gameTypeSelectAll":
-                  $gameType = new GameType($this->isDebug(), $row["gameTypeId"], $row["gameTypeName"]);
+                  $gameType = new GameType(debug: $this->isDebug(), id: $row["gameTypeId"], name: $row["gameTypeName"]);
                   array_push($resultList, $gameType);
                   break;
                 case "groupSelectAll":
                 case "groupSelectAllById":
-                  $group = new Group($this->isDebug(), (int) $row["id"], $row["name"]);
+                  $group = new Group(debug: $this->isDebug(), id: (int) $row["id"], name: $row["name"]);
                   array_push($resultList, $group);
                   break;
                 case "groupPayoutSelectAll":
                 case "groupPayoutSelectAllById":
-                  $group = new Group($this->isDebug(), (int) $row["id"], $row["group name"]);
+                  $group = new Group(debug: $this->isDebug(), id: (int) $row["id"], name: $row["group name"]);
                   $aryPayouts = $this->getPayouts((int) $params[0], $dataName == "groupPayoutSelectAllById" ? (int) $params[1] : null, $dataName == "groupPayoutSelectAllById" ? true : false);
-                  $groupPayout = new GroupPayout($this->isDebug(), null, $group, $aryPayouts);
+                  $groupPayout = new GroupPayout(debug: $this->isDebug(), id: null, group: $group, payouts: $aryPayouts);
                   array_push($resultList, $groupPayout);
                   break;
                 case "groupSelectNameList":
@@ -2325,20 +2021,20 @@ class DatabaseResult extends Root {
                   array_push($resultList, $row["active"]);
                   break;
                 case "limitTypeSelectAll":
-                  $limitType = new LimitType($this->isDebug(), $row["limitTypeId"], $row["limitTypeName"]);
+                  $limitType = new LimitType(debug: $this->isDebug(), id: $row["limitTypeId"], name: $row["limitTypeName"]);
                   array_push($resultList, $limitType);
                   break;
                 case "locationSelectAll":
                 case "locationSelectById":
 //                 case "locationSelectAllCount":
                   if ("locationSelectById" != $dataName) {
-                    $name = explode(" ", $row["host"]);
+                    $name = $row["host"];
                   } else {
-                    $name = array("", "");
+                    $name = "";
                   }
-                  $address = new Address($this->isDebug(), null, $row["address"], $row["city"], $row["state"], (int) $row["zip"]);
-                  $user = new User($this->isDebug(), $row["playerId"], $name[0], $name[1], null, null, null, null, 0, null, null, null, null, null, null, null, (int) $row["active"], $address, null, null, null, null, null, null);
-                  $location = new Location($this->isDebug(), $row["id"], $row["name"], $user, 0, (int) $row["active"], null, null, "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
+                  $address = new Address(debug: $this->isDebug(), id: null, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zip"]);
+                  $user = new User(debug: $this->isDebug(), id: $row["playerId"], name: $name, username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: (int) $row["active"], address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
+                  $location = new Location(debug: $this->isDebug(), id: $row["id"], name: $row["name"], user: $user, count: 0, active: (int) $row["active"], map: null, mapName: null, tournamentCount: "locationSelectAll" == $dataName ? (int) $row["trnys"] : 0);
                   array_push($resultList, $location);
                   break;
 //                 case "locationSelectMaxId":
@@ -2354,9 +2050,9 @@ class DatabaseResult extends Root {
                   break;
                 case "notificationSelectAll":
                 case "notificationSelectOneById":
-                  $startDateTime = new DateTime($this->isDebug(), null, $row["start date"]);
-                  $endDateTime = new DateTime($this->isDebug(), null, $row["end date"]);
-                  $notification = new Notification($this->isDebug(), (int) $row["id"], $row["description"], $startDateTime, $endDateTime);
+                  $startDateTime = new DateTime(debug:$this->isDebug(), id: null, time: $row["start date"]);
+                  $endDateTime = new DateTime(debug:$this->isDebug(), id: null, time: $row["end date"]);
+                  $notification = new Notification(debug:$this->isDebug(), id: (int) $row["id"], description: $row["description"], startDate: $startDateTime, endDate: $endDateTime);
                   array_push($resultList, $notification);
                   break;
                 case "payoutSelectMaxId":
@@ -2387,41 +2083,28 @@ class DatabaseResult extends Root {
                 case "resultIdMax":
                   array_push($resultList, (int) $row["tournamentId"]);
                   break;
-                case "resultBountyByTournamentIdAndBountyId":
-                  $values = array(
-                    $row["1"]);
-                  array_push($resultList, $values);
-                  break;
                 case "resultSelectAll":
                 case "resultSelectOneByTournamentIdAndPlayerId":
                 case "resultSelectRegisteredByTournamentId":
                 case "resultSelectAllFinishedByTournamentId":
                 case "resultSelectPaidByTournamentId":
                 case "resultSelectPaidNotEnteredByTournamentId":
-                  $status = new Status($this->isDebug(), null, $row["statusCode"], $row["status"]);
-                  //public function __construct(bool $debug, string|int|null $id, string|null $description ,string|null $comment, LimitType|null $limitType, GameType|null $gameType,
-                  //SpecialType|null $specialType, int $chipCount, Location|null $location, DateTime $date, DateTime|null $startTime, DateTime|null $endTime, int $buyinAmount, int $maxPlayers,
-                  //int $maxRebuys, int $rebuyAmount, int $addonAmount, int $addonChipCount, GroupPayout|null $groupPayout, int $rake, int $registeredCount, int $buyinsPaid, int $rebuysPaid,
-                  // int $rebuysCount, int $addonsPaid, int $enteredCount) {
-                  $tournament = new Tournament($this->isDebug(), (int) $row["tournamentId"], null, null, null, null, null, 0, null, null, null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0);
-                  //public function __construct(bool $debug, string|int|null $id, string $firstName, string $lastName, string|null $username, string|null $password, string|null $email,
-                  //Phone|null $phone, int $administrator, string|null $registrationDate, string|null $approvalDate, int|null $approvalUserid, string|null $approvalName, string|null $rejectionDate,
-                  //int|null $rejectionUserid, string|null $rejectionName, int $active, Address|null $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires) {
-                  $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), (int) $row["playerId"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, (int) $row["active"], null, null, null, null, null, null, null);
+                  $status = new Status(debug: $this->isDebug(), id: null, code: $row["statusCode"], name: $row["status"]);
+                  $tournament = new Tournament(debug: $this->isDebug(), id: (int) $row["tournamentId"], description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: null, startTime: null, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
+                  $user = new User(debug: $this->isDebug(), id:(int) $row["playerId"], name: $row["name"], username: null, password: null, email: $row["email"], phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: (int) $row["active"], address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   if (isset($row["knocked out by"])) {
-                    $nameKnockedOutBy = explode(" ", $row["knocked out by"]);
+                    $nameKnockedOutBy = $row["knocked out by"];
                   } else {
-                    $nameKnockedOutBy = array("", "");
+                    $nameKnockedOutBy = "";
                   }
-                  $knockedOutBy = new User($this->isDebug(), (int) $row["knockedOutBy"], $nameKnockedOutBy[0], $nameKnockedOutBy[1], null, null, null, null, 0, null, null, null, null, null, null, null, isset($row["knockedOutActive"]) ? (int) $row["knockedOutActive"] : 0, null, null, null, null, null, null, null);
+                  $knockedOutBy = new User(debug: $this->isDebug(), id: (int) $row["knockedOutBy"], name: $nameKnockedOutBy, username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: isset($row["knockedOutActive"]) ? (int) $row["knockedOutActive"] : 0, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   //(bool $debug, string|int|null $id, Tournament $tournament, User $user, Status $status, int $registerOrder, bool $buyinPaid, bool $rebuyPaid, bool $addonPaid, int $rebuyCount,
                   // bool $addonFlag, int $place, User $knockedOutBy, string $food) {
                   $buyinPaid = new BooleanString($row["buyinPaid"]);
                   $rebuyPaid = new BooleanString($row["rebuyPaid"]);
                   $addonPaid = new BooleanString($row["addon"]);
                   $addonFlag = new BooleanString($row["addonFlag"]);
-                  $result = new Result($this->isDebug(), null, $tournament, $user, $status, (int) $row["registerOrder"], $buyinPaid->getBoolean(), $rebuyPaid->getBoolean(), $addonPaid->getBoolean(), (int) $row["rebuy"], $addonFlag->getBoolean(), (int) $row["place"], $knockedOutBy, $row["food"]);
+                  $result = new Result(debug: $this->isDebug(), id: null, tournament: $tournament, user: $user, status: $status, registerOrder: (int) $row["registerOrder"], buyinPaid: $buyinPaid->getBoolean(), rebuyPaid: $rebuyPaid->getBoolean(), addonPaid: $addonPaid->getBoolean(), rebuyCount: (int) $row["rebuy"], addonFlag: $addonFlag->getBoolean(), place: (int) $row["place"], knockedOutBy: $knockedOutBy, food: $row["food"]);
                   array_push($resultList, $result);
                   break;
                 case "resultSelectAllDuring":
@@ -2511,19 +2194,6 @@ class DatabaseResult extends Root {
                   $resultListForPerson["active"] = $row["active"];
                   $resultList[(string) $row["name"]] = $resultListForPerson;
                   break;
-                case "resultBountySelectAll":
-                  $bounty = new Bounty(debug: $this->isDebug(), id: (int) $row["bountyId"], name: null, description: null);
-                  //$tournament = new Tournament(debug: $this->isDebug(), id: (int) $row["tournamentId"], description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: null, startTime: null, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
-                  $tournament = new Tournament(debug: $this->isDebug(), id: (int) $row["tournamentId"], description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: null, startTime: null, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
-                  // $user = new User(debug: $this->isDebug(), id: null, firstName: null, lastName: null, username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
-                  $user = new User(debug: $this->isDebug(), id: (int) $row["playerId"], firstName: null, lastName: null, username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: (int) $row["active"], address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
-                  $resultBounty = new ResultBounty(debug: $this->isDebug(), id: null, tournament: $tournament, bounty: $bounty, user: $user);
-                  array_push($resultList, $resultBounty);
-                  break;
-                case "resultBountyCurrent":
-                  $values = array($row["bountyId"], $row["playerId"]);
-                  array_push($resultList, $values);
-                  break;
                 case "resultPaidUserCount":
                   array_push($resultList, (int) $row["cnt"]);
                   break;
@@ -2551,10 +2221,7 @@ class DatabaseResult extends Root {
                 case "structureSelectAll":
                 case "structurePayout":
                   if ("structureSelectAll" == $dataName) {
-//                     $debug, $id, $place, $percentage
                     $structure = new Structure(debug: $this->isDebug(), id: null, place: (int) $row["place"], percentage: (float) $row["percentage"]);
-//                     $debug, $id, $name, $bonusPoints, $minPlayers, $maxPlayers, $structures
-//                     $payout = new Payout(debug: $this->isDebug(), id: (int) $row["payoutId"], name: null, bonusPoints: 0, minPlayers: 0, maxPlayers: 0, structures: array($structure));
                     array_push($resultList, $structure);
                   } else if ("structurePayout" == $dataName) {
                     $values = array($row["place"], $row["percentage"], (float) $row["pay"]);
@@ -2566,9 +2233,6 @@ class DatabaseResult extends Root {
                   break;
                 case "tournamentAll":
                   $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["tournamentDate"]);
-                  //$debug, $id, $description, $comment, $limitType, $gameType, $specialType, $chipCount, $location, $date, $startTime, $endTime,
-                  //$buyinAmount, $maxPlayers, $maxRebuys, $rebuyAmount, $addonAmount, $addonChipCount, $groupPayout, $rake, $registeredCount,
-                  //$buyinsPaid, $rebuysPaid, $rebuysCount, $addonsPaid, $enteredCount
                   $tournament = new Tournament(debug: $this->isDebug(), id: $row["tournamentId"], description: $row["tournamentDesc"], comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: $dateTime, startTime: null, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
                   array_push($resultList, $tournament);
                   break;
@@ -2583,19 +2247,14 @@ class DatabaseResult extends Root {
                   $limitType = new LimitType(debug: $this->isDebug(), id: $row["limitTypeId"], name: $row["limit"]);
                   $gameType = new GameType(debug: $this->isDebug(), id: $row["gameTypeId"], name: $row["type"]);
                   $specialType = new SpecialType(debug: $this->isDebug(), id: $row["specialTypeId"], description: $row["std"]);
-                  //(bool $debug, string|int|null $id, string $address, string $city, string $state, int $zip) {
                   $address = new Address(debug: $this->isDebug(), id: null, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zipCode"]);
                   if ("tournamentsWonByPlayerId" != $dataName) {
-                      $name = explode(" ", $row["playerName"]);
+                      $name = $row["playerName"];
                   } else {
-                      $name = array("", "");
+                      $name = "";
                   }
-                  //$debug, $id, string $firstName, string $lastName, $username, $password, $email, $phone, int $administrator,
-                  //$registrationDate, $approvalDate, $approvalUserid, $approvalName, $rejectionDate, $rejectionUserid,
-                  //$rejectionName, $active, $address, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires
-                  $phone = new Phone($this->isDebug(), null, $row["phone"]);
-                  $user = new User(debug: $this->isDebug(), id: $row["playerId"], firstName: $name[0], lastName: $name[1], username: null, password: null, email: null, phone: $phone, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
-                  //$debug, $id, $name, $user, $count, $active, $map, $mapName, $tournamentCount
+                  $phone = new Phone(debug: $this->isDebug(), id: null, value: $row["phone"]);
+                  $user = new User(debug: $this->isDebug(), id: $row["playerId"], name: $name, username: null, password: null, email: null, phone: $phone, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 0, address: $address, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   $location = new Location(debug: $this->isDebug(), id: $row["locationId"], name: $row["location"], user: $user, count: 0, active: 0, map: $row["mapHide"], mapName: $row["map"], tournamentCount: 0);
                   $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["date"]);
                   $dateTimeStart = new DateTime(debug: $this->isDebug(), id: null, time: $row["start"]);
@@ -2603,7 +2262,7 @@ class DatabaseResult extends Root {
                   if (!isset($row["std"]) || (isset($row["std"]) && strpos($row["std"], Constant::$DESCRIPTION_CHAMPIONSHIP) === false)) {
                     $maxPlayers = (int) $row["max players"];
                   } else {
-                    $databaseResult = new DatabaseResult($this->isDebug());
+                    $databaseResult = new DatabaseResult(debug: $this->isDebug());
                     //TODO: move sessionutility to callers
                     //$params = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
                     $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers(params: $paramsNested));
@@ -2651,8 +2310,8 @@ class DatabaseResult extends Root {
                   array_push($resultList, (int) $row["buyinsPaid"]);
                   break;
                 case "seasonSelectAllChampionship":
-                  $startDateTime = new DateTime($this->isDebug(), null, $row["seasonStartDate"]);
-                  $endDateTime = new DateTime($this->isDebug(), null, $row["seasonEndDate"]);
+                  $startDateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["seasonStartDate"]);
+                  $endDateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["seasonEndDate"]);
                   $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["seasonDescription"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], active: $row["seasonActive"]);
                   array_push($resultList, $season);
                   break;
@@ -2665,21 +2324,6 @@ class DatabaseResult extends Root {
                   array_push($resultList, (int) $row["year"]);
                   break;
                 case "tournamentsSelectForEmailNotifications":
-                  break;
-                case "tournamentBountySelectAll":
-                case "tournamentBountySelectByTournamentId":
-//                   $debug, $id, $description, $comment, $limitType, $gameType, $specialType, $chipCount, $location, $date, $startTime, 
-//                   $endTime, $buyinAmount, $maxPlayers, $maxRebuys, $rebuyAmount, $addonAmount, $addonChipCount, $groupPayout, $rake, 
-//                   $registeredCount, $buyinsPaid, $rebuysPaid, $rebuysCount, $addonsPaid, $enteredCount
-                  $tournament = new Tournament(debug: $this->isDebug(), id: (int) $row["tournamentId"], description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: null, startTime: null, endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
-                  $bounty = new Bounty(debug: $this->isDebug(), id: (int) $row["bountyId"], name: $row["bountyName"], description: $row["bountyDesc"]);
-                  $name = isset($row["name"]) ? explode(" ", $row["name"]) : array("", "");
-//                   $debug, $id, $firstName, $lastName, $username, $password, $email, $phone, $administrator, $registrationDate, $approvalDate, 
-//                   $approvalUserid, $approvalName, $rejectionDate, $rejectionUserid, $rejectionName, $active, $address, $resetSelector, 
-//                   $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires
-                  $user = new User(debug: $this->isDebug(), id: (int) $row["playerId"], firstName: $name[0], lastName: $name[1], username: null, password: null, email: null, phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: isset($row["active"]) ? (int) $row["active"] : 0, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
-                  $tournamentBounty = new TournamentBounty($this->isDebug(), null, $tournament, $bounty, $user);
-                  array_push($resultList, $tournamentBounty);
                   break;
                 case "tournamentsPlayedByPlayerIdAndDateRange":
                   array_push($resultList, (int) $row["numPlayed"]);
@@ -2708,15 +2352,7 @@ class DatabaseResult extends Root {
                   array_push($resultList, $values);
                   break;
                 case "userActive":
-                  $name = explode(" ", $row["name"]);
-                  $user = new User(debug: $this->isDebug(), id: (int) $row["id"], firstName: $name[0], lastName: $name[1], username: null, password: null, email: $row["email"], phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 1, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
-//                   if (1 < count($name)) {
-//                     $lastName = "";
-//                     for ($i = 1; $i < count($name); $i ++) {
-//                       $lastName .= $name[$i] . " ";
-//                     }
-//                     $user->setLastName(substr($lastName, 0, strlen($lastName) - 1));
-//                   }
+                  $user = new User(debug: $this->isDebug(), id: (int) $row["id"], name: $row["name"], username: null, password: null, email: $row["email"], phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: null, approvalName: null, rejectionDate: null, rejectionUserid: null, rejectionName: null, active: 1, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   array_push($resultList, $user);
                   break;
                 case "userSelectAll":
@@ -2724,14 +2360,12 @@ class DatabaseResult extends Root {
                 case "userSelectOneByUsername":
                 case "userSelectOneByEmail":
                 case "userPaidByTournamentId":
-                  $name = explode(" ", $row["name"]);
-                  $phone = new Phone($this->isDebug(), null, $row[5]);
-                  $user = new User($this->isDebug(), (int) $row["id"], $name[0], $name[1], $row[2], $row[3], $row[4], $phone, (int) $row[6], $row[7], $row[8], (int) $row[9], $row[10], $row[11], (int) $row[12], $row[13], (int) $row[14], null, null, null, null, null, null, null, null);
+                  $phone = new Phone(debug: $this->isDebug(), id: null, value: $row[5]);
+                  $user = new User(debug: $this->isDebug(), id: (int) $row["id"], name: $row["name"], username: $row[2], password: $row[3], email: $row[4], phone: $phone, administrator: (int) $row[6], registrationDate: $row[7], approvalDate: $row[8], approvalUserid: (int) $row[9], approvalName: $row[10], rejectionDate: $row[11], rejectionUserid: (int) $row[12], rejectionName: $row[13], active: (int) $row[14], address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   array_push($resultList, $user);
                   break;
                 case "usersSelectForEmailNotifications":
-                  $name = explode(" ", $row["name"]);
-                  $user = new User($this->isDebug(), $row["id"], $name[0], $name[1], null, null, $row["email"], null, 0, null, null, null, null, null, null, null, 0, null, null, null, null, null, null, null, null);
+                  $user = new User(debug: $this->isDebug(), id: $row["id"], name: $row["name"], username: null, password: null, email: $row["email"], phone: null, administrator: 0, registrationDate: null, approvalDate: null, approvalUserid: 0, approvalName: null, rejectionDate: null, rejectionUserid: 0, rejectionName: null, active: 0, address: null, resetSelector: null, resetToken: null, resetExpires: null, rememberSelector: null, rememberToken: null, rememberExpires: null);
                   array_push($resultList, $user);
                   break;
                 case "waitListedPlayerByTournamentId":
@@ -2842,9 +2476,6 @@ class DatabaseResult extends Root {
     $numRecords = 0;
     try {
       switch ($dataName) {
-        case "bountyDelete":
-          $query = "DELETE FROM poker_result_bounty " . "WHERE tournamentId = " . $params[0] . " AND playerId = " . $params[1] . " AND bountyId = " . $params[2];
-          break;
         case "groupDelete":
           $query =
             "DELETE FROM poker_group " .
@@ -2881,11 +2512,6 @@ class DatabaseResult extends Root {
             "DELETE FROM poker_result " .
             "WHERE tournamentId IN (" . $params[0] . ")";
           break;
-        case "resultBountyDelete":
-          $query =
-            "DELETE FROM poker_result_bounty " .
-            "WHERE tournamentId IN (" . $params[0] . ")";
-          break;
         case "seasonDelete":
           $query =
             "DELETE FROM poker_season " .
@@ -2900,21 +2526,6 @@ class DatabaseResult extends Root {
           $query =
             "DELETE FROM poker_tournament " .
             "WHERE tournamentId IN (" . $params[0] . ")";
-          break;
-        case "tournamentBountyDeleteByTournamentId":
-          $query =
-            "DELETE FROM poker_tournament_bounty " .
-            "WHERE tournamentId = " . $params[0];
-          break;
-        case "tournamentBountyDeleteByTournamentIdAndBountyId":
-          $query =
-            "DELETE FROM poker_tournament_bounty " .
-            "WHERE tournamentId = " . $params[0] . " AND bountyId = " . $params[1];
-          break;
-        case "tournamentBountyDeleteByPlayerId":
-          $query =
-            "DELETE FROM poker_tournament_bounty " .
-            "WHERE tournamentId = " . $params[0] . " AND bountyId = " . $params[1] . " AND playerId = " . $params[2];
           break;
         case "specialTypeDelete":
           $query =
@@ -2942,9 +2553,6 @@ class DatabaseResult extends Root {
     $numRecords = 0;
 //     try {
       switch ($dataName) {
-        case "bountyInsert":
-          $query = "INSERT INTO poker_result_bounty(tournamentId, playerId, bountyId) " . "VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
-          break;
         case "groupInsert":
           $query = "INSERT INTO poker_group(groupId, groupName) " . "SELECT IFNULL(MAX(groupId), 0) + 1, '" . $params[0] . "' FROM poker_group";
           break;
@@ -2971,9 +2579,6 @@ class DatabaseResult extends Root {
           break;
         case "tournamentInsert":
           $query = "INSERT INTO poker_tournament(tournamentId, tournamentDesc, comment, limitTypeId, gameTypeId, chipCount, locationId, tournamentDate, startTime, endTime, buyinAmount, maxPlayers, maxRebuys, rebuyAmount, addonAmount, addonChipCount, groupId, rake, map, specialTypeId) " . "SELECT IFNULL(MAX(tournamentId), 0) + 1, " . (isset($params[0]) ? "'" . $params[0] . "'" : "null") . ", " . (isset($params[1]) == 0 ? "'" . $params[1] . "'" : "null") . ", " . $params[2] . ", " . $params[3] . ", " . $params[4] . ", " . $params[5] . ", " . (isset($params[6]) ? "'" . $params[6]->getDatabaseFormat() . "'" : "null") . ", " . (isset($params[7]) ? "'" . $params[7]->getDatabaseTimeFormat() . "'" : "null") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "null") . ", " . $params[9] . ", " . $params[10] . ", " . $params[11] . ", " . $params[12] . ", " . $params[13] . ", " . $params[14] . ", " . $params[15] . ", " . (isset($params[16]) ? $params[16] : "null") . ", " . (strlen($params[17]) > 0 ? ("'" . $params[17]) . "'" : "null") . ", " . (strlen($params[18]) > 0 ? "'" . $params[18] . "'" : "null") . " FROM poker_tournament";
-          break;
-        case "tournamentBountyInsert":
-          $query = "INSERT INTO poker_tournament_bounty(tournamentId, bountyId, playerId) " . "VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
           break;
         case "specialTypeInsert":
           $query = "INSERT INTO poker_special_type(typeId, typeDescription) " . "SELECT IFNULL(MAX(typeId), 0) + 1, '" . $params[0] . "' FROM poker_special_type";
@@ -3272,14 +2877,10 @@ class DatabaseResult extends Root {
           $selector = bin2hex(random_bytes(length: 8));
           $token = random_bytes(length: 32);
           $expires = new \DateTime("NOW");
-          // $expires->add(new DateInterval("PT01H")); // 1 hour
           $expires->add(new \DateInterval("P1D")); // 1 day
-//           $query = "UPDATE poker_user " . "SET reset_selector = '" . $selector . "', reset_token = '" . hash('sha256', $token) . "', reset_expires = " . $expires->format('U') . " WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "'";
           $query = "UPDATE poker_user " . "SET selector = '" . $selector . "', token = '" . hash('sha256', $token) . "', expires = " . $expires->format('U') . " WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "'";
           break;
         case "userUpdateChangePassword":
-//           $query = "UPDATE poker_user " . "SET password = '" . password_hash($params[2], PASSWORD_DEFAULT) . "', reset_selector = NULL, reset_token = NULL, reset_expires = NULL " . "WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "' " . "AND reset_expires >= " . $params[2];
-//          $query = "UPDATE poker_user " . "SET password = '" . password_hash($params[2], PASSWORD_DEFAULT) . "', selector = NULL, token = NULL, expires = NULL " . "WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "' " . "AND expires >= " . $params[2];
           $query = "UPDATE poker_user " . "SET password = '" . password_hash($params[2], PASSWORD_DEFAULT) . "', selector = NULL, token = NULL, expires = NULL " . "WHERE username = '" . $params[0] . "' " . "AND email = '" . $params[1] . "'";
           break;
 //         case "userUpdateRememberMe":

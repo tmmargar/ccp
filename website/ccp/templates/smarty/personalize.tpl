@@ -1,5 +1,5 @@
 {extends file="base.tpl"}
 {block name=title}{$title}{/block}
-{block name=style}<link href="css/personalize.css" rel="stylesheet">{$style}{/block}
-{block name=script}<script src="scripts/top5.js" type="text/javascript"></script>{/block}
+{block name=style}<link href="css/personalize.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">{$style}{/block}
+{block name=script}<script src="scripts/top5.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" type="text/javascript"></script>{/block}
 {block name=content}{$content}{/block}

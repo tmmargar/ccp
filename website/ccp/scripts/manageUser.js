@@ -1,5 +1,8 @@
 "use strict";
 $(document).ready(function() {
+  if ($("#mode").val() == "create" || $("#mode").val() == "modify") {
+    $("body").css("maxWidth", "450px");
+  }
   input.initialize();
   $("[id^='phone_']").mask("(000) 000-0000");
 });

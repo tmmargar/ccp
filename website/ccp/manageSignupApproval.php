@@ -103,5 +103,4 @@ if (0 < $result->rowCount()) {
 $hiddenMode = new FormControl(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null, false, null, null, null, false, Constant::$FIELD_NAME_MODE, null, Constant::$FIELD_NAME_MODE, null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $mode, null);
 $output .= $hiddenMode->getHtml();
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("manage.tpl");

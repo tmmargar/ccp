@@ -1,130 +1,7 @@
-.title {
- font-size: 1.1rem;
- font-weight: bold;
- text-align: center;
-}
-/* Variables
-================================== */
-/* Tables
-================================== */
-.responsive {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 3em 0;
-  padding: 0;
-}
-.responsive-cell {
-  background: rgba(112, 128, 144, 0.2);
-  /*border: solid 3px white;*/
-  box-sizing: border-box;
-  flex-grow: 1;
-  list-style: none;
-  overflow: hidden;
-  padding: 0.4em 0.6em;
-  width: 100%;
-}
-.responsive-cell > h1,
-.responsive-cell > h2,
-.responsive-cell > h3,
-.responsive-cell > h4,
-.responsive-cell > h5,
-.responsive-cell > h6 {
-  margin: 0;
-}
-/* Table column sizing
-================================== */
-.responsive--2cols > .responsive-cell {
-  width: 50%;
-}
-.responsive--3cols > .responsive-cell {
-  width: 33.33%;
-}
-.responsive--4cols > .responsive-cell {
-  width: 25%;
-}
-.responsive--5cols > .responsive-cell {
-  width: 20%;
-}
-.responsive--6cols > .responsive-cell {
-  width: 16.6%;
-}
-html {
-  height: 100%;
-  background-color: #EEE;
-}
-body {
-  background-color: white;
-  border: double 3px #DDD;
-  border-bottom: none;
-  border-top: none;
-  box-sizing: border-box;
-  font-family: 'Josefin Sans', sans-serif;
-  /*font-size: 1.2em;*/
-  margin: 0 auto;
-  min-height: 100%;
-  padding: .4em;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-}
-.responsive {
-  left: 3px;
-  position: relative;
-  top: 3px;
-}
-.responsive-cell {
-  background-color: white;
-  border-color: #e2e6e9;
-  margin: -3px 0 5px -3px;
-}
-.responsive-cell--head {
-  background-color: #74828F;
-  /*border-color: #5a6673;*/
-  color: white;
-}
-.responsive-cell--head > h1,
-.responsive-cell--head > h2,
-.responsive-cell--head > h3,
-.responsive-cell--head > h4,
-.responsive-cell--head > h5,
-.responsive-cell--head > h6 {
-  color: white;
-}
-#leftContent {
-  float: left;
-  width: 10%;
-}
 @media all and (max-width: 600px) {
   body {
     max-width: unset;
   }
-  .responsive-cell-empty {
-    display: none;
-  }
-  .responsive--collapse {
-    display: block;
-  }
-  /*.responsive--collapse > .responsive-cell {
-    width: 100% !important;
-  }*/
-  .responsive--collapse > .responsive-cell--foot {
-    margin-bottom: 1em;
-  }
-  #leftContent {
-    float: left;
-    width: 20%;
-  }
-  .responsive--3cols > .responsive-cell, .responsive--4cols > .responsive-cell {
-    width: unset;
-  }
-  /*dialog {
-    width: auto;
-  }*/
   h1,
   h2,
   h3,
@@ -133,77 +10,20 @@ h6 {
   h6 {
     display: inline-block;
     font-size: 1.3em;
-    width: 90%;
+    width: 100%;
   }
-}
-.no-flexbox .responsive {
-  display: block;
-}
-.no-flexbox .responsive > .responsive-cell {
-  width: 100%;
-}
-.no-flexbox .responsive > .responsive-cell--foot {
-  margin-bottom: 1em;
-}
-button {
-  background-color: #96C0CE;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 24px;
-  padding: 6px 8px;
-}
-/* Darker background on mouse-over */
-button:hover {
-  background-color: #274CE0;
-}
-.link {
-  text-decoration: none;
-}
-.linkText {
-  vertical-align: super;
-}
-#live-dialog::backdrop, .dialog::backdrop {
-  background-color: #5e68df;
-  opacity: 0.7;
-}
-#live-dialog, .dialog {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
-  /*margin: 100px;
-  width: 500px;*/
-  overflow: hidden;
-  width: 20vw;
-}
-#live-dialog header, .dialog header {
-  align-items: center;
-  background-color: #5e68df;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 5px;
-}
-#live-dialog header h2, .dialog header h2 {
-  margin-block: 0px;
-}
-#live-dialog button, .dialog button {
-  background: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-#dialog-header--cancel-btn, .dialogButton, .dialogButton:focus {
-  border: 0;
-  color: white;
-  font-weight: bold;
-  height: fit-content;
-  outline: 0;
-}
-.dialog main {
-  padding: 5px;
-}
-@media all and (max-width: 600px) {
+  .responsive-cell-empty {
+    display: none;
+  }
+  .responsive--collapse {
+    display: block;
+  }
+  .responsive--collapse > .responsive-cell--foot {
+    margin-bottom: 1em;
+  }
+  .responsive--3cols > .responsive-cell, .responsive--4cols > .responsive-cell {
+    width: unset;
+  }
   .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
    text-align: right !important;
   }

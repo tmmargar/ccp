@@ -23,6 +23,14 @@ $outputChange =
   "  </li>\n" .
   " </ul>\n" .
   "</section>\n" .
+  "<section class=\"version\" id=\"1.1.1\">" .
+  " <h3>Version 1.1.1</h3>\n" .
+  " <b><time datetime=\"2023-01-13\">Jan 13, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Updated to be mobile friendly</li>\n" .
+  "  <li>Fixed some minor bugs on maintenance screens</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.1.0\">" .
   " <h3>Version 1.1.0</h3>\n" .
   " <b><time datetime=\"2021-05-22\">May 22, 2021</time></b>\n" .
@@ -72,5 +80,4 @@ $outputChange =
   " </ul>\n" .
   "</section>\n";
 $smarty->assign("content", $outputChange);
-$smarty->assign("footerClass", "footer");
 $smarty->display("changeLog.tpl");

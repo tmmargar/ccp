@@ -82,10 +82,10 @@ const inputLocal = {
     //}
   },
   // position is [100,100]
-  showFullList : function(obj, title, height, width, positionParent) {
+  showFullList : function(obj, title, height, width, positionParent, rankValue, userFullName) {
     const re = /\s/gi;
+    dataTable.displayHighlightRow("#dataTblRank" + title.replace(re, ""), rankValue, userFullName);
     input.showDialogWithWidth("RankAll" + title.replace(re, ""), height, title, width, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});
-    //$("#dialogRankAll" + title.replace(re, "")).insertAfter($(obj));
   },
   showFullListBullies : function(title, positionParent) {
     input.showDialog("RankAllBullies", 400, title, {my: "left top", at: "center top", of: "#" + positionParent, collision: "fit"});

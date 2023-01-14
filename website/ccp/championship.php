@@ -5,10 +5,10 @@ use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
-$smarty->assign("title", "Chip Chair and a Prayer Championship Seating");
+$smarty->assign("title", "Chip Chair and a Prayer Championship");
 $smarty->assign("formName", "frmChampionship");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
-$smarty->assign("heading", "Championship Seating");
+$smarty->assign("heading", "Championship");
 $smarty->assign("style", "");
 $output = "";
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
@@ -262,8 +262,7 @@ if (0 < $count) {
     }
   }
 } else {
-  $output .= "No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y");
+  $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
 }
 $smarty->assign("content", $output);
-$smarty->assign("footerClass", "footer");
 $smarty->display("championship.tpl");

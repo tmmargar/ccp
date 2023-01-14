@@ -1,15 +1,31 @@
+html {
+  height: 100%;
+  background-color: #EEE;
+}
 body {
-  font-size: .9rem;
+  background-color: white;
+  border: double 3px #DDD;
+  border-bottom: none;
+  border-top: none;
+  box-sizing: border-box;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: .9em;
+  margin: 0 auto;
+  min-height: 100%;
+  padding: .4em;
 }
 nav {
  font-size: .8em;
 }
-p {
-  margin: 0;
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
 }
 h1 {
   margin: 1px;
   text-align: center;
+}
+p {
+  margin: 0;
 }
 caption {
   text-align: left;
@@ -18,18 +34,22 @@ td {
   text-align: center;
 }
 button, input[type="submit"], input[type="reset"] {
-  background-color: #5e68df;
+  background: #3498db;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: #fff;
   cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  font-weight: 700;
   margin: 1px;
-  padding: 5px;
+  outline: none;
+  padding: 2px;
   text-align: center;
   text-decoration: none;
 }
 /* Darker background on mouse-over */
-button:hover:enabled, input[type="submit"]:hover:enabled, input[type="reset"]:hover:enabled {
+button:focus:enabled, button:hover:enabled, input[type="submit"]:focus:enabled, input[type="submit"]:hover:enabled, input[type="reset"]:focus:enabled, input[type="reset"]:hover:enabled {
   background-color: #274CE0;
   font-weight: bold;
 }
@@ -43,69 +63,26 @@ div.center {
 a:focus {
   outline: .1rem solid black;
 }
-/* Darker background on mouse-over */
-button:hover {
-  background-color: #274CE0;
-}
-#modeDisplay {
-  color: green;
-  text-align: center;
-}
-#messages {
-  color: blue;
-}
 #errors {
   color: red;
-}
-#seasonInfo {
-  text-align: center;
 }
 #header {
   font-size: 1.5em;
   font-weight: bold;
   text-align: center;
 }
-#selectedTournamentText {
-  font-size: .85rem;
-}
-.errors {
-  border: 1px solid red !important;
-  color: red;
-}
-.messages {
+#messages {
   color: blue;
 }
-.number {
-  text-align: right;
-}
-.positive {
-   color: #009900;
-   font-weight: bold;
- }
-.negative {
-  color: #FF0000;
-  font-weight:bold;
-}
-.center {
+#modeDisplay {
+  color: green;
   text-align: center;
 }
-.hide {
-  display: none;
-}
-.hidden {
-  visibility: hidden;
-}
-.highlight {
-  background-color: yellow !important;
-}
-.footer {
-  clear: both;
-  padding-top: 5px;
+#seasonInfo {
   text-align: center;
-  width: 100%;
 }
-.textAlignUnset {
- text-align: unset;
+#selectedTournamentText {
+  font-size: .85rem;
 }
 /* Inserting this collapsed row between two flex items will make the flex item that comes after it break to a new row */
 .break {
@@ -115,24 +92,18 @@ button:hover {
 .bold {
  font-weight: bold;
 }
-.boldUnderline {
- font-weight: bold;
- text-decoration: underline;
-}
 .boldHeader {
  font-size: 1.1em;
  font-weight: bold;
 }
-.title {
-  font-weight: bold;
-}
-.fixedWidth {
-  font-family: monospace;
+.boldUnderline {
+ font-weight: bold;
+ text-decoration: underline;
 }
 .button-icon {
-  background: none;
+  background: #3498db;
   border: none;
-  color: inherit;
+  color: #fff;
   cursor: pointer;
   display: inline-block;
   font-size: inherit;
@@ -143,13 +114,12 @@ button:hover {
   transition: all 0.3s;
   -moz-transition: all 0.3s;
   -webkit-transition: all 0.3s;
-  /*display: flex;
-   justify-content: space-around;
-   align-items: center;*/
 }
 .button-icon:after {
+  background: #2980b9;
   content: '';
   position: absolute;
+  top: 2px;
   transition: all 0.3s;
   z-index: -1;
   -moz-transition: all 0.3s;
@@ -160,43 +130,191 @@ button:hover {
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
-  line-height: 1;
-  position: relative;
+  left: 0;
+  line-height: 1.5;
+  position: absolute;
   text-transform: none;
+  top: 0;
+  width: 30px;
   -webkit-font-smoothing: antialiased;
 }
 .button-icon-separator:before {
   background: rgba(0,0,0,0.15);
 }
-.button-icon {
-  background: #3498db;
-  color: #fff;
+.clear {
+  clear: both;
 }
-/*.button-icon:hover {
-  background: #274CE0;
-}*/
-.button-icon:active {
-  background: #2980b9;
-  top: 2px;
+.dialog {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
+  /*margin: 100px;
+  width: 500px;*/
+  overflow: hidden;
+  width: 20vw;
 }
-.button-icon:before {
-  /*height: 100%;*/
-  left: 0;
-  line-height: 1.1;
-  position: absolute;
-  top: 0;
-  width: 30px;
+.dialog::backdrop {
+  background-color: #5e68df;
+  opacity: 0.7;
 }
-.icon-border-caret-right:before {
-  content: "\f152";
+.dialog header {
+  align-items: center;
+  background-color: #5e68df;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+.dialog header h2 {
+  margin-block: 0px;
+}
+.dialog button {
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.dialog main {
+  padding: 5px;
+}
+.dialogButton, .dialogButton:focus {
+  border: 0;
+  color: white;
+  font-weight: bold;
+  height: fit-content;
+  outline: 0;
+}
+.errors {
+  border: 1px solid red !important;
+  color: red;
 }
 .fa-caret-left, .fa-caret-right {
   padding-left: 2px;
   padding-right: 2px;
   vertical-align: super;
 }
+.fixedWidth {
+  font-family: monospace;
+}
+.footer {
+  clear: both;
+  padding-top: 5px;
+  text-align: center;
+  width: 100%;
+}
+.hidden {
+  visibility: hidden;
+}
+.hide {
+  display: none;
+}
+.highlight {
+  background-color: yellow !important;
+}
+.highlightRow {
+  background-color: orange !important;
+}
+.icon-border-caret-right:before {
+  content: "\f152";
+}
+.link {
+  text-decoration: none;
+}
+.linkText {
+  vertical-align: super;
+}
+.messages {
+  color: blue;
+}
+.negative {
+  color: #FF0000;
+  font-weight:bold;
+}
+.number {
+  text-align: right;
+}
+.positive {
+   color: #009900;
+   font-weight: bold;
+ }
+.responsive {
+  display: flex;
+  flex-wrap: wrap;
+  left: 3px;
+  margin: 0 0 3em 0;
+  padding: 0;
+  position: relative;
+  top: 3px;
+}
+.responsive-cell > h1,
+.responsive-cell > h2,
+.responsive-cell > h3,
+.responsive-cell > h4,
+.responsive-cell > h5,
+.responsive-cell > h6 {
+  margin: 0;
+}
+.responsive-cell {
+  background: rgba(112, 128, 144, 0.2);
+  background-color: white;
+  border-color: #e2e6e9;
+  /*border: solid 3px white;*/
+  box-sizing: border-box;
+  flex-grow: 1;
+  list-style: none;
+  margin: -3px 0 5px -3px;
+  overflow: hidden;
+  /*padding: 0.4em 0.6em;*/
+  padding: 0.2em 0.2em;
+  width: 100%;
+}
+.responsive-cell--head {
+  background-color: #74828F;
+  /*border-color: #5a6673;*/
+  color: white;
+}
+.responsive-cell--head > h1,
+.responsive-cell--head > h2,
+.responsive-cell--head > h3,
+.responsive-cell--head > h4,
+.responsive-cell--head > h5,
+.responsive-cell--head > h6 {
+  color: white;
+}
+.responsive--2cols > .responsive-cell {
+  width: 50%;
+}
+.responsive--3cols > .responsive-cell {
+  width: 33.33%;
+}
+.responsive--4cols > .responsive-cell {
+  width: 25%;
+}
+.responsive--5cols > .responsive-cell {
+  width: 20%;
+}
+.responsive--6cols > .responsive-cell {
+  width: 16.6%;
+}
+.textAlignUnset {
+ text-align: unset;
+}
+.title {
+ font-size: 1.1rem;
+ font-weight: bold;
+ text-align: center;
+}
+/* moved to end to override other alignment */
+.center {
+  text-align: center;
+}
 @media all and (max-width: 600px) {
   .button-icon:before {
-    line-height: 1.3;
+    line-height: 1.5;
+  }
+}
+@media all and (max-width: 1100px) {
+  h1 {
+    font-size: 1.4em;
   }
 }

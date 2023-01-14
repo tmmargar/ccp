@@ -56,9 +56,6 @@ body {
   padding: 5px;
 }
 @media all and (max-width: 600px) {
-  .contentTop5Mini, .contentTop5Small {
-    width: 100%;
-  }
   .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
    text-align: right !important;
   }

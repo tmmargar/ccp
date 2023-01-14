@@ -57,7 +57,7 @@ $(document).on("click", "[id^='tournamentRebuy_']", function(event) {
   $("#tournamentRebuyCount_" + id[1]).val(($(this).prop("checked") ? 1 : 0));
 });
 $(document).on("keyup paste", "[id^='tournamentRebuyCount_']", function(event) {
-  input.validateNumberOnlyLessThanEqualToValue($(this), $("#maxRebuys").val(), event);
+  input.validateNumberOnlyGreaterThanEqualToValue($(this), $("#maxRebuys").val(), event);
   const id = this.id.split("_");
   input.validateNumberOnly($(this), event, false);
   if ($(this).val() == "") {
@@ -201,7 +201,7 @@ const inputLocal = {
     // if no tournament selected disable view, modify and delete buttons otherwise enable them
     const result = $("#tournamentId").val() == "0";
     $("#view").prop("disabled", result);
-    $([id^='delete']).prop("disabled", result);
+    $("[id^='delete']").prop("disabled", result);
     $("#go").prop("disabled", result);
     if (result) {
       $("[id^='modify']").prop("disabled", true);
