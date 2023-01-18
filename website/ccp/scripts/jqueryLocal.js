@@ -29,9 +29,11 @@ $.fn.selectRange = function(start, end) {
 };
 // set cursor to end by changing value and then putting back
 $(document).on("focus", "form", function(event) {
-  const value = $("#" + event.target.id).val();
-  $("#" + event.target.id).val("");
-  $("#" + event.target.id).val(value);
+  if ("" != event.target.id) {
+    const value = $("#" + event.target.id).val();
+    $("#" + event.target.id).val("");
+    $("#" + event.target.id).val(value);
+  }
 });
 $(document).on("click", "#dataTbl tr", function(event) {
   $("[id^='modify']").prop("disabled", $(this).hasClass("selected"));
