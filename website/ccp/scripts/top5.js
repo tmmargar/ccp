@@ -32,22 +32,14 @@ const inputLocal = {
       if ("dataTblRankLifetimeTourneys" == tableId) {
         dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [ [0, "asc" ] ], false, false, "600px", true);
       } else {
-        const reportId = $(this).siblings(".reportId").val();
+        const dialogId = $(this).prop("id").replace("dataTblRank", "dialogRankAll");
+        let reportId = $("#" + dialogId).siblings(".reportId").val();
+        if (undefined == reportId) {
+          reportId = $("#" + dialogId).parent().siblings(".reportId").val();
+        }
         dataTable.initialize(tableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "earningsTotalForUser" == reportId || "earningsAverageForUser" == reportId || "earningsTotalForSeasonForUser" == reportId ? "currency" : "number" }, { "orderSequence": [ "desc", "asc" ],  "type" : "number" }], [ [0, "asc" ] ], false, false, "600px", true);
-        /*const suffix = tableId.replace("dataTblRank", "");
-        $(document).on("click", "#dialogRankAll" + suffix + "-header--cancel-btn", function(event) {
-          document.getElementById("dialogRankAll" + suffix).close();
-          return false;
-        });*/
       }
     });
-    /*$("table[id^='dataTblNemesis'], table[id^='dataTblBully']").each(function(index) {
-      const suffix = tableId.replace("dataTbl", "");
-      $(document).on("click", "#dialogRankAll" + suffix + "-header--cancel-btn", function(event) {
-        document.getElementById("dialogRankAll" + suffix).close();
-        return false;
-      });
-    });*/
     let previousValue = "";
     // for ranking tables only
     $("table[id^='dataTblRank'] tr td:first-child").each(function(index) {

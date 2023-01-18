@@ -23,6 +23,13 @@ $outputChange =
   "  </li>\n" .
   " </ul>\n" .
   "</section>\n" .
+  "<section class=\"version\" id=\"1.1.2\">" .
+  " <h3>Version 1.1.2</h3>\n" .
+  " <b><time datetime=\"2023-01-17\">Jan 17, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Updated datatables, jQuery, jQuery UI and jQuery Migrate to latest versions</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.1.1\">" .
   " <h3>Version 1.1.1</h3>\n" .
   " <b><time datetime=\"2023-01-13\">Jan 13, 2023</time></b>\n" .
