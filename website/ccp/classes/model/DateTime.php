@@ -7,11 +7,10 @@ class DateTime extends Base {
   private static string $DATE_FORMAT_YEAR                          = "Y";
   private static string $DATE_FORMAT_DATABASE_DEFAULT              = "Y-m-d";
   private static string $DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT    = "Y-m-d H:i:s";
-  private static string $DATE_FORMAT_DISPLAY_DEFAULT               = "M d, Y";
+  private static string $DATE_FORMAT_DISPLAY_DEFAULT               = "m/d/Y";
   private static string $DATE_FORMAT_DISPLAY_LONG                  = "D, M j, Y";
   private static string $DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
-  private static string $DATE_FORMAT_PICKER_DISPLAY_DEFAULT        = "m/d/Y";
-  private static string $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT   = "m/d/Y H:i";
+  private static string $DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT   = "Y-m-d\TH:i";
   private static string $DATE_FORMAT_TIME_DISPLAY_DEFAULT          = "M d, Y h:i A";
   private static string $TIME_FORMAT_DATABASE_DEFAULT              = "H:i:s";
   private static string $TIME_FORMAT_DISPLAY_AMPM                  = "h:i A";
@@ -43,10 +42,6 @@ class DateTime extends Base {
 
   public function getDisplayAmPmFormat() {
     return null == $this->time ? null : $this->time->format(self::$TIME_FORMAT_DISPLAY_AMPM);
-  }
-
-  public function getDisplayDatePickerFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_DISPLAY_DEFAULT);
   }
 
   public function getDisplayDateTimePickerFormat() {

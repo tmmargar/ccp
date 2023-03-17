@@ -12,7 +12,10 @@ if (Constant::FLAG_LOCAL()) {
   set_time_limit(240);
 }
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
-$output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+$output .=
+  "<script type=\"module\">\n" .
+  "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+  "  let aryMessages = [];\n";
 $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->getDisplayLongTimeFormat() . "###\");\n" : "\r";
 $days = 14;
 $params = array($days);
@@ -69,7 +72,7 @@ if (count($resultList2) == 0) {
     }
   }
 }
-$output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+$output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
 if (isset($_GET[Constant::$FIELD_NAME_MODE])) {
   $smarty->assign("title", "Chip Chair and a Prayer Auto Reminder");
   $smarty->assign("heading", "Auto Reminder");

@@ -1,62 +1,92 @@
 "use strict";
-$(document).ready(function() {
-  // selectUsers set in php
-  inputLocal.initializeSelectize(selectUsers);
-  inputLocal.validate();
-  inputLocal.enableEmail();
-});
-$(document).on("click", "#selectAll", function(event) {
-  return input.selectAllSelectize("to");
-});
-$(document).on("click", "#deselectAll", function(event) {
-  return input.deselectAllSelectize("to");
-});
-$(document).on("blur click keyup paste", "#subject, #body", function(event) {
-  inputLocal.validate();
-  inputLocal.enableEmail();
-});
-$(document).on("click", "[id^='email']", function(event) {
-  $("#mode").val(this.value.toLowerCase());
-  $("#body").val("<pre>" + $("#body").val() + "</pre>");
-});
-const inputLocal = {
+import { dataTable, display, input } from "./import.js";
+export const inputLocal = {
   enableEmail : function() {
-    $("[id^='email']").prop("disabled", ($("#subject").val().length == 0) || ($("#body").val().length == 0));
+    document.querySelectorAll("[id^='email']").forEach(obj => { obj.disabled = (document.querySelector("#to").tomselect.items.length == 0 || document.querySelector("#subject").value.length == 0) || (document.querySelector("#body").value.length == 0); });
   },
-  initializeSelectize : function(selectValues) {
-    let options = [];
-    $.each(selectValues, function(key, value) {
-      options.push($("<option>", {value : key + ":" + value}).text(key));
-    });
-    $("#to").append(options);
-    $("#to").selectize({
-      dropdownParent: 'body',
-      valueField: "email",
-      labelField: "name",
-      searchField: ["name", "email"],
-      plugins: {
-        "drag_drop": {},
-        "remove_button": {},
-        "set_all": {"id": "to"}
-      },
-      render: {
-        item: function(item, escape) {
-          return "<div class=\"item\">" + (item.name ? "<span class='name'>" + escape(item.name) + "</span>" : "") + (item.email ? "<span class='email'> &lt;" + escape(item.email) + "&gt;</span>" : "") + "</div>";
+  initializeTomSelect : function(placeholder) {
+    document.querySelectorAll(".tom-select").forEach((el) => {
+      const settings = {
+      // max items required so isFull() works
+        maxItems: el.options.length,
+        placeholder: placeholder,
+        plugins: {
+          "clear_button" : { title: "Remove all selected options" },
+          "remove_button" : { title: "Remove this option" }
         },
-        option: function(item, escape) {
-          const label = item.name || item.email;
-          const caption = item.name ? item.email.split(':')[1] : null;
-          return "<div><span class='label'>" + escape(label) + "</span>" + (caption ? "<span class='caption'> &lt;" + escape(caption) + "&gt;</span>" : "") + "</div>";
+        render: {
+          item: function(data, escape) {
+            return "<div title=\"" + escape(data.value) + "\">" + escape(data.text) + "</div>";
+          }
+        },
+        onItemAdd : function() {
+          document.querySelector("#to").tomselect.control_input.value = "";
+          document.querySelector("#deselectAll").href = "#";
+          if (document.querySelector("#to").tomselect.isFull()) { document.querySelector("#selectAll").removeAttribute("href"); }
+          if (document.querySelector("#to").tomselect.items.length > 0) { document.querySelector(".ts-control").classList.remove("errors"); }
+          inputLocal.enableEmail();
+        },
+        onItemRemove : function() {
+          document.querySelector("#to").tomselect.control_input.value = "";
+          document.querySelector("#selectAll").href = "#";
+          if (document.querySelector("#to").tomselect.getValue() == "") { document.querySelector("#deselectAll").removeAttribute("href"); }
+          if (document.querySelector("#to").tomselect.items.length > 0) {
+            document.querySelector(".ts-control").classList.remove("errors");
+          } else {
+            document.querySelector(".ts-control").classList.add("errors");
+          }
+          inputLocal.enableEmail();
         }
-      }
+      };
+      const tomSelect = new TomSelect(el, settings);
     });
   },
   reset : function() {
-    input.deselectAllSelectize("to");
+    document.querySelector("#to").tomselect.clear();
   },
   validate : function() {
-    input.validateLength($(".selectize-input"), 1, false);
-    input.validateLength($("#subject"), 1, false);
-    input.validateLength($("#body"), 1, false);
+    input.validateLength({obj: document.querySelector(".ts-control"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#subject"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#body"), length: 1, focus: false});
   },
 };
+let documentReadyCallback = () => {
+  inputLocal.initializeTomSelect("Select user(s)...");
+  inputLocal.validate();
+  inputLocal.enableEmail();
+  input.storePreviousValue({selectors: ["[id^='to']", "[id^='subject']", "[id^='body']"]});
+};
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  documentReadyCallback();
+} else {
+  document.addEventListener("DOMContentLoaded", documentReadyCallback);
+}
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id == "selectAll") {
+    return input.selectAllTomSelect({objId: "to", event: event});
+  } else if (event.target && event.target.id.includes("deselectAll")) {
+    return input.deselectAllTomSelect({objId: "to", placeholder: "Select user(s)...", event: event});
+  } else if (event.target && event.target.id.includes("email")) {
+    document.querySelector("#mode").value = event.target.value.toLowerCase();
+    document.querySelector("#body").value = "<pre>" + document.querySelector("#body").value + "</pre>";
+  } else if (event.target && event.target.id.includes("reset")) {
+    inputLocal.reset();
+    input.restorePreviousValue({selectors: ["[id^='to']", "[id^='subject']", "[id^='body']"]});
+    inputLocal.validate();
+    inputLocal.enableEmail();
+  } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
+    inputLocal.setIds();
+   }
+});
+document.addEventListener("keyup", (event) => {
+  if (event.target && (event.target.id.includes("subject") || event.target.id.includes("body"))) {
+    inputLocal.validate();
+    inputLocal.enableEmail();
+  }
+});
+document.addEventListener("paste", (event) => {
+  if (event.target && (event.target.id.includes("subject") || event.target.id.includes("body"))) {
+    inputLocal.validate();
+    inputLocal.enableEmail();
+  }
+});

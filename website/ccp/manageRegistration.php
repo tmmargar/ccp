@@ -32,7 +32,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   // get number of registered to determine max number of wait list to process
   $valuesCount = array_count_values($aryStatus);
   $numRows = array_key_exists(Constant::$NAME_STATUS_REGISTERED, $valuesCount) ? $valuesCount[Constant::$NAME_STATUS_REGISTERED] : 0;
-  $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+  $output .= 
+    "<script type=\"module\">\n" .
+    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+    "  let aryMessages = [];\n";
   foreach ($ary as $index => $id) {
     $params = array($id);
     $resultList = $databaseResult->getUserById(params: $params);
@@ -117,7 +120,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $cnt ++;
     }
   }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
   $ids = DEFAULT_VALUE_BLANK;
   $mode = Constant::$MODE_VIEW;
 }
@@ -135,17 +138,17 @@ if ($mode == Constant::$MODE_VIEW) {
     $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
     foreach ($resultList as $tournament) {
-      $optionText = $tournament->getDate()->getDisplayDatePickerFormat();
+      $optionText = $tournament->getDate()->getDisplayFormat();
       $optionText .= "@" . $tournament->getStartTime()->getDisplayAmPmFormat();
       $optionText .= " (" . $tournament->getLocation()->getName() . ")";
       $optionText .= " " . $tournament->getLimitType()->getName();
       $optionText .= " " . $tournament->getGameType()->getName();
       $optionText .= " " . $tournament->getMaxRebuys() . "r" . (0 != $tournament->getAddonAmount() ? "+a" : "");
       $waitListCnt = $tournament->getRegisteredCount() - $tournament->getMaxPlayers();
-      $optionText .= " (" . $tournament->getRegisteredCount() . ($waitListCnt > 0 ? "+" . $waitListCnt . "wl" : "") . " not paid/" . $tournament->getBuyinsPaid() . " paid";
-      $optionText .= "+" . $tournament->getRebuysPaid() . "r paid";
-      $optionText .= "+" . $tournament->getAddonsPaid() . "a paid";
-      $optionText .= "/" . $tournament->getEnteredCount() . " entered)";
+      $optionText .= " (" . $tournament->getRegisteredCount() . ($waitListCnt > 0 ? "+" . $waitListCnt . "wl" : "") . "np/" . $tournament->getBuyinsPaid() . "p";
+      $optionText .= "+" . $tournament->getRebuysPaid() . "r";
+      $optionText .= "+" . $tournament->getAddonsPaid() . "a";
+      $optionText .= "/" . $tournament->getEnteredCount() . "ent)";
       $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId, suffix: null, text: $optionText, value: $tournament->getId());
       $output .= $option->getHtml();
     }

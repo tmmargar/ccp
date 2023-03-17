@@ -11,7 +11,7 @@ require_once "init.php";
 define("PAYOUT_NAME_FIELD_LABEL", "Payout name");
 define("BONUS_POINTS_FIELD_LABEL", "Bonus points");
 define("MIN_PLAYERS_FIELD_LABEL", "Min players");
-define("Max_PLAYERS_FIELD_LABEL", "Max players");
+define("MAX_PLAYERS_FIELD_LABEL", "Max players");
 define("PLACE_FIELD_LABEL", "Place");
 define("PERCENTAGE_FIELD_LABEL", "Percentage");
 define("PAYOUT_ID_FIELD_NAME", "payoutId");
@@ -58,7 +58,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . MIN_PLAYERS_FIELD_NAME . "_" . $id . "\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textMinPlayers = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MIN_PLAYERS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: MIN_PLAYERS_FIELD_NAME . "_" . $id, maxLength: 2, name: MIN_PLAYERS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : 0), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textMinPlayers->getHtml() . "</div>\n";
-      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . MIN_PLAYERS_FIELD_NAME . "_" . $id . "\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . MAX_PLAYERS_FIELD_NAME . "_" . $id . "\">" . MAX_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textMaxPlayers = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_MAX_PLAYERS, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: MAX_PLAYERS_FIELD_NAME . "_" . $id, maxLength: 2, name: MAX_PLAYERS_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMaxPlayers() : 36), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textMaxPlayers->getHtml() . "</div>\n";
       $percentageTotal = 0;
@@ -79,14 +79,14 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         $output .= "    </td>\n";
         $output .= "    <td class=\"textAlignUnset\">" . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
         $output .= "    <td class=\"textAlignUnset\">\n";
-        $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, maxLength: 2, name: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), wrap: null);
+        $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, maxLength: 3, name: PERCENTAGE_FIELD_NAME . "_" . $id . "_" . $ctr2, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $structure->getPercentage() * 100 : ""), wrap: null);
         $output .= $textPayoutPercentage->getHtml();
         $output .= "    </td>\n";
         $output .= "   </tr>\n";
         $percentageTotal += $structure->getPercentage() * 100;
         $ctr2 ++;
       }
-      $output .= "   <tr>\n";
+      $output .= "   <tr id=\"rowTotal\">\n";
       $output .= "    <td class=\"textAlignUnset\"></td>\n";
       $output .= "    <td class=\"textAlignUnset\">\n";
       $textDummy = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hidden"), cols: null, disabled: false, id: "dummy_" . $id . "_total", maxLength: 2, name: "dummy_" . $id . "_total", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
@@ -94,7 +94,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= "    </td>\n";
       $output .= "    <td class=\"textAlignUnset\">Total " . PERCENTAGE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ":</td>\n";
       $output .= "    <td class=\"textAlignUnset\">\n";
-      $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: PERCENTAGE_FIELD_NAME . "Total", maxLength: 2, name: PERCENTAGE_FIELD_NAME . "Total", onClick: null, placeholder: null, readOnly: true, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) $percentageTotal, wrap: null);
+      $textPayoutPercentage = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PERCENTAGE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: PERCENTAGE_FIELD_NAME . "Total", maxLength: 3, name: PERCENTAGE_FIELD_NAME . "Total", onClick: null, placeholder: null, readOnly: true, required: null, rows: null, size: 2, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) $percentageTotal, wrap: null);
       $output .= $textPayoutPercentage->getHtml();
       $output .= "    </td>\n";
       $output .= "   </tr>\n";

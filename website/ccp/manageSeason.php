@@ -30,7 +30,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
   $output .= $buttonSave->getHtml();
   $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET . "_2", maxLength: null, name: Constant::$TEXT_RESET . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
   $output .= $buttonReset->getHtml();
-  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null, noValidate: true);
   $output .= $buttonCancel->getHtml();
   $output .= " </div>\n";
   $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
@@ -42,10 +42,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $textBoxDescription = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_DESCRIPTION, autoComplete: null, autoFocus: true, checked: null, class: null, cols: 30, disabled: false, id: SEASON_DESCRIPTION_FIELD_NAME . "_" . $id, maxLength: 200, name: SEASON_DESCRIPTION_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: 6, size: 100, suffix: null, type: FormControl::$TYPE_INPUT_TEXTAREA, value: ((count($resultList) > 0) ? $resultList[$ctr]->getDescription() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxDescription->getHtml() . "</div>\n";
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_START_DATE_FIELD_NAME . "_" . $id . "\">" . SEASON_START_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
-      $textBoxStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: SEASON_START_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: SEASON_START_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getStartDate()->getDisplayDatePickerFormat() : ""), wrap: null);
+      $textBoxStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: SEASON_START_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: SEASON_START_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_DATE_TIME, value: ((count($resultList) > 0) ? $resultList[$ctr]->getStartDate()->getDisplayDateTimePickerFormat() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxStartDate->getHtml() . "</div>\n";
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_END_DATE_FIELD_NAME . "_" . $id . "\">" . SEASON_END_DATE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
-      $textBoxEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: SEASON_END_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: SEASON_END_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEndDate()->getDisplayDatePickerFormat() : ""), wrap: null);
+      $textBoxEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_START_TIME, autoComplete: null, autoFocus: false, checked: null, class: array("timePicker"), cols: null, disabled: false, id: SEASON_END_DATE_FIELD_NAME . "_" . $id, maxLength: 30, name: SEASON_END_DATE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_DATE_TIME, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEndDate()->getDisplayDateTimePickerFormat() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxEndDate->getHtml() . "</div>\n";
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id . "\">" . SEASON_CHAMPIONSHIP_QUALIFY_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
       $textBoxChampionshipQualify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id, maxLength: 2, name: SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 3, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getChampionshipQualify() : ""), wrap: null);
@@ -64,7 +64,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $buttonReset = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_RESET, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_RESET, maxLength: null, name: Constant::$TEXT_RESET, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_RESET, value: Constant::$TEXT_RESET, wrap: null);
     $output .= $buttonReset->getHtml();
   }
-  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+  $buttonCancel = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null, noValidate: true);
   $output .= $buttonCancel->getHtml();
   $output .= " </div>\n";
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
@@ -87,7 +87,11 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $params = array($seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonId == "" ? null : $seasonId);
     $rowCount = $databaseResult->getSeasonDateCheckCount(params: $params);
     if ($rowCount[0] > 0) {
-      $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"You must enter a start date (" . $seasonStartDateTime->getDisplayFormat() . ") and end date  (" . $seasonEndDateTime->getDisplayFormat() . ") that do not overlap with an existing season\" ]);\n" . "</script>\n";
+      $output .=
+        "<script type=\"module\">\n" .
+        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+        "  display.showErrors({errors: [ \"You must enter a start date (" . $seasonStartDateTime->getDisplayFormat() . ") and end date  (" . $seasonEndDateTime->getDisplayFormat() . ") that do not overlap with an existing season\" ]});\n" .
+        "</script>\n";
     } else {
       if (Constant::$MODE_SAVE_CREATE == $mode) {
         $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, isset($seasonActive) ? $seasonActive : 0);
@@ -97,7 +101,11 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           $rowCount = $databaseResult->updateSeason(params: $params);
       }
       if (!is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+        $output .=
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
+          "</script>\n";
       }
     }
     $ids = DEFAULT_VALUE_BLANK;
@@ -115,7 +123,11 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
       $params = array($ids);
       $rowCount = $databaseResult->deleteSeason(params: $params);
       if (! is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+        $output .= 
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
+          "</script>\n";
       }
       $ids = DEFAULT_VALUE_BLANK;
     }
@@ -133,7 +145,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   } else if (Constant::$MODE_DELETE == $mode) {
     $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE . "_2", maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
-    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL . "_2", maxLength: null, name: Constant::$TEXT_CANCEL . "_2", onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null, noValidate: true);
     $output .= $buttonDelete->getHtml();
   }
   $output .= "</div>\n";
@@ -161,7 +173,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   } else if (Constant::$MODE_DELETE == $mode) {
     $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CONFIRM_DELETE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CONFIRM_DELETE, maxLength: null, name: Constant::$TEXT_CONFIRM_DELETE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CONFIRM_DELETE, wrap: null);
     $output .= $buttonDelete->getHtml();
-    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null);
+    $buttonDelete = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_CANCEL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_CANCEL, maxLength: null, name: Constant::$TEXT_CANCEL, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_CANCEL, wrap: null, noValidate: true);
     $output .= $buttonDelete->getHtml();
   }
   $output .= "</div>\n";

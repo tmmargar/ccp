@@ -1,7 +1,6 @@
 <?php
 declare(strict_types = 1);
 namespace ccp\classes\model;
-use ccp\classes\utility\SessionUtility;
 class Tournament extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount) {
     parent::__construct($debug, $id);
@@ -73,7 +72,7 @@ class Tournament extends Base {
     return $close;
   }
   public function getRegistrationOpen() {
-    return new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "12:00");
+    return new DateTime(debug: $this->isDebug(), id: null, time: "12:00");
   }
   public function getRegisteredCount() {
     return $this->registeredCount;
@@ -169,6 +168,9 @@ class Tournament extends Base {
 //     return HtmlUtility::buildLink("manageTournament.php", "modify", $this->getId(), $this->getDescription());
     $link = new HtmlLink(null, null, $this->isDebug(), "manageTournament.php", null, array("id", "mode"),  array($this->getId(). "modify"), -1, $this->getDescription(), null);
     return $link->getHtml();
+  }
+  public function getDateAndTime() {
+    return new DateTime(debug: $this->isDebug(), id: null, time: $this->getDate()->getDatabaseFormat() . " " . $this->getStartTime()->getDatabaseTimeFormat());
   }
   public function __toString() {
     $output = parent::__toString();

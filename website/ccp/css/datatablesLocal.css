@@ -1,0 +1,13 @@
+.dataTable, .dataTables_filter, .dataTables_info {
+  font-size: .8rem;
+}
+table.dataTable thead th {
+  text-align: center !important;
+}
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 4px 4px !important;
+}
+table.dataTable>tbody>tr.child ul.dtr-details>li {
+  padding: 0;
+}

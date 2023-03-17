@@ -1,9 +1,6 @@
 body {
   max-width: 500px;
 }
-button {
-  padding: 5px 10px 10px 10px;
-}
 @media all and (max-width: 600px) {
   body {
     max-width: unset;

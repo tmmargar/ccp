@@ -506,7 +506,7 @@ if (!isset($reportId) || "" == $reportId) {
           } else if (POINTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Avg Points";
           }
-          $dialogParameters = array($titleText, 500, 460, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
           $hideColIndexes = array(0, 2, 5);
@@ -515,7 +515,7 @@ if (!isset($reportId) || "" == $reportId) {
           } else if (KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Avg Knockouts";
           }
-          $dialogParameters = array($titleText, 500, 400, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (EARNINGS_TOTAL_FOR_SEASON_FOR_USER == $reportId || EARNINGS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array(5, "currency", 2));
           $hideColIndexes = array(0, 2, 5);
@@ -524,7 +524,7 @@ if (!isset($reportId) || "" == $reportId) {
           } else if (EARNINGS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Avg Earnings";
           }
-          $dialogParameters = array($titleText, 500, 460, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId || WINS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "percentage", 2));
           $hideColIndexes = array(0, 2, 5);
@@ -533,7 +533,7 @@ if (!isset($reportId) || "" == $reportId) {
           } else if (WINS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
             $titleText = "Season Avg Wins";
           }
-          $dialogParameters = array($titleText, 500, 400, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (POINTS_TOTAL_FOR_USER == $reportId || POINTS_AVERAGE_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
           if (POINTS_TOTAL_FOR_USER == $reportId) {
@@ -543,7 +543,7 @@ if (!isset($reportId) || "" == $reportId) {
             $titleText = "Lifetime Avg Points";
             $hideColIndexes = array(0, 2, 4);
           }
-          $dialogParameters = array($titleText, 500, 400, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (EARNINGS_TOTAL_FOR_USER == $reportId || EARNINGS_AVERAGE_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array(5, "currency", 2));
           if (EARNINGS_TOTAL_FOR_USER == $reportId) {
@@ -553,7 +553,7 @@ if (!isset($reportId) || "" == $reportId) {
             $titleText = "Lifetime Avg Earnings";
             $hideColIndexes = array(0, 2, 4);
           }
-          $dialogParameters = array($titleText, 500, 400, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (KNOCKOUTS_TOTAL_FOR_USER == $reportId || KNOCKOUTS_AVERAGE_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
           if (KNOCKOUTS_TOTAL_FOR_USER == $reportId) {
@@ -563,16 +563,16 @@ if (!isset($reportId) || "" == $reportId) {
             $titleText = "Lifetime Avg KO";
             $hideColIndexes = array(0, 2, 4);
           }
-          $dialogParameters = array($titleText, 500, 400, $parentObjectId);
+          $dialogParameters = array($titleText);
         } else if (WINS_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(5, "percentage", 2));
           $hideColIndexes = array(0, 2, 5);
-          $dialogParameters = array("Lifetime Wins", 500, 400, $parentObjectId);
+          $dialogParameters = array("Lifetime Wins");
           $titleText = "Lifetime Wins";
         } else if (TOURNAMENTS_PLAYED_FOR_USER == $reportId) {
           $colFormats = array(array(1, "number", 0), array(4, "number", 0));
           $hideColIndexes = array(0, 2);
-          $dialogParameters = array("Lifetime Tourneys", 500, 400, $parentObjectId);
+          $dialogParameters = array("Lifetime Tourneys");
           $titleText = "Lifetime Tourneys";
         }
         $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
@@ -600,7 +600,12 @@ if (!isset($reportId) || "" == $reportId) {
           $rowUser[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowUser[$value[3]]);
           $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowUser[$value[3]] . "</div>\n";
           $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowUser[$rank[3]]);
-          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"javascript:inputLocal.showFullList('rank_" . $userId . "', '" . $dialogParameters[0] . "', " . $dialogParameters[1] . ", " . $dialogParameters[2] . ", '" . $dialogParameters[3] . "', " . $rowUser[$rank[3]] . ", '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "');\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
+          $output .= 
+            "<script type=\"module\">\n" .
+            "  import { inputLocal } from \"./scripts/top5.js\";\n" .
+            "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList('" . $dialogParameters[0] . "', '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "'));\n" .
+            "</script>\n";
+          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
           $output .= 
             "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
             " <form method=\"dialog\">\n" .
@@ -626,7 +631,10 @@ if (!isset($reportId) || "" == $reportId) {
         $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
         $resultList = $databaseResult->getTournamentsWonByPlayerId(params: $params, paramsNested: $paramsNested);
         if (0 < count($resultList)) {
-          $output .= "<script type=\"text/javascript\">$(document).ready(function() {\$(\"#title" . ucfirst($reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count($resultList) . " + ')');});</script>\n";
+          $output .= 
+            "<script type=\"module\">\n" .
+            "  $(document).ready(function() {\$(\"#title" . ucfirst($reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count($resultList) . " + ')');});\n" .
+            "</script>\n";
           $ctr = 0;
           foreach ($resultList as $tournament) {
             $ctr ++;
@@ -674,9 +682,12 @@ if (!isset($reportId) || "" == $reportId) {
             $tableIdSuffix = "Bullies";
             $titleText = "Bullies";
           }
-          $output .= "<div class=\"center\" id=\"showList\"><a id=\"showFullList" . $tableIdSuffix . "\" href=\"javascript:inputLocal.showFullList" . $tableIdSuffix . "('showFullList" . $tableIdSuffix . "', '" . $title . "', '" . $parentObjectId . "');\">See full list</a></div>";
-          // this div is used for modal dialog
-//           $output .= "<div id=\"dialog" . $tableIdSuffix . "\" style=\"display: none;\"></div>";
+          $output .=
+            "<script type=\"module\">\n" .
+            "  import { inputLocal } from \"./scripts/top5.js\";\n" .
+            "  document.querySelector(\"#rank_" . $tableIdSuffix . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList" . $tableIdSuffix . "());\n" .
+            "</script>\n";
+          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $tableIdSuffix . "\"><a href=\"#\" id=\"rank_" . $tableIdSuffix . "_link\">See full list</a></div>\n";
           $output .=
           "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
           " <form method=\"dialog\">\n" .
@@ -695,6 +706,8 @@ if (!isset($reportId) || "" == $reportId) {
   }
   $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_PARAM_NAME), cols: null, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: null, name: REPORT_ID_PARAM_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
   $output .= $hiddenReportId->getHtml();
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+  $output .= $hiddenMode->getHtml();
   if (!isset($parentObjectId)) {
     $output .= "</div>\n";
   }

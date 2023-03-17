@@ -237,7 +237,7 @@ class DatabaseResult extends Root {
     return $this->getData(dataName: "seasonDateCheckCount", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getSpecialType(array $params) {
-    return $this->getData(dataName: "specialTypeSelectAll", params: null, orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
+    return $this->getData(dataName: "specialTypeSelectAll", params: $params[2], orderBy: $params[0], returnQuery: $params[1], limitCount: null, rank: false);
   }
   public function getSpecialTypeById(array $params) {
     return $this->getData(dataName: "specialTypeSelectOneById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -1129,6 +1129,9 @@ class DatabaseResult extends Root {
             if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " AND place = 0";
             }
+            if (isset($params[2])) {
+              $query .= $params[2];
+            }
             if ("resultSelectPaidByTournamentId" == $dataName || "resultSelectPaidNotEnteredByTournamentId" == $dataName) {
             //if ("resultSelectPaidNotEnteredByTournamentId" == $dataName) {
               $query .= " ORDER BY " . $this->buildOrderByName(prefix: "u");
@@ -1618,6 +1621,9 @@ class DatabaseResult extends Root {
             if ("specialTypeSelectOneById" == $dataName) {
               $query .= " WHERE typeId = " . $params[0];
             }
+            if (isset($params[0]) && $params[0]) {
+              $query .= " ORDER BY typeDescription";
+            }
           break;
         case "statusSelectPaid":
           $query =
@@ -1861,7 +1867,7 @@ class DatabaseResult extends Root {
             "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, u.email, u.username, u.rejection_date AS \"Rejection Date\", CONCAT(u2.first_name, ' ', u2.last_name) AS \"Rejection Name\"" .
             "FROM poker_user u " .
             "LEFT JOIN poker_user u2 ON u.rejection_userid = u2.id " .
-            "WHERE u.approval_date IS NULL";
+            "WHERE u.approval_date IS NULL AND u.rejection_date IS NULL";
           break;
         case "waitListedPlayerByTournamentId":
           $query =
@@ -2606,7 +2612,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_structure(payoutId, place, percentage) VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
           break;
         case "tournamentInsert":
-          $query = "INSERT INTO poker_tournament(tournamentId, tournamentDesc, comment, limitTypeId, gameTypeId, chipCount, locationId, tournamentDate, startTime, endTime, buyinAmount, maxPlayers, maxRebuys, rebuyAmount, addonAmount, addonChipCount, groupId, rake, map, specialTypeId) " . "SELECT IFNULL(MAX(tournamentId), 0) + 1, " . (isset($params[0]) ? "'" . $params[0] . "'" : "null") . ", " . (isset($params[1]) == 0 ? "'" . $params[1] . "'" : "null") . ", " . $params[2] . ", " . $params[3] . ", " . $params[4] . ", " . $params[5] . ", " . (isset($params[6]) ? "'" . $params[6]->getDatabaseFormat() . "'" : "null") . ", " . (isset($params[7]) ? "'" . $params[7]->getDatabaseTimeFormat() . "'" : "null") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "null") . ", " . $params[9] . ", " . $params[10] . ", " . $params[11] . ", " . $params[12] . ", " . $params[13] . ", " . $params[14] . ", " . $params[15] . ", " . (isset($params[16]) ? $params[16] : "null") . ", " . (strlen($params[17]) > 0 ? ("'" . $params[17]) . "'" : "null") . ", " . (strlen($params[18]) > 0 ? "'" . $params[18] . "'" : "null") . " FROM poker_tournament";
+          $query = "INSERT INTO poker_tournament(tournamentId, tournamentDesc, comment, limitTypeId, gameTypeId, chipCount, locationId, tournamentDate, startTime, endTime, buyinAmount, maxPlayers, maxRebuys, rebuyAmount, addonAmount, addonChipCount, groupId, rake, map, specialTypeId) " . "SELECT IFNULL(MAX(tournamentId), 0) + 1, " . (isset($params[0]) ? "'" . $params[0] . "'" : "null") . ", " . (isset($params[1]) ? "'" . $params[1] . "'" : "null") . ", " . $params[2] . ", " . $params[3] . ", " . $params[4] . ", " . $params[5] . ", " . (isset($params[6]) ? "'" . $params[6]->getDatabaseFormat() . "'" : "null") . ", " . (isset($params[7]) ? "'" . $params[7]->getDatabaseTimeFormat() . "'" : "null") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "null") . ", " . $params[9] . ", " . $params[10] . ", " . $params[11] . ", " . $params[12] . ", " . $params[13] . ", " . $params[14] . ", " . $params[15] . ", " . (isset($params[16]) ? $params[16] : "null") . ", " . (strlen($params[17]) > 0 ? ("'" . $params[17]) . "'" : "null") . ", " . (strlen($params[18]) > 0 ? "'" . $params[18] . "'" : "null") . " FROM poker_tournament";
           break;
         case "specialTypeInsert":
           $query = "INSERT INTO poker_special_type(typeId, typeDescription) " . "SELECT IFNULL(MAX(typeId), 0) + 1, '" . $params[0] . "' FROM poker_special_type";
@@ -2615,7 +2621,7 @@ class DatabaseResult extends Root {
 //           $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires) " .
           $query = "INSERT INTO poker_user(id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, selector, token, expires) " .
           // "SELECT MAX(id) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', '" . password_hash($params[3], PASSWORD_DEFAULT) . "', '" . $params[4] . "', 0, CURRENT_TIMESTAMP, null, null, null, null, 0, null, null, null, null, null, null FROM poker_user";
-          "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . $params[6] . ", " . (isset($params[7]) ? $params[7] : "0") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "CURRENT_TIMESTAMP") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "CURRENT_TIMESTAMP") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? "'" . $params[11] . "'" : "null") . ", " . (isset($params[12]) ? $params[12] : "null") . ", " . (isset($params[13]) ? $params[13] : "0") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
+          "SELECT MAX(id) + 1, '" . $params[1] . "', '" . $params[2] . "', '" . $params[3] . "', '" . password_hash($params[4], PASSWORD_DEFAULT) . "', '" . $params[5] . "', " . $params[6] . ", " . (isset($params[7]) ? $params[7] : "0") . ", " . (isset($params[8]) ? "'" . $params[8] . "'" : "CURRENT_TIMESTAMP") . ", " . (isset($params[9]) ? "'" . $params[9] . "'" : "null") . ", " . (isset($params[10]) ? "'" . $params[10] . "'" : "null") . ", " . (isset($params[11]) ? "'" . $params[11] . "'" : "null") . ", " . (isset($params[12]) ? $params[12] : "null") . ", " . (isset($params[13]) ? $params[13] : "0") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[14]) ? $params[14] : "null") . ", " . (isset($params[15]) ? $params[15] : "null") . " FROM poker_user";
           break;
       }
       if ($this->isDebug()) {
@@ -2714,8 +2720,10 @@ class DatabaseResult extends Root {
             "statusCode = '" . $params[3] .
             "', place = " . $params[4] .
             ", knockedOutBy = " . $params[5] .
-            " WHERE tournamentId = " . $params[6] .
-            " AND playerId IN (" . $params[7] . ")";
+            " WHERE tournamentId = " . $params[6];
+            if (isset($params[7])) {
+              $query .= " AND playerId IN (" . $params[7] . ")";
+            }
           break;
         case "resultUpdateDuring":
           $query =

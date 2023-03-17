@@ -1,24 +1,26 @@
+<!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css"/ >
-<script src="scripts/jquery/jquery-3.2.1.js"></script>
-<script src="scripts/jquery/jquery.datetimepicker.full.js"></script>
-<script>
-$(document).ready(function() {
-  $('#datetimepicker').datetimepicker(
-     {allowTimes: ['14:00', '15:00', '17:30', '19:30'],
-      disabledWeekDays: [0, 1, 2, 3, 4, 5],
-      format: "m/d/Y H:i",
-      lastInit: true,
-      mask: true,
-      yearStart: "2005"}
-   );
-});
-</script>
+ <meta charset="ISO-8859-1">
+ <title>HTML5 Date Time</title>
+ <style>
+  input:invalid + span::after {
+    content: "I";
+    padding-left: 5px;
+  }
+  input:valid + span::after {
+    content: "V";
+    padding-left: 5px;
+  }
+ </style>
+ <script type="module">
+ </script>
 </head>
 <body>
-<form>
-<input id="datetimepicker" type="text">
-</form>
+ <form>
+   <label for="party">Choose a date and time:</label>
+   <input type="datetime-local" id="party" max="2023-03-31T11:45" min="2023-03-01T00:00" name="bday" required />
+   <span class="validity"></span>
+ </form>
 </body>
 </html>

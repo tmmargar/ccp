@@ -10,7 +10,7 @@ require_once "init.php";
 define("USER_ID_PARAM_NAME", "userId");
 $userId = isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME]) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid");
 $output = "";
-$output .= " <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
+$output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 try {
   $startDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
   $endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
@@ -47,7 +47,7 @@ try {
 } catch (Exception $e) {
   $output .= HtmlUtility::buildErrorMessage($e);
 }
-$output .= " <script type=\"text/javascript\">\n";
+$output .= " <script>\n";
 $output .= "  google.charts.load('current', {'packages':['gauge']});\n";
 $output .= "  google.charts.setOnLoadCallback(drawGauge);\n";
 // $output .= " var gaugeOptions = {min: 0, max: 20, yellowFrom: 5, yellowTo: 10, redFrom: 0, redTo: 5, majorTicks: [\"0\", \"5\", \"10\", \"15\", \"20\"], minorTicks: 5, greenFrom: 10, greenTo: 20};\n";

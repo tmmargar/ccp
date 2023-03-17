@@ -25,7 +25,7 @@ $aryScriptFull = explode("/", $_SERVER["SCRIPT_NAME"]);
 $scriptName = $aryScriptFull[count($aryScriptFull) - 1];
 $aryScript = explode(".", $scriptName);
 $scriptNameNoExtension = $aryScript[0];
-$smarty->assign("script", "<script src=\"scripts/" . $scriptNameNoExtension . ".js\" type=\"text/javascript\"></script>\n");
+$smarty->assign("script", "<script src=\"scripts/" . $scriptNameNoExtension . ".js\" type=\"module\"></script>\n");
 $smarty->assign("style", "");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $mode = isset($_POST[Constant::$FIELD_NAME_MODE]) ? $_POST[Constant::$FIELD_NAME_MODE] : (isset($_GET[Constant::$FIELD_NAME_MODE]) ? $_GET[Constant::$FIELD_NAME_MODE] : Constant::$MODE_VIEW);

@@ -83,7 +83,12 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
                  "  <div id=\"passwordDiv\"" . (Constant::$MODE_MODIFY == $mode ? " style=\"display: none;\"" : "") . ">" . $textBoxPassword->getHtml() . "</div>\n";
       if (Constant::$MODE_MODIFY == $mode) {
         $output .= " <div id=\"passwordLinkDiv\">";
-        $output .= "  <a href=\"javascript:input.showHideToggle(['passwordLinkDiv', 'passwordDiv'], '" . PASSWORD_FIELD_NAME . "_" . $id . "');\">Click to enter new password</a>\n";
+        $output .=
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  document.querySelector(\"#password_link\").addEventListener(\"click\", (evt) => input.showHideToggle({aryId: ['passwordLinkDiv', 'passwordDiv'], idFocus: '" . PASSWORD_FIELD_NAME . "_" . $id . "'}));\n" .
+          "</script>\n";
+        $output .= "  <a href=\"#\" id=\"password_link\">Click to enter new password</a>\n";
         $output .= " </div>\n";
       }
       $output .= " </div>\n";
@@ -91,7 +96,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME . "_" . $id, maxLength: 100, name: EMAIL_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 25, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getEmail() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxEmail->getHtml() . "</div>";
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . PHONE_FIELD_NAME . "_" . $id . "\">" . PHONE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $textBoxPhone = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: 10, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 12, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPhone()->getValue() == 0 ? "" : $resultList[$ctr]->getPhone()->getValue() : ""), wrap: null);
+      $textBoxPhone = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PHONE, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: PHONE_FIELD_NAME . "_" . $id, maxLength: null, name: PHONE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 12, suffix: null, type: FormControl::$TYPE_INPUT_TELEPHONE, value: ((count($resultList) > 0) ? $resultList[$ctr]->getPhone()->getValue() == 0 ? "" : $resultList[$ctr]->getPhone()->getValue() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxPhone->getHtml() . "</div>";
       if (SessionUtility::getValue(SessionUtility::$OBJECT_NAME_ADMINISTRATOR) == 1) {
         $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . ADMINISTRATOR_FIELD_NAME . "_" . $id . "\">" . ADMINISTRATOR_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";

@@ -1,70 +1,72 @@
 "use strict";
-$(document).ready(function() {
+import { dataTable, display, input } from "./import.js";
+window.addEventListener('DOMContentLoaded', (event) => {
   reportsInputLocal.initializeDataTable();
 });
-$(document).on("change", "#season", function(event) {
+document.querySelector("#season")?.addEventListener("change", function(event) {
   const queryString = new URLSearchParams(window.location.search);
   let action = [];
   let found = false;
   for (let qs of queryString) {
     if ("season" == qs[0]) {
-      qs[1] = $(this).val();
+      qs[1] = this.value;
       found = true;
     }
     action.push(qs.join("="));
   }
   if (!found) {
-    action[action.length] = "season=" + $(this).val();
+    action[action.length] = "season=" + this.value;
   }
-  $("#frmReports").attr("action", document.URL.split('?')[0] + "?" + action.join("&"));
-  $("#frmReports").submit();
+  document.querySelector("#frmReports").setAttribute("action", document.URL.split('?')[0] + "?" + action.join("&"));
+  document.querySelector("#frmReports").submit();
 });
-const reportsInputLocal = {
+export const reportsInputLocal = {
   initializeDataTable : function() {
     let dataTableId = null;
-    $(".reportId2").each(function(index) {
-      const reportId = $(this).val();
+    document.querySelectorAll(".reportId2").forEach(obj => {
+      const reportId = obj.value;
       if (reportId == "results") {
         dataTableId = "dataTblTournamentResults";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ] }, { "type" : "name" }, { "searchable": false, "visible": false }], [[0, "asc" ]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "type" : "name" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "pointsTotal") {
         dataTableId = "dataTblTotalPoints";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "earnings") {
         dataTableId = "dataTblEarnings";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "earningsChampionship") {
         dataTableId = "dataTblEarnings\\(Championship\\)";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "currency" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "knockouts") {
         dataTableId = "dataTblKnockouts";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc" ]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "summary") {
         dataTableId = "dataTblSummary";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], [[ 12, "desc"], [0, "asc"]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[12, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "winners") {
         dataTableId = "dataTblWinners";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }, { "orderSequence": [ "desc", "asc" ], "type" : "number" }], [[ 1,'desc'], [0, "asc"]], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "finishes") {
         dataTableId = "dataTblFinishes";
-        if ($("#" + dataTableId).length > 0) {
-          dataTable.initialize(dataTableId, [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ], "type" : "percentage" }], [], false, false, "600px", true);
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "championship") {
+        dataTableId = "dataTblChampionship";
         const params = new URLSearchParams(window.location.search);
         // website blocking desc in parameter so passing up and down and replacing here
         const paramsSort = params.get("sort").replace("up", "asc").replace("down", "desc");
@@ -89,11 +91,28 @@ const reportsInputLocal = {
 	          const nf = new Intl.NumberFormat();
 	          const earningsSum = rows.data().pluck(2).reduce( function (a, b) { return parseInt(a.toString().replace(/[$,]/g, '')) + parseInt(b.toString().replace(/[$,]/g, '')); }, 0);
 	          const earningsSumFormatted = rows.data().pluck(2).reduce( function (a, b) { return "$" + nf.format(parseInt(a.toString().replace(/[$,]/g, '')) + parseInt(b.toString().replace(/[$,]/g, ''))); }, 0);
-	          return $('<tr/>').append('<td colspan="2">Earnings for ' + group + '</td>\n').append('<td class="number positive">' + earningsSumFormatted + '</td>\n<td class="rowGroupSum" style="display:none;">' + earningsSum + '</td>\n');
+	          const objRow = document.createElement("tr");
+	          const objColumn = document.createElement("td");
+	          objColumn.classList.add("bold");
+	          objColumn.colSpan = 2;
+	          objColumn.innerHTML = "Earnings for " + group;
+	          objRow.appendChild(objColumn);
+	          const objColumn2 = document.createElement("td");
+	          objColumn2.classList.add("number");
+	          objColumn2.classList.add("positive");
+	          objColumn2.innerHTML = earningsSumFormatted;
+	          objColumn2.style.fontWeight = "900";
+	          objRow.appendChild(objColumn2);
+	          const objColumn3 = document.createElement("td");
+	          objColumn3.classList.add("rowGroupSum");
+	          objColumn3.style.display = "none";
+	          objColumn3.innerHTML = earningsSum;
+	          objRow.appendChild(objColumn3);
+	          return objRow;
 	        },
 	        dataSrc: aryNew[0][0]
 	      };
-	      dataTable.initialize("dataTblChampionship", aryCols, aryNew, false, aryRowGroup, "600px", false, false, true, false);
+	      dataTable.initialize({tableId: dataTableId, aryColumns: aryCols, aryOrder: aryNew, aryRowGroup: aryRowGroup, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
       }
     });
     return dataTableId;

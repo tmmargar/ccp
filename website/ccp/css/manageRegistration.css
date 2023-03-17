@@ -1,8 +1,8 @@
 body {
-  max-width: 900px;
+  max-width: 600px;
 }
 #tournamentId {
-  width: 700px;
+  width: 450px;
 }
 .responsive--2cols > .responsive-cell-label {
   width: 50%;
@@ -11,11 +11,11 @@ body {
   width: 50%;
 }
 .responsive--3cols > .responsive-cell-label {
-  width: 10%;
+  width: 15%;
 }
 .responsive--3cols > .responsive-cell-value {
-  width: 80%;
+  width: 78%;
 }
 .responsive--3cols > .responsive-cell-button {
-  width: 10%;
+  width: 7%;
 }
