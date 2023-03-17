@@ -25,7 +25,11 @@ $emailAddress = isset($_POST[EMAIL_FIELD_NAME]) ? $_POST[EMAIL_FIELD_NAME] : (is
 $username = isset($_POST[USERNAME_FIELD_NAME]) ? $_POST[USERNAME_FIELD_NAME] : (isset($_GET[USERNAME_FIELD_NAME]) ? $_GET[USERNAME_FIELD_NAME] : DEFAULT_VALUE_BLANK);
 $password = isset($_POST[PASSWORD_FIELD_NAME]) ? $_POST[PASSWORD_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
-  $output .= "<script type=\"text/javascript\"> aryMessages = []; aryErrors = [];";
+  $output .= 
+    "<script type=\"module\">\n" .
+    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+    "  let aryMessages = [];\n" .
+    "  let aryErrors = [];\n";
   $params = array($username, $emailAddress, time());
   $resultList = $databaseResult->updateUserReset(params: $params);
   if (!is_array($resultList)) {
@@ -36,8 +40,8 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
     $output .= "  aryMessages.push(\"" . $email->sendPasswordResetRequestEmail(info: $params, selectorAndToken: $resultList) . "<br>You will be redirected to the login page in 5 seconds\");";
     header("refresh:5;url=login.php");
   }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}";
-  $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}</script>";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}";
+  $output .= "  if (aryErrors.length > 0) {display.showErrors({errors: aryErrors});}</script>";
 } else if (Constant::$MODE_RESET_PASSWORD == $mode) {
   $selector = filter_input(INPUT_GET, "selector");
   $validator = filter_input(INPUT_GET, "validator");
@@ -62,7 +66,11 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
     }
   }
 } else if (Constant::$MODE_RESET_PASSWORD_CONFIRM == $mode) {
-  $output .= "<script type=\"text/javascript\"> aryMessages = []; aryErrors = [];";
+  $output .= 
+    "<script type=\"module\">\n" .
+    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+    "  let aryMessages = [];\n" .
+    "  let aryErrors = [];\n";
   $params = array($username, $emailAddress, $password);
   $resultList = $databaseResult->updateUserChangePassword(params: $params);
   if (0 == $resultList) {
@@ -74,15 +82,15 @@ if (Constant::$MODE_RESET_PASSWORD_REQUEST == $mode) {
     session_destroy();
     header("refresh:5;url=login.php");
   }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}";
-  $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}</script>";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}";
+  $output .= "  if (aryErrors.length > 0) {display.showErrors({errors: aryErrors});}</script>";
 }
 if (Constant::$MODE_VIEW == $mode) {
   $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
-  $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 15, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $username, wrap: null);
+  $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "off", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $username, wrap: null);
   $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
   $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxUsername->getHtml() . "</div>";
-  $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 15, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: null);
+  $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: null);
   $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxEmail->getId() . "\">Email:</label></div>";
   $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxEmail->getHtml() . "</div>";
   $output .= " <div class=\"responsive-cell\">\n";

@@ -1,50 +1,65 @@
 "use strict";
-$(document).ready(function() {
-  input.initialize();
-});
-$(document).on("click", "#dataTbl tr", function(event) {
-  $("#register").prop("disabled", dataTable.getSelectedRows($("#dataTbl").dataTable()).length == 0);
-});
-$(document).on("click", "#register", function(event) {
-  const selectedRows = dataTable.getSelectedRows($("#dataTbl").dataTable());
-  if (selectedRows.length == 0) {
-    display.showErrors([ "You must select a row to modify" ]);
-    event.preventDefault();
-    event.stopPropagation();
-  } else {
-    inputLocal.setPlayerIds();
-    $("#mode").val("modify");
-  }
-});
-const inputLocal = {
-  enableRegister : function(id) {
-    return $(".selected").count() == 0;
+import { dataTable, display, input } from "./import.js";
+export const inputLocal = {
+  enableRegister : function() {
+    return document.querySelectorAll(".selected").length == 0;
   },
   initializeDataTable : function() {
-    dataTable.initialize("dataTbl", [{ "type" : "name" }, null, { "type" : "registerOrder" }, {"searchable": false, "visible": false } ], [ [ 1, "desc" ], [ 2, "asc" ], [ 0, "asc" ] ]);
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name" }, null, { "type" : "register" }, {"searchable": false, "visible": false }], aryOrder: [[1, "desc"], [2, "asc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
   postProcessing : function() {
     input.enableView();
   },
   setDefaults : function() {
-    input.insertSelectedBefore("Tournament", "tournamentId", "mode");
+    input.insertSelectedBefore({objIdSelected: "tournamentId", objIdAfter: "mode", width: "85%"});
   },
   setPlayerIds : function() {
     let playerIds = "";
     let statuses = "";
-    const selectedRows = dataTable.getSelectedRowsData($("#dataTbl").DataTable());
+    const selectedRows = dataTable.getSelectedRowsData({jQueryTableApi: $("#dataTbl").DataTable()});
     for (let idx = 0; idx < selectedRows.length; idx++) {
       const selectedRow = selectedRows[idx];
-      playerIds += $(selectedRow[3]).val() + ", ";
+      const inp = document.createElement("div");
+      inp.innerHTML = selectedRow[3];
+      playerIds += inp.children[0].value + ", ";
+      inp.remove();
       statuses += selectedRow[1] + ", ";
     }
-    $("#ids").val(playerIds.substring(0, playerIds.length - 2));
-    $("#tournamentPlayerStatus").val(statuses.substring(0, statuses.length - 2));
+    document.querySelector("#ids").value = playerIds.substring(0, playerIds.length - 2);
+    document.querySelector("#tournamentPlayerStatus").value = statuses.substring(0, statuses.length - 2);
   },
   tableRowClick : function(row, selected) {
-    if (!selected) {
-      $(row).addClass("selected");
+    if (selected) {
+      row.classList.remove("selected");
+    } else {
+      row.classList.add("selected");
     }
-    input.enable("register", inputLocal.enableRegister);
+    input.enable({objId: "register", functionName: inputLocal.enableRegister});
   }
 };
+let documentReadyCallback = () => {
+  inputLocal.initializeDataTable();
+  inputLocal.setDefaults();
+  inputLocal.postProcessing();
+};
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  documentReadyCallback();
+} else {
+  document.addEventListener("DOMContentLoaded", documentReadyCallback);
+}
+document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListener("click", (event) => {
+  inputLocal.tableRowClick(row, row.classList.contains("selected"));
+}));
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id.includes("register")) {
+    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    if (selectedRows.length == 0) {
+      display.showErrors({errors: [ "You must select a row to register / un-register" ]});
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      inputLocal.setPlayerIds();
+      document.querySelector("#mode").value = "modify";
+    }
+  }
+});

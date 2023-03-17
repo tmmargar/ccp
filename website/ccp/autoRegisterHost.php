@@ -9,7 +9,10 @@ use ccp\classes\model\Email;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
-$output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+$output .=
+  "<script type=\"module\">\n" .
+  "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+  "  let aryMessages = [];\n";
 $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->getDisplayLongTimeFormat() . "###\");\n" : "\r";
 $dateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
 $params = array($dateTime->getDatabaseFormat(), $dateTime->getDatabaseFormat());
@@ -33,7 +36,7 @@ if (count($resultList) == 0) {
     $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $tournament, 0, $user->getName()) . "\");\n" : "\r";
   }
 }
-$output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+$output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
 if (isset($_GET[Constant::$FIELD_NAME_MODE])) {
   $smarty->assign("title", "Chip Chair and a Prayer Auto Register Host");
   $smarty->assign("heading", "Auto Register Host");

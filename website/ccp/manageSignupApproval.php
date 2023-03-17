@@ -31,7 +31,10 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
       $rejection[$userId] = $user[$userId];
     }
   }
-  $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n";
+  $output .= 
+    "<script type=\"module\">\n" .
+    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+    "  aryMessages = [];\n";
   // update approval date or rejection date and set active flag
   $params = array();
   // id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires
@@ -54,7 +57,7 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
     $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($value), toEmail: array($emailAddress[$key]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
     $output .= "  aryMessages.push(\"" . $email->sendRejectedEmail() . "\");\n";
   }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+  $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
 }
 $query = $databaseResult->getUsersForApproval();
 $result = $databaseResult->getConnection()->query($query);

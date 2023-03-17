@@ -18,7 +18,7 @@ define("USER_ID_PARAMETER_NAME", "userId");
 define("FOOD_FIELD_NAME", "food");
 define("REGISTERED_FIELD_NAME", "registered");
 define("REGISTERED_LABEL", "Registered");
-define("UPDATE_REGISTER_TEXT", "Update registration");
+define("UPDATE_REGISTER_TEXT", "Update");
 define("WAIT_LIST_COUNT_FIELD_NAME", "waitListCount");
 $smarty->assign("title", "Chip Chair and a Prayer Registration");
 $output = "";
@@ -27,7 +27,11 @@ $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAMETER_NAME]) ? $_POST[TOURNAMENT
 $urlAction = $_SERVER["SCRIPT_NAME"] . "?tournamentId=" . $tournamentId;
 $smarty->assign("action", $urlAction);
 $smarty->assign("heading", "Registration");
-$output .= "<script type=\"text/javascript\">\n aryMessages = [];\n aryErrors = [];\n";
+$output .= 
+  "<script type=\"module\">\n" .
+  "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+  "  let aryMessages = [];\n" .
+  "  let aryErrors = [];\n";
 if (!isset($tournamentId) || "" == $tournamentId) {
   $output .= " aryErrors.push(\"Unable to identify tournament to register for.\");\n";
 } else {
@@ -113,11 +117,11 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             }
           }
         }
-        $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n";
-        $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+        $output .= "  if (aryErrors.length > 0) {display.showErrors({errors: aryErrors});}\n";
+        $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
       } else {
-        $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n";
-        $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+        $output .= "  if (aryErrors.length > 0) {display.showErrors({errors: aryErrors});}\n";
+        $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
         $output .= "  <div class=\"column2\">" . $tournament->getDescription() . "</div>\n";
         $output .= "  <div class=\"clear\"></div>\n";
         $output .= "  <div class=\"column2\">" . $tournament->getComment() . "</div>\n";
@@ -234,15 +238,21 @@ if (!isset($tournamentId) || "" == $tournamentId) {
         // check in registration range and not full
         if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
           if ($tournament->getDescription() == "Championship" && SessionUtility::getValue(SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) > $numPlayed) {
-            $output .= "<script type=\"text/javascript\">\n aryMessages = [];\n aryErrors = [];\n";
-            $output .= "aryErrors.push(\"You are not allowed to register for the Championship because you only played " . $numPlayed . " tournaments and did not meet the " . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournament minimum to qualify.\");\n";
-            $output .= "  if (aryErrors.length > 0) {display.showErrors(aryErrors);}\n";
-            $output .= "  if (aryMessages.length > 0) {display.showMessages(aryMessages);}\n</script>\n";
+            $output .= 
+              "<script type=\"module\">\n" .
+              "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+              "  aryMessages = [];\n" .
+              "  aryErrors = [];\n";
+            $output .= "  aryErrors.push(\"You are not allowed to register for the Championship because you only played " . $numPlayed . " tournaments and did not meet the " . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournament minimum to qualify.\");\n";
+            $output .= "  if (aryErrors.length > 0) {display.showErrors({errors: aryErrors});}\n";
+            $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
           } else {
+            $output .= " <div class=\"center\">\n";
             $buttonRegister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (isset($food) ? false : true), id: Constant::$TEXT_REGISTER, maxLength: null, name: Constant::$TEXT_REGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: $registerText, wrap: null);
             $output .= $buttonRegister->getHtml();
             $buttonUnregister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_UNREGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (!$registered ? true : false), id: Constant::$TEXT_UNREGISTER, maxLength: null, name: Constant::$TEXT_UNREGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_UNREGISTER, wrap: null);
             $output .= $buttonUnregister->getHtml();
+            $output .= " </div>\n";
           }
         }
         $output .= $output2;

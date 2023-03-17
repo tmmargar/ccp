@@ -1,11 +1,17 @@
+body {
+  max-width: 830px;
+}
+#tournamentId {
+  width: 480px;
+}
 .responsive--3cols > .responsive-cell-label {
-  width: 9%;
+  width: 12%;
 }
 .responsive--3cols > .responsive-cell-value {
-  width: 72%;
+  width: 62%;
 }
 .responsive--3cols > .responsive-cell-button {
-  width: 19%;
+  width: 26%;
 }
 .responsive--3cols > .responsive-cell-label-footer {
   width: 15%;
@@ -15,7 +21,4 @@
 }
 .responsive--3cols > .responsive-cell-value-after-footer {
   width: 78%;
-}
-body {
-  max-width: 1120px;
 }

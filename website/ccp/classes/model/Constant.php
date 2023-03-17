@@ -62,6 +62,7 @@ class Constant {
   public static string $ACCESSKEY_TOURNAMENT_DATE             = "t";
   public static string $ACCESSKEY_TOURNAMENT_ID               = "t";
   public static string $ACCESSKEY_UNREGISTER                  = "u";
+  public static string $ACCESSKEY_UPDATE                      = "u";
   public static string $ACCESSKEY_USERNAME                    = "u";
   public static string $ACCESSKEY_VIEW                        = "v";
   public static string $ACCESSKEY_ZIP                         = "z";
@@ -131,6 +132,7 @@ class Constant {
   public static string $TEXT_SAVE                             = "Save";
   public static string $TEXT_TRUE                             = "true";
   public static string $TEXT_UNREGISTER                       = "Unregister";
+  public static string $TEXT_UPDATE                           = "Update";
   public static string $TEXT_VIEW                             = "View";
   public static string $TEXT_YES                              = "Yes";
   public static string $TYPE_INPUT_BUTTON                     = "button";

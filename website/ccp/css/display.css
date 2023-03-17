@@ -151,7 +151,7 @@ a:focus {
   /*margin: 100px;
   width: 500px;*/
   overflow: hidden;
-  width: 20vw;
+  width: 23vw;
 }
 .dialog::backdrop {
   background-color: #5e68df;
@@ -184,9 +184,13 @@ a:focus {
   height: fit-content;
   outline: 0;
 }
-.errors {
+.errors, .timePicker:invalid {
   border: 1px solid red !important;
   color: red;
+}
+.timePicker:valid {
+  border: 1px solid black !important;
+  color: unset;
 }
 .fa-caret-left, .fa-caret-right {
   padding-left: 2px;
@@ -216,6 +220,9 @@ a:focus {
 }
 .icon-border-caret-right:before {
   content: "\f152";
+}
+.inactive {
+  background-color: #FFB8B8 !important;
 }
 .link {
   text-decoration: none;

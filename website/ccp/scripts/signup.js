@@ -1,47 +1,58 @@
 "use script";
-$(document).on("keyup paste", "#name, #username, #email, #password, #confirmPassword", function(event) {
-  inputLocal.validate();
-});
-$(document).on("click", "#signUp", function(event) {
-  $("#mode").val(this.value.toLowerCase().replace(" ", ""));
-});
-const inputLocal = {
+import { dataTable, display, input } from "./import.js";
+export const inputLocal = {
   enableSignUp : function() {
-    if (($("#name").val().length == 0)) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#name"));
-      display.showErrors(["Name is blank"]);
-    } else if (!(/.+\s.+$/.test($("#name").val()))) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#name"));
-      display.showErrors(["Your name is not a valid format (must include first and last separate by space)"]);
-    } else if (($("#email").val().length == 0)) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#email"));
-      display.showErrors(["Email is blank"]);
-  } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email").val()))) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#email"));
-      display.showErrors(["Your email is not a valid format (a@b.cd)"]);
-    } else if (($("#username").val().length == 0)) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#username"));
-      display.showErrors(["Username is blank"]);
-    } else if (($("#password").val().length == 0) || ($("#confirmPassword").val().length == 0) || $("#password").val() != $("#confirmPassword").val()) {
-      $("#signUp").prop("disabled", true);
-      input.invalid($("#password"));
-      input.invalid($("#confirmPassword"));
-      display.showErrors(["Your passwords are blank or do not match"]);
+    if ((document.querySelector("#name").value.length == 0)) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#name"});
+      display.showErrors({errors: ["Name is blank"]});
+    } else if (!(/.+\s.+$/.test(document.querySelector("#name").value))) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#name"});
+      display.showErrors({errors: ["Your name is not a valid format (must include first and last separate by space)"]});
+    } else if ((document.querySelector("#email").value.length == 0)) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#email"});
+      display.showErrors({errors: ["Email is blank"]});
+  } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.querySelector("#email").value))) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#email"});
+      display.showErrors({errors: ["Your email is not a valid format (a@b.cd)"]});
+    } else if ((document.querySelector("#username").value.length == 0)) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#username"});
+      display.showErrors({errors: ["Username is blank"]});
+    } else if ((document.querySelector("#password").value.length == 0) || (document.querySelector("#confirmPassword").value.length == 0) || document.querySelector("#password").value != document.querySelector("#confirmPassword").value) {
+      document.querySelector("#signUp").disabled = true;
+      input.invalid({selector: "#password"});
+      input.invalid({selector: "#confirmPassword"});
+      display.showErrors({errors: ["Your passwords are blank or do not match"]});
     } else {
-      $("#signUp").prop("disabled", false);
+      display.clearErrorsAndMessages();
+      document.querySelector("#signUp").disabled = false;
     }
   },
   validate : function() {
-    input.validateLength($("#name"), 1, false);
-    input.validateLength($("#username"), 1, false);
-    input.validateLength($("#email"), 1, false);
-    input.validateLength($("#password"), 1, false);
-    input.validateLength($("#confirmPassword"), 1, false);
+    input.validateLength({obj: document.querySelector("#name"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#username"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#email"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#password"), length: 1, focus: false});
+    input.validateLength({obj: document.querySelector("#confirmPassword"), length: 1, focus: false});
     inputLocal.enableSignUp();
   }
 };
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id.includes("signUp")) {
+    document.querySelector("#mode").value = event.target.value.toLowerCase().replace(" ", "");
+  }
+});
+document.addEventListener("keyup", (event) => {
+  if (event.target && (event.target.id.includes("name") || event.target.id.includes("username") || event.target.id.includes("email") || event.target.id.includes("password") || event.target.id.includes("confirmPassword"))) {
+    inputLocal.validate();
+  }
+});
+document.addEventListener("paste", (event) => {
+  if (event.target && (event.target.id.includes("name") || event.target.id.includes("username") || event.target.id.includes("email") || event.target.id.includes("password") || event.target.id.includes("confirmPassword"))) {
+    inputLocal.validate();
+  }
+});

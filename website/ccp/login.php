@@ -32,8 +32,9 @@ if (Constant::$MODE_LOGIN == $mode) {
     exit();
   } else {
     $output .=
-      "<script type=\"text/javascript\">" .
-      "  display.showErrors([ \"Login failed. Please try again\" ]);" .
+      "<script type=\"module\">" .
+      "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+      "  display.showErrors({errors: [\"Login failed. Please try again\"]});" .
     "</script>";
   }
 }

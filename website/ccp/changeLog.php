@@ -7,8 +7,8 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
-  "<section class=\"version\" id=\"1.2.0\">" .
-  " <h3>Version 1.2.0</h3>\n" .
+  "<section class=\"version\" id=\"1.2.1\">" .
+  " <h3>Version 1.2.1</h3>\n" .
   " <b><time datetime=\"TBD\">TBD</time></b>\n" .
   " <ul>\n" .
   "  <li>Future changes" .
@@ -21,6 +21,18 @@ $outputChange =
   "    <li>Add remember me</li>\n" .
   "   </ul>\n" .
   "  </li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
+  "<section class=\"version\" id=\"1.2.0\">" .
+  " <h3>Version 1.2.0</h3>\n" .
+  " <b><time datetime=\"2023-03-01\">Mar 1, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Change javascript to ES modules</li>\n" .
+  "  <li>Change selectize to tom select for email\n" .
+  "  <li>Change mask to non jquery version\n" .
+  "  <li>Change datetimepicker to HTML5\n" .
+  "  <li>Remove jquery ui\n" .
+  "  <li>Change jquery and datatables to use CDN</li>\n" .
   " </ul>\n" .
   "</section>\n" .
   "<section class=\"version\" id=\"1.1.2\">" .

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="ISO-8859-1">
+ <title>Tom Select Test</title>
+ <style>
+ .ts-wrapper.multi .ts-control > div.item {
+  background-color: #1b9dec;
+  background-image: linear-gradient(to bottom,#1da7ee,#178ee9);
+  background-repeat: repeat-x;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2),inset 0 1px rgba(255,255,255,0.03);
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0,51,83,0.3);
+ }
+ </style>
+ <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+ <script type="module">
+  document.querySelectorAll(".tom-select").forEach((el) => {
+   let settings = {
+   // max items required so isFull() works
+    maxItems: el.options.length,
+    plugins: {
+     'clear_button':{ 'title':'Remove all selected options' },
+     'remove_button':{ title:'Remove this item' }
+    },
+    render: {
+     item: function(data, escape) {
+      return "<div title=\"" + escape(data.value) + "\">" + escape(data.text) + "</div>";
+     }
+    },
+    onItemAdd:function() {
+     document.querySelector("#deselectAll").href = "#";
+     if (document.querySelector("#select-user").tomselect.isFull()) { document.querySelector("#selectAll").removeAttribute("href"); }
+    },
+    onItemRemove:function() {
+     document.querySelector("#selectAll").href = "#";
+     if (document.querySelector("#select-user").tomselect.getValue() == "") { document.querySelector("#deselectAll").removeAttribute("href"); }
+    }
+   };
+   const tomSelect = new TomSelect(el, settings);
+  });
+  document.addEventListener("click", (event) => {
+   if (event.target && event.target.id == "selectAll") {
+    const selectUser = document.querySelector("#select-user");
+    const tomSelect = selectUser.tomselect;
+    selectUser.querySelectorAll("option").forEach((opt) => {
+     tomSelect.addItem(opt.value);
+    });
+    tomSelect.settings.placeholder = "";
+    tomSelect.inputState();
+    //event.target.disabled = true;
+    //document.querySelector("#deselectAll").disabled = false;
+    event.target.removeAttribute("href");
+    document.querySelector("#deselectAll").href = "#";
+    event.preventDefault();
+    return false;
+   } else if (event.target && event.target.id.includes("deselectAll")) {
+    const selectUser = document.querySelector("#select-user");
+    const tomSelect = selectUser.tomselect;
+    tomSelect.clear();
+    tomSelect.settings.placeholder = "Select a user...";
+    tomSelect.inputState();
+    //event.target.disabled = true;
+    //document.querySelector("#selectAll").disabled = false;
+    event.target.removeAttribute("href");
+    document.querySelector("#selectAll").href = "#";
+    event.preventDefault();
+    return false;
+   }
+  });
+ </script>
+</head>
+<body>
+ <select autocomplete="off" class="tom-select" id="select-state" name="state[]" multiple placeholder="Select a state..." style="width: 300px;">
+  <option value="">Select a state...</option>
+  <option value="AL">Alabama</option>
+  <option value="AK">Alaska</option>
+  <option value="AZ">Arizona</option>
+  <option value="AR">Arkansas</option>
+  <option value="CA" selected>California</option>
+  <option value="CO">Colorado</option>
+  <option value="CT">Connecticut</option>
+  <option value="DE">Delaware</option>
+  <option value="DC">District of Columbia</option>
+  <option value="FL">Florida</option>
+  <option value="GA">Georgia</option>
+  <option value="HI">Hawaii</option>
+  <option value="ID">Idaho</option>
+  <option value="IL">Illinois</option>
+  <option value="IN">Indiana</option>
+  <option value="IA">Iowa</option>
+  <option value="KS">Kansas</option>
+  <option value="KY">Kentucky</option>
+  <option value="LA">Louisiana</option>
+  <option value="ME">Maine</option>
+  <option value="MD">Maryland</option>
+  <option value="MA">Massachusetts</option>
+  <option value="MI">Michigan</option>
+  <option value="MN">Minnesota</option>
+  <option value="MS">Mississippi</option>
+  <option value="MO">Missouri</option>
+  <option value="MT">Montana</option>
+  <option value="NE">Nebraska</option>
+  <option value="NV">Nevada</option>
+  <option value="NH">New Hampshire</option>
+  <option value="NJ">New Jersey</option>
+  <option value="NM">New Mexico</option>
+  <option value="NY">New York</option>
+  <option value="NC">North Carolina</option>
+  <option value="ND">North Dakota</option>
+  <option value="OH">Ohio</option>
+  <option value="OK">Oklahoma</option>
+  <option value="OR">Oregon</option>
+  <option value="PA">Pennsylvania</option>
+  <option value="RI">Rhode Island</option>
+  <option value="SC">South Carolina</option>
+  <option value="SD">South Dakota</option>
+  <option value="TN">Tennessee</option>
+  <option value="TX">Texas</option>
+  <option value="UT">Utah</option>
+  <option value="VT">Vermont</option>
+  <option value="VA">Virginia</option>
+  <option value="WA">Washington</option>
+  <option value="WV">West Virginia</option>
+  <option value="WI">Wisconsin</option>
+  <option value="WY" selected>Wyoming</option>
+ </select>
+ <select autocomplete="off" class="tom-select" id="select-user" name="user[]" multiple placeholder="Select users..." style="width: 300px;">
+  <option value= "tony.abuamsha@gmail.com">Tony Abuamsha</option>
+  <option value= "mahern5976@yahoo.com">Mark Ahern</option>
+  <option value= "Rich8848@gmail.com">Rich Austreng</option>
+  <option value= "bashijustin@gmail.com">Justin Bashi</option>
+  <option value= "gregory.bennett@kofc.org">Gary Bennett</option>
+  <option value= "nyal68@icloud.com">Nyal Bischoff</option>
+  <option value= "Davespokerroom@yahoo.com">David Brock</option>
+  <option value= "scottlifecoach24@gmail.com">Scott Buryta</option>
+  <option value= "jbush5@att.net">Joe Bush</option>
+  <option value= "stevec@dataknow.com">Steve Cummings</option>
+  <option value= "timxjc@gmail.com">Timothy Cummings</option>
+  <option value= "bdahl718@gmail.com">Brandy Dahl</option>
+  <option value= "randydtg1@aol.com">Randy Dawley</option>
+  <option value= "fredeppe@gmail.com">Fred Eppensteiner</option>
+  <option value= "avflip@comcast.net">Allen Filipski</option>
+  <option value= "bflogaus@avfuel.com">Brian Flogaus</option>
+  <option value= "mcforster@comcast.net">Mark Forster</option>
+  <option value= "fgottler@lifesecureltc.com">Francine Gottler</option>
+  <option value= "dhatch7048185@yahoo.com">David Hatch</option>
+  <option value= "hrecznyj@yahoo.com">Mike Hrecznyj</option>
+  <option value= "akh4@wowway.com">Kent Hurlburt</option>
+  <option value= "johnson.keven@gmail.com">Keven Johnson</option>
+  <option value= "bjohnst_1@yahoo.com">Brent Johnston</option>
+  <option value= "mkirby@ltcr.com">Mark Kirby</option>
+  <option value= "kline_adam@att.net">Adam Kline</option>
+  <option value= "jkline0525@hotmail.com">Jason Kline</option>
+  <option value= "kuchips@gmail.com">Sanjay Kuchipudi</option>
+  <option value= "paul.kula@sbcglobal.net">Paul Kula</option>
+  <option value= "jameskupras@gmail.com">James Kupras</option>
+  <option value= "Glang23@gmail.com">George Lang</option>
+  <option value= "jimlee@comcast.net">Jim Lee</option>
+  <option value= "loopsteve@yahoo.com">Steve Loop</option>
+  <option value= "todd@toddandpatti.com">Todd Margarita</option>
+  <option value= "tmmargar@gmail.com">Todd Margarita (Test)</option>
+  <option value= "mcclungq@yahoo.com">Dan McClung</option>
+  <option value= "dougjmcclure14@gmail.com">Doug McClure</option>
+  <option value= "dmickd421@gmail.com">Dan_J McDermott</option>
+  <option value= "dan.mcdermott@live.com">Dan_T McDermott</option>
+  <option value= "irish44chip@yahoo.com">Andy McEvoy</option>
+  <option value= "jntrout@yahoo.com">Jennifer McEvoy</option>
+  <option value= "gamckay@hotmail.com">Gregory McKay</option>
+  <option value= "jeff.merritt@comcast.net">Jeffrey Merritt</option>
+  <option value= "brent2543@gmail.com">Brent Micallef</option>
+  <option value= "mjmodrzejewski@yahoo.com">Matthew Modrzejewski</option>
+  <option value= "lisamoore357@gmail.com">Lisa Moore</option>
+  <option value= "tjmurray64@gmail.com">Tom Murray</option>
+  <option value= "lostoutfit@mi.rr.com">Steve Myers</option>
+  <option value= "JASON.NANTAIS@ATT.NET">Jason Nantais</option>
+  <option value= "ran.nelson@gmail.com">Randy Nelson</option>
+  <option value= "ohpbuck@yahoo.com">Eric Nemeth</option>
+  <option value= "clperrone@gmail.com">Chuck Perrone</option>
+  <option value= "aquigley1777@gmail.com">Anthony Quigley</option>
+  <option value= "quigleygabe19@gmail.com">Gabe Quigley</option>
+  <option value= "jonquigleyhome@gmail.com">Jon Quigley</option>
+  <option value= "robertquigley21@gmail.com">Robert Quigley</option>
+  <option value= "johns50718@aol.com">John Safranski</option>
+  <option value= "lamisamona@gmail.com">Lami Samona</option>
+  <option value= "paul_bills2pay@yahoo.com">Paul Sandhu</option>
+  <option value= "mschmidt71@aol.com">Mike Schmidt</option>
+  <option value= "dwsinger@ameritech.net">Dean Singer</option>
+  <option value= "patrick1541@att.net">Pat Stankus</option>
+  <option value= "David.Starzacher@jci.com">David Starzacher</option>
+  <option value= "tstock500@aol.com">Tom Stocker</option>
+  <option value= "gregstucki@yahoo.com">Greg Stucki</option>
+  <option value= "dansultana@gmail.com">Dan Sultana</option>
+  <option value= "mccs9890@yahoo.com">Martha Sultana</option>
+  <option value= "matt.towers@sbcglobal.net">Matt Towers</option>
+  <option value= "RayKnight7@gmail.com">Raymond Turnbull</option>
+  <option value= "vande648@msu.edu">Nathan Vanderschaaf</option>
+  <option value= "joe@joeattorney.com">Joe Villarosa</option>
+  <option value= "joeyvilla100@gmail.com">Joey Villarosa</option>
+  <option value= "Dpweishaar@gmail.com">David Weishaar</option>
+  <option value= "billwertz@sbcglobal.net">Bill Wertz</option>
+  <option value= "gwiland@gmail.com">Greg Wiland</option>
+  <option value= "snickies72@yahoo.com">Roger Wilhelmi</option>
+  <option value= "timwilsoncpa@hotmail.com">Tim Wilson</option>
+  <option value= "dwojtanowski@mi.rr.com">David Wojtanowski</option>
+  <option value= "chazzz@wowway.com">Chazz Worlow</option>
+ </select>
+ <a href="#" id="selectAll">Select all</a>&nbsp;<a id="deselectAll">De-select all</a>
+</body>
+</html>

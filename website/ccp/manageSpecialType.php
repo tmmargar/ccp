@@ -57,14 +57,18 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $specialTypeId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SPECIAL_TYPE_ID;
     $specialTypeDescription = (isset($_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     if (Constant::$MODE_SAVE_CREATE == $mode) {
-      $params = array($specialTypeDescription);
+      $params = array(addslashes($specialTypeDescription));
       $rowCount = $databaseResult->insertSpecialType(params: $params);
     } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
       $params = array($specialTypeId, $specialTypeDescription);
       $rowCount = $databaseResult->updateSpecialType(params: $params);
     }
     if (!is_numeric($rowCount)) {
-      $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+      $output .= 
+        "<script type=\"module\">\n" .
+        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+        "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
+        "</script>\n";
     }
     $ids = DEFAULT_VALUE_BLANK;
   }
@@ -76,7 +80,11 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
       $params = array($ids);
       $rowCount = $databaseResult->deleteSpecialType(params: $params);
       if (!is_numeric($rowCount)) {
-        $output .= "<script type=\"text/javascript\">\n" . "  display.showErrors([ \"" . $rowCount . "\" ]);\n" . "</script>\n";
+        $output .= 
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
+          "</script>\n";
       }
       $ids = DEFAULT_VALUE_BLANK;
     }
@@ -101,7 +109,7 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: null, name: SELECTED_ROWS_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $ids, wrap: null);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(null, true);
+  $params = array(null, true, array(false));
   $query = $databaseResult->getSpecialType(params: $params);
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE typeId IN (" . $ids . ")";

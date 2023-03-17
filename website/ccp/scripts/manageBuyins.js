@@ -1,179 +1,223 @@
 "use strict";
-$(document).ready(function() {
-  input.initialize();
-});
-$(document).on("click", "#buyinCheckAll", function(event) {
-  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
-  input.toggleCheckboxes(id, id);
-  input.countUpdate(id, id + "Count");
-  inputLocal.postProcessing();
-});
-$(document).on("click", "#rebuyCheckAll", function(event) {
-  inputLocal.toggleRebuy($(this).prop("checked"));
-  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
-  input.toggleCheckboxes(id, id);
-  input.countUpdate(id, id + "Count");
-});
-$(document).on("click", "#addonCheckAll", function(event) {
-  const id = this.id.substring(0, this.id.indexOf("CheckAll"));
-  input.toggleCheckboxes(id, id);
-  input.countUpdate(id, id + "Count");
-});
-$(document).on("click", "[id^='buyin_'], [id^='rebuy_']", function(event) {
-  const id = this.id.substring(0, this.id.indexOf("_"));
-  input.toggleCheckAll(id, id);
-});
-$(document).on("click", "[id^='buyin_']", function(event) {
-  inputLocal.postProcessing();
-});
-$(document).on("click", "[id^='rebuy_']", function(event) {
-  const values = $(this).attr("id").split("_");
-  $("#rebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
-  $("#rebuyCount_" + values[1]).val(($(this).prop("checked") ? 1 : 0));
-  input.countUpdate("rebuy", "rebuyCount");
-});
-$(document).on("keyup paste", "[id^='rebuyCount_']", function(event) {
-  input.validateNumberOnly($(this), event, false);
-  if ($(this).val() == "" || parseInt($(this).val()) > parseInt($("#rebuyFlag").val())) {
-    $(this).val($(this).data("previousValue"));
-  } else {
-    const id = $(this).attr("id");
-    const values = id.split("_");
-    $(this).prop("disabled", ($(this).val() == 0));
-    $("#rebuy_" + values[1]).prop("checked", !($(this).val() == 0));
-    input.countUpdate("rebuy", "rebuyCount");
-  }
-});
-$(document).on("click", "[id^='addon_']", function(event) {
-  input.toggleCheckAll("addon", "addon");
-  input.countUpdate("addon");
-});
-const inputLocal = {
+import { dataTable, display, input } from "./import.js";
+export const inputLocal = {
   buildData : function(objTableId, mode) {
-    const objPlayers = $("#ids");
-    const objAllPaid = $("#buyinPaid");
-    const objAllRebuy = $("#rebuyPaid");
-    const objAllRebuyCount = $("#rebuyCount");
-    const objAllAddon = $("#addonPaid");
-    objPlayers.val("");
-    objAllPaid.val("");
-    objAllRebuy.val("");
-    objAllRebuyCount.val("");
-    objAllAddon.val("");
+    const objPlayers = document.querySelector("#ids");
+    const objAllPaid = document.querySelector("#buyinPaid");
+    const objAllRebuy = document.querySelector("#rebuyPaid");
+    const objAllRebuyCount = document.querySelector("#rebuyCount");
+    const objAllAddon = document.querySelector("#addonPaid");
+    objPlayers.value = "";
+    objAllPaid.value = "";
+    objAllRebuy.value = "";
+    objAllRebuyCount.value = "";
+    objAllAddon.value = "";
     // if mode is create or modify then build list of player ids for paid, rebuy, addon
     if (("create" == mode) || ("modify" == mode)) {
       // for each table row except header
-      $("#" + objTableId + " tr").slice("1").each(function(index) {
-        const aryInput = $("#dataTbl").DataTable().row(this).data();
+      Array.from(document.querySelectorAll("#" + objTableId + " tr")).slice("1").forEach(row => {
+        const aryInput = $("#dataTbl").DataTable().row(row).data();
         for (let idx = 0; idx < aryInput.length; idx++) {
-          const playerId = $(aryInput[aryInput.length - 1]).val();
-          objAllPaid.val(objAllPaid.val() + (0 < objAllPaid.val().length ? ", " : "") + $("#buyin_" + playerId).prop("checked"));
-          objAllRebuy.val(objAllRebuy.val() + (0 < objAllRebuy.val().length ? ", " : "") + $("#rebuy_" + playerId).prop("checked"));
-          objAllRebuyCount.val(objAllRebuyCount.val() + (0 < objAllRebuyCount.val().length ? ", " : "") + $("#rebuyCount_" + playerId).val());
-          objAllAddon.val(objAllAddon.val() + (0 < objAllAddon.val().length ? ", " : "") +$("#addon_" + playerId).prop("checked"));
-          objPlayers.val(objPlayers.val() + (0 < objPlayers.val().length ? ", " : "") + playerId);
+          const placeholder = document.createElement("div");
+          placeholder.innerHTML = aryInput[aryInput.length - 1];
+          const playerId = placeholder.firstElementChild.value;
+          objAllPaid.value = objAllPaid.value + (0 < objAllPaid.value.length ? ", " : "") + document.querySelector("#buyin_" + playerId).checked;
+          objAllRebuy.value = objAllRebuy.value + (0 < objAllRebuy.value.length ? ", " : "") + document.querySelector("#rebuy_" + playerId).checked;
+          objAllRebuyCount.value = objAllRebuyCount.value + (0 < objAllRebuyCount.value.length ? ", " : "") + document.querySelector("#rebuyCount_" + playerId).value;
+          objAllAddon.value = objAllAddon.value + (0 < objAllAddon.value.length ? ", " : "") + document.querySelector("#addon_" + playerId).checked;
+          objPlayers.value = objPlayers.value + (0 < objPlayers.value.length ? ", " : "") + playerId;
         }
       });
     }
-    $("#mode").val(mode);
   },
   disableCheckboxAll : function(hasFlag, name, countNotCheckedPaid) {
     // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
-    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
+    if ((hasFlag && document.querySelector("#" + name + "Flag").value != "0" && document.querySelector("#" + name + "Flag").value != "") || !hasFlag) {
       // if checkbox count is same as count passed in then disable check all checkbox
-      $("#" + name + "CheckAll").prop("disabled", $('input[id^="' + name + '_"]').length == countNotCheckedPaid);
+      document.querySelector("#" + name + "CheckAll").disabled = document.querySelectorAll('[id^="' + name + '_"]').length == countNotCheckedPaid;
     }
   },
   disableCheckboxes : function(hasFlag, obj, name, id) {
     // if need to check flag and flag is set or no need to check flag then enable/disable appropriately (rebuy flag is 0 for no rebuy, addon is blank for no addon) 
-    if ((hasFlag && $("#" + name + "Flag").val() != "0" && $("#" + name + "Flag").val() != "") || !hasFlag) {
-      $("#" + name + "_" + id).prop("disabled", !$(obj).prop("checked"));
+    if ((hasFlag && document.querySelector("#" + name + "Flag").value != "0" && document.querySelector("#" + name + "Flag").value != "") || !hasFlag) {
+      document.querySelector("#" + name + "_" + id).disabled = !obj.checked;
     }
   },
   enableSave : function() {
+    //return document.querySelectorAll("[id^='buyin_']:checked").length == 0;
     return false;
   },
   initializeDataTable : function() {
-    //dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
-    dataTable.initialize("dataTbl", [ { "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false } ], [ [ 0, "asc" ] ]);
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
   markCheckboxes : function(hasFlag, obj, name, id) {
     // if need to check flag and flag is set or no need to check flag then mark checkbox and check check all checkbox appropriately
-    if ((hasFlag && $("#" + name + "Flag").val() != "0") || !hasFlag) {
-      $("#" + name + "CheckAll").prop("checked", $(obj).prop("checked"));
-      $("#" + name + "_" + id).prop("checked", $(obj).prop("checked"));
+    if ((hasFlag && document.querySelector("#" + name + "Flag").value != "0") || !hasFlag) {
+      document.querySelector("#" + name + "CheckAll").checked = obj.checked;
+      document.querySelector("#" + name + "_" + id).checked = obj.checked;
     }
   },
   postProcessing : function() {
     let countNotCheckedPaid = 0;
     // for each paid checkbox
-    $('[id^="buyin_"]').each(function(index) {
+    document.querySelectorAll("[id^='buyin_']")?.forEach(obj => {
       // parse out number from id to use for other objects 
-      const id = $(this).attr("id");
+      const id = obj.id;
       const values = id.split("_");
       // if paid checkbox is not checked
-      if (!$(this).prop("checked")) {
-        inputLocal.markCheckboxes(true, this, "rebuy", values[1]);
-        inputLocal.markCheckboxes(true, this, "addon", values[1]);
+      if (!obj.checked) {
+        inputLocal.markCheckboxes(true, obj, "rebuy", values[1]);
+        inputLocal.markCheckboxes(true, obj, "addon", values[1]);
       }
-      inputLocal.disableCheckboxes(true, this, "rebuy", values[1]);
-      inputLocal.disableCheckboxes(true, this, "addon", values[1]);
+      inputLocal.disableCheckboxes(true, obj, "rebuy", values[1]);
+      inputLocal.disableCheckboxes(true, obj, "addon", values[1]);
       // count how many are not checked
-      if (!$(this).prop("checked")) {
+      if (!obj.checked) {
         countNotCheckedPaid++;
       }
     });
     inputLocal.processAllCheckAll(countNotCheckedPaid);
     input.enableView();
-    $("[id^='rebuy_']").each(function(index) {
-      const id = $(this).attr("id");
+    document.querySelectorAll("[id^='rebuy_']")?.forEach(obj => {
+      const id = obj.id;
       const values = id.split("_");
-      $("#rebuyCount_" + values[1]).prop("disabled", !$(this).prop("checked"));
-      if ($("#rebuyCount_" + values[1]).prop("disabled")) {
-        $("#rebuyCount_" + values[1]).val(0);
+      document.querySelector("#rebuyCount_" + values[1]).disabled = !obj.checked;
+      if (document.querySelector("#rebuyCount_" + values[1]).disabled) {
+        document.querySelector("#rebuyCount_" + values[1]).value = 0;
       }
     });
-    $("[id^='rebuyCount_']").each(function(index) {
-      $(this).data("previousValue", $(this).val());
-    });
-    input.countUpdate("buyin");
-    input.countUpdate("rebuy", "rebuyCount");
-    input.countUpdate("addon");
+    /*document.querySelectorAll("[id^='rebuyCount_']")?.forEach(obj => {
+      console.log("set pvv to " + obj.value);
+      obj.dataset.previousValueValidation = obj.value;
+    });*/
+    input.countUpdate({prefix: "buyin"});
+    input.countUpdate({prefix: "rebuy", prefixAdditional: "rebuyCount"});
+    input.countUpdate({prefix: "addon"});
+    if (document.querySelector("#mode")) {
+      document.querySelector("#mode").value = "modify";
+    }
   },
   processAllCheckAll : function(countNotCheckedPaid) {
-    input.toggleCheckAll("buyin", "buyin");
-    input.toggleCheckAll("rebuy", "rebuy");
-    input.toggleCheckAll("addon", "addon");
+    input.toggleCheckAll({id: "buyin", idAll: "buyin"});
+    input.toggleCheckAll({id: "rebuy", idAll: "rebuy"});
+    input.toggleCheckAll({id: "addon", idAll: "addon"});
     inputLocal.disableCheckboxAll(true, "rebuy", countNotCheckedPaid);
     inputLocal.disableCheckboxAll(true, "addon", countNotCheckedPaid);
   },
   setDefaults : function() {
-    input.insertSelectedBefore("Tournament", "tournamentId", "mode");
+    input.insertSelectedBefore({objIdSelected: "tournamentId", objIdAfter: "mode", width: "90%"});
+  },
+  setIds : function() {
+    let ids = "";
+    document.querySelectorAll("[id^='buyin_']")?.forEach(obj => {
+      if (obj.checked) {
+        const id = obj.id.split("_");
+        ids += id[1] + ", ";
+      }
+    });
+    ids = ids.substring(0, ids.length - 2);
+    document.querySelector("#ids").value = ids;
   },
   tableRowClick : function(obj) {
-    $(obj).removeClass("selected");
+    obj.classList.remove("selected");
   },
   toggleRebuy : function(checked) {
-    let disabled = false;
-    $("[id^='rebuy_']").each(function(index) {
-      if ($(this).prop("disabled")) {
-        disabled = true;
-      } else {
-        const id = $(this).attr("id");
+    document.querySelectorAll("[id^='rebuy_']")?.forEach(obj => {
+      if (!obj.disabled) {
+        const id = obj.id
         const values = id.split("_");
-        $(this).prop("checked", checked);
-        $("#rebuyCount_" + values[1]).prop("disabled", !checked);
-        if (0 == $("#rebuyCount_" + values[1]).val()) {
-          $("#rebuyCount_" + values[1]).val(1);
+        obj.checked = checked;
+        document.querySelector("#rebuyCount_" + values[1]).disabled = !checked;
+        if (0 == document.querySelector("#rebuyCount_" + values[1]).value) {
+          document.querySelector("#rebuyCount_" + values[1]).value = 1;
         }
         if (!checked) {
-          $("#rebuyCount_" + values[1]).val(0);
+          document.querySelector("#rebuyCount_" + values[1]).value = 0;
         }
       }
     });
-    // if at least 1 disabled checkbox then uncheck check all checkbox
-    if (disabled) {
-      $("#" + name + "CheckAll").prop("checked", false);
+  },
+  validateField : function(obj, event) {
+    input.validateNumberOnly({obj: obj, event: event, storeValue: false});
+    if (obj.value == "" || parseInt(obj.value) > parseInt(document.querySelector("#rebuyFlag").value)) {
+      obj.value = obj.dataset.previousValueValidation;
+    } else {
+      const id = obj.id;
+      const values = id.split("_");
+      obj.disabled = (obj.value == 0);
+      document.querySelector("#rebuy_" + values[1]).checked = !(obj.value == 0);
+      input.countUpdate({prefix: "rebuy", prefixAdditiona: "rebuyCount"});
     }
   }
 };
+let documentReadyCallback = () => {
+  inputLocal.initializeDataTable();
+  inputLocal.setDefaults();
+  inputLocal.postProcessing();
+};
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  documentReadyCallback();
+} else {
+  document.addEventListener("DOMContentLoaded", documentReadyCallback);
+}
+document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListener("click", (event) => {
+  const selected = row.classList.contains("selected");
+  document.querySelectorAll("[id^='modify']")?.forEach(btn => { btn.disabled = selected; });
+  document.querySelectorAll("[id^='delete']")?.forEach(btn => { btn.disabled = selected; });
+  // if 1 row is already selected
+  if (selected || document.querySelectorAll("#dataTbl tbody tr.selected").length == 1) {
+    row.classList.remove("selected");
+  } else {
+    row.classList.add("selected");
+  }
+  inputLocal.tableRowClick(row);
+}));
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id.includes("buyinCheckAll")) {
+    const id = event.target.id.substring(0, event.target.id.indexOf("CheckAll"));
+    input.toggleCheckboxes({id: id, idAll: id});
+    input.countUpdate({prefix: id, prefixAdditional: id + "Count"});
+    inputLocal.postProcessing();
+  } else if (event.target && event.target.id.includes("rebuyCheckAll")) {
+    inputLocal.toggleRebuy(event.target.checked);
+    const id = event.target.id.substring(0, event.target.id.indexOf("CheckAll"));
+    input.toggleCheckboxes({id: id, idAll: id});
+    input.countUpdate({prefix: id, prefixAdditional: id + "Count"});
+  } else if (event.target && event.target.id.includes("addonCheckAll")) {
+    const id = event.target.id.substring(0, event.target.id.indexOf("CheckAll"));
+    input.toggleCheckboxes({id: id, idAll: id});
+    input.countUpdate({prefix: id, prefixAdditional: id + "Count"});
+  } else if (event.target && event.target.id.includes("buyin")) {
+    const id = event.target.id.substring(0, event.target.id.indexOf("_"));
+    input.toggleCheckAll({id: id, idAll: id});
+    inputLocal.postProcessing();
+  } else if (event.target && event.target.id.includes("rebuy_")) {
+    const id = event.target.id.substring(0, event.target.id.indexOf("_"));
+    input.toggleCheckAll({id: id, idAll: id});
+    const values = event.target.id.split("_");
+    document.querySelector("#rebuyCount_" + values[1]).disabled = !event.target.checked;
+    document.querySelector("#rebuyCount_" + values[1]).value = (event.target.checked ? 1 : 0);
+    input.countUpdate({prefix: "rebuy", prefixAdditional: "rebuyCount"});
+    document.querySelector("#rebuyCount_" + values[1]).dataset.previousValueValidation = document.querySelector("#rebuyCount_" + values[1]).value;
+  } else if (event.target && event.target.id.includes("addon")) {
+    input.toggleCheckAll({id: "addon", idAll: "addon"});
+    input.countUpdate({prefix: "addon"});
+  } else if (event.target && event.target.id.includes("reset")) {
+    input.restorePreviousValue({selectors: ["[id^='notificationStartDate_']", "[id^='notificationEndDate_']"]});
+    inputLocal.validate();
+  } else if (event.target && event.target.id.includes("save")) {
+    inputLocal.setIds();
+  }
+});
+document.addEventListener("keyup", (event) => {
+  if (event.target && event.target.id.includes("rebuyCount")) {
+    inputLocal.validateField(event.target, event);
+    event.target.dataset.previousValueValidation = event.target.value;
+  }
+});
+document.addEventListener("paste", (event) => {
+  if (event.target && event.target.id.includes("rebuyCount")) {
+    inputLocal.validateField(event.target, event);
+    event.target.dataset.previousValueValidation = event.target.value;
+  }
+});
