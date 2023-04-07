@@ -8,7 +8,7 @@ export const inputLocal = {
     }
     return result;
   },
-  customValidation : function(confirmation) {
+  customValidation : function({confirmation} = {}) {
     let msg = [];
     const aryId = document.querySelector("#ids").value.split(", ");
     for (let id of aryId) {
@@ -52,7 +52,11 @@ export const inputLocal = {
     || (document.querySelector("#tournamentChipCount_" + id).value.length == 0) || (document.querySelector("#tournamentLocationId_" + id).value == "") || !document.querySelector("#tournamentStartDateTime_" + id + ":valid")
     || (document.querySelector("#tournamentBuyinAmount_" + id).value.length == 0) || (document.querySelector("#tournamentMaxPlayers_" + id).value.length == 0) || (document.querySelector("#tournamentRebuyAmount_" + id).value.length == 0)
     || (document.querySelector("#tournamentRebuys_" + id).value.length == 0) || (document.querySelector("#tournamentAddonAmount_" + id).value.length == 0) || (document.querySelector("#tournamentAddonChipCount_" + id).value.length == 0)
-    || (document.querySelector("#tournamentRake_" + id).value.length == 0) || (document.querySelector("#tournamentGroupId_" + id).value == ""));
+    || (document.querySelector("#tournamentRake_" + id).value.length == 0) || (document.querySelector("#tournamentGroupId_" + id).value == "")
+    || (document.querySelector("#tournamentRebuyAmount_" + id).value == 0) && (document.querySelector("#tournamentRebuys_" + id).value > 0)
+    || (document.querySelector("#tournamentRebuyAmount_" + id).value > 0) && (document.querySelector("#tournamentRebuys_" + id).value == 0)
+    || (document.querySelector("#tournamentAddonAmount_" + id).value == 0) && (document.querySelector("#tournamentAddonChipCount_" + id).value > 0)
+    || (document.querySelector("#tournamentAddonAmount_" + id).value > 0) && (document.querySelector("#tournamentAddonChipCount_" + id).value == 0));
   },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "3%" },
@@ -73,20 +77,6 @@ export const inputLocal = {
       { "width": "4%" }, { "width": "4%" }, { "width": "4%" }, { "width": "4%" }, { "width": "4%" },
       { "width": "4%" }, { "width": "4%" }, { "width": "4%" }, { "orderable": false, "visible": false, "width": "3%" }, { "orderable": false, "visible": false }], aryOrder: [[7, "desc"], [8, "desc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
-  save : function(event) {
-    let result = true;
-    const aryId = document.querySelector("#ids").value.split(", ");
-    for (let id of aryId) {
-      if (!inputLocal.customValidation(true)) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        result = false;
-      }
-    }
-    return result;
-  },
   setDefaults : function() {
     if (document.querySelector("#mode").value == "create") {
       document.querySelector("[id^='tournamentDescription_']").value = inputLocal.defaultDescription();
@@ -105,14 +95,14 @@ export const inputLocal = {
       document.querySelector("[id^='tournamentGroupId_']").value = 2;
     }
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -140,11 +130,11 @@ export const inputLocal = {
     input.validateLength({obj: document.querySelector("#tournamentGroupId_"), length: 1, focus: false});
     input.validateLength({obj: document.querySelector("#tournamentRake_"), length: 1, focus: false});
   },
-  validateField : function(obj) {
+  validateField : function({obj} = {}) {
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   },
-  validateField2 : function(obj, event) {
+  validateField2 : function({obj, event} = {}) {
     const objSt = document.querySelector("[id^='tournamentSpecialTypeId_']");
     if (objSt.options[objSt.selectedIndex].innerText == "Championship") {
       input.validateNumberOnlyGreaterThanEqualToValue({obj: obj, event: event, value: 0, storeValue: true});
@@ -154,7 +144,7 @@ export const inputLocal = {
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   },
-  validateField3 : function(obj, event) {
+  validateField3 : function({obj, event} = {}) {
     if (obj.id.search(/tournamentBuyinAmount_/g) == -1) {
       if (obj.id.search(/tournamentRebuyAmount_/g) != -1 || obj.id.search(/tournamentRebuys_/g) != -1 || obj.id.search(/tournamentAddonAmount_/g) != -1 || obj.id.search(/tournamentAddonChipCount_/g) != -1) {
         input.validateNumberOnlyGreaterThanEqualToValue({obj: obj, event: event, value: 0, storeValue: true});
@@ -174,21 +164,21 @@ export const inputLocal = {
         input.validateLength({obj: document.querySelector("[id^='tournamentRebuyAmount_']"), length: 1, focus: false});
         input.validateLength({obj: document.querySelector("[id^='tournamentRebuys_']"), length: 1, focus: false});
       } else {
-        inputLocal.customValidation(false);
+        inputLocal.customValidation({confirmation: false});
       }
     } else if (obj.id.search(/tournamentAddonAmount_/g) != -1 || obj.id.search(/tournamentAddonChipCount_/g) != -1) {
       if (document.querySelector("[id^='tournamentAddonAmount_']").value == "" || document.querySelector("[id^='tournamentAddonChipCount_']").value == "") {
         input.validateLength({obj: document.querySelector("[id^='tournamentAddonAmount_']"), length: 1, focus: false});
         input.validateLength({obj: document.querySelector("[id^='tournamentAddonChipCount_']"), length: 1, focus: false});
       } else {
-        inputLocal.customValidation(false);
+        inputLocal.customValidation({confirmation: false});
       }
     } else {
       input.validateLength({obj: obj, length: 1, focus: false});
     }
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   },
-  validateField4 : function(obj, event) {
+  validateField4 : function({obj, event} = {}) {
     input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
@@ -222,7 +212,7 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
 }));
 document.addEventListener("change", (event) => {
   if (event.target && (event.target.id.includes("tournamentLimitTypeId") || event.target.id.includes("tournamentGameTypeId") || event.target.id.includes("tournamentLocationId") || event.target.id.includes("tournamentGroupId"))) {
-    inputLocal.validateField(event.target);
+    inputLocal.validateField({obj: event.target});
   } else if (event.target && event.target.id.includes("tournamentSpecialTypeId")) {
     if (event.target.options[event.target.selectedIndex].innerText == "Championship") {
       document.querySelector("[id^='tournamentChipCount_']").value = 0;
@@ -254,23 +244,23 @@ document.addEventListener("input", (event) => {
 });
 document.addEventListener("keyup", (event) => {
   if (event.target && (event.target.id.includes("tournamentDescription") || event.target.id.includes("tournamentStartDateTime"))) {
-    inputLocal.validateField(event.target);
+    inputLocal.validateField({obj: event.target});
   } else if (event.target && (event.target.id.includes("tournamentChipCount") || event.target.id.includes("tournamentBuyinAmount") || event.target.id.includes("tournamentRake"))) {
-    inputLocal.validateField2(event.target, event);
+    inputLocal.validateField2({obj: event.target, event: event});
   } else if (event.target && (event.target.id.includes("tournamentRebuyAmount") || event.target.id.includes("tournamentRebuys") || event.target.id.includes("tournamentAddonAmount") || event.target.id.includes("tournamentAddonChipCount"))) {
-    inputLocal.validateField3(event.target, event);
+    inputLocal.validateField3({obj: event.target, event: event});
   } else if (event.target && event.target.id.includes("tournamentMaxPlayers")) {
-    inputLocal.validateField4(event.target, event);
+    inputLocal.validateField4({obj: event.target, event: event});
   }
 });
 document.addEventListener("paste", (event) => {
   if (event.target && (event.target.id.includes("tournamentDescription") || event.target.id.includes("tournamentStartDateTime"))) {
-    inputLocal.validateField(event.target);
+    inputLocal.validateField({obj: event.target});
   } else if (event.target && (event.target.id.includes("tournamentChipCount") || event.target.id.includes("tournamentBuyinAmount") || event.target.id.includes("tournamentRake"))) {
-    inputLocal.validateField2(event.target, event);
+    inputLocal.validateField2({obj: event.target, event: event});
   } else if (event.target && (event.target.id.includes("tournamentRebuyAmount") || event.target.id.includes("tournamentRebuys") || event.target.id.includes("tournamentAddonAmount") || event.target.id.includes("tournamentAddonChipCount"))) {
-    inputLocal.validateField3(event.target, event);
+    inputLocal.validateField3({obj: event.target, event: event});
   } else if (event.target && event.target.id.includes("tournamentMaxPlayers")) {
-    inputLocal.validateField4(event.target, event);
+    inputLocal.validateField4({obj: event.target, event: event});
   }
 });

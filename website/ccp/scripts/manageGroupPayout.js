@@ -8,8 +8,7 @@ export const inputLocal = {
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "searchable": false, "visible": false }], aryOrder: [[1, "asc"], [3, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
-  setId : function(selectedRow) {
-    //return selectedRow.children[0].innerHTML;
+  setId : function({selectedRow} = {}) {
     const htmlGroup = selectedRow.children[0].innerHTML;
     let positionStart = htmlGroup.indexOf("groupId=");
     const groupId = htmlGroup.substring(positionStart + 8, htmlGroup.indexOf("&", positionStart));
@@ -22,7 +21,7 @@ export const inputLocal = {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;

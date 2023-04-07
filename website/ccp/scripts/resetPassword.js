@@ -6,7 +6,7 @@ export const inputLocal = {
       document.querySelector("#send").disabled = document.querySelector("#username").value.length == 0 || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.querySelector("#email").value));
     }
   },
-  validatePassword : function(event) {
+  validatePassword : function({event} = {}) {
     if (document.querySelector("#password")) {
       if (document.querySelector("#password").value.length == 0 || document.querySelector("#confirmPassword").value.length == 0 || document.querySelector("#password").value != document.querySelector("#confirmPassword").value) {
         document.querySelector("#resetPassword").disabled = true;
@@ -38,7 +38,7 @@ document.addEventListener("click", (event) => {
   } else if (event.target && event.target.id.includes("send")) {
     document.querySelector("#mode").value = "resetPasswordRequest";
   } else if (event.target && event.target.id.includes("resetPassword")) {
-    inputLocal.validatePassword(event);
+    inputLocal.validatePassword({event: event});
     inputLocal.enableSend();
     document.querySelector("#mode").value = "resetPasswordConfirm";
   }
@@ -49,7 +49,7 @@ document.addEventListener("keyup", (event) => {
     input.validateLength({obj: document.querySelector("#email"), length: 1, focus: true});
     inputLocal.enableSend();
   } else if (event.target && event.target.id.includes("confirmPassword")) {
-    inputLocal.validatePassword(event);
+    inputLocal.validatePassword({event: event});
     inputLocal.enableSend();
   }
 });
@@ -59,7 +59,7 @@ document.addEventListener("paste", (event) => {
     input.validateLength({obj: document.querySelector("#email"), length: 1, focus: true});
     inputLocal.enableSend();
   } else if (event.target && event.target.id.includes("confirmPassword")) {
-    inputLocal.validatePassword(event);
+    inputLocal.validatePassword({event: event});
     inputLocal.enableSend();
   }
 });

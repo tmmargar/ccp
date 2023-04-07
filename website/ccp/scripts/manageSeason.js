@@ -14,14 +14,14 @@ export const inputLocal = {
       document.querySelector("#seasonChampionshipQualify_").value = 8;
     }
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -56,11 +56,11 @@ export const inputLocal = {
     input.validateLength({obj: document.querySelector("#seasonEndDate_"), length: 1, focus: false});
     input.validateLength({obj: document.querySelector("#seasonChampionshipQualify_"), length: 1, focus: false});
   },
-  validateField : function(obj) {
+  validateField : function({obj} = {}) {
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   },
-  validateFieldNumber : function(obj, event) {
+  validateFieldNumber : function({obj, event} = {}) {
     input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
@@ -108,15 +108,15 @@ document.addEventListener("input", (event) => {
 });
 document.addEventListener("keyup", (event) => {
   if (event.target && event.target.id.includes("seasonDescription")) {
-    inputLocal.validateField(event.target);
+    inputLocal.validateField({obj: event.target});
   } else if (event.target && event.target.id.includes("seasonChampionshipQualify")) {
-    inputLocal.validateFieldNumber(event.target, event);
+    inputLocal.validateFieldNumber({obj: event.target, event: event});
   }
 });
 document.addEventListener("paste", (event) => {
   if (event.target && event.target.id.includes("seasonDescription")) {
-    inputLocal.validateField(event.target);
+    inputLocal.validateField({obj: event.target});
   } else if (event.target && event.target.id.includes("seasonChampionshipQualify")) {
-    inputLocal.validateFieldNumber(event.target, event);
+    inputLocal.validateFieldNumber({obj: event.target, event: event});
   }
 });

@@ -8,14 +8,14 @@ export const inputLocal = {
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width" : "4%" }, { "type" : "name", "width" : "11%" }, { "width" : "10%" }, { "width" : "15%" }, { "render" : function (data) { return display.formatPhone({value: data}); }, "width" : "8%" }, { "render" : function (data, type, row, meta) { return display.formatHighlight({value: data, meta: meta, tableId: "dataTbl"}); }, "width" : "4%" }, { "width" : "8%" }, { "width" : "7%" }, { "width" : "8%" }, { "render" : function (data, type, row, meta) { return display.formatActive({value: data, meta: meta, tableId: "dataTbl"}); },  "width" : "3%" }, { "searchable": false, "visible": false }], aryOrder: [[9, "desc"], [1, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()]);
+    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -26,9 +26,9 @@ export const inputLocal = {
     input.validateLength({obj: document.querySelector("#username_"), length: 1, focus: false});
     input.validateLength({obj: document.querySelector("#password_"), length: 1, focus: false});
     input.validateLength({obj: document.querySelector("#email_"), length: 1, focus: false});
-    inputLocal.validateEmail(document.querySelector("#email_"));
+    inputLocal.validateEmail({obj: document.querySelector("#email_")});
   },
-  validateEmail : function(obj) {
+  validateEmail : function({obj} = {}) {
     if (obj) {
       if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(obj.value)) {
         obj.classList.remove("errors");

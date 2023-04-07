@@ -1,7 +1,7 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  validate : function(obj) {
+  validate : function({obj} = {}) {
     const result = ("" == input.validateLength({obj: obj, length: 1, focus: true, msg: "You must enter a dish"}));
     document.querySelector("#register").disabled = !result;
     if (result) {
@@ -27,5 +27,5 @@ document.addEventListener("click", (event) => {
      document.querySelector("#mode").value = "savemodify";
   }
 });
-document.addEventListener("keyup", (event) => { if (event.target && event.target.id == "food") { inputLocal.validate(event.target); } });
-document.addEventListener("paste", (event) => { if (event.target && event.target.id == "food") { inputLocal.validate(event.target); } });
+document.addEventListener("keyup", (event) => { if (event.target && event.target.id == "food") { inputLocal.validate({obj: event.target}); } });
+document.addEventListener("paste", (event) => { if (event.target && event.target.id == "food") { inputLocal.validate({obj: event.target}); } });

@@ -196,15 +196,15 @@ class HtmlTable extends HtmlBase {
               foreach ($aryFmt as $fmt) {
                 switch (strtolower($fmt)) {
                   case "date":
-                    $dateTime = new DateTime($this->isDebug(), null, $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
                     $temp = $dateTime->getDisplayFormat();
                     break;
                   case "datetime":
-                    $dateTime = new DateTime($this->isDebug(), null, $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
                     $temp = $dateTime->getDisplayTimeFormat();
                     break;
                   case "time":
-                    $dateTime = new DateTime($this->isDebug(), null, $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
                     $temp = $dateTime->getDisplayAmPmFormat();
                     array_push($class, "time");
                     break;

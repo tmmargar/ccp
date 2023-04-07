@@ -1,11 +1,5 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
-window.addEventListener('DOMContentLoaded', (event) => {
-  inputLocal.rebuildTableForDialog("Nemesis", "Nemesis");
-  inputLocal.rebuildTableForDialog("Bullies", "Bully");
-  inputLocal.rebuildTableForDialog("LocationsHosted");
-  inputLocal.initializeDataTable();
-});
 export const inputLocal = {
   initializeDataTable : function() {
     document.querySelectorAll(".reportId").forEach(obj => { 
@@ -44,7 +38,7 @@ export const inputLocal = {
       }
     });
   },
-  rebuildTableForDialog : function(dialogName, tableName) {
+  rebuildTableForDialog : function({dialogName, tableName} = {}) {
     // if dialog exists
     if (document.querySelector("#dialogRankAll" + dialogName)) {
       // header row + 5 data rows
@@ -54,7 +48,7 @@ export const inputLocal = {
       }
     }
   },
-  showFullList : function(title, userFullName) {
+  showFullList : function({title, userFullName} = {}) {
     const re = /\s/gi;
     dataTable.displayHighlightRow({tableId: "#dataTblRank" + title.replace(re, ""), value: userFullName});
     input.showDialogWithWidth({name: "RankAll" + title.replace(re, "")});
@@ -69,3 +63,14 @@ export const inputLocal = {
     input.showDialog({name: "RankAllNemesis"});
   }
 };
+let documentReadyCallback = () => {
+  inputLocal.rebuildTableForDialog({dialogName: "Nemesis", tableName: "Nemesis"});
+  inputLocal.rebuildTableForDialog({dialogName: "Bullies", tableName: "Bully"});
+  inputLocal.rebuildTableForDialog({dialogName: "LocationsHosted"});
+  inputLocal.initializeDataTable();
+};
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  documentReadyCallback();
+} else {
+  document.addEventListener("DOMContentLoaded", documentReadyCallback);
+}

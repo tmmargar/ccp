@@ -603,7 +603,7 @@ if (!isset($reportId) || "" == $reportId) {
           $output .= 
             "<script type=\"module\">\n" .
             "  import { inputLocal } from \"./scripts/top5.js\";\n" .
-            "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList('" . $dialogParameters[0] . "', '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "'));\n" .
+            "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList({title: '" . $dialogParameters[0] . "', userFullName: '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "'}));\n" .
             "</script>\n";
           $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
           $output .= 

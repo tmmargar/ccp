@@ -68,8 +68,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $notificationDescription = (isset($_POST[NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $notificationStartDate = isset($_POST[NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id]) ? $_POST[NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $notificationEndDate = isset($_POST[NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id]) ? $_POST[NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $notificationStartDateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $notificationStartDate);
-    $notificationEndDateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, $notificationEndDate);
+    $notificationStartDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $notificationStartDate);
+    $notificationEndDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $notificationEndDate);
     if (Constant::$MODE_SAVE_CREATE == $mode) {
       $params = array($notificationDescription, $notificationStartDateTime->getDatabaseDateTimeFormat(), $notificationEndDateTime->getDatabaseDateTimeFormat());
       $rowCount = $databaseResult->insertNotification(params: $params);
