@@ -4,7 +4,7 @@ export const inputLocal = {
   enableEmail : function() {
     document.querySelectorAll("[id^='email']").forEach(obj => { obj.disabled = (document.querySelector("#to").tomselect.items.length == 0 || document.querySelector("#subject").value.length == 0) || (document.querySelector("#body").value.length == 0); });
   },
-  initializeTomSelect : function(placeholder) {
+  initializeTomSelect : function({placeholder} = {}) {
     document.querySelectorAll(".tom-select").forEach((el) => {
       const settings = {
       // max items required so isFull() works
@@ -51,7 +51,7 @@ export const inputLocal = {
   },
 };
 let documentReadyCallback = () => {
-  inputLocal.initializeTomSelect("Select user(s)...");
+  inputLocal.initializeTomSelect({placeholder: "Select user(s)..."});
   inputLocal.validate();
   inputLocal.enableEmail();
   input.storePreviousValue({selectors: ["[id^='to']", "[id^='subject']", "[id^='body']"]});

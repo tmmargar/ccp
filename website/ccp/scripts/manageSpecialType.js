@@ -7,14 +7,14 @@ export const inputLocal = {
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "20%" }, { "width": "80%" }, { "orderable": false, "visible": false }], aryOrder: [[ 1, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;

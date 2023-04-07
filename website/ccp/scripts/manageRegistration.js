@@ -28,7 +28,7 @@ export const inputLocal = {
     document.querySelector("#ids").value = playerIds.substring(0, playerIds.length - 2);
     document.querySelector("#tournamentPlayerStatus").value = statuses.substring(0, statuses.length - 2);
   },
-  tableRowClick : function(row, selected) {
+  tableRowClick : function({row, selected} = {}) {
     if (selected) {
       row.classList.remove("selected");
     } else {
@@ -48,7 +48,7 @@ if (document.readyState === "complete" || (document.readyState !== "loading" && 
   document.addEventListener("DOMContentLoaded", documentReadyCallback);
 }
 document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListener("click", (event) => {
-  inputLocal.tableRowClick(row, row.classList.contains("selected"));
+  inputLocal.tableRowClick({row: row, selected: row.classList.contains("selected")});
 }));
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("register")) {

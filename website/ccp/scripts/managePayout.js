@@ -1,7 +1,7 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  addRow : function(objId) {
+  addRow : function({objId} = {}) {
     let newId;
     // clone last row and adjust index by 1
     const rowLast = document.querySelector("#rowTotal").previousElementSibling;
@@ -100,14 +100,14 @@ export const inputLocal = {
       obj.disabled = false;
     });
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -119,7 +119,7 @@ export const inputLocal = {
     input.validateLength({obj: document.querySelector("#maxPlayers_"), length: 1, focus: false});
     inputLocal.enableButtons();
   },
-  validateField(event) {
+  validateField : function({event} = {}) {
     event.target.value = parseInt(event.target.value);
     const aryId = event.target.id.split("_");
     const objPrevious = document.querySelector("#percentage_" + aryId[1] + "_" + (parseInt(aryId[2]) - 1));
@@ -157,7 +157,7 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
 }));
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("addRow")) {
-    inputLocal.addRow("inputs");
+    inputLocal.addRow({objId: "inputs"});
     inputLocal.enableButtons();
   } else if (event.target && event.target.id.includes("removeRow")) {
     inputLocal.removeRow("inputs");
@@ -190,7 +190,7 @@ document.addEventListener("keyup", (event) => {
     input.validateLength({obj: event.target, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("percentage_")) {
-    inputLocal.validateField(event);
+    inputLocal.validateField({event: event});
   }
 });
 document.addEventListener("paste", (event) => {
@@ -210,6 +210,6 @@ document.addEventListener("paste", (event) => {
     input.validateLength({obj: event.target, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("percentage_")) {
-    inputLocal.validateField(event);
+    inputLocal.validateField({event: event});
   }
 });

@@ -1,9 +1,10 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  buildName : function(id) {
+  buildName : function({id} = {}) {
     const objPlayer = document.querySelector("#playerId_" + id);
     document.querySelector("#locationName_" + id).value = objPlayer.options[objPlayer.selectedIndex].innerText + " - " + document.querySelector("#city_" + id).value;
+    input.validateLength({obj: document.querySelector("#locationName_" + id), length: 1, focus: false});
   },
   enableSave : function(id) {
     return (document.querySelector("#locationName_" + id).value.length == 0) || (document.querySelector("#playerId_" + id).value == "") || (document.querySelector("#address_" + id).value.length == 0) || (document.querySelector("#city_" + id).value.length == 0) || (document.querySelector("#states_" + id).value == "") || (document.querySelector("#zipCode_" + id).value.length < 5);
@@ -11,7 +12,7 @@ export const inputLocal = {
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{"orderSequence": [ "desc", "asc" ], "width" : "2%" }, { "width" : "19%" }, { "type" : "host", "width" : "15%" }, { "searchable": false, "width" : "21%" }, { "searchable": false, "width" : "11%" }, { "searchable": false, "width" : "5%" }, { "searchable": false, "width" : "4%" }, { "render" : function (data, type, row, meta) { return display.formatActive({value: data, meta: meta, tableId: "dataTbl"}); },  "width" : "7%" }, { "width" : "7%" }, { "searchable": false, "visible": false }], aryOrder: [[7, "desc"], [2, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
-  save : function(event) {
+  save : function() {
     document.querySelectorAll("[id^='states_']")?.forEach(obj => { obj.disabled = false; });
     return true;
   },
@@ -21,14 +22,14 @@ export const inputLocal = {
     }
     document.querySelectorAll("[id^='states_']")?.forEach(obj => { obj.disabled = true; });
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -49,6 +50,7 @@ let documentReadyCallback = () => {
   inputLocal.setDefaults();
   inputLocal.validate();
   input.enable({objId: "save", functionName: inputLocal.enableSave});
+  document.querySelectorAll("[id^='locationName_']")?.forEach(obj => { obj.tabindex = -1; });
   document.querySelector("[id^='playerId_']")?.focus();
   input.storePreviousValue({selectors: ["[id^='locationName_']", "[id^='playerId_']", "[id^='address_']", "[id^='city_']", "[id^='states_']", "[id^='zipCode']", "[id^='active']"]});
 };
@@ -77,17 +79,17 @@ document.addEventListener("change", (event) => {
 document.addEventListener("click", (event) => {
   if (event.target && (event.target.id.includes("locationName") || event.target.id.includes("playerId") || event.target.id.includes("address"))) {
     input.validateLength({obj: event.target, length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("city")) {
     input.validateLetterOnly({obj: event.target, event: event});
     input.validateLength({obj: document.querySelector("#city_"), length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("zipCode")) {
     // add check to prevent 5 zeroes and handle leading zeroes
     input.validateNumberOnly({obj: event.target, event: event, storeValue: true});
-    input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
+    const result = input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
     if (result == "") {
       display.clearErrorsAndMessages();
     }
@@ -105,17 +107,17 @@ document.addEventListener("click", (event) => {
 document.addEventListener("keyup", (event) => {
   if (event.target && (event.target.id.includes("locationName") || event.target.id.includes("playerId") || event.target.id.includes("address"))) {
     input.validateLength({obj: event.target, length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("city")) {
     input.validateLetterOnly({obj: event.target, event: event});
     input.validateLength({obj: document.querySelector("#city_"), length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("zipCode")) {
     // add check to prevent 5 zeroes and handle leading zeroes
     input.validateNumberOnly({obj: event.target, event: event, storeValue: true});
-    input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
+    const result = input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
     if (result == "") {
       display.clearErrorsAndMessages();
     }
@@ -125,17 +127,17 @@ document.addEventListener("keyup", (event) => {
 document.addEventListener("paste", (event) => {
   if (event.target && (event.target.id.includes("locationName") || event.target.id.includes("playerId") || event.target.id.includes("address"))) {
     input.validateLength({obj: event.target, length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("city")) {
     input.validateLetterOnly({obj: event.target, event: event});
     input.validateLength({obj: document.querySelector("#city_"), length: 1, focus: false});
-    inputLocal.buildName(document.querySelector("#ids").value.split(", ")[0]);
+    inputLocal.buildName({id: document.querySelector("#ids").value.split(", ")[0]});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && event.target.id.includes("zipCode")) {
     // add check to prevent 5 zeroes and handle leading zeroes
     input.validateNumberOnly({obj: event.target, event: event, storeValue: true});
-    input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
+    const result = input.validateLength({obj: event.target, length: 5, focus: true, msg: "You have entered " + event.target.value.length + " of 5 digits for zipCode"});
     if (result == "") {
       display.clearErrorsAndMessages();
     }

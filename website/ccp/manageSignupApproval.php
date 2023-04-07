@@ -34,7 +34,7 @@ if (Constant::$MODE_SAVE_VIEW == $mode) {
   $output .= 
     "<script type=\"module\">\n" .
     "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-    "  aryMessages = [];\n";
+    "  let aryMessages = [];\n";
   // update approval date or rejection date and set active flag
   $params = array();
   // id, first_name, last_name, username, password, email, phone, administrator, registration_date, approval_date, approval_userid, rejection_date, rejection_userid, active, reset_selector, reset_token, reset_expires, remember_selector, remember_token, remember_expires

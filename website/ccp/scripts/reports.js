@@ -1,25 +1,5 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
-window.addEventListener('DOMContentLoaded', (event) => {
-  reportsInputLocal.initializeDataTable();
-});
-document.querySelector("#season")?.addEventListener("change", function(event) {
-  const queryString = new URLSearchParams(window.location.search);
-  let action = [];
-  let found = false;
-  for (let qs of queryString) {
-    if ("season" == qs[0]) {
-      qs[1] = this.value;
-      found = true;
-    }
-    action.push(qs.join("="));
-  }
-  if (!found) {
-    action[action.length] = "season=" + this.value;
-  }
-  document.querySelector("#frmReports").setAttribute("action", document.URL.split('?')[0] + "?" + action.join("&"));
-  document.querySelector("#frmReports").submit();
-});
 export const reportsInputLocal = {
   initializeDataTable : function() {
     let dataTableId = null;
@@ -118,3 +98,30 @@ export const reportsInputLocal = {
     return dataTableId;
   }
 };
+let documentReadyCallback = () => {
+  reportsInputLocal.initializeDataTable();
+};
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  documentReadyCallback();
+} else {
+  document.addEventListener("DOMContentLoaded", documentReadyCallback);
+}
+document.addEventListener("change", (event) => {
+  if (event.target && event.target.id.includes("season")) {
+    const queryString = new URLSearchParams(window.location.search);
+    let action = [];
+    let found = false;
+    for (let qs of queryString) {
+      if ("season" == qs[0]) {
+        qs[1] = event.target.value;
+        found = true;
+      }
+      action.push(qs.join("="));
+    }
+    if (!found) {
+      action[action.length] = "season=" + event.target.value;
+    }
+    document.querySelector("#frmReports").setAttribute("action", document.URL.split('?')[0] + "?" + action.join("&"));
+    document.querySelector("#frmReports").submit();
+  }
+});

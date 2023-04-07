@@ -7,14 +7,14 @@ export const inputLocal = {
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "width": "50%" }, { "type": "date", "width": "20%" }, { "type": "date", "width": "20%" }, { "orderable": false, "visible": false }], aryOrder: [[3, "desc"], [2, "desc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
-  setId : function(selectedRow) {
+  setId : function({selectedRow} = {}) {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
     const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
     let ids = "";
     for (let selectedRow of selectedRows) {
-      ids += inputLocal.setId(selectedRow) + ", ";
+      ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
     }
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
@@ -43,14 +43,14 @@ export const inputLocal = {
       document.querySelector("[id^='notificationEndDate_']").style.width = "175px";
     }
   },
-  validateField : function(obj) {
+  validateField : function({obj} = {}) {
     input.validateLength({obj: obj, length: 1, focus: false});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   }
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
-  inputLocal.validateField(document.querySelector("#notificationDescription_"));
+  inputLocal.validateField({obj: document.querySelector("#notificationDescription_")});
   inputLocal.setMinMax();
   inputLocal.setWidth();
   input.enable({objId: "save", functionName: inputLocal.enableSave});
@@ -75,7 +75,7 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='notificationDescription_']", "[id^='notificationStartDate_']", "[id^='notificationEndDate_']"]});
-    inputLocal.validateField(document.querySelector("#notificationDescription_"));
+    inputLocal.validateField({obj: document.querySelector("#notificationDescription_")});
     input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
@@ -87,5 +87,5 @@ document.addEventListener("input", (event) => {
     inputLocal.setMinMax();
   }
 });
-document.addEventListener("keyup", (event) => { if (event.target && event.target.id.includes("notificationDescription")) { inputLocal.validateField(event.target); } });
-document.addEventListener("paste", (event) => { if (event.target && event.target.id.includes("notificationDescription")) { inputLocal.validateField(event.target); } });
+document.addEventListener("keyup", (event) => { if (event.target && event.target.id.includes("notificationDescription")) { inputLocal.validateField({obj: event.target}); } });
+document.addEventListener("paste", (event) => { if (event.target && event.target.id.includes("notificationDescription")) { inputLocal.validateField({obj: event.target}); } });
