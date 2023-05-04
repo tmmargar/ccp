@@ -1,9 +1,6 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  enableSave : function(id) {
-    return document.querySelector("#specialTypeDescription_" + id).value == "";
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "20%" }, { "width": "80%" }, { "orderable": false, "visible": false }], aryOrder: [[ 1, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
@@ -20,13 +17,15 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   validate : function() {
-    input.validateLength({obj: document.querySelector("#specialTypeDescription_"), length: 1, focus: false});
+    const description = document.querySelectorAll("[id^='specialTypeDescription_']");
+    if (description.length > 0) {
+      description[0].setCustomValidity(description[0].validity.valueMissing ? "You must enter a description" : "");
+    }
   }
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
   inputLocal.validate();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
   input.storePreviousValue({selectors: ["[id^='specialTypeDescription_']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -46,23 +45,13 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("click", (event) => {
+  inputLocal.validate();
   if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='specialTypeDescription_']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
   }
 });
-document.addEventListener("keyup", (event) => {
-  if (event.target && (event.target.id.includes("specialTypeDescription") || event.target.id.includes("specialTypeStartDate") || event.target.id.includes("specialTypeEndDate"))) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
-});
-document.addEventListener("paste", (event) => {
-  if (event.target && (event.target.id.includes("specialTypeDescription") || event.target.id.includes("specialTypeStartDate") || event.target.id.includes("specialTypeEndDate"))) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
+document.addEventListener("input", (event) => {
+  inputLocal.validate();
 });

@@ -39,10 +39,10 @@ if (Constant::$MODE_LOGIN == $mode) {
   }
 }
 $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
-$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_USERNAME, maxLength: 30, name: NAME_FIELD_USERNAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
+$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_USERNAME, maxLength: 30, name: NAME_FIELD_USERNAME, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: null, wrap: null);
 $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
 $output .= " <div class=\"responsive-cell\">" . $textBoxUsername->getHtml() . "</div>";
-$textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "current-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_PASSWORD, maxLength: null, name: NAME_FIELD_PASSWORD, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: null, wrap: null);
+$textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_PASSWORD, autoComplete: "current-password", autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: NAME_FIELD_PASSWORD, maxLength: null, name: NAME_FIELD_PASSWORD, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 10, suffix: null, type: FormControl::$TYPE_INPUT_PASSWORD, value: null, wrap: null);
 $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxPassword->getId() . "\">Password:</label></div>";
 $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "</div>";
 // $output .= "<div class=\"label\">Remember Me:</div>";
@@ -50,7 +50,7 @@ $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "<
 // $output .= HtmlUtility::buildCheckbox(false, false, false, null, false, Base::build(NAME_FIELD_REMEMBER_ME, null), Base::build(NAME_FIELD_REMEMBER_ME, null), null, null);
 // $output .= "</div>";
 // $output .= "<div class=\"clear\"></div>";
-$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: null, disabled: true, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_BUTTON, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
+$buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_LOGIN, autoComplete: null, autoFocus: false, checked: null, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: null, disabled: false, id: NAME_FIELD_LOGIN, maxLength: null, name: NAME_FIELD_LOGIN, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: ucwords(NAME_FIELD_LOGIN), wrap: null);
 $output .= $buttonLogin->getHtml();
 $output .= " <div class=\"responsive-cell\"></div>";
 $output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a>&nbsp;&nbsp;&nbsp;<a href=\"signup.php\">New User</a></div>";

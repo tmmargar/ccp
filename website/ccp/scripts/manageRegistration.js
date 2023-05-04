@@ -1,9 +1,6 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  enableRegister : function() {
-    return document.querySelectorAll(".selected").length == 0;
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name" }, null, { "type" : "register" }, {"searchable": false, "visible": false }], aryOrder: [[1, "desc"], [2, "asc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
@@ -34,7 +31,6 @@ export const inputLocal = {
     } else {
       row.classList.add("selected");
     }
-    input.enable({objId: "register", functionName: inputLocal.enableRegister});
   }
 };
 let documentReadyCallback = () => {
@@ -58,8 +54,11 @@ document.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
     } else {
+      display.clearErrorsAndMessages();
       inputLocal.setPlayerIds();
       document.querySelector("#mode").value = "modify";
     }
+  } else {
+    display.clearErrorsAndMessages();
   }
 });

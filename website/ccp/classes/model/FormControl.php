@@ -8,6 +8,7 @@ class FormControl extends FormBase {
   public static string $TYPE_INPUT_DATE_TIME = "datetime-local";
   public static string $TYPE_INPUT_EMAIL     = "email";
   public static string $TYPE_INPUT_HIDDEN    = "hidden";
+  public static string $TYPE_INPUT_NUMBER    = "number";
   public static string $TYPE_INPUT_PASSWORD  = "password";
   public static string $TYPE_INPUT_RESET     = "reset";
   public static string $TYPE_INPUT_SUBMIT    = "submit";
@@ -60,7 +61,7 @@ class FormControl extends FormBase {
 //       (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : (self::$TYPE_INPUT_TELEPHONE == $this->type ? " placeholder=\"(999) 999-9999\"" : "")) .
       (isset($this->readOnly) && $this->readOnly ? " readonly" : "") .
 //       (isset($this->required) ? " required=\"" . $this->required . "\"" : "") .
-    (isset($this->required) ? " required" : "") .
+      ($this->required ? " required" : "") .
       (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") .
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
       " type=\"" . ((self::$TYPE_INPUT_RESET == $this->type) ? self::$TYPE_INPUT_BUTTON : $this->type) . "\"" .
