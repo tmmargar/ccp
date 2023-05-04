@@ -169,7 +169,7 @@ if ($mode == Constant::$MODE_VIEW) {
   }
   if ($tournamentId != DEFAULT_VALUE_TOURNAMENT_ID) {
     $output .= " <div class=\"buttons center\">\n";
-    $buttonRegister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: true, id: Constant::$TEXT_REGISTER, maxLength: null, name: Constant::$TEXT_REGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_REGISTER_UNREGISTER, wrap: null);
+    $buttonRegister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_REGISTER, maxLength: null, name: Constant::$TEXT_REGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_REGISTER_UNREGISTER, wrap: null);
     $output .= $buttonRegister->getHtml();
     $output .= " </div>\n";
     $params = array($tournamentId);

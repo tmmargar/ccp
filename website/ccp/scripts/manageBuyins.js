@@ -41,10 +41,6 @@ export const inputLocal = {
       document.querySelector("#" + name + "_" + id).disabled = !obj.checked;
     }
   },
-  enableSave : function() {
-    //return document.querySelectorAll("[id^='buyin_']:checked").length == 0;
-    return false;
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
@@ -104,10 +100,8 @@ export const inputLocal = {
   setIds : function() {
     let ids = "";
     document.querySelectorAll("[id^='buyin_']")?.forEach(obj => {
-      if (obj.checked) {
-        const id = obj.id.split("_");
-        ids += id[1] + ", ";
-      }
+      const id = obj.id.split("_");
+      ids += id[1] + ", ";
     });
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;

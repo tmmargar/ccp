@@ -1,13 +1,13 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  enableSave : function(id) {
-    return ((document.querySelector("#seasonDescription_" + id).value == "") || (document.querySelector("#seasonChampionshipQualify_" + id).value <= 0) || !input.compareDate({date1: document.querySelector("[id^='seasonStartDate_']").value, date2: document.querySelector("[id^='seasonEndDate_']").value}));
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "5%" }, { "width": "25%" }, { "type": "date", "width": "20%" }, { "type": "date", "width": "20%" }, { "width": "20%" }, {"render" : function (data, type, row, meta) { return display.formatActive({value: data, meta: meta, tableId: "dataTbl"}); },  "width": "10%" }, { "orderable": false, "visible": false }], aryOrder: [[5, "desc"], [2, "desc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
   setDefaultsLoad : function() {
+    if ("create" == document.querySelector("#mode").value || "modify" == document.querySelector("#mode").value) {
+      document.querySelector("[id^='seasonChampionshipQualify_']").min = 1;
+    }
     if ("create" == document.querySelector("#mode").value) {
       document.querySelector("[id^='seasonStartDate_']").value = (new Date().getFullYear() + 1) + "-01-01T00:00";
       document.querySelector("[id^='seasonEndDate_']").value = (new Date().getFullYear() + 1) + "-12-31T23:59";
@@ -27,16 +27,19 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   setMinMax : function() {
+    if (document.querySelector("[id^='seasonChampionshipQualify_']")) {
+      document.querySelector("[id^='seasonChampionshipQualify_']").max = 99;
+    }
     if (document.querySelector("[id^='seasonStartDate_']")) {
       if (document.querySelector("[id^='seasonEndDate_']:valid")) {
-        document.querySelector("[id^='seasonStartDate_']").max = document.querySelector("[id^='seasonEndDate_']").value;
+        document.querySelector("[id^='seasonStartDate_']").max = input.formatDate({value: document.querySelector("[id^='seasonEndDate_']").value, field: "minutes", operation: "-", amount: 1});
       } else {
         document.querySelector("[id^='seasonStartDate_']").removeAttribute("max");
       }
     }
     if (document.querySelector("[id^='seasonEndDate_']")) {
       if (document.querySelector("[id^='seasonStartDate_']:valid")) {
-        document.querySelector("[id^='seasonEndDate_']").min = document.querySelector("[id^='seasonStartDate_']").value;
+        document.querySelector("[id^='seasonEndDate_']").min = input.formatDate({value: document.querySelector("[id^='seasonStartDate_']").value, field: "minutes", operation: "+", amount: 1});
       } else {
         document.querySelector("[id^='seasonEndDate_']").removeAttribute("min");
       }
@@ -51,28 +54,23 @@ export const inputLocal = {
     }
   },
   validate : function() {
-    input.validateLength({obj: document.querySelector("#seasonDescription_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#seasonStartDate_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#seasonEndDate_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#seasonChampionshipQualify_"), length: 1, focus: false});
-  },
-  validateField : function({obj} = {}) {
-    input.validateLength({obj: obj, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  },
-  validateFieldNumber : function({obj, event} = {}) {
-    input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
-    input.validateLength({obj: obj, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
+    const description = document.querySelectorAll("[id^='seasonDescription_']");
+    const startDate = document.querySelectorAll("[id^='seasonStartDate_']");
+    const endDate = document.querySelectorAll("[id^='seasonEndDate_']");
+    const championshipQualify = document.querySelectorAll("[id^='seasonChampionshipQualify_']");
+    if (description.length > 0) {
+      description[0].setCustomValidity(description[0].validity.valueMissing ? "You must enter a description" : "");
+      startDate[0].setCustomValidity(startDate[0].validity.valueMissing ? "You must enter a valid start date" : startDate[0].validity.rangeOverflow ? "You must enter a start date before the end date" : "");
+      endDate[0].setCustomValidity(endDate[0].validity.valueMissing ? "You must enter a valid end date" : endDate[0].validity.rangeUnderflow ? "You must enter an end date after the start date" : "");
+      championshipQualify[0].setCustomValidity(championshipQualify[0].validity.valueMissing ? "You must enter a #" : championshipQualify[0].validity.rangeUnderflow ? "You must enter a # >= " + championshipQualify[0].min : "");
+    }
   }
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
-  inputLocal.setDefaultsLoad();
-  inputLocal.validate();
   inputLocal.setMinMax();
+  inputLocal.setDefaultsLoad();
   inputLocal.setWidth();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
   input.storePreviousValue({selectors: ["[id^='seasonDescription_']", "[id^='seasonStartDate_']", "[id^='seasonEndDate_']", "[id^='seasonChampionshipQualify_']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -92,31 +90,16 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("click", (event) => {
+  inputLocal.validate();
   if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='seasonDescription_']", "[id^='seasonStartDate_']", "[id^='seasonEndDate_']", "[id^='seasonChampionshipQualify_']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
   }
 });
 document.addEventListener("input", (event) => {
+  inputLocal.validate();
   if (event.target && event.target.classList.contains("timePicker")) {
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
     inputLocal.setMinMax();
-  }
-});
-document.addEventListener("keyup", (event) => {
-  if (event.target && event.target.id.includes("seasonDescription")) {
-    inputLocal.validateField({obj: event.target});
-  } else if (event.target && event.target.id.includes("seasonChampionshipQualify")) {
-    inputLocal.validateFieldNumber({obj: event.target, event: event});
-  }
-});
-document.addEventListener("paste", (event) => {
-  if (event.target && event.target.id.includes("seasonDescription")) {
-    inputLocal.validateField({obj: event.target});
-  } else if (event.target && event.target.id.includes("seasonChampionshipQualify")) {
-    inputLocal.validateFieldNumber({obj: event.target, event: event});
   }
 });

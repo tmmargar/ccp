@@ -194,7 +194,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
           $output .= "  <div>";
           $food = $resultList[2];
           if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
-            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
+            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_FOOD, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: FOOD_FIELD_NAME, maxLength: null, name: FOOD_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 20, suffix: null, type: FormControl::$TYPE_INPUT_TEXTBOX, value: $food, wrap: null);
             $output .= $textBoxName->getHtml();
           } else {
             $output .= $food;
@@ -248,9 +248,9 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
           } else {
             $output .= " <div class=\"center\">\n";
-            $buttonRegister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (isset($food) ? false : true), id: Constant::$TEXT_REGISTER, maxLength: null, name: Constant::$TEXT_REGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: $registerText, wrap: null);
+            $buttonRegister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_REGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$TEXT_REGISTER, maxLength: null, name: Constant::$TEXT_REGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: $registerText, wrap: null);
             $output .= $buttonRegister->getHtml();
-            $buttonUnregister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_UNREGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (!$registered ? true : false), id: Constant::$TEXT_UNREGISTER, maxLength: null, name: Constant::$TEXT_UNREGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_UNREGISTER, wrap: null);
+            $buttonUnregister = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: Constant::$ACCESSKEY_UNREGISTER, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: (!$registered ? true : false), id: Constant::$TEXT_UNREGISTER, maxLength: null, name: Constant::$TEXT_UNREGISTER, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_SUBMIT, value: Constant::$TEXT_UNREGISTER, wrap: null, import: null, noValidate: true);
             $output .= $buttonUnregister->getHtml();
             $output .= " </div>\n";
           }

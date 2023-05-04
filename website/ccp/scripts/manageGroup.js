@@ -1,9 +1,6 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  enableSave : function(id) {
-    return document.querySelector("#groupName_" + id).value.length == 0;
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width" : "30%" }, { "width" : "70%" }, { "searchable": false, "visible": false }], aryOrder: [[ 1, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
@@ -20,13 +17,15 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   validate : function() {
-    input.validateLength({obj: document.querySelector("#groupName_"), length: 1, focus: false});
+    const name = document.querySelectorAll("[id^='groupName_']");
+    if (name.length > 0) {
+      name[0].setCustomValidity(name[0].validity.valueMissing ? "You must enter a name" : "");
+    }
   },
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
   inputLocal.validate();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
   input.storePreviousValue({selectors: ["[id^='groupName']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -46,27 +45,13 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("click", (event) => {
-  if (event.target && event.target.id.includes("groupName")) {
-    input.validateLength(event.target, 1, false);
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("reset")) {
+  inputLocal.validate();
+  if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='groupName']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
   }
 });
-document.addEventListener("keyup", (event) => {
-  if (event.target && event.target.id.includes("groupName")) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
-});
-document.addEventListener("paste", (event) => {
-  if (event.target && event.target.id.includes("groupName")) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
+document.addEventListener("input", (event) => {
+  inputLocal.validate();
 });

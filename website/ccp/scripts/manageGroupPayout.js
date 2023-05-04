@@ -1,10 +1,6 @@
 "use strict";
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
-  enableSave : function(id) {
-    const idTemp = id.split("::")[0];
-    return document.querySelector("#groupId_" + idTemp).value.length == 0 || document.querySelector("#payoutId_" + idTemp).value.length == 0;
-  },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "orderSequence": [ "desc", "asc" ], "width" : "15%", "visible": false }, { "width" : "50%" }, { "searchable": false, "visible": false }], aryOrder: [[1, "asc"], [3, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
@@ -27,15 +23,17 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   validate : function() {
-    input.validateLength({obj: document.querySelector("#groupId_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#payoutId_"), length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
+    const group = document.querySelectorAll("[id^='groupId_']");
+    const payout = document.querySelectorAll("[id^='payoutId_']");
+    if (group.length > 0) {
+      group[0].setCustomValidity(group[0].value == "" ? "You must select a group" : "");
+      payout[0].setCustomValidity(payout[0].value == "" ? "You must select a payout" : "");
+    }
   }
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
   inputLocal.validate();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
   input.storePreviousValue({selectors: ["[id^='payoutId_'], [id^='groupId']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -55,17 +53,19 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("change", (event) => {
-  if (event.target && (event.target.id.includes("groupId") || event.target.id.includes("payoutId"))) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
+  inputLocal.validate();
 });
 document.addEventListener("click", (event) => {
+  inputLocal.validate();
   if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='payoutId_'], [id^='groupId_']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
+  }
+});
+document.addEventListener("input", (event) => {
+  inputLocal.validate();
+  if (event.target && event.target.classList.contains("timePicker")) {
+    inputLocal.setMinMax();
   }
 });

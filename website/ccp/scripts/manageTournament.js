@@ -8,55 +8,8 @@ export const inputLocal = {
     }
     return result;
   },
-  customValidation : function({confirmation} = {}) {
-    let msg = [];
-    const aryId = document.querySelector("#ids").value.split(", ");
-    for (let id of aryId) {
-      if (document.querySelectorAll("#tournamentRebuys_" + id).length > 0) {
-        const rebuys = document.querySelector("#tournamentRebuys_" + id).value;
-        const rebuyAmount = document.querySelector("#tournamentRebuyAmount_" + id).value;
-        if ((((rebuyAmount == "$0") || (rebuyAmount == "0")) && (rebuys != "0")) || (((rebuyAmount != "$0") && (rebuyAmount != "0")) && (rebuys == "0"))) {
-          msg.push("You must enter either both the rebuy amount and the max rebuys or 0 for both");
-          document.querySelector("#tournamentRebuys_" + id).classList.add("errors");
-          document.querySelector("#tournamentRebuyAmount_" + id).classList.add("errors");
-        } else {
-          display.clearErrorsAndMessages();
-          document.querySelector("#tournamentRebuys_" + id).classList.remove("errors");
-          document.querySelector("#tournamentRebuyAmount_" + id).classList.remove("errors");
-        }
-        const addonAmount = document.querySelector("#tournamentAddonAmount_" + id).value;
-        const addonChipCount = document.querySelector("#tournamentAddonChipCount_" + id).value;
-        if ((((addonAmount == "$0") || (addonAmount == "0")) && (addonChipCount != "0")) || (((addonAmount!= "$0") && (addonAmount != "0")) && (addonChipCount == "0"))) {
-          msg.push("You must enter either both the addon amount and the addon chip count or 0 for both");
-          document.querySelector("#tournamentAddonChipCount_" + id).classList.add("errors");
-          document.querySelector("#tournamentAddonAmount_" + id).classList.add("errors");
-        } else {
-          display.clearErrorsAndMessages();
-          document.querySelector("[id^='tournamentAddonAmount_']").classList.remove("errors");
-          document.querySelector("[id^='tournamentAddonChipCount_']").classList.remove("errors");
-        }
-        if (confirmation) {
-          inputLocal.confirmAction();
-        }
-      }
-    }
-    if (msg.length > 0) {
-      display.showErrors({errors: msg});
-    }
-  },
   defaultDescription : function() {
     return "S" + (new Date().getFullYear() - input.firstYear() + 1) + " - T";
-  },
-  enableSave : function(id) {
-    return ((document.querySelector("#tournamentDescription_" + id).value == "") || (document.querySelector("#tournamentLimitTypeId_" + id).value == "") || (document.querySelector("#tournamentGameTypeId_" + id).value == "")
-    || (document.querySelector("#tournamentChipCount_" + id).value.length == 0) || (document.querySelector("#tournamentLocationId_" + id).value == "") || !document.querySelector("#tournamentStartDateTime_" + id + ":valid")
-    || (document.querySelector("#tournamentBuyinAmount_" + id).value.length == 0) || (document.querySelector("#tournamentMaxPlayers_" + id).value.length == 0) || (document.querySelector("#tournamentRebuyAmount_" + id).value.length == 0)
-    || (document.querySelector("#tournamentRebuys_" + id).value.length == 0) || (document.querySelector("#tournamentAddonAmount_" + id).value.length == 0) || (document.querySelector("#tournamentAddonChipCount_" + id).value.length == 0)
-    || (document.querySelector("#tournamentRake_" + id).value.length == 0) || (document.querySelector("#tournamentGroupId_" + id).value == "")
-    || (document.querySelector("#tournamentRebuyAmount_" + id).value == 0) && (document.querySelector("#tournamentRebuys_" + id).value > 0)
-    || (document.querySelector("#tournamentRebuyAmount_" + id).value > 0) && (document.querySelector("#tournamentRebuys_" + id).value == 0)
-    || (document.querySelector("#tournamentAddonAmount_" + id).value == 0) && (document.querySelector("#tournamentAddonChipCount_" + id).value > 0)
-    || (document.querySelector("#tournamentAddonAmount_" + id).value > 0) && (document.querySelector("#tournamentAddonChipCount_" + id).value == 0));
   },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "3%" },
@@ -107,91 +60,86 @@ export const inputLocal = {
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
   },
+  setMinMax : function() {
+    if (document.querySelector("[id^='tournamentChipCount_']")) {
+      document.querySelector("[id^='tournamentChipCount_']").min = document.querySelector("[id^='tournamentSpecialTypeId_']").options[document.querySelector("[id^='tournamentSpecialTypeId_']").selectedIndex].text == input.championshipText() ? 0 : 1;
+      document.querySelector("[id^='tournamentChipCount_']").max = 999999;
+    }
+    if (document.querySelector("[id^='tournamentBuyinAmount_']")) {
+      document.querySelector("[id^='tournamentBuyinAmount_']").min = document.querySelector("[id^='tournamentSpecialTypeId_']").options[document.querySelector("[id^='tournamentSpecialTypeId_']").selectedIndex].text == input.championshipText() ? 0 : 1;
+      document.querySelector("[id^='tournamentBuyinAmount_']").max = 999;
+    }
+    if (document.querySelector("[id^='tournamentMaxPlayers_']")) {
+      document.querySelector("[id^='tournamentMaxPlayers_']").min = 1;
+      document.querySelector("[id^='tournamentMaxPlayers_']").max = 99;
+    }
+    if (document.querySelector("[id^='tournamentRebuyAmount_']")) {
+      document.querySelector("[id^='tournamentRebuyAmount_']").min = 0;
+      document.querySelector("[id^='tournamentRebuyAmount_']").max = 999;
+    }
+    if (document.querySelector("[id^='tournamentRebuys_']")) {
+      document.querySelector("[id^='tournamentRebuys_']").min = 0;
+      document.querySelector("[id^='tournamentRebuys_']").max = 99;
+    }
+    if (document.querySelector("[id^='tournamentAddonAmount_']")) {
+      document.querySelector("[id^='tournamentAddonAmount_']").min = 0;
+      document.querySelector("[id^='tournamentAddonAmount_']").max = 999;
+    }
+    if (document.querySelector("[id^='tournamentAddonChipCount_']")) {
+      document.querySelector("[id^='tournamentAddonChipCount_']").min = 0;
+      document.querySelector("[id^='tournamentAddonChipCount_']").max = 999999;
+    }
+    if (document.querySelector("[id^='tournamentRake_']")) {
+      document.querySelector("[id^='tournamentRake_']").min = document.querySelector("[id^='tournamentSpecialTypeId_']").options[document.querySelector("[id^='tournamentSpecialTypeId_']").selectedIndex].text == input.championshipText() ? 0 : 1;
+      document.querySelector("[id^='tournamentRake_']").max = 99;
+    }
+  },
   validate : function() {
-    input.validateLength({obj: document.querySelector("#tournamentDesc_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentLimitTypeId_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentGameTypeId_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentChipCount_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentLocationId_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentBuyinAmount_"), length: 1, focus: false});
-    if (document.querySelector("#mode").value == "create" || document.querySelector("#mode").value == "modify") {
-      document.querySelector("[id^='tournamentChipCount_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentChipCount_']").value;
-      document.querySelector("[id^='tournamentRebuyAmount_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentRebuyAmount_']").value;
-      document.querySelector("[id^='tournamentRebuys_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentRebuys_']").value;
-      document.querySelector("[id^='tournamentAddonAmount_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentAddonAmount_']").value;
-      document.querySelector("[id^='tournamentAddonChipCount_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentAddonChipCount_']").value;
-      document.querySelector("[id^='tournamentRake_']").dataset.previousValueValidation = document.querySelector("[id^='tournamentRake_']").value;
-    }
-    input.validateLength({obj: document.querySelector("#tournamentMaxPlayers_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentRebuyAmount_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentRebuys_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentAddonAmount_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentAddonChipCount_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentGroupId_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#tournamentRake_"), length: 1, focus: false});
-  },
-  validateField : function({obj} = {}) {
-    input.validateLength({obj: obj, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  },
-  validateField2 : function({obj, event} = {}) {
-    const objSt = document.querySelector("[id^='tournamentSpecialTypeId_']");
-    if (objSt.options[objSt.selectedIndex].innerText == "Championship") {
-      input.validateNumberOnlyGreaterThanEqualToValue({obj: obj, event: event, value: 0, storeValue: true});
-    } else {
-      input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
-    }
-    input.validateLength({obj: obj, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  },
-  validateField3 : function({obj, event} = {}) {
-    if (obj.id.search(/tournamentBuyinAmount_/g) == -1) {
-      if (obj.id.search(/tournamentRebuyAmount_/g) != -1 || obj.id.search(/tournamentRebuys_/g) != -1 || obj.id.search(/tournamentAddonAmount_/g) != -1 || obj.id.search(/tournamentAddonChipCount_/g) != -1) {
-        input.validateNumberOnlyGreaterThanEqualToValue({obj: obj, event: event, value: 0, storeValue: true});
-      } else {
-        input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
+    const description = document.querySelectorAll("[id^='tournamentDescription_']");
+    const chipCount = document.querySelectorAll("[id^='tournamentChipCount_']");
+    const buyinAmount = document.querySelectorAll("[id^='tournamentBuyinAmount_']");
+    const maxPlayers = document.querySelectorAll("[id^='tournamentMaxPlayers_']");
+    const rebuyAmount = document.querySelectorAll("[id^='tournamentRebuyAmount_']");
+    const rebuys = document.querySelectorAll("[id^='tournamentRebuys_']");
+    const addonAmount = document.querySelectorAll("[id^='tournamentAddonAmount_']");
+    const addonChipCount = document.querySelectorAll("[id^='tournamentAddonChipCount_']");
+    const rake = document.querySelectorAll("[id^='tournamentRake_']");
+    if (description.length > 0) {
+      description[0].setCustomValidity(description[0].validity.valueMissing ? "You must enter a description" : "");
+      const limitType = document.querySelectorAll("[id^='tournamentLimitTypeId_']");
+      const gameType = document.querySelectorAll("[id^='tournamentGameTypeId_']");
+      limitType[0].setCustomValidity(limitType[0].value == "" ? "You must select a limit type" : "");
+      gameType[0].setCustomValidity(gameType[0].value == "" ? "You must select a game type" : "");
+      chipCount[0].setCustomValidity(chipCount[0].validity.valueMissing ? "You must enter a chip count" : chipCount[0].validity.rangeUnderflow ? "You must enter a chip count >= " + chipCount[0].min : chipCount[0].validity.rangeOverflow ? "You must enter a chip count <= " + chipCount[0].max : "");
+      const location = document.querySelectorAll("[id^='tournamentLocationId_']");
+      location[0].setCustomValidity(location[0].value == "" ? "You must select a location" : "");
+      buyinAmount[0].setCustomValidity(buyinAmount[0].validity.valueMissing ? "You must enter a buyin amount" : buyinAmount[0].validity.rangeUnderflow ? "You must enter a buyin amount >= " + buyinAmount[0].min : buyinAmount[0].validity.rangeOverflow ? "You must enter a buyin amount <= " + buyinAmount[0].max : "");
+      maxPlayers[0].setCustomValidity(maxPlayers[0].validity.valueMissing ? "You must enter the # of players" : maxPlayers[0].validity.rangeUnderflow ? "You must enter the # of players >= " + maxPlayers[0].min : maxPlayers[0].validity.rangeOverflow ? "You must enter the # of players <= " + maxPlayers[0].max : "");
+      rebuyAmount[0].setCustomValidity(rebuyAmount[0].validity.valueMissing ? "You must enter a rebuy amount" : rebuyAmount[0].validity.rangeUnderflow ? "You must enter a rebuy amount >= " + rebuyAmount[0].min : rebuyAmount[0].validity.rangeOverflow ? "You must enter a rebuy amount <= " + rebuyAmount[0].max : "");
+      rebuys[0].setCustomValidity(rebuys[0].validity.valueMissing ? "You must enter the max rebuys" : rebuys[0].validity.rangeUnderflow ? "You must enter the max rebuys >= " + rebuys[0].min : rebuys[0].validity.rangeOverflow ? "You must enter the max rebuys <= " + rebuys[0].max : "");
+      if ((rebuyAmount[0].value == 0 && rebuys[0].value != 0) || (rebuyAmount[0].value != 0 && rebuys[0].value == 0)) {
+        rebuyAmount[0].setCustomValidity("You must enter both a rebuy amount and the max # of rebuys or neither");
+        rebuys[0].setCustomValidity("You must enter both a rebuy amount and the max # of rebuys or neither");
       }
-    } else {
-      const objSt = document.querySelector("[id^='tournamentSpecialTypeId_']");
-      if (objSt.options[objSt.selectedIndex].innerText == "Championship") {
-        input.validateNumberOnlyGreaterThanEqualToValue({obj: obj, event: event, value: 0, storeValue: true});
-      } else {
-        input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
+      addonAmount[0].setCustomValidity(addonAmount[0].validity.valueMissing ? "You must enter an addon amount" : addonAmount[0].validity.rangeUnderflow ? "You must enter an addon amount >= " + addonAmount[0].min : addonAmount[0].validity.rangeOverflow ? "You must enter an addon amount <= " + addonAmount[0].max : "");
+      addonChipCount[0].setCustomValidity(addonChipCount[0].validity.valueMissing ? "You must enter an addon chip count" : addonChipCount[0].validity.rangeUnderflow ? "You must enter an addon chip count >= " + addonChipCount[0].min : addonChipCount[0].validity.rangeOverflow ? "You must enter an addon chip count <= " + addonChipCount[0].max : "");
+      if ((addonAmount[0].value == 0 && addonChipCount[0].value != 0) || (addonAmount[0].value != 0 && addonChipCount[0].value == 0)) {
+        addonAmount[0].setCustomValidity("You must enter both a rebuy amount and the max # of rebuys or neither");
+        addonChipCount[0].setCustomValidity("You must enter both an addon amount and the addon chip count or neither");
       }
+      const group = document.querySelectorAll("[id^='tournamentGroupId_']");
+      group[0].setCustomValidity(group[0].value == "" ? "You must select a group" : "");
+      rake[0].setCustomValidity(rake[0].validity.valueMissing ? "You must enter a rake" : rake[0].validity.rangeUnderflow ? "You must enter a rake >= " + rake[0].min : rake[0].validity.rangeOverflow ? "You must enter a rake <= " + rake[0].max : "");
     }
-    if (obj.id.search(/tournamentRebuyAmount_/g) != -1 || obj.id.search(/tournamentRebuys_/g) != -1) {
-      if (document.querySelector("[id^='tournamentRebuyAmount_']").value == "" || document.querySelector("[id^='tournamentRebuys_']").value == "") {
-        input.validateLength({obj: document.querySelector("[id^='tournamentRebuyAmount_']"), length: 1, focus: false});
-        input.validateLength({obj: document.querySelector("[id^='tournamentRebuys_']"), length: 1, focus: false});
-      } else {
-        inputLocal.customValidation({confirmation: false});
-      }
-    } else if (obj.id.search(/tournamentAddonAmount_/g) != -1 || obj.id.search(/tournamentAddonChipCount_/g) != -1) {
-      if (document.querySelector("[id^='tournamentAddonAmount_']").value == "" || document.querySelector("[id^='tournamentAddonChipCount_']").value == "") {
-        input.validateLength({obj: document.querySelector("[id^='tournamentAddonAmount_']"), length: 1, focus: false});
-        input.validateLength({obj: document.querySelector("[id^='tournamentAddonChipCount_']"), length: 1, focus: false});
-      } else {
-        inputLocal.customValidation({confirmation: false});
-      }
-    } else {
-      input.validateLength({obj: obj, length: 1, focus: false});
-    }
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  },
-  validateField4 : function({obj, event} = {}) {
-    input.validateNumberOnlyGreaterZero({obj: obj, event: event, condition: true, storeValue: true});
-    input.validateLength({obj: obj, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   }
 };
 let documentReadyCallback = () => {
   if (document.querySelector("#mode").value == "create" || document.querySelector("#mode").value == "modify") {
-    document.querySelector("body").style.maxWidth = "500px";
+    document.querySelector("body").style.maxWidth = "600px";
   }
   inputLocal.initializeDataTable();
+  inputLocal.setMinMax();
   inputLocal.setDefaults();
-  inputLocal.validate();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
   input.storePreviousValue({selectors: ["[id^='tournamentDescription_']", "[id^='tournamentComment_']", "[id^='tournamentLimitTypeId_']", "[id^='tournamentGameTypeId_']", "[id^='tournamentSpecialTypeId_']", "[id^='tournamentLocationId_']", "[id^='tournamentStartDateTime_']", "[id^='tournamentBuyinAmount_']", "[id^='tournamentMaxPlayers_']", "[id^='tournamentRebuyAmount_']", "[id^='tournamentRebuys_']", "[id^='tournamentAddonAmount_']", "[id^='tournamentAddonChipCount_']", "[id^='tournamentGroupId_']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -211,56 +159,27 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("change", (event) => {
-  if (event.target && (event.target.id.includes("tournamentLimitTypeId") || event.target.id.includes("tournamentGameTypeId") || event.target.id.includes("tournamentLocationId") || event.target.id.includes("tournamentGroupId"))) {
-    inputLocal.validateField({obj: event.target});
-  } else if (event.target && event.target.id.includes("tournamentSpecialTypeId")) {
-    if (event.target.options[event.target.selectedIndex].innerText == "Championship") {
-      document.querySelector("[id^='tournamentChipCount_']").value = 0;
-      document.querySelector("[id^='tournamentBuyinAmount_']").value = 0;
-    } else {
-      if (document.querySelector("[id^='tournamentChipCount_']").value == 0) {
-        document.querySelector("[id^='tournamentChipCount_']").value = "";
-      }
-      if (document.querySelector("[id^='tournamentBuyinAmount_']").value == 0) {
-        document.querySelector("[id^='tournamentBuyinAmount_']").value = "";
-        input.validateLength({obj: document.querySelector("[id^='tournamentBuyinAmount_']"), length: 1, focus: false});
-      }
-    }
+  if (event.target && event.target.id.includes("tournamentSpecialTypeId")) {
+    inputLocal.setMinMax();
+    inputLocal.validate();
   }
 });
 document.addEventListener("click", (event) => {
-  if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
-    inputLocal.setIds();
-  } else if (event.target && (event.target.id.includes("reset"))) {
+  inputLocal.validate();
+  if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='tournamentDescription_']", "[id^='tournamentComment_']", "[id^='tournamentLimitTypeId_']", "[id^='tournamentGameTypeId_']", "[id^='tournamentSpecialTypeId_']", "[id^='tournamentLocationId_']", "[id^='tournamentStartDateTime_']", "[id^='tournamentBuyinAmount_']", "[id^='tournamentMaxPlayers_']", "[id^='tournamentRebuyAmount_']", "[id^='tournamentRebuys_']", "[id^='tournamentAddonAmount_']", "[id^='tournamentAddonChipCount_']", "[id^='tournamentGroupId_']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
+  } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
+    inputLocal.setIds();
+  } else if (event.target && event.target.id.includes("confirmDelete")) {
+    if (!inputLocal.confirmAction()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 });
 document.addEventListener("input", (event) => {
+  inputLocal.validate();
   if (event.target && event.target.classList.contains("timePicker")) {
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  }
-});
-document.addEventListener("keyup", (event) => {
-  if (event.target && (event.target.id.includes("tournamentDescription") || event.target.id.includes("tournamentStartDateTime"))) {
-    inputLocal.validateField({obj: event.target});
-  } else if (event.target && (event.target.id.includes("tournamentChipCount") || event.target.id.includes("tournamentBuyinAmount") || event.target.id.includes("tournamentRake"))) {
-    inputLocal.validateField2({obj: event.target, event: event});
-  } else if (event.target && (event.target.id.includes("tournamentRebuyAmount") || event.target.id.includes("tournamentRebuys") || event.target.id.includes("tournamentAddonAmount") || event.target.id.includes("tournamentAddonChipCount"))) {
-    inputLocal.validateField3({obj: event.target, event: event});
-  } else if (event.target && event.target.id.includes("tournamentMaxPlayers")) {
-    inputLocal.validateField4({obj: event.target, event: event});
-  }
-});
-document.addEventListener("paste", (event) => {
-  if (event.target && (event.target.id.includes("tournamentDescription") || event.target.id.includes("tournamentStartDateTime"))) {
-    inputLocal.validateField({obj: event.target});
-  } else if (event.target && (event.target.id.includes("tournamentChipCount") || event.target.id.includes("tournamentBuyinAmount") || event.target.id.includes("tournamentRake"))) {
-    inputLocal.validateField2({obj: event.target, event: event});
-  } else if (event.target && (event.target.id.includes("tournamentRebuyAmount") || event.target.id.includes("tournamentRebuys") || event.target.id.includes("tournamentAddonAmount") || event.target.id.includes("tournamentAddonChipCount"))) {
-    inputLocal.validateField3({obj: event.target, event: event});
-  } else if (event.target && event.target.id.includes("tournamentMaxPlayers")) {
-    inputLocal.validateField4({obj: event.target, event: event});
+    inputLocal.setMinMax();
   }
 });

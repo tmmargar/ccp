@@ -49,9 +49,6 @@ export const inputLocal = {
       document.querySelectorAll('[id^="removeRow"]').forEach(obj => {obj.disabled = document.querySelectorAll("#inputs tbody tr").length == 2; });
     }
   },
-  enableSave : function(id) {
-    return document.querySelector("#payoutName_" + id).value.length == 0 || document.querySelector("#bonusPoints_" + id).value.length == 0 || document.querySelector("#minPlayers_" + id).value.length == 0 || document.querySelector("#maxPlayers_" + id).value.length == 0 || (parseInt(document.querySelector("#minPlayers_" + id).value) >= parseInt(document.querySelector("#maxPlayers_" + id).value)) || document.querySelector("#percentageTotal").value != 100;
-  },
   initializeDataTable : function() {
     const aryRowGroup = {
       startRender: null,
@@ -112,31 +109,71 @@ export const inputLocal = {
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
   },
-  validate : function() {
-    input.validateLength({obj: document.querySelector("#payoutName_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#bonusPoints_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#minPlayers_"), length: 1, focus: false});
-    input.validateLength({obj: document.querySelector("#maxPlayers_"), length: 1, focus: false});
-    inputLocal.enableButtons();
-  },
-  validateField : function({event} = {}) {
-    event.target.value = parseInt(event.target.value);
-    const aryId = event.target.id.split("_");
-    const objPrevious = document.querySelector("#percentage_" + aryId[1] + "_" + (parseInt(aryId[2]) - 1));
-    if (objPrevious) {
-      input.validateNumberOnlyLessThanEqualToValue({obj: event.target, event: event, value: objPrevious.value, storeValue: false});
-    } else {
-      input.validateNumberOnlyGreaterZero({obj: event.target, event: event, condition: true, storeValue: false});
+  setMinMax : function() {
+    if (document.querySelector("[id^='bonusPoints_']")) {
+      document.querySelector("[id^='bonusPoints_']").min = 1;
     }
-    inputLocal.calculateTotal(event.target.id);
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
+    if (document.querySelector("[id^='minPlayers_']")) {
+      document.querySelector("[id^='minPlayers_']").min = 1;
+      if (document.querySelector("[id^='maxPlayers_']:valid")) {
+        document.querySelector("[id^='minPlayers_']").max = parseInt(document.querySelector("[id^='maxPlayers_']").value) - 1;
+      } else {
+        document.querySelector("[id^='minPlayers_']").removeAttribute("max");
+      }
+    }
+    if (document.querySelector("[id^='maxPlayers_']")) {
+      document.querySelector("[id^='maxPlayers_']").max = 999;
+      if (document.querySelector("[id^='minPlayers_']:valid")) {
+        document.querySelector("[id^='maxPlayers_']").min = parseInt(document.querySelector("[id^='minPlayers_']").value) + 1;
+      } else {
+        document.querySelector("[id^='maxPlayers_']").removeAttribute("min");
+      }
+    }
+  },
+  setWidth : function() {
+    document.querySelector("[id^='minPlayers_']").style.width = "50px";
+    document.querySelector("[id^='maxPlayers_']").style.width = "50px";
+    document.querySelectorAll("[id^='place_']").forEach(obj => {
+      obj.style.width = "50px";
+    });
+    document.querySelectorAll("[id^='percentage_']").forEach(obj => {
+      obj.style.width = "50px";
+    });
+  },
+  validate : function() {
+    const name = document.querySelectorAll("[id^='payoutName_']");
+    const bonusPoints = document.querySelectorAll("[id^='bonusPoints_']");
+    const minPlayers = document.querySelectorAll("[id^='minPlayers_']");
+    const maxPlayers = document.querySelectorAll("[id^='maxPlayers_']");
+    if (name.length > 0) {
+      name[0].setCustomValidity(name[0].validity.valueMissing ? "You must enter a name" : "");
+      bonusPoints[0].setCustomValidity(bonusPoints[0].validity.valueMissing ? "You must enter a #" : bonusPoints[0].validity.rangeUnderflow ? "You must enter a # > 0" : "");
+      minPlayers[0].setCustomValidity(minPlayers[0].validity.valueMissing ? "You must enter a #" : minPlayers[0].validity.rangeUnderflow ? "You must enter a # >= " + minPlayers[0].min : minPlayers[0].validity.rangeOverflow ? "You must enter a # <= " + minPlayers[0].max : "");
+      maxPlayers[0].setCustomValidity(maxPlayers[0].validity.valueMissing ? "You must enter a #" : maxPlayers[0].validity.rangeUnderflow ? "You must enter a # >= " + maxPlayers[0].min : maxPlayers[0].validity.rangeOverflow ? "You must enter a # <= " + maxPlayers[0].max : "");
+    }
+  },
+  validateTotal : function(event) {
+    if (document.querySelector("#mode").value.startsWith("save")) {
+      if (document.querySelector("#percentageTotal").value < 100) {
+        display.showErrors({errors: ["You must enter percentages that add up to 100"]});
+        event.preventDefault();
+        event.stopPropagation();
+        document.querySelector("#mode").value = document.querySelector("#mode").value.replace("save", "");
+      } else {
+        display.clearErrorsAndMessages();
+      }
+    }
   }
 };
 let documentReadyCallback = () => {
+  if (document.querySelector("#mode").value != "create" || document.querySelector("#mode").value != "modify") {
+    document.querySelector("body").style.maxWidth = "500px";
+  }
   inputLocal.initializeDataTable();
+  inputLocal.setMinMax();
   inputLocal.validate();
   inputLocal.postProcessing();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
+  inputLocal.setWidth();
   input.storePreviousValue({selectors: ["[id^='payoutName_'], [id^='bonusPoints_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
@@ -156,60 +193,27 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
   }
 }));
 document.addEventListener("click", (event) => {
+  inputLocal.validate();
+  inputLocal.validateTotal(event);
   if (event.target && event.target.id.includes("addRow")) {
     inputLocal.addRow({objId: "inputs"});
-    inputLocal.enableButtons();
   } else if (event.target && event.target.id.includes("removeRow")) {
     inputLocal.removeRow("inputs");
-    inputLocal.enableButtons();
   } else if (event.target && event.target.id.includes("save")) {
     inputLocal.save();
   } else if (event.target && event.target.id.includes("reset")) {
     inputLocal.reset();
     input.restorePreviousValue({selectors: ["[id^='payoutName_'], [id^='bonusPoints_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
-    inputLocal.validate();
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
   }
 });
-document.addEventListener("keyup", (event) => {
-  if (event.target && event.target.id.includes("payoutName")) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("bonusPoints")) {
-    input.validateNumberOnlyGreaterZero({obj: event.target, event: event, condition: true, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("minPlayers")) {
-    input.validateNumberOnlyLessThanEqualToValue({obj: event.target, event: event, value: document.querySelector("[id^='maxPlayers']").value, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("maxPlayers")) {
-    input.validateNumberOnlyGreaterThanEqualToValue({obj: event.target, event: event, value: document.querySelector("[id^='minPlayers']").value, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("percentage_")) {
-    inputLocal.validateField({event: event});
-  }
-});
-document.addEventListener("paste", (event) => {
-  if (event.target && event.target.id.includes("payoutName")) {
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("bonusPoints")) {
-    input.validateNumberOnlyGreaterZero({obj: event.target, event: event, condition: true, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("minPlayers")) {
-    input.validateNumberOnlyLessThanEqualToValue({obj: event.target, event: event, value: document.querySelector("[id^='maxPlayers']").value, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("maxPlayers")) {
-    input.validateNumberOnlyGreaterThanEqualToValue({obj: event.target, event: event, value: document.querySelector("[id^='minPlayers']").value, storeValue: true});
-    input.validateLength({obj: event.target, length: 1, focus: false});
-    input.enable({objId: "save", functionName: inputLocal.enableSave});
-  } else if (event.target && event.target.id.includes("percentage_")) {
-    inputLocal.validateField({event: event});
+document.addEventListener("input", (event) => {
+  inputLocal.validate();
+  inputLocal.validateTotal(event);
+  if (event.target && (event.target.id.includes("minPlayers") || event.target.id.includes("maxPlayers"))) {
+    inputLocal.setMinMax();
+  } else if (event.target && event.target.id.includes("percentage")) {
+    inputLocal.calculateTotal();
   }
 });

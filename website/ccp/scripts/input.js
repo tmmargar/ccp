@@ -1,6 +1,9 @@
 "use script";
 import { display } from "./display.js";
 export const input = {
+  championshipText : function() {
+    return "Championship";
+  },
   changeState : function({checkId, aryChangeId} = {}) {
     const objCheck = document.querySelector("#" + checkId);
     for (let changeId of aryChangeId) {
@@ -75,6 +78,13 @@ export const input = {
   },
   firstYear : function() {
     return 2006;
+  },
+  formatDate : function({value, field, operation, amount} = {}) {
+    let dt = new Date(value);
+    if (field == "minutes") {
+      dt.setMinutes(operation == "+" ? dt.getMinutes() + amount : dt.getMinutes() - amount);
+    }
+    return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0") + "T" + String(dt.getHours()).padStart(2, "0") + ":" + String(dt.getMinutes()).padStart(2, "0");
   },
   insertSelectedBefore : function({objIdSelected, objIdAfter, width} = {}) {
     const obj = document.querySelector("#selectedTournamentText");
@@ -235,7 +245,7 @@ document.addEventListener("click", (event) => {
     document.querySelector("#mode").value = "confirm";
   } else if (event.target && (event.target.id.includes("view") || event.target.id.includes("cancel"))) {
     document.querySelector("#mode").value = "view";
-  } else if (event.target && event.target.id.includes("save")) {
+  } else if (event.target && event.target.id.includes("save") && document.forms[0].reportValidity()) {
     document.querySelector("#mode").value = "save" + document.querySelector("#mode").value;
   } else if (event.target && event.target.id.includes("reset")) {
     document.querySelectorAll(".errors")?.forEach(obj => { obj.classList.remove("errors"); });

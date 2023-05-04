@@ -63,6 +63,24 @@ div.center {
 a:focus {
   outline: .1rem solid black;
 }
+
+input:invalid,
+textarea:invalid,
+select:invalid,
+input:out-of-range,
+.ts-control > input:invalid {
+  border: 2px dashed red !important;
+  color: red !important;
+}
+input:invalid:required,
+textarea:invalid:required,
+select:invalid,
+.ts-control > input:invalid {
+  background-image: linear-gradient(to right, pink, lightgreen) !important;
+}
+input:invalid:out-of-range {
+  background-image: linear-gradient(to right, lightgreen, pink);
+} 
 #errors {
   color: red;
 }
@@ -184,13 +202,9 @@ a:focus {
   height: fit-content;
   outline: 0;
 }
-.errors, .timePicker:invalid {
+.errors {
   border: 1px solid red !important;
   color: red;
-}
-.timePicker:valid {
-  border: 1px solid black !important;
-  color: unset;
 }
 .fa-caret-left, .fa-caret-right {
   padding-left: 2px;
@@ -305,6 +319,9 @@ a:focus {
 }
 .textAlignUnset {
  text-align: unset;
+}
+.timePicker {
+  width: 180px;
 }
 .title {
  font-size: 1.1rem;

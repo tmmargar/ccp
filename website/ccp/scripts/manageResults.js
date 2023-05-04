@@ -65,9 +65,6 @@ export const inputLocal = {
         e2.value = (e.checked ? 1 : 0);
       });
     }));
-    //document.querySelectorAll("[id^='tournamentRebuyCount_" + id + "']")?.forEach(e => e.addEventListener("keyup", function(event) { inputLocal.validateField(e, event); }));
-    //document.querySelectorAll("[id^='tournamentRebuyCount_" + id + "']")?.forEach(e => e.addEventListener("paste", function(event) { inputLocal.validateField(e, event); }));
-    //document.querySelectorAll("[id^='tournamentKnockoutBy_" + id + "']")?.forEach(e => e.addEventListener("change", function(event) { inputLocal.validateField2(e); }));
   },
   customValidation : function(objId, delim, index) {
     // player value is id, rebuyPaid, rebuyCount, addonPaid (100::N::0::N)
