@@ -147,6 +147,9 @@ class DatabaseResult extends Root {
   public function getPrizePoolForSeason($params, $returnQuery) {
     return $this->getData(dataName: "prizePoolForSeason", params: $params, orderBy: null, returnQuery: $returnQuery, limitCount: null, rank: false);
   }
+  public function getRegistrationList(array $params) {
+      return $this->getData(dataName: "registrationList", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  }
   public function getRegistrationWaitList(array $params) {
     return $this->getData(dataName: "registrationWaitList", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
@@ -319,6 +322,9 @@ class DatabaseResult extends Root {
   }
   public function getUserById(array $params) {
     return $this->getData(dataName: "userSelectOneById", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  }
+  public function getUserByName(array $params) {
+      return $this->getData(dataName: "userSelectOneByName", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
   }
   public function getUserByUsername(array $params) {
     return $this->getData(dataName: "userSelectOneByUsername", params: $params, orderBy: null, returnQuery: false, limitCount: null, rank: false);
@@ -1083,6 +1089,17 @@ class DatabaseResult extends Root {
             "                 GROUP BY tournamentId) na ON t.tournamentId = na.tournamentId " .
             "      WHERE t.tournamentDate BETWEEN '" . $params[0] . "' AND '" . $params[1] . "') zz";
           break;
+        case "registrationList":
+            $query = "SELECT u.first_name, u.last_name, r.food " .
+                "FROM (SELECT t1.tournamentId " .
+                "      FROM poker_tournament t1 INNER JOIN (SELECT tournamentdate, MIN(startTime) startTimeMin, MAX(startTime) startTimeMax " .
+                "                                           FROM poker_tournament " .
+                "                                           WHERE tournamentdate = '" . $params[0] . "') t2 " .
+                "      ON t1.tournamentDate = t2.tournamentDate " .
+                "      AND t1.startTime = t2.startTime" . ($params[1] ? "Max" : "Min") . ") t INNER JOIN poker_result r ON t.tournamentId = r.tournamentId " .
+                "INNER JOIN poker_user u ON r.playerId = u.id " .
+                "ORDER BY r.registerOrder";
+            break;
         case "registrationWaitList":
           $query =
             "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.email, t.maxPlayers, u.active " .
@@ -1833,6 +1850,7 @@ class DatabaseResult extends Root {
           break;
         case "userSelectAll":
         case "userSelectOneById":
+        case "userSelectOneByName":
         case "userSelectOneByUsername":
         case "userSelectOneByEmail":
           $query =
@@ -1845,8 +1863,10 @@ class DatabaseResult extends Root {
           }
           if ("userSelectOneById" == $dataName) {
             $query .= " WHERE u.id = " . $params[0];
+          } else if ("userSelectOneByName" == $dataName) {
+            $query .= " AND CONCAT(u.first_name, ' ', u.last_name) = '" . $params[0] . "'";
           } else if ("userSelectOneByUsername" == $dataName) {
-            $query .= " AND u.username = '" . $params[0] . "'";
+              $query .= " AND u.username = '" . $params[0] . "'";
           } else if ("userSelectOneByEmail" == $dataName) {
             $query .= " AND u.email = '" . $params[0] . "'";
           }
@@ -2110,6 +2130,10 @@ class DatabaseResult extends Root {
                 case "prizePoolForSeason":
                   array_push($resultList, $row["total"]);
                   break;
+                case "registrationList":
+                    $values = array($row["first_name"], $row["last_name"], $row["food"]);
+                    array_push($resultList, $values);
+                    break;
                 case "registrationWaitList":
                   $values = array($row["name"], $row["email"], $row["maxPlayers"], $row["active"]);
                   array_push($resultList, $values);
@@ -2391,6 +2415,7 @@ class DatabaseResult extends Root {
                   break;
                 case "userSelectAll":
                 case "userSelectOneById":
+                case "userSelectOneByName":
                 case "userSelectOneByUsername":
                 case "userSelectOneByEmail":
                 case "userPaidByTournamentId":
