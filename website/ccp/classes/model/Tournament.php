@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
     parent::__construct($debug, $id);
   }
   public function getDescription() {
@@ -92,6 +92,9 @@ class Tournament extends Base {
   public function getEnteredCount() {
     return $this->enteredCount;
   }
+  public function getEarnings() {
+    return $this->earnings;
+  }
   public function setDescription(string $description) {
     $this->description = $description;
   }
@@ -164,6 +167,9 @@ class Tournament extends Base {
   public function setAddonsPaid(int $addonsPaid) {
     $this->addonsPaid = $addonsPaid;
   }
+  public function setEarnings(int $earnings) {
+    $this->earnings = $earnings;
+  }
   public function getLink() {
 //     return HtmlUtility::buildLink("manageTournament.php", "modify", $this->getId(), $this->getDescription());
     $link = new HtmlLink(null, null, $this->isDebug(), "manageTournament.php", null, array("id", "mode"),  array($this->getId(). "modify"), -1, $this->getDescription(), null);
@@ -226,6 +232,8 @@ class Tournament extends Base {
     $output .= $this->rebuysCount;
     $output .= ", addonsPaid = ";
     $output .= $this->addonsPaid;
+    $output .= ", earnings = ";
+    $output .= $this->earnings;
     return $output;
   }
 }
