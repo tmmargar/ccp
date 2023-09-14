@@ -638,8 +638,8 @@ if (!isset($reportId) || "" == $reportId) {
           $ctr = 0;
           foreach ($resultList as $tournament) {
             $ctr ++;
-            $tournamentInfo = $tournament->getDate()->getDisplayFormat() . ", " . $tournament->getStartTime()->getDisplayAmPmFormat() . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played";
-            $output .= "<div style=\"display: inline-block; vertical-align: top; width: 10%;\">" . $ctr . "</div>\n<div class=\"fixedWidth\"  style=\"display: inline-block; text-align: left; width: 80%;\">" . $tournamentInfo . "</div>\n";
+            $tournamentInfo = $tournament->getDate()->getDisplayFormat() . ", " . $tournament->getStartTime()->getDisplayAmPmFormat() . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played $" . $tournament->getEarnings() . " won";
+            $output .= "<div style=\"display: inline-block; vertical-align: top; width: 3%;\">" . $ctr . "</div>\n<div class=\"fixedWidth\"  style=\"display: inline-block; text-align: left; width: 95%;\">" . $tournamentInfo . "</div>\n";
           }
         } else {
           $output .= "<div class=\"center\">No data found</div>\n";
