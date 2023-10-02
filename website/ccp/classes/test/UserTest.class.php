@@ -2,7 +2,6 @@
 namespace ccp\classes\Test;
 use ccp\classes\model\Address;
 use ccp\classes\model\User;
-use ccp\classes\model\UserGroup;
 use Exception;
 // include_once "../init.php";
 // include_once ROOT . "/autoload.php";
@@ -79,20 +78,6 @@ class UserTest extends BaseTest {
       echo "<br>testGetTypeException " . self::getPassOutput();
     }
   }
-  public static function testGetGroupsBlank() {
-    $user = new User();
-    echo "<br>testGetGroupsBlank " . (($user->getGroups() == "") ? self::getPassOutput() : self::getFailOutput());
-  }
-  public static function testGetGroupsNotBlank() {
-    $user = new User();
-    $group = new UserGroup();
-    $group->setTitle("Registered");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
-    $groupsOut = $user->getGroups();
-    echo "<br>testGetGroupsNotBlank " . (($groupsOut[0]->getTitle() == "Registered") ? self::getPassOutput() : self::getFailOutput());
-  }
   public static function testGetAddressBlank() {
     $user = new User();
     echo "<br>testGetAddressBlank " . (($user->getAddress() == "") ? self::getPassOutput() : self::getFailOutput());
@@ -134,12 +119,6 @@ class UserTest extends BaseTest {
     $user->setAddress($address);
     $user->setFirstName("fn");
     $user->setEmail("email@somewhere.com");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Registered");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
     $user->setId(2);
     $user->setLastName("ln");
     $user->setPassword("pwd");
