@@ -24,6 +24,7 @@ define("REPORT_ID_SUMMARY", "summary");
 define("REPORT_ID_WINNERS", "winners");
 define("REPORT_ID_FINISHES", "finishes");
 define("REPORT_ID_CHAMPIONSHIP", "championship");
+define("REPORT_ID_FEES", "fees");
 define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
 define("SEASON_START_DATE_PARAM_NAME", "seasonStartDate");
@@ -120,6 +121,9 @@ if (!isset($reportId)) {
     case REPORT_ID_CHAMPIONSHIP:
       $title = "Championship";
       break;
+    case REPORT_ID_FEES:
+      $title = "Fees";
+      break;
     default:
       $output = "No value provided for report id";
   }
@@ -137,6 +141,7 @@ if (!isset($reportId)) {
   $hiddenAdditional = null;
   $hideColIndexes = null;
   $colSpan = null;
+  $link = null;
   switch ($reportId) {
     case REPORT_ID_TOURNAMENT_RESULTS:
       $prizePool = null;
@@ -211,7 +216,7 @@ if (!isset($reportId)) {
       $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
       $query = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: null);
       $colFormats = array(array(2, "number", 0), array(3, "percentage", 2), array(4, "number", 0));
-      $hideColIndexes = array( 0, 5);
+      $hideColIndexes = array(0, 5);
       $width = "100%";
       break;
     case REPORT_ID_FINISHES:
@@ -227,6 +232,16 @@ if (!isset($reportId)) {
       $colFormats = array(array($group ? 1 : 3, "currency", 0));
       $hideColIndexes = $group ? array(2, 3) : array(1, 4, 5);
       $width = "100%";
+      break;
+    case REPORT_ID_FEES:
+//       $params = array(null);
+      $query = $databaseResult->getFeeBySeason();
+      $colFormats = array(array(4, "currency", 0));
+      $hideColIndexes = array(0);
+      $width = "100%";
+      //0$href, 1$paramName, 2$paramValue, 3$text, 4$id
+//       $link = array(array(4), array("feeDetail.php", array("seasonId", "mode"), array(0, "view"), 4));
+      $link = array(array(4), array("#", array("seasonId"), array(0), 4, "fee_detail_link"));
       break;
   }
   if ("show" == $seasonSelection) {
@@ -254,7 +269,7 @@ if (!isset($reportId)) {
     $output .= $hiddenSeasonEndDate->getHtml();
     $output .= "</div>\n";
   }
-  $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: str_replace(" ", "", ucwords($title)), width: $width);
+  $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: $link, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: str_replace(" ", "", ucwords($title)), width: $width);
   $outputTable = $htmlTable->getHtml();
   if (REPORT_ID_TOURNAMENT_RESULTS == $reportId && $outputTable == "") {
     $output .= "<br>No results because not yet entered/played";
@@ -266,6 +281,44 @@ if (!isset($reportId)) {
   $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   $output .= "</div>\n";
+  if ($reportId == REPORT_ID_FEES) {
+    $query = $databaseResult->getFeeDetail();
+    $result = $databaseResult->getConnection()->query($query);
+    $colFormats = array(array(3, "currency", 0), array(4, "currency", 0), array(5, "currency", 0));
+//     $hiddenAdditional = array(array("seasonId", 0));
+//     $hideColIndexes = array(0);
+    //         $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
+//     $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
+    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
+    $outputTemp = $htmlTable->getHtml();
+    if (0 < $result->rowCount()) {
+      $outputDialog =
+      "<script type=\"module\">\n" .
+      "  import { reportsInputLocal } from \"./scripts/reports.js\";\n" .
+//       "  document.querySelector(\"#fee_detail_link\").addEventListener(\"click\", (evt) => reportsInputLocal.showFeeDetail());\n" .
+      "  document.querySelectorAll(\"a[id^='fee_detail_link']\").forEach(link => {\n" .
+      "    let id = link.id.split(\"_\");\n" .
+      "    let qs = link.href.split(\"?\");\n" .
+      "    let values = qs[qs.length - 1].split(\"=\");\n" .
+      "    link.addEventListener(\"click\", (evt) => reportsInputLocal.showFeeDetail(values[1]));\n" .
+      "  });\n" .
+      "</script>\n";
+      $outputDialog .=
+      "<dialog class=\"dialog\" id=\"dialogFeeDetail\">\n" .
+      " <form method=\"dialog\">\n" .
+      "  <header>\n" .
+      "   <h2>Fee Detail<span id=\"dialogFeeDetailSpan\"></span></h2>\n" .
+      "   <button class=\"dialogButton\" id=\"dialogFeeDetail-header--cancel-btn\">X</button>\n" .
+      "  </header>\n" .
+      "  <main>\n" .
+      $outputTemp .
+      "  </main>\n" .
+      " </form>\n" .
+      "</dialog>\n";
+    }
+    $result->closeCursor();
+  }
 }
 $smarty->assign("content", $output);
+$smarty->assign("contentDialog", $outputDialog);
 $smarty->display("reports.tpl");

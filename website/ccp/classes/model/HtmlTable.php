@@ -271,7 +271,34 @@ class HtmlTable extends HtmlBase {
 //             } elseif (isset($this->link) && in_array($index, $this->link[0])) {
 //               $link = new HtmlLink(null, null, $this->isDebug(), $this->link[1][0], null, $this->link[1][1], array($row[$this->link[1][2]], $this->link[1][3]), -1, $row[$this->link[1][4]], null);
             } elseif (isset($this->link) && in_array($index, $this->link[0])) {
-              $link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], null, $this->link[$linkCounter + 1][1], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], null);
+//               echo $temp;
+              //0$href, 1$paramName, 2$paramValue, 3$text, 4$id
+              //$accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title
+              //$link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], null, $this->link[$linkCounter + 1][1][0], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], null);
+              //[0][0] = 3
+              //[1][0] = manageUSer.php
+              //[1][1][0] = "userId"
+              //[1][1][1] = "mode"
+              //[1][2][0] = 2
+              //[1][2][1] = "modify"
+              //[1][3] = 3
+              //[1][4] = "a_b_link"
+              //print_r($this->link);
+              //echo "<br>".gettype($this->link[$linkCounter + 1][2][0]);
+              $counterValues = 0;
+              $paramValues = array();
+              if (isset($this->link[$linkCounter + 1][2][0])) {
+                $paramValues[$counterValues] = $row[$this->link[$linkCounter + 1][2][0]];
+              }
+              $counterValues++;
+              if (isset($this->link[$linkCounter + 1][2][1])) {
+                $paramValues[$counterValues] = $this->link[$linkCounter + 1][2][1];
+              }
+              if (sizeof($paramValues) == 0) {
+                $paramValues = null;
+              }
+              //$link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] : null, isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, isset($this->link[$linkCounter + 1][2][0]) && isset($this->link[$linkCounter + 1][2][1]) ? array($row[$this->link[$linkCounter + 1][2][0]], $this->link[$linkCounter + 1][2][1]) : null, -1, $row[$this->link[$linkCounter + 1][3]], null);
+              $link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] . "_" . ($linkCounter + 1) : null, isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, $paramValues, -1, $row[$this->link[$linkCounter + 1][3]], null);
               $output .= $link->getHtml();
               $linkCounter++;
             } else {

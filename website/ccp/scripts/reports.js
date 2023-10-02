@@ -93,9 +93,23 @@ export const reportsInputLocal = {
 	        dataSrc: aryNew[0][0]
 	      };
 	      dataTable.initialize({tableId: dataTableId, aryColumns: aryCols, aryOrder: aryNew, aryRowGroup: aryRowGroup, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+      } else if (reportId == "fees") {
+        dataTableId = "dataTblFees";
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [null, null, null, null], aryOrder: [[1, "desc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+          dataTable.initialize({tableId: "dataTblFeeDetail", aryColumns: [{visible: false}, {visible: false}, { "type": "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ], visible: false }, null], aryOrder: [[5, "desc"], [2, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+        }
       }
     });
     return dataTableId;
+  },
+  showFeeDetail : function(seasonId) {
+    // search matches entire value
+    const regex = '\\b' + seasonId + '\\b';
+    $("#dataTblFeeDetail").DataTable().columns(0).search(regex, true, false).draw();
+    const rowsData = $("#dataTblFeeDetail").DataTable().rows({search:'applied'}).data();
+    document.querySelector("#dialogFeeDetailSpan").innerText = " - " + rowsData[0][1] + " " + rowsData[0][4];
+    input.showDialog({name: "FeeDetail"});
   }
 };
 let documentReadyCallback = () => {

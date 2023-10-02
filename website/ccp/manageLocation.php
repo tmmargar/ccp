@@ -154,7 +154,8 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   }
   $colFormats = array(array(0, "right", 0), array(7, "right", 0));
   $hideColIndexes = array(2);
-  $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
+  //$link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
+  $link = array(array(3), array("manageUser.php", array("userId", "mode"), array(2, "modify"), 3));
   //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
   $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: $link, note: true, query: $query, selectedRow: $ids, suffix: null, width: "90%");
   $output .= $htmlTable->getHtml();

@@ -131,8 +131,12 @@ export const inputLocal = {
     }
   },
   setWidth : function() {
-    document.querySelector("[id^='minPlayers_']").style.width = "50px";
-    document.querySelector("[id^='maxPlayers_']").style.width = "50px";
+    if (document.querySelector("[id^='minPlayers_']")) {
+      document.querySelector("[id^='minPlayers_']").style.width = "50px";
+    }
+    if (document.querySelector("[id^='maxPlayers_']")) {
+      document.querySelector("[id^='maxPlayers_']").style.width = "50px";
+    }
     document.querySelectorAll("[id^='place_']").forEach(obj => {
       obj.style.width = "50px";
     });

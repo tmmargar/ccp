@@ -60,8 +60,11 @@ class DatabaseResult extends Root {
   public function getEarningsTotalAndAverageForUser($params, $orderBy, $rank) {
     return $this->getData(dataName: "earningsTotalAndAverageForUser", params: $params, orderBy: $orderBy, returnQuery: true, limitCount: null, rank: $rank);
   }
-  public function getFee() {
-    return $this->getData(dataName: "feeSelectAll", params: null, orderBy: null, returnQuery: false, limitCount: null, rank: false);
+  public function getFeeDetail() {
+    return $this->getData(dataName: "feeDetail", params: null, orderBy: null, returnQuery: true, limitCount: null, rank: false);
+  }
+  public function getFeeBySeason() {
+    return $this->getData(dataName: "feeSelectAll", params: null, orderBy: null, returnQuery: true, limitCount: null, rank: false);
   }
   public function getFinishesForUser(array $params) {
     return $this->getData(dataName: "finishesSelectAllByPlayerId", params: $params, orderBy: null, returnQuery: true, limitCount: null, rank: false);
@@ -807,10 +810,18 @@ class DatabaseResult extends Root {
             }
           }
           break;
+        case "feeDetail":
+          $query =
+            "SELECT s.seasonId, s.seasonDescription AS Description, CONCAT(u.first_name, ' ', u.last_name) AS Name, CASE WHEN f.amount IS NULL THEN 0 ELSE f.amount END AS Paid, s.seasonFee AS Fee, CASE WHEN f.amount IS NULL THEN s.seasonFee ELSE s.seasonFee - f.amount END AS Balance " .
+            "FROM poker_user u CROSS JOIN poker_season s ON u.active = 1 " .
+            "LEFT JOIN poker_fee f ON s.seasonId = f.seasonId AND u.id = f.playerId " .
+            "ORDER BY s.seasonDescription, f.playerId";
+          break;
         case "feeSelectAll":
           $query =
-            "SELECT year, playerId, amount " .
-            "FROM poker_fee";
+            "SELECT s.seasonId, s.seasonDescription AS Description, s.seasonStartDate AS 'Start Date', s.seasonEndDate AS 'End Date', SUM(f.amount) AS Amount " .
+            "FROM poker_fee f INNER JOIN poker_season s ON f.seasonId = s.seasonId " .
+            "GROUP BY s.seasonDescription";
           break;
         case "finishesSelectAllByPlayerId":
           $query =
@@ -1747,7 +1758,7 @@ class DatabaseResult extends Root {
         case "seasonSelectOneByIdAndDesc":
         case "seasonSelectOneByActive":
           $query =
-            "SELECT seasonId AS id, seasonDescription AS description, seasonStartDate AS 'start date', seasonEndDate AS 'end date', seasonChampionshipQualify AS '# to qualify', seasonActive AS 'active' " .
+            "SELECT seasonId AS id, seasonDescription AS description, seasonStartDate AS 'start date', seasonEndDate AS 'end date', seasonChampionshipQualify AS '# to qualify', seasonFee AS fee, seasonActive AS 'active' " .
             "FROM poker_season s ";
           if ("seasonSelectOneById" == $dataName) {
             $query .= " WHERE seasonid = " . $params[0];
@@ -1765,7 +1776,7 @@ class DatabaseResult extends Root {
           break;
         case "seasonSelectAllChampionship":
           $query =
-            "SELECT seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonActive " .
+            "SELECT seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFee, seasonActive " .
             "FROM poker_season " .
             "ORDER BY seasonEndDate DESC, seasonStartDate";
           break;
@@ -2192,6 +2203,21 @@ class DatabaseResult extends Root {
                   }
                   array_push($resultList, $row["active"]);
                   break;
+                case "feeDetail":
+                  array_push($resultList, $row["seasonId"]);
+                  array_push($resultList, $row["Description"]);
+                  array_push($resultList, $row["Name"]);
+                  array_push($resultList, $row["Paid"]);
+                  array_push($resultList, $row["Fee"]);
+                  array_push($resultList, $row["Balance"]);
+                  break;
+                case "feeSelectAll":
+                  array_push($resultList, $row["seasonId"]);
+                  array_push($resultList, $row["Description"]);
+                  array_push($resultList, $row["Start Date"]);
+                  array_push($resultList, $row["End Date"]);
+                  array_push($resultList, $row["Amount"]);
+                  break;
                 case "finishesSelectAllByPlayerId":
                   array_push($resultList, $row["place"]);
                   array_push($resultList, $row["finishes"]);
@@ -2437,7 +2463,7 @@ class DatabaseResult extends Root {
                 case "seasonSelectOneByActive":
                   $startDateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["start date"]);
                   $endDateTime = new DateTime(debug: $this->isDebug(), id: null, time: $row["end date"]);
-                  $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["description"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], active: (int) $row["active"]);
+                  $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["description"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], fee: (int) $row["fee"], active: (int) $row["active"]);
                   array_push($resultList, $season);
                   break;
                 case "statusSelectPaid":
@@ -2805,7 +2831,7 @@ class DatabaseResult extends Root {
           $query = "INSERT INTO poker_result(tournamentId, playerId, rebuyCount, statusCode, registerOrder, addonFlag, place, knockedOutBy, food) " . "SELECT " . $params[0] . ", " . $params[1] . ", 0, '" . Constant::$CODE_STATUS_REGISTERED . "', CASE WHEN MAX(registerOrder) IS NULL THEN 1 ELSE MAX(registerOrder) + 1 END, '" . Constant::$FLAG_NO . "', 0, NULL, '" . $params[2] . "' FROM poker_result WHERE tournamentId = " . $params[0];
           break;
         case "seasonInsert":
-          $query = "INSERT INTO poker_season(seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonActive) " . "SELECT IFNULL(MAX(seasonId), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', " . $params[3] . ", " . (isset($params[4]) ? $params[4] : 0) . " FROM poker_season";
+          $query = "INSERT INTO poker_season(seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFee, seasonActive) " . "SELECT IFNULL(MAX(seasonId), 0) + 1, '" . $params[0] . "', '" . $params[1] . "', '" . $params[2] . "', " . $params[3] . ", " . $params[4] . ", " . (isset($params[5]) ? $params[5] : 0) . " FROM poker_season";
           break;
         case "structureInsert":
           $query = "INSERT INTO poker_structure(payoutId, place, percentage) VALUES(" . $params[0] . ", " . $params[1] . ", " . $params[2] . ")";
@@ -2963,7 +2989,8 @@ class DatabaseResult extends Root {
             ", seasonStartDate = '" . $params[2] .
             "', seasonEndDate = '" . $params[3] .
             "', seasonChampionshipQualify = " . $params[4] .
-            ", seasonActive = " . (isset($params[5]) ? $params[5] : 0) .
+            ", seasonFee = " . $params[5] .
+            ", seasonActive = " . (isset($params[6]) ? $params[6] : 0) .
             " WHERE seasonId = " . $params[0];
           break;
         case "tournamentUpdate":
