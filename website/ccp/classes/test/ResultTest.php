@@ -13,7 +13,6 @@ use ccp\classes\model\Result;
 use ccp\classes\model\Status;
 use ccp\classes\model\Tournament;
 use ccp\classes\model\User;
-use ccp\classes\model\UserGroup;
 use ccp\classes\utility\SessionUtility;
 use Exception;
 // include_once "../init.php";
@@ -251,12 +250,6 @@ class ResultTest extends BaseTest {
     $knockedOutBy->setAddress($address);
     $knockedOutBy->setEmail("email3@email3.com");
     $knockedOutBy->setFirstName("fn 3");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Dummy");
-    $groups = array(
-      $group);
-    $knockedOutBy->setGroups($groups);
     $knockedOutBy->setId(10);
     $knockedOutBy->setLastName("ln 3");
     $knockedOutBy->setPassword("pwd 3");
@@ -336,12 +329,6 @@ class ResultTest extends BaseTest {
     $user->setAddress($address);
     $user->setEmail("email@email.com");
     $user->setFirstName("fn");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Registered");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
     $user->setId(10);
     $user->setLastName("ln");
     $user->setPassword("pwd");
@@ -366,12 +353,6 @@ class ResultTest extends BaseTest {
     $user->setAddress($address);
     $user->setEmail("email2@email2.com");
     $user->setFirstName("fn 2");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Adminstrator");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
     $user->setId(10);
     $user->setLastName("ln 2");
     $user->setPassword("pwd 2");

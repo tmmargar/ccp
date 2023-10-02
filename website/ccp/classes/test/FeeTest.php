@@ -3,7 +3,6 @@ namespace ccp\classes\Test;
 use ccp\classes\model\Address;
 use ccp\classes\model\Fee;
 use ccp\classes\model\User;
-use ccp\classes\model\UserGroup;
 // include_once "../init.php";
 // include_once ROOT . "/autoload.php";
 class FeeTest extends BaseTest {
@@ -49,12 +48,6 @@ class FeeTest extends BaseTest {
     $user->setAddress($address);
     $user->setEmail("email@email.com");
     $user->setFirstName("fn");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Registered");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
     $user->setId(10);
     $user->setLastName("ln");
     $user->setPassword("pwd");

@@ -4,7 +4,6 @@ use ccp\classes\model\Address;
 use ccp\classes\model\Constant;
 use ccp\classes\model\Location;
 use ccp\classes\model\User;
-use ccp\classes\model\UserGroup;
 use Exception;
 // include_once "../init.php";
 // include_once ROOT . "/autoload.php";
@@ -90,12 +89,6 @@ class LocationTest extends BaseTest {
     $user->setAddress($address);
     $user->setEmail("email@email.com");
     $user->setFirstName("fn");
-    $group = new UserGroup();
-    $group->setId(3);
-    $group->setTitle("Registered");
-    $groups = array(
-      $group);
-    $user->setGroups($groups);
     $user->setId(10);
     $user->setLastName("ln");
     $user->setPassword("pwd");
