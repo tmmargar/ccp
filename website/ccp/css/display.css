@@ -171,6 +171,9 @@ input:invalid:out-of-range {
   overflow: hidden;
   width: 23vw;
 }
+.dialog#dialogFeeDetail {
+  width: 28vw;
+}
 .dialog::backdrop {
   background-color: #5e68df;
   opacity: 0.7;
@@ -254,7 +257,8 @@ input:invalid:out-of-range {
 .number {
   text-align: right;
 }
-.positive {
+.positive,
+.positive a {
    color: #009900;
    font-weight: bold;
  }

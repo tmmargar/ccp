@@ -11,10 +11,12 @@ define("SEASON_DESCRIPTION_FIELD_LABEL", "Description");
 define("SEASON_START_DATE_FIELD_LABEL", "Start date");
 define("SEASON_END_DATE_FIELD_LABEL", "End date");
 define("SEASON_CHAMPIONSHIP_QUALIFY_FIELD_LABEL", "# to qualify");
+define("SEASON_FEE_FIELD_LABEL", "Fee");
 define("SEASON_ACTIVE_FIELD_LABEL", "Active");
 define("SEASON_DESCRIPTION_FIELD_NAME", "seasonDescription");
 define("SEASON_START_DATE_FIELD_NAME", "seasonStartDate");
 define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
+define("SEASON_FEE_FIELD_NAME", "seasonFee");
 define("SEASON_ACTIVE_FIELD_NAME", "seasonActive");
 define("SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME", "seasonChampionshipQualify");
 define("DEFAULT_VALUE_CHAMPIONSHIP_QUALIFY", 10);
@@ -50,6 +52,9 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id . "\">" . SEASON_CHAMPIONSHIP_QUALIFY_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
       $textBoxChampionshipQualify = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id, maxLength: 2, name: SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 3, suffix: null, type: FormControl::$TYPE_INPUT_NUMBER, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getChampionshipQualify() : ""), wrap: null);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxChampionshipQualify->getHtml() . "</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_FEE_FIELD_NAME . "_" . $id . "\">" . SEASON_FEE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
+      $textBoxFee = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: true, checked: null, class: null, cols: null, disabled: false, id: SEASON_FEE_FIELD_NAME . "_" . $id, maxLength: 2, name: SEASON_FEE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: true, rows: null, size: 3, suffix: null, type: FormControl::$TYPE_INPUT_NUMBER, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getFee() : ""), wrap: null);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxFee->getHtml() . "</div>\n";
       $resultList2 = $databaseResult->getSeasonActiveCount();
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_ACTIVE_FIELD_NAME . "_" . $id . "\">" . SEASON_ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
       $checkboxActive = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: ((count($resultList) > 0) && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive() ? true : false), class: null, cols: null, disabled: (count($resultList) > 0 && $resultList2[0] == 0) || (count($resultList) > 0 && $resultList2[0] != 0 && Constant::$FLAG_YES_DATABASE == $resultList[$ctr]->getActive())  ? false : true, id: SEASON_ACTIVE_FIELD_NAME . "_" . $id, maxLength: null, name: SEASON_ACTIVE_FIELD_NAME . "_" . $id, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix:null, type: FormControl::$TYPE_INPUT_CHECKBOX, value: (string) Constant::$FLAG_YES_DATABASE, wrap: null);
@@ -80,6 +85,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $seasonStartDate = isset($_POST[SEASON_START_DATE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_START_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $seasonEndDate = isset($_POST[SEASON_END_DATE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_END_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $seasonChampionshipQualify = isset($_POST[SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_CHAMPIONSHIP_QUALIFY;
+    $seasonFee = isset($_POST[SEASON_FEE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_FEE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SEASON_FEE;
     $seasonActive = isset($_POST[SEASON_ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_ACTIVE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SEASON_ACTIVE;
     $seasonActive = DEFAULT_VALUE_BLANK == $seasonActive ? DEFAULT_VALUE_SEASON_ACTIVE : $seasonActive;
     $seasonStartDateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $seasonStartDate);
@@ -94,10 +100,10 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
         "</script>\n";
     } else {
       if (Constant::$MODE_SAVE_CREATE == $mode) {
-        $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, isset($seasonActive) ? $seasonActive : 0);
+        $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
         $rowCount = $databaseResult->insertSeason(params: $params);
       } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
-        $params = array($seasonId, $seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, isset($seasonActive) ? $seasonActive : 0);
+        $params = array($seasonId, $seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
           $rowCount = $databaseResult->updateSeason(params: $params);
       }
       if (!is_numeric($rowCount)) {
@@ -158,8 +164,9 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE seasonId IN (" . $ids . ")";
   }
+  $colFormats = array(array(5, "currency", 0));
   //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: null, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
+  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
   $output .= $htmlTable->getHtml();
   $output .= "<div class=\"buttons center\">\n";
   if (Constant::$MODE_VIEW == $mode) {

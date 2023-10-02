@@ -103,11 +103,8 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_DELETE == $mode) {
     $query .= " WHERE groupId IN (" . $ids . ")";
   }
-  //0$href, 1$paramName, 2/3$paramValue, 4$text
-//   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
-  $link = array(array(1), array("manageGroupPayout.php", array("groupId", "mode"), 1, "modify", 1));
 //     $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: null, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: $link, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
+  $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: null, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: Constant::$DELIMITER_DEFAULT, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: $ids, suffix: null, width: "100%");
   $output .= $htmlTable->getHtml();
   $output .= "<div class=\"buttons center\">\n";
   if (Constant::$MODE_VIEW == $mode) {

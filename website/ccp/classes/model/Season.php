@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Season extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate, protected int $championshipQualify, protected int $active) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate, protected int $championshipQualify, protected int $fee, protected int $active) {
     parent::__construct($debug, $id);
   }
 
@@ -16,6 +16,10 @@ class Season extends Base {
 
   public function getEndDate() {
     return $this->endDate;
+  }
+  
+  public function getFee() {
+    return $this->fee;
   }
 
   public function getStartDate() {
@@ -37,6 +41,10 @@ class Season extends Base {
   public function setEndDate(string $endDate) {
     $this->endDate = $endDate;
   }
+  
+  public function setFee(int $fee) {
+    $this->fee = $fee;
+  }
 
   public function setStartDate(string $startDate) {
     $this->startDate = $startDate;
@@ -56,6 +64,8 @@ class Season extends Base {
     $output .= $this->endDate->getDisplayFormat();
     $output .= "', championshipQualify = ";
     $output .= $this->championshipQualify;
+    $output .= "', fee = ";
+    $output .= $this->fee;
     $output .= ", active = '";
     $output .= $this->active;
     $output .= "'";

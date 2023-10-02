@@ -6,4 +6,5 @@
  <form action="{$action}" method="post" id="{$formName}" name="{$formName}">
   {$content}
  </form>
+ {$contentDialog}
 {/block}
