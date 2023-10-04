@@ -36,17 +36,18 @@ foreach ($resultList as $tournament) {
   if ($registrationOpen) {
     $output .= "</a>";
   }
-  $description = explode(", ", $tournament->getDescription());
-  if (count($description) == 1) {
-    $description = explode(" - ", $tournament->getDescription());
-    if (count($description) > 1) {
-      $description = explode("<br>", $description[1]);
-    }
-  }
+//   $description = explode(", ", $tournament->getDescription());
+//   if (count($description) == 1) {
+//     $description = explode(" - ", $tournament->getDescription());
+//     if (count($description) > 1) {
+//       $description = explode("<br>", $description[1]);
+//     }
+//   }
   if ($registrationOpen) {
     $output .= "<a href=\"" . $url . "\">";
   }
-  $output .= $description[0];
+//   $output .= $description[0];
+  $output .= $tournament->getDescription();
   if (null != $tournament->getSpecialType()->getDescription()) {
     $output .= " (" . $tournament->getSpecialType()->getDescription() . ")";
   }
