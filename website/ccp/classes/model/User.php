@@ -2,8 +2,9 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class User extends Base {
-  private $firstName;
-  private $lastName;
+  private string $firstName;
+  private string $lastName;
+  private int $idPrevious;
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string|null $username, protected string|null $password, protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate, protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName, protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
     parent::__construct($debug, $id);
     $nameFull = explode(" ", $name);

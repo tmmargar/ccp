@@ -2,10 +2,10 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
-use Exception;
 class Email extends Base {
   private static string $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
-
+  private bool $local;
+  private array $localEmail;
   public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|null $ccName, protected array|null $ccEmail, protected array|null $bccName, protected array|null $bccEmail, protected string|null $subject, protected string|null $body) {
     parent::__construct($debug, null);
     $this->local = Constant::FLAG_LOCAL();

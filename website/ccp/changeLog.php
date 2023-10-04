@@ -7,6 +7,14 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
+  "<section class=\"version\" id=\"1.2.2\">" .
+  " <h3>Version 1.2.2</h3>\n" .
+  " <b><time datetime=\"2023-10-04\">Oct 4, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Upgrade PHP to 8.2.11</li>\n" .
+  "  <li>Fix errors caused by PHP upgrade</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.2.1\">" .
   " <h3>Version 1.2.1</h3>\n" .
   " <b><time datetime=\"2023-10-04\">Oct 4, 2023</time></b>\n" .
