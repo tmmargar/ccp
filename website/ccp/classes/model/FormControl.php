@@ -15,7 +15,7 @@ class FormControl extends FormBase {
   public static string $TYPE_INPUT_TELEPHONE = "tel";
   public static string $TYPE_INPUT_TEXTAREA  = "textarea";
   public static string $TYPE_INPUT_TEXTBOX   = "text";
-  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked, protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name, protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size, protected string|null $suffix, protected string|null $type, protected array|string|null $value, protected string|null $wrap, protected string|null $import = null, protected bool|null $noValidate = false) {
+  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked, protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name, protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size, protected string|null $suffix, protected string|null $type, protected array|string|int|null $value, protected string|null $wrap, protected string|null $import = null, protected bool|null $noValidate = false) {
     parent::__construct($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
   }
   public function getAccessKey() {
@@ -66,7 +66,7 @@ class FormControl extends FormBase {
       (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
       " type=\"" . ((self::$TYPE_INPUT_RESET == $this->type) ? self::$TYPE_INPUT_BUTTON : $this->type) . "\"" .
 //     " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TELEPHONE : $this->type) . "\"" .
-      (self::$TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities($this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+    (self::$TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities((string) $this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
 //       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
       (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type || self::$TYPE_INPUT_HIDDEN == $this->type || self::$TYPE_INPUT_CHECKBOX == $this->type ? "" : " onfocus=\"this.select();\"") .

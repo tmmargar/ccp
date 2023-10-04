@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormBase extends Base {
-  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected string|int|null $id, protected string|null $name, protected string|null $suffix, protected array|string|null $value) {
+  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected string|int|null $id, protected string|null $name, protected string|null $suffix, protected array|string|int|null $value) {
     parent::__construct($debug, $id);
     $this->class = null == $class ? array() : $class;
     $this->name = Base::build($name, null);

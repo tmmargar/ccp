@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormSelect extends FormBase {
-  public function __construct(protected bool $debug, protected string $accessKey, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected bool $multiple, protected string|null $name, protected string|null $onClick, protected bool $readOnly, protected int $size, protected string|null $suffix, protected array|string|null $value) {
+  public function __construct(protected bool $debug, protected string $accessKey, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected bool $multiple, protected string|null $name, protected string|null $onClick, protected bool $readOnly, protected int $size, protected string|null $suffix, protected array|string|int|null $value) {
     parent::__construct($debug, $class, $disabled, $id, $name, $suffix, $value);
   }
   public function getAccessKey() {

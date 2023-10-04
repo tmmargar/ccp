@@ -4,7 +4,7 @@
  *
  * @package Example-application
  */
-require '../libs/Smarty.class.php';
+require '../libs/Smarty.php';
 $smarty = new Smarty;
 //$smarty->force_compile = true;
 $smarty->debugging = true;

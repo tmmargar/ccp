@@ -257,9 +257,9 @@ class HtmlTable extends HtmlBase {
                 }
               }
               if (!in_array("negative", $class) && !in_array("positive", $class) && isset($temp)) {
-                if (0 != preg_match('/^\$-+\d+(,\d+)?(.\d+)?|-+\d+(,\d+)?(.\d+)?%$/', $temp)) {
+                if (0 != preg_match('/^\$-+\d+(,\d+)?(.\d+)?|-+\d+(,\d+)?(.\d+)?%$/', (string) $temp)) {
                   array_push($class, "negative");
-                } else if (0 != preg_match('/^\$\d+(,\d+)?(.\d+)?|\d+(,\d+)?(.\d+)?%$/', $temp)) {
+                } else if (0 != preg_match('/^\$\d+(,\d+)?(.\d+)?|\d+(,\d+)?(.\d+)?%$/', (string) $temp)) {
                   array_push($class, "positive");
                 }
               }
@@ -302,7 +302,7 @@ class HtmlTable extends HtmlBase {
               $output .= $link->getHtml();
               $linkCounter++;
             } else {
-              $output .= isset($temp) ? htmlentities($temp, ENT_NOQUOTES, "UTF-8") : "";
+              $output .= isset($temp) ? htmlentities((string) $temp, ENT_NOQUOTES, "UTF-8") : "";
             }
             $output .= "</td>\n";
           }
