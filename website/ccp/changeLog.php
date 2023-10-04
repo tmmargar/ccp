@@ -9,18 +9,11 @@ $outputChange =
   "<h1>Change Log</h1>\n" .
   "<section class=\"version\" id=\"1.2.1\">" .
   " <h3>Version 1.2.1</h3>\n" .
-  " <b><time datetime=\"TBD\">TBD</time></b>\n" .
+  " <b><time datetime=\"2023-10-04\">Oct 4, 2023</time></b>\n" .
   " <ul>\n" .
-  "  <li>Future changes" .
-  "   <ul>\n" .
-  "    <li>Upgrade JavaScript to ES 6 (IE no longer supported)</li>\n" .
-  "    <li>Replace JQuery UI dialog and date time picker</li>\n" .
-  "    <li>Replace JQuery UI with ?</li>\n" .
-  "    <li>Add support for non CCP events</li>\n" .
-  "    <li>Add ability to auto approve user</li>\n" .
-  "    <li>Add remember me</li>\n" .
-  "   </ul>\n" .
-  "  </li>\n" .
+  "  <li>Upgrade Smarty to 4.3.2</li>\n" .
+  "  <li>Upgrade PHP to 8.1.24</li>\n" .
+  "  <li>Fix errors caused by PHP upgrade or hidden errors</li>\n" .
   " </ul>\n" .
   "</section>\n" .
   "<section class=\"version\" id=\"1.2.0\">" .
