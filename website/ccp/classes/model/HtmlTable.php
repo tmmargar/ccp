@@ -325,9 +325,9 @@ class HtmlTable extends HtmlBase {
               $temp = "";
             }
             $htmlTemp = str_replace("value=\"?1\"", $temp, $this->html[0][$idx]); // button text
-            $htmlTemp = str_replace("?2", $row[$this->html[4][0]], $htmlTemp); // player id
+            $htmlTemp = str_replace("?2", (string) $row[$this->html[4][0]], $htmlTemp); // player id
             $htmlTemp = str_replace("?3", $temp, $htmlTemp); // status name
-            $htmlTemp = str_replace("?4", $row[$this->html[4][1]], $htmlTemp); // rebuy count
+            $htmlTemp = str_replace("?4", (string) $row[$this->html[4][1]], $htmlTemp); // rebuy count
             $output .= "     <td align=\"center\">" . $htmlTemp . "</td>\n";
           }
         }
