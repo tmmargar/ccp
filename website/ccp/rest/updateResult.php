@@ -32,7 +32,7 @@ $params = array($_POST["tournamentDate"], $_POST["tournamentDate"]);
 $paramsNested = array($season->getStartDate()->getDatabaseFormat(), $season->getEndDate()->getDatabaseFormat(), $season->getChampionshipQualify());
 //print_r($paramsNested);
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: null);
-$tournament = $resultList[0];
+$tournament = $resultList[$_POST["first"]];
 $params = array(null, null, null, Constant::$CODE_STATUS_PAID, 0, "null", $tournament->getId()); // , $maxPlace);
 $rowCount = $databaseResult->updateResultByTournamentIdAndPlace(params: $params);
 echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to paid";
