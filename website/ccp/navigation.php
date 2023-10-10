@@ -179,6 +179,8 @@ $htmlLinkResetPassword = new HtmlLink(accessKey: null, class: null, debug: Sessi
 $htmlLinkMyProfileArray = array($htmlLinkEdit, $htmlLinkLogout, $htmlLinkResetPassword);
 $htmlMenuReportMyProfile->setItems($htmlLinkMyProfileArray);
 array_push($levels, $htmlMenuReportMyProfile);
+$htmlLinkRules = new HtmlLink(accessKey: null, class: null, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), href: "rules/ccp_rules_2023.pdf", id: null, paramName: null, paramValue: null, tabIndex: -1, text: "Rules", title: null);
+array_push($levels, $htmlLinkRules);
   // echo print_r($levels, true);
 $htmlMenuRoot = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, items: $levels, text: null);
 $smarty->assign("navigation", $htmlMenuRoot->getHtmlRoot());
