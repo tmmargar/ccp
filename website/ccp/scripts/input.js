@@ -95,10 +95,6 @@ export const input = {
       objDiv.classList.add("responsive-cell");
       objDiv.classList.add("responsive-cell-label");
       objDiv.classList.add("responsive-cell--head");
-      const objLabel = document.createElement("label");
-      objLabel.htmlFor = "selectedTournamentText";
-      objLabel.innerText = "Selected:";
-      objDiv.appendChild(objLabel);      
       const objDiv2 = document.createElement("div");
       objDiv2.classList.add("responsive-cell");
       objDiv2.classList.add("responsive-cell-value");

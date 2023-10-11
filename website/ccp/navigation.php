@@ -20,14 +20,15 @@ $counterLoop = 1;
 $counterResultSeasonGroup = 0;
 $counterResultSeason = 0;
 foreach ($queryResultYears as $rowYears) {
-    $htmlLinkResultArray = array();
-    $htmlLinkResultArrayCounter = 0;
+  $htmlLinkResultArray = array();
+  $htmlLinkResultArrayCounter = 0;
   if ($counterLoop == 1) {
 //     $htmlLinkResultArray = array();
 //     $htmlLinkResultArrayCounter = 0;
     $htmlMenuResultSeasonGroup = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, items: null, text: "Seasons " . $counterOverall . " to " . ($counterOverall - 4 == 0 ? 1 : $counterOverall - 4));
     $htmlMenuResultSeasonGroupArray[$counterResultSeasonGroup] = $htmlMenuResultSeasonGroup;
     $counterResultSeasonGroup++;
+    $htmlMenuResultSeasonArray = array();
   }
   $htmlMenuResultSeason = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, items: null, text: $rowYears . " (Season " . ($rowYears - DateTime::$YEAR_FIRST_SEASON) . ")");
   $htmlMenuResultSeasonArray[$counterResultSeason] = $htmlMenuResultSeason;
