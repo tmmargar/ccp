@@ -83,10 +83,10 @@ nav .m-menu ul {
   height: 100%;
   overflow-y: auto;
 }
-nav .m-menu ul li label {
+nav .m-menu ul li label, nav .m-menu ul li span {
   padding: 0 15px;
 }
-nav .m-menu ul li a, nav .m-menu ul li label {
+nav .m-menu ul li a, nav .m-menu ul li label, nav .m-menu ul li span {
   display: block;
   text-align: left;
   line-height: 25px;
@@ -97,7 +97,7 @@ nav .m-menu ul li a, nav .m-menu ul li label {
   border-bottom: 1px solid #e8e8e8;
   position: relative;
 }
-nav .m-menu ul li label.a-label__chevron::after {
+nav .m-menu ul li label.a-label__chevron::after, nav .m-menu ul li span.a-label__chevron::after {
   content: "";
   position: absolute;
   display: inline-block;
