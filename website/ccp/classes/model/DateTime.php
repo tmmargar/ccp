@@ -19,53 +19,53 @@ class DateTime extends Base {
   private \DateTimeZone $timeZone; // \DateTimeZone
 
   public function __construct(protected bool $debug, protected string|int|null $id, string|null $time) {
-    parent::__construct($debug, $id);
-    $this->timeZone = new DateTimeZone(date_default_timezone_get());
+    parent::__construct(debug: $debug, id: $id);
+    $this->timeZone = new DateTimeZone(timezone: date_default_timezone_get());
     if ("now" == $time) {
       $temp = new \DateTime();
-      $time = $temp->format(self::$TIME_FORMAT_NOW);
+      $time = $temp->format(format: self::$TIME_FORMAT_NOW);
     }
     $this->time = null == $time ? null : new \DateTime($time, $this->timeZone);
   }
 
   public function getDatabaseFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DATABASE_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_DATABASE_DEFAULT);
   }
 
   public function getDatabaseDateTimeFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_DATABASE_DATE_TIME_DEFAULT);
   }
 
   public function getDatabaseTimeFormat() {
-    return null == $this->time ? null : $this->time->format(self::$TIME_FORMAT_DATABASE_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$TIME_FORMAT_DATABASE_DEFAULT);
   }
 
   public function getDisplayAmPmFormat() {
-    return null == $this->time ? null : $this->time->format(self::$TIME_FORMAT_DISPLAY_AMPM);
+    return null == $this->time ? null : $this->time->format(format: self::$TIME_FORMAT_DISPLAY_AMPM);
   }
 
   public function getDisplayDateTimePickerFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
   }
 
   public function getDisplayFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_DISPLAY_DEFAULT);
   }
 
   public function getDisplayLongFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_LONG);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_DISPLAY_LONG);
   }
 
   public function getDisplayLongTimeFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_LONG . " " . self::$TIME_FORMAT_DISPLAY_AMPM);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_DISPLAY_LONG . " " . self::$TIME_FORMAT_DISPLAY_AMPM);
   }
 
   public function getDisplayRegistrationNotOpenFormat() {
-    return null == $this->time ? null :  $this->time->format(self::$DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN);
+    return null == $this->time ? null :  $this->time->format(format: self::$DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN);
   }
 
   public function getDisplayTimeFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_TIME_DISPLAY_DEFAULT);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_TIME_DISPLAY_DEFAULT);
   }
 
   public function getTime() {
@@ -77,7 +77,7 @@ class DateTime extends Base {
   }
 
   public function getYearFormat() {
-    return null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_YEAR);
+    return null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_YEAR);
   }
 
   public function setTime(int $time) {
@@ -91,7 +91,7 @@ class DateTime extends Base {
     $output = parent::__toString();
     $output .= ", time = ";
 //     $output .= null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_DISPLAY_DEFAULT);
-    $output .= null == $this->time ? null : $this->time->format(self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
+    $output .= null == $this->time ? null : $this->time->format(format: self::$DATE_FORMAT_PICKER_TIME_DISPLAY_DEFAULT);
     $output .= ", timeZone = ";
     $output .= null == $this->timeZone ? null : $this->timeZone->getName();
     return $output;

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Payout extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected int $bonusPoints, protected int $minPlayers, protected int $maxPlayers, protected array|null $structures) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getName() {
     return $this->name;
@@ -51,7 +51,7 @@ class Payout extends Base {
       $output .= $structure;
       $output .= "],";
     }
-    $output = substr($output, 0, strlen($output) - 1) . "]";
+    $output = substr(string: $output, offset: 0, length: strlen(string: $output) - 1) . "]";
     return $output;
   }
 }

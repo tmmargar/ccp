@@ -21,6 +21,7 @@ class Constant {
   public static string $ACCESSKEY_DELETE                      = "l";
   public static string $ACCESSKEY_DESCRIPTION                 = "i";
   public static string $ACCESSKEY_EMAIL                       = "e";
+  public static string $ACCESSKEY_FEE_PAID                    = "f";
   public static string $ACCESSKEY_FIRST_NAME                  = "f";
   public static string $ACCESSKEY_FOOD                        = "f";
   public static string $ACCESSKEY_GAME_TYPE                   = "g";
@@ -119,6 +120,9 @@ class Constant {
   public static string $TEXT_CONFIRM_DELETE                   = "Confirm delete";
   public static string $TEXT_CREATE                           = "Create";
   public static string $TEXT_DELETE                           = "Delete";
+  public static string $TEXT_FEE                              = "Fee";
+  public static string $TEXT_FEE_PAID                         = "FeePaid";
+  public static string $TEXT_FEE_PAID_DISPLAY                 = "Fee Paid";
   public static string $TEXT_GO                               = "Go";
   public static string $TEXT_MODIFY                           = "Modify";
   public static string $TEXT_NO                               = "No";
@@ -170,7 +174,6 @@ class Constant {
     return (self::FLAG_LOCAL() ? "" : self::$PATH_HOME_SERVER . self::CONTEXT_ROOT()) . self::$FOLDER_SESSION;
   }
   public static function SERVER_EMAIL() {
-    //return self::FLAG_LOCAL() ? "localhost" : "secure253.inmotionhosting.com";
     return self::FLAG_LOCAL() ? "localhost" : "ecngx303.inmotionhosting.com";
   }
 }

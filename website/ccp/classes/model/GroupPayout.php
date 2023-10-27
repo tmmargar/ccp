@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class GroupPayout extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected Group $group, protected array $payouts) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getGroup() {
     return $this->group;
@@ -27,7 +27,7 @@ class GroupPayout extends Base {
       $output .= $payout;
       $output .= "],";
     }
-    $output = substr($output, 0, strlen($output) - 1) . "]";
+    $output = substr($output, 0, strlen(string: $output) - 1) . "]";
     return $output;
   }
 }

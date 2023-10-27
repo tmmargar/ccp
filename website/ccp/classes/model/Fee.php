@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Fee extends Base {
-  public function __construct(protected bool $debug, protected int $seasonId, protected int $playerId, protected int $amount) {
-    parent::__construct($debug, $id);
+  public function __construct(protected bool $debug, protected int $seasonId, protected int $playerId, protected int $amount, protected string $status) {
+    parent::__construct(debug: $debug, id: null);
   }
   
   public function getAmount() {
@@ -18,6 +18,10 @@ class Fee extends Base {
     return $this->seasonId;
   }
   
+  public function getStatus() {
+    return $this->status;
+  }
+  
   public function setAmount(int $amount) {
     $this->amount = $amount;
   }
@@ -30,6 +34,10 @@ class Fee extends Base {
     $this->seasonId = $seasonId;
   }
   
+  public function setStatus(string $status) {
+    $this->status = $status;
+  }
+  
   public function __toString() {
     $output = parent::__toString();
     $output .= ", amount = ";
@@ -38,7 +46,9 @@ class Fee extends Base {
     $output .= $this->playerId;
     $output .= ", seasonId = ";
     $output .= $this->seasonId;
-    $output .= "";
+    $output .= " status = '";
+    $output .= $this->status;
+    $output .= "'";
     return $output;
   }
 }

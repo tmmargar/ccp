@@ -3,9 +3,9 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormBase extends Base {
   public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected string|int|null $id, protected string|null $name, protected string|null $suffix, protected array|string|int|null $value) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
     $this->class = null == $class ? array() : $class;
-    $this->name = Base::build($name, null);
+    $this->name = Base::build(value: $name, suffix: null);
     $this->value = (isset($value) && $value != "") || $value == 0 ? $value : null;
   }
   public function getClass() {
@@ -44,7 +44,7 @@ class FormBase extends Base {
   public function toString() {
     $output = parent::__toString();
     $output .= ", class = '";
-    $output .= print_r($this->class, true);
+    $output .= print_r(value: $this->class, return: true);
     $output .= "', disabled = ";
     $output .= $this->disabled;
     $output .= ", name = '";

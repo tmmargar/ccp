@@ -5,7 +5,7 @@ use Exception;
 class Status extends Base {
   private static array $codeList = array("P" => "Paid", "R" => "Registered", "F" => "Finished");
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $code, protected string $name) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getCode() {
     return $this->code;
@@ -17,10 +17,10 @@ class Status extends Base {
     return self::$codeList[$this->code];
   }
   public function setCode(string $code) {
-    if (array_key_exists($code, self::$codeList)) {
+    if (array_key_exists(key: $code, array: self::$codeList)) {
       $this->code = $code;
     } else {
-      throw new Exception($code . " is not a valid status code");
+      throw new Exception(message: $code . " is not a valid status code");
     }
   }
   public function setName(string $name) {

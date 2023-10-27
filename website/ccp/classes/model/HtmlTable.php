@@ -23,68 +23,62 @@ class HtmlTable extends HtmlBase {
    * $width is width of table (default is 100%)
    * $link is array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name) (default is NULL)
    */
-//    private string $query; // query
-//    private array|null $class; // array of class names
-//    private string|null $caption; // additional info about table
-//    private array|null $columnFormat; // array of column formats
-//    private string|null $hiddenId; // name prefix of field to store row identifier
-//    private string|null $selectedRow; // array of selected rows
-//    private string $delimiter; // delimiter (default is ", ")
-//    private array|null $foreignKeys; // array of foreign key queries
-//    private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
-//    private bool $header; // boolean to display header row or not
-//    private bool $note; // boolean true to display sorting note, false to hide
-//    private array|null $hiddenAdditional; // array of name and index of value to store
-//    private array|null $hideColumnIndexes; // array of column indexes to hide that are returned from query
-//    private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
-//    private string|null $suffix; // suffix of table id
-//    private string $width; // width of table
-//    private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
+  // private string $query; // query
+  // private array|null $class; // array of class names
+  // private string|null $caption; // additional info about table
+  // private array|null $columnFormat; // array of column formats
+  // private string|null $hiddenId; // name prefix of field to store row identifier
+  // private string|null $selectedRow; // array of selected rows
+  // private string $delimiter; // delimiter (default is ", ")
+  // private array|null $foreignKeys; // array of foreign key queries
+  // private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+  // private bool $header; // boolean to display header row or not
+  // private bool $note; // boolean true to display sorting note, false to hide
+  // private array|null $hiddenAdditional; // array of name and index of value to store
+  // private array|null $hideColumnIndexes; // array of column indexes to hide that are returned from query
+  // private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
+  // private string|null $suffix; // suffix of table id
+  // private string $width; // width of table
+  // private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
   public function __construct(protected string|null $caption, protected array|null $class, protected array|null $colspan, protected array|null $columnFormat, protected bool $debug, protected string $delimiter, protected array|null $foreignKeys, protected bool $header, protected array|null $hiddenAdditional, protected string|null $hiddenId, protected array|null $hideColumnIndexes, protected array|null $html, protected string|int|null $id, protected array|null $link, protected bool $note, protected string $query, protected string|null $selectedRow, protected string|null $suffix, protected string $width) {
-    parent::__construct(null, $class, $debug, $id, - 1, null);
+    parent::__construct(accessKey: null, class: $class, debug: $debug, id: $id, tabIndex: - 1, title: null);
   }
   public function getCaption() {
     return $this->caption;
   }
-
   public function getColspan() {
     return $this->colspan;
   }
-
   public function getColumnFormat() {
     return $this->columnFormat;
   }
-
   public function getDelimiter() {
     return $this->delimiter;
   }
-
   public function getForeignKeys() {
     return $this->foreignKeys;
   }
-
   public function getHtml() {
     $output = "";
-//     if (!isset($this->caption)) {
-      // $caption = "<strong>Hold shift and click on additional column(s) to do multi column sort</strong>";
-//     }
+    // if (!isset($this->caption)) {
+    // $caption = "<strong>Hold shift and click on additional column(s) to do multi column sort</strong>";
+    // }
     $hasRecords = false;
-    $databaseResult = new DatabaseResult($this->isDebug());
-    $result = $databaseResult->getConnection()->query($this->query);
+    $databaseResult = new DatabaseResult(debug: $this->isDebug());
+    $result = $databaseResult->getConnection()->query(query: $this->query);
     if ($result) {
       $numRecords = $result->rowCount();
       $hasRecords = 0 < $numRecords;
     }
     if ($hasRecords) {
       $firstRow = true;
-//       $ctr = 1;
+      // $ctr = 1;
       $ary = NULL;
       if ("" != $this->selectedRow) {
-        $ary = explode($this->delimiter, $this->selectedRow);
+        $ary = explode(separator: $this->delimiter, string: $this->selectedRow);
       }
       // set width using style to override default from css
-      $output .=
-        "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display" . (null !== $this->getClassAsString() ? " " . $this->getClassAsString() : "") . "\" id=\"" . self::$ID_TABLE_DATA . (isset($this->suffix) ? $this->suffix : "") . "\" style=\"width: " . $this->width . ";\">\n";
+      $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display" . (null !== $this->getClassAsString() ? " " . $this->getClassAsString() : "") . "\" id=\"" . self::$ID_TABLE_DATA . (isset($this->suffix) ? $this->suffix : "") . "\" style=\"width: " . $this->width . ";\">\n";
       if (isset($this->caption)) {
         $output .= "<caption>" . $this->caption . "</caption>";
       }
@@ -96,24 +90,25 @@ class HtmlTable extends HtmlBase {
         }
         $colSpanAllIndexes = array_merge($this->colspan[1], $colSpanIgnoreAllIndexes);
       }
+      $linkIdCounter = 0;
       while ($row = $result->fetch()) {
         if ($this->header && $firstRow) {
           $output .= "     <thead>\n";
           if (isset($this->colspan)) {
             $output .= "      <tr>\n";
             $colSpanIndex = 0;
-//             $sortIndex = -1;
-            for ($index = 0; $index < $count; $index++) {
+            // $sortIndex = -1;
+            for ($index = 0; $index < $count; $index ++) {
               if ((! isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) && (! isset($colSpanIgnoreAllIndexes) || (isset($colSpanIgnoreAllIndexes) && FALSE === array_search($index, $colSpanIgnoreAllIndexes)))) {
                 $output .= "       <th colspan=\"";
                 // if not found in col span indexes
                 if (isset($this->colspan[1]) && FALSE === array_search($index, $this->colspan[1])) {
                   $output .= "1";
-//                   $thStyle = " style=\"border-right: 1px solid black;\"";
+                  // $thStyle = " style=\"border-right: 1px solid black;\"";
                 } else {
-                  $output .= count($this->colspan[2][$colSpanIndex]) + 1;
-                  $colSpanIndex++;
-//                   $thStyle = " style=\"border-right: 1px solid black;\"";
+                  $output .= count(value: $this->colspan[2][$colSpanIndex]) + 1;
+                  $colSpanIndex ++;
+                  // $thStyle = " style=\"border-right: 1px solid black;\"";
                 }
                 $output .= "\" rowspan=\"";
                 // if not found in col span indexes
@@ -127,33 +122,33 @@ class HtmlTable extends HtmlBase {
                 if (isset($this->colspan[1]) && FALSE !== array_search($index, $this->colspan[1])) {
                   $output .= $this->colspan[0][array_search($index, $this->colspan[1])];
                   // if not found in col span indexes
-                } else if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE === array_search($index, $colSpanAllIndexes))) {
-                  $output .= ucwords($result->getColumnMeta($index)["name"]);
+                } else if (! isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE === array_search($index, $colSpanAllIndexes))) {
+                  $output .= ucwords(string: $result->getColumnMeta($index)["name"]);
                 }
-//                 $sortIndex++;
-//                 $output .= " <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $sortIndex . "</span>";
+                // $sortIndex++;
+                // $output .= " <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $sortIndex . "</span>";
                 $output .= "</th>\n";
               }
             }
             $output .= "      </tr>\n";
           }
           $output .= "      <tr>\n";
-//           $sortIndex = -1;
-          for ($index = 0; $index < $count; $index++) {
-            if (!isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
+          // $sortIndex = -1;
+          for ($index = 0; $index < $count; $index ++) {
+            if (! isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
               // if found in all col span indexes
-              if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE !== array_search($index, $colSpanAllIndexes))) {
-//                 $sortIndex++;
-                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords($result->getColumnMeta($index)["name"]) . 
-//                 "      <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $index . "</span>\n".
+              if (! isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE !== array_search($index, $colSpanAllIndexes))) {
+                // $sortIndex++;
+                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords(string: $result->getColumnMeta($index)["name"]) .
+                // " <span class=\"sortPriority\" id=\"SortPriority" . $index . "\" aria-hidden=\"true\">" . $index . "</span>\n".
                 "</th>\n";
               }
             }
           }
           if (isset($this->html)) {
-            for ($idx = 0; $idx < count($this->html[1]); $idx++) {
-              $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] . 
-//               "      <span class=\"sortPriority\" id=\"SortPriority" . $idx. "\" aria-hidden=\"true\">" . $index . "</span>\n" .
+            for ($idx = 0; $idx < count(value: $this->html[1]); $idx ++) {
+              $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] .
+              // " <span class=\"sortPriority\" id=\"SortPriority" . $idx. "\" aria-hidden=\"true\">" . $index . "</span>\n" .
               "</th>\n";
             }
           }
@@ -168,19 +163,19 @@ class HtmlTable extends HtmlBase {
         $output .= "      <tr>\n";
         $linkCounter = 0;
         for ($index = 0; $index < $count; $index ++) {
-          if (!isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
+          if (! isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
             $output .= "       <td";
             $formattedFlag = false;
             $class = array();
             $temp = $row[$index];
             if (! $formattedFlag) {
-              $aryFmt = $result->getColumnMeta($index);
+              $aryFmt = $result->getColumnMeta(column: $index);
               if (isset($this->columnFormat)) {
                 $aryFmt2 = array();
-                for ($idx = 0; $idx < count($this->columnFormat); $idx ++) {
+                for ($idx = 0; $idx < count(value: $this->columnFormat); $idx ++) {
                   if ($this->columnFormat[$idx][0] == $index) {
                     $fmt = $this->columnFormat[$idx][1];
-                    $aryFmt2 = explode(",", $fmt);
+                    $aryFmt2 = explode(separator: ",", string: $fmt);
                     $places = $this->columnFormat[$idx][2];
                     break;
                   }
@@ -194,7 +189,7 @@ class HtmlTable extends HtmlBase {
                 $aryFmt = array($aryFmt["native_type"]);
               }
               foreach ($aryFmt as $fmt) {
-                switch (strtolower($fmt)) {
+                switch (strtolower(string: $fmt)) {
                   case "date":
                     $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
                     $temp = $dateTime->getDisplayFormat();
@@ -211,8 +206,8 @@ class HtmlTable extends HtmlBase {
                   case "currency":
                   case "percentage":
                   case "number":
-//                     $class .= " number";
-//                     if ($fmt != "percentage") {
+                    // $class .= " number";
+                    // if ($fmt != "percentage") {
                     if ($fmt != "number") {
                       array_push($class, "number");
                     }
@@ -230,8 +225,8 @@ class HtmlTable extends HtmlBase {
                       // $symbol = $formatter->getSymbol(NumberFormatter::PERCENT_SYMBOL);
                       // $temp = $formatter->formatCurrency($temp, $symbol);
                     }
-                    if (isset($temp) && isset($places) && -1 != $places) {
-                      $temp = number_format((float) $temp, $places);
+                    if (isset($temp) && isset($places) && - 1 != $places) {
+                      $temp = number_format(num: (float) $temp, decimals: $places);
                     }
                     if ($temp != "") {
                       $temp = $prefix . $temp . $suffix;
@@ -256,7 +251,7 @@ class HtmlTable extends HtmlBase {
                     break;
                 }
               }
-              if (!in_array("negative", $class) && !in_array("positive", $class) && isset($temp)) {
+              if (! in_array("negative", $class) && ! in_array("positive", $class) && isset($temp)) {
                 if (0 != preg_match('/^\$-+\d+(,\d+)?(.\d+)?|-+\d+(,\d+)?(.\d+)?%$/', (string) $temp)) {
                   array_push($class, "negative");
                 } else if (0 != preg_match('/^\$\d+(,\d+)?(.\d+)?|\d+(,\d+)?(.\d+)?%$/', (string) $temp)) {
@@ -268,50 +263,50 @@ class HtmlTable extends HtmlBase {
             $output .= ">";
             if ($result->getColumnMeta($index)["name"] == "map" && $temp != "") {
               $output .= "<a href=\"" . $temp . "\">View</a>";
-//             } elseif (isset($this->link) && in_array($index, $this->link[0])) {
-//               $link = new HtmlLink(null, null, $this->isDebug(), $this->link[1][0], null, $this->link[1][1], array($row[$this->link[1][2]], $this->link[1][3]), -1, $row[$this->link[1][4]], null);
+              // } elseif (isset($this->link) && in_array($index, $this->link[0])) {
+              // $link = new HtmlLink(null, null, $this->isDebug(), $this->link[1][0], null, $this->link[1][1], array($row[$this->link[1][2]], $this->link[1][3]), -1, $row[$this->link[1][4]], null);
             } elseif (isset($this->link) && in_array($index, $this->link[0])) {
-//               echo $temp;
-              //0$href, 1$paramName, 2$paramValue, 3$text, 4$id
-              //$accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title
-              //$link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], null, $this->link[$linkCounter + 1][1][0], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], null);
-              //[0][0] = 3
-              //[1][0] = manageUSer.php
-              //[1][1][0] = "userId"
-              //[1][1][1] = "mode"
-              //[1][2][0] = 2
-              //[1][2][1] = "modify"
-              //[1][3] = 3
-              //[1][4] = "a_b_link"
-              //print_r($this->link);
-              //echo "<br>".gettype($this->link[$linkCounter + 1][2][0]);
+              // echo $temp;
+              // 0$href, 1$paramName, 2$paramValue, 3$text, 4$id
+              // $accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title
+              // $link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], null, $this->link[$linkCounter + 1][1][0], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], null);
+              // [0][0] = 3
+              // [1][0] = manageUSer.php
+              // [1][1][0] = "userId"
+              // [1][1][1] = "mode"
+              // [1][2][0] = 2
+              // [1][2][1] = "modify"
+              // [1][3] = 3
+              // [1][4] = "a_b_link"
+              // print_r($this->link);
+              // echo "<br>".gettype($this->link[$linkCounter + 1][2][0]);
               $counterValues = 0;
               $paramValues = array();
               if (isset($this->link[$linkCounter + 1][2][0])) {
                 $paramValues[$counterValues] = $row[$this->link[$linkCounter + 1][2][0]];
               }
-              $counterValues++;
+              $counterValues ++;
               if (isset($this->link[$linkCounter + 1][2][1])) {
                 $paramValues[$counterValues] = $this->link[$linkCounter + 1][2][1];
               }
               if (sizeof($paramValues) == 0) {
                 $paramValues = null;
               }
-              //$link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] : null, isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, isset($this->link[$linkCounter + 1][2][0]) && isset($this->link[$linkCounter + 1][2][1]) ? array($row[$this->link[$linkCounter + 1][2][0]], $this->link[$linkCounter + 1][2][1]) : null, -1, $row[$this->link[$linkCounter + 1][3]], null);
-              $link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] . "_" . ($linkCounter + 1) : null, isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, $paramValues, -1, $row[$this->link[$linkCounter + 1][3]], null);
+              $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: $this->link[$linkCounter + 1][0], id: isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] . "_" . ($linkIdCounter + 1) : null, paramName: isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, paramValue: $paramValues, tabIndex: - 1, text: $row[$this->link[$linkCounter + 1][3]], title: null);
               $output .= $link->getHtml();
-              $linkCounter++;
+              $linkCounter ++;
+              $linkIdCounter ++;
             } else {
-              $output .= isset($temp) ? htmlentities((string) $temp, ENT_NOQUOTES, "UTF-8") : "";
+              $output .= isset($temp) ? htmlentities(string: (string) $temp, flags: ENT_NOQUOTES, encoding: "UTF-8") : "";
             }
             $output .= "</td>\n";
           }
         }
         if (isset($this->html)) {
-          // 0 is html, 1 is headers, 2 is index, 3 is status name/button text, 4 is player index
-          for ($idx = 0; $idx < count($this->html[0]); $idx ++) {
-            if (!is_string($this->html[2][$idx])) {
-              for ($idx2 = 0; $idx2 < count($this->html[0]); $idx2 ++) {
+          // 0 is html, 1 is headers, 2 is index, 3 is status name/button text, 4 is player index/rebuy count/fee paid/fee paid for tournament
+          for ($idx = 0; $idx < count(value: $this->html[0]); $idx ++) {
+            if (! is_string($this->html[2][$idx])) {
+              for ($idx2 = 0; $idx2 < count(value: $this->html[0]); $idx2 ++) {
                 if ($row[$this->html[2][$idx]] == $this->html[3][$idx2][0]) {
                   $temp = $this->html[3][$idx2][1];
                   break;
@@ -324,23 +319,29 @@ class HtmlTable extends HtmlBase {
             } else {
               $temp = "";
             }
-            $htmlTemp = str_replace("value=\"?1\"", $temp, $this->html[0][$idx]); // button text
-            $htmlTemp = str_replace("?2", (string) $row[$this->html[4][0]], $htmlTemp); // player id
-            $htmlTemp = str_replace("?3", $temp, $htmlTemp); // status name
-            $htmlTemp = str_replace("?4", (string) $row[$this->html[4][1]], $htmlTemp); // rebuy count
+            $htmlTemp = str_replace(search: "value=\"?1\"", replace: $temp, subject: $this->html[0][$idx]); // button text
+            $htmlTemp = str_replace(search: "?2", replace: (string) $row[$this->html[4][0]], subject: $htmlTemp); // player id
+            $htmlTemp = str_replace(search: "?3", replace: $temp, subject: $htmlTemp); // status name
+            $htmlTemp = str_replace(search: "?4", replace: (string) $row[$this->html[4][1]], subject: $htmlTemp); // rebuy count
+            if (isset($this->html[4][2])) {
+              $htmlTemp = str_replace(search: "?5", replace: (string) $row[$this->html[4][2]], subject: $htmlTemp); // fee paid
+            }
+            if (isset($this->html[4][3])) {
+              $htmlTemp = str_replace(search: "?6", replace: (string) $row[$this->html[4][3]], subject: $htmlTemp); // fee paid for tournament
+            }
             $output .= "     <td align=\"center\">" . $htmlTemp . "</td>\n";
           }
         }
         if (isset($this->hiddenId)) {
-            $output .= "<td>\n";
-            $hiddenTemp = new FormControl($this->isDebug(), null, null, false, null, array("hide"), null, false, $this->hiddenId . "_" . $row[0], null, $this->hiddenId . "_" . $row[0], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[0], null);
-            $output .= $hiddenTemp->getHtml();
-            $output .= "</td>\n";
+          $output .= "<td>\n";
+          $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hide"), cols: null, disabled: false, id: $this->hiddenId . "_" . $row[0], maxLength: null, name: $this->hiddenId . "_" . $row[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $row[0], wrap: null);
+          $output .= $hiddenTemp->getHtml();
+          $output .= "</td>\n";
         }
         if (isset($this->hiddenAdditional)) {
-          for ($index = 0; $index < count($this->hiddenAdditional); $index ++) {
+          for ($index = 0; $index < count(value: $this->hiddenAdditional); $index ++) {
             $output .= "<td>\n";
-            $hiddenTemp = new FormControl($this->isDebug(), null, null, false, null, array("hide"), null, false, $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], null, $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], null, null, false, null, null, null, null, FormControl::$TYPE_INPUT_HIDDEN, $row[$this->hiddenAdditional[$index][1]], null);
+            $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hide"), cols: null, disabled: false, id: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], maxLength: null, name: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $row[$this->hiddenAdditional[$index][1]], wrap: null);
             $output .= $hiddenTemp->getHtml();
             $output .= "</td>\n";
           }
@@ -355,141 +356,114 @@ class HtmlTable extends HtmlBase {
     }
     return $output;
   }
-
   public function getHiddenAdditional() {
     return $this->hiddenAdditional;
   }
-
   public function getHiddenId() {
     return $this->hiddenId;
   }
-
   public function getHideColumnIndexes() {
     return $this->hideColumnIndexes;
   }
-
   public function getLink() {
     return $this->link;
   }
-
   public function getQuery() {
     return $this->query;
   }
-
   public function getSelectedRow() {
     return $this->selectedRow;
   }
-
   public function getSuffix() {
     return $this->suffix;
   }
-
   public function getWidth() {
     return $this->width;
   }
-
   public function isHeader() {
     return $this->header;
   }
-
   public function isNote() {
     return $this->note;
   }
-
   public function setCaption(string $caption) {
     $this->caption = $caption;
   }
-
   public function setColspan(array $colspan) {
     $this->colspan = $colspan;
   }
-
   public function setColumnFormat(array $columnFormat) {
     $this->columnFormat = $columnFormat;
   }
-
   public function setDelimiter(string $delimiter) {
     $this->delimiter = $delimiter;
   }
-
   public function setForeignKeys(array $foreignKeys) {
     $this->foreignKeys = $foreignKeys;
   }
-
   public function setHiddenId(string $hiddenId) {
     $this->hiddenId = $hiddenId;
   }
-
   public function setHeader(bool $header) {
     $this->header = $header;
   }
-
   public function setHiddenAdditional(array $hiddenAdditional) {
     $this->hiddenAdditional = $hiddenAdditional;
   }
-
   public function setHideColumnIndexes(array $hideColumnIndexes) {
     $this->hideColumnIndexes = $hideColumnIndexes;
   }
-
   public function setHtml(array $html) {
     $this->html = $html;
   }
-
   public function setLink(array $link) {
-      $this->link = $link;
+    $this->link = $link;
   }
-
   public function setNote(bool $note) {
-      $this->note = $note;
+    $this->note = $note;
   }
-
   public function setQuery(string $query) {
     $this->query = $query;
   }
-
   public function setSelectedRow(array $selectedRow) {
     $this->selectedRow = $selectedRow;
   }
-
   public function setSuffix(string $suffix) {
-      $this->suffix = $suffix;
+    $this->suffix = $suffix;
   }
-
   public function setWidth(string $width) {
-      $this->width = $width;
+    $this->width = $width;
   }
-
   public function __toString() {
     $output = parent::__toString();
     $output .= ", caption = '";
     $output .= $this->caption;
     $output .= "', colspan = ";
-    $output .= print_r($this->colspan, true);
+    $output .= print_r(value: $this->colspan, return: true);
     $output .= ", columnFormat = ";
-    $output .= print_r($this->columnFormat, true);
+    $output .= print_r(value: $this->columnFormat, return: true);
     $output .= ", delimiter = '";
     $output .= $this->delimiter;
     $output .= "', foreignKeys = ";
-    $output .= print_r($this->foreignKeys, true);
+    $output .= print_r(value: $this->foreignKeys, return: true);
     $output .= ", header = "; // boolean
-    $output .= var_export($this->header, true);
+    $output .= var_export(value: $this->header, return: true);
     $output .= ", hiddenAdditional = ";
-    $output .= print_r($this->hiddenAdditional, true);
+    $output .= print_r(value: $this->hiddenAdditional, return: true);
     $output .= ", hiddenId = '"; // not array
     $output .= $this->hiddenId;
     $output .= "', hideColumnIndexes = ";
-    $output .= print_r($this->hideColumnIndexes, true);
+    $output .= print_r(value: $this->hideColumnIndexes, return: true);
     $output .= ", html = ";
-    $output .= print_r($this->html, true);
+    $output .= print_r(value: $this->html, return: true);
     $output .= ", link = ";
-    $output .= print_r($this->link, true);
+    $output .= print_r(value: $this->link, return: true);
     $output .= ", note = ";
-    $output .= var_export($this->note, true);
+    $output .= var_export(value: $this->note, return: true);
     $output .= ", query = '";
     $output .= $this->query;
     $output .= "', selectedRow = ";
-    $output .= print_r($this->selectedRow, true);
+    $output .= print_r(value: $this->selectedRow, return: true);
     $output .= ", suffix = '";
     $output .= $this->suffix;
     $output .= "', width = '";

@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Result extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder, protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy, protected string|null $food) {
-    parent::__construct($debug, $id);
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder, protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy, protected string|null $food, protected string|null $feeStatus) {
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getTournament() {
     return $this->tournament;
@@ -41,6 +41,9 @@ class Result extends Base {
   public function getFood() {
     return $this->food;
   }
+  public function getFeeStatus() {
+    return $this->feeStatus;
+  }
   public function setTournament(Tournament $tournament) {
     $this->tournament = $tournament;
   }
@@ -77,9 +80,12 @@ class Result extends Base {
   public function setFood(string $food) {
     $this->food = $food;
   }
+  public function setFeeStatus(string $feeStatus) {
+    $this->feeStatus = $feeStatus;
+  }
   public function getLink() {
 //     return HtmlUtility::buildLink("manageResult.php", "modify", $this->getId(), $this->getTournament()->getDescription());
-    $link = new HtmlLink(null, null, $this->isDebug(), "manageResult.php", null, array("id", "mode"),  array($this->getId(). "modify"), -1, $this->getTournament()->getDescription(), null);
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageResult.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getTournament()->getDescription(), title: null);
     return $link->getHtml();
   }
   public function __toString() {
@@ -93,21 +99,23 @@ class Result extends Base {
     $output .= "], registerOrder = ";
     $output .= $this->registerOrder;
     $output .= ", buyinPaid = ";
-    $output .= var_export($this->buyinPaid, true);
+    $output .= var_export(value: $this->buyinPaid, return: true);
     $output .= ", rebuyPaid = ";
-    $output .= var_export($this->eebuyPaid, true);
+    $output .= var_export(value: $this->rebuyPaid, return: true);
     $output .= ", addonPaid = ";
-    $output .= var_export($this->addonPaid, true);
+    $output .= var_export(value: $this->addonPaid, return: true);
     $output .= ", rebuyCount = ";
     $output .= $this->rebuyCount;
     $output .= ", addonFlag = ";
-    $output .= var_export($this->addonFlag, true);
+    $output .= var_export(value: $this->addonFlag, return: true);
     $output .= ", place = ";
     $output .= $this->place;
     $output .= ", knockedOutBy = [";
     $output .= $this->knockedOutBy;
     $output .= "], food = '";
     $output .= $this->food;
+    $output .= "', feeStatus = '";
+    $output .= $this->feeStatus;
     $output .= "'";
     return $output;
   }

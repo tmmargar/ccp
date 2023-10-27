@@ -87,18 +87,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           $endDateTemp = clone ($tournament->getDate());
           $endDateTemp->getTime()->modify('-1 day');
         }
-        $optionText = $tournament->getDate()->getDisplayFormat();
-        $optionText .= "@" . $tournament->getStartTime()->getDisplayAmPmFormat();
-        $optionText .= " (" . $tournament->getLocation()->getName() . ")";
-        $optionText .= " " . $tournament->getLimitType()->getName();
-        $optionText .= " " . $tournament->getGameType()->getName();
-        $optionText .= " " . $tournament->getMaxRebuys() . "r" . (0 < $tournament->getAddonAmount() ? "+a" : "");
-        $waitListCnt = $tournament->getRegisteredCount() - $tournament->getMaxPlayers();
-        $optionText .= " (" . $tournament->getRegisteredCount() . ($waitListCnt > 0 ? "+" . $waitListCnt . "wl" : "") . "np/" . $tournament->getBuyinsPaid() . "p";
-        $optionText .= "+" . $tournament->getRebuysPaid() . "rp";
-        $optionText .= "+" . $tournament->getAddonsPaid() . "ap";
-        $optionText .= "/" . $tournament->getEnteredCount() . "ent)";
-        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId . "::" . $tournament->getMaxRebuys() . "::" . $tournament->getAddonAmount(), suffix: null, text: $optionText, value: $tournament->getId() . "::" . $tournament->getMaxRebuys() . "::" . $tournament->getAddonAmount());
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId . "::" . $tournament->getMaxRebuys() . "::" . $tournament->getAddonAmount(), suffix: null, text: $tournament->getDisplayDetails(), value: $tournament->getId() . "::" . $tournament->getMaxRebuys() . "::" . $tournament->getAddonAmount());
         $output .= $option->getHtml();
         $cnt ++;
       }

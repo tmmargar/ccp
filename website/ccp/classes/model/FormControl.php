@@ -16,7 +16,7 @@ class FormControl extends FormBase {
   public static string $TYPE_INPUT_TEXTAREA  = "textarea";
   public static string $TYPE_INPUT_TEXTBOX   = "text";
   public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked, protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name, protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size, protected string|null $suffix, protected string|null $type, protected array|string|int|null $value, protected string|null $wrap, protected string|null $import = null, protected bool|null $noValidate = false) {
-    parent::__construct($debug, $class, $disabled, $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), $suffix, $value);
+    parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), name: $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), suffix: $suffix, value: $value);
   }
   public function getAccessKey() {
     return $this->accessKey;
@@ -31,8 +31,6 @@ class FormControl extends FormBase {
     return $this->cols;
   }
   public function getHtml() {
-//     echo "<br>" . $this->getId() . " -- " . $this->getValue() . " -> " . ("" !== $this->getValue());
-//     echo "<br>" . $this->getId() . " -- " . $this->isDisabled() . " -> " . $this->readOnly;
     $temp = "";
     if (isset($this->onClick)) {
       $temp =
@@ -168,9 +166,9 @@ class FormControl extends FormBase {
     $output .= "', autoComplete = '";
     $output .= $this->autoComplete;
     $output .= "', autoFocus = ";
-    $output .= var_export($this->autoFocus, true);
+    $output .= var_export(value: $this->autoFocus, return: true);
     $output .= ", checked = ";
-    $output .= var_export($this->checked, true);
+    $output .= var_export(value: $this->checked, return: true);
     $output .= ", cols = ";
     $output .= $this->cols;
     $output .= ", import = '";
@@ -184,9 +182,9 @@ class FormControl extends FormBase {
     $output .= "', placeholder = '";
     $output .= $this->placeholder;
     $output .= "', readOnly = ";
-    $output .= var_export($this->readOnly, true);
+    $output .= var_export(value: $this->readOnly, return: true);
     $output .= ", required = ";
-    $output .= var_export($this->required, true);
+    $output .= var_export(value: $this->required, return: true);
     $output .= ", rows = ";
     $output .= $this->rows;
     $output .= ", size = ";

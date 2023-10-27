@@ -88,6 +88,9 @@ if (!isset($tournamentId) || "" == $tournamentId) {
           $resultList = $databaseResult->getUserById(params: $params);
           if (0 < count($resultList)) {
             $user = $resultList[0];
+            $paramsNested = array($userId, $tournamentId);
+            $resultListNested = $databaseResult->getFeeByTournamentAndPlayer(params: $paramsNested);
+            $feeStatus = $resultListNested[0]->getStatus();
             $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
             $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
 //             $debug, $id, $description, $comment, $limitType, $gameType, $specialType, $chipCount, $location, $date, $startTime, $endTime, $buyinAmount, $maxPlayers, $maxRebuys, $rebuyAmount, $addonAmount, $addonChipCount, $groupPayout, $rake, $registeredCount, $buyinsPaid, $rebuysPaid, $rebuysCount, $addonsPaid, $enteredCount
@@ -95,7 +98,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             if ("cancelling" == $state) {
               $output .= "aryMessages.push(\"" . $email->sendCancelledEmail(address: $emailAddress, tournament: $emailTournament) . "\");\n";
             } else {
-              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, waitList: $waitListCount) . "\");\n";
+              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, feeStatus: $feeStatus, waitList: $waitListCount) . "\");\n";
             }
           }
           if (isset($waitListEmail)) {
@@ -103,17 +106,19 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             $params = array($tournamentId);
             $resultList = $databaseResult->getWaitListedPlayerByTournamentId(params: $params);
             if (0 < count($resultList)) {
-              $waitListName = $resultList[0];
-              $waitListEmail = $resultList[1];
+              $waitListName = $resultList[1];
+              $waitListEmail = $resultList[2];
+              $paramsNested = array($resultList[0], $tournamentId);
+              $resultListNested = $databaseResult->getFeeByTournamentAndPlayer(params: $paramsNested);
+              $feeStatus = $resultListNested[0]->getStatus();
               $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($waitListName), toEmail: array($waitListEmail), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
               $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip(), phone: null);
               $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: $tournament->getId(), description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: $tournament->getDate(), startTime: $tournament->getStartTime(), endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
-              //               $output .= $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, waitList: -99);
-              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, waitList: -99) . "\");\n";
+              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, feeStatus: $feeStatus, waitList: -99) . "\");\n";
               // send email to CCP staff
               $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::$NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
               $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip(), phone: null);
-              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, waitList: $user->getName() . " un-registered and " . $waitListName) . "\");\n";
+              $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, feeStatus: $feeStatus, waitList: $user->getName() . " un-registered and " . $waitListName) . "\");\n";
             }
           }
         }
@@ -202,7 +207,11 @@ if (!isset($tournamentId) || "" == $tournamentId) {
           $output .= "</div>\n";
           $output .= "  <div class=\"clear\"></div>\n";
         }
-        $output2 = "  <h3>" . REGISTERED_LABEL . "</h3>\n";
+        $output2 = "  <h3 class=\"center\">" . REGISTERED_LABEL . "</h3>\n";
+        $output2 .= "  <div class=\"columnHeader\">Name</div>\n";
+        $output2 .= "  <div class=\"column1Header\">Season Fee</div>\n";
+        $output2 .= "  <div class=\"columnHeader\">Food</div>\n";
+        $output2 .= "  <div class=\"clear\" style=\"padding-bottom: 2px;\"></div>\n";
         $params = array($tournamentId);
         $resultList = $databaseResult->getResultRegisteredByTournamentId(params: $params);
         if (0 < count($resultList)) {
@@ -218,6 +227,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
               $output2 .= " <h3>Wait List</h3>";
             }
             $output2 .= "  <div class=\"column\">" . $result->getUser()->getName() . "</div>\n";
+            $output2 .= "  <div class=\"column1\">" . $result->getFeeStatus() . "</div>\n";
             $output2 .= "  <div>" . null !== $result->getFood() ? $result->getFood() : "" . "</div>\n";
             $output2 .= "  <div class=\"clear\" style=\"padding-bottom: 2px;\"></div>\n";
             $count ++;

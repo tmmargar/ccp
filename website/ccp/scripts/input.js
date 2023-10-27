@@ -132,11 +132,11 @@ export const input = {
   },
   showDialog : function({name} = {}) {
     document.querySelector("#dialog" + name).showModal();
-     $("table[id^='dataTbl']").DataTable().columns.adjust();
+    $("table[id^='dataTbl']").DataTable().columns.adjust();
   },
   showDialogWithWidth : function({name} = {}) {
     document.querySelector("#dialog" + name).showModal();
-     $("table[id^='dataTblRank']").DataTable().columns.adjust();
+    $("table[id^='dataTblRank']").DataTable().columns.adjust();
   },
   showHideToggle : function({aryId, idFocus} = {}) {
     aryId.forEach(element => { document.querySelector("#" + element).toggle(); });

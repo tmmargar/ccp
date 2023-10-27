@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class SpecialType extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
 
   public function getDescription() {

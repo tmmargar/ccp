@@ -1,9 +1,16 @@
 body {
-  max-width: 400px;
+  max-width: 450px;
 }
-.column {
+.columnHeader, .column {
   float: left;
-  width: 140px;
+  width: 150px;
+}
+.columnHeader, .column1Header {
+  font-weight: bold;
+}
+.column1Header, .column1 {
+  float: left;
+  width: 120px;
 }
 .column2 {
   width: 350px;

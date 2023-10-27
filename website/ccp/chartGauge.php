@@ -29,7 +29,7 @@ if (0 < count($resultList)) {
 // $startDate = "2019-10-01";
 $params = array($startDate, $endDate, null, false);
 $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-if (0 < count($resultList)) {
+if (0 < count(value: $resultList)) {
   $tournamentsLeft = $resultList[0] == 0 ? 1 : $resultList[0];
   $yellowFrom = 0;
   $yellowTo = $tournamentsLeft / 2;

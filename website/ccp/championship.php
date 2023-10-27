@@ -55,7 +55,7 @@ $aryPosition[8] = 2;
 
 $params = array($startDate, $endDate, SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
-$count = count($resultList) - count($aryAbsentIds);
+$count = count(value: $resultList) - count(value: $aryAbsentIds);
 if (0 < $count) {
   // $numPlayers = $count;
   $ctr = 0;
@@ -63,7 +63,7 @@ if (0 < $count) {
   $allowCtr = 0;
   $absentCtr = 0;
   $additionalPlayers = 36 - $countWinners;
-  while ($ctr < count($resultList)) {
+  while ($ctr < count(value: $resultList)) {
     $aryResult = $resultList[$ctr];
 //     echo "<br>".$ctr."-->".$index."->".$aryResult[0];
     if (in_array($aryResult[0], $aryAbsentNames)) {
@@ -123,14 +123,14 @@ if (0 < $count) {
     }
   }
   // echo "<br>maxPlayers -> " . print_r($aryMaxPlayers, true);
-  $topThird = ceil($playerCount / 3);
+  $topThird = ceil(num: $playerCount / 3);
   $topThirdChipCount = 11000;
-  $middleThird = floor($playerCount / 3);
+  $middleThird = floor(num: $playerCount / 3);
   $middleThirdChipCount = 10000;
-  $bottomThird = floor($playerCount / 3);
+  $bottomThird = floor(num: $playerCount / 3);
   $bottomThirdChipCount = 9000;
   $ctr = 0;
-  while ($ctr < count($aryNames)) {
+  while ($ctr < count(value: $aryNames)) {
     if ($ctr < $topThird) {
       $aryNames[$ctr] .= " (" . $topThirdChipCount . " chips)";
     } else if ($ctr < ($topThird + $middleThird)) {
@@ -142,7 +142,7 @@ if (0 < $count) {
     }
     $ctr ++;
   }
-  $maxPlayers = round(count($aryNames) / $numTables); // ceil(count($aryNames) / $numTables);
+  $maxPlayers = round(num, count(value: $aryNames) / $numTables); // ceil(count($aryNames) / $numTables);
                                                       // $numEmpty = $totalPlayers - count($aryNames);
   $tableNumber = 0;
   $index = 1;
@@ -161,7 +161,7 @@ if (0 < $count) {
   // echo print_r($table) . "<br>";
   // skip first entry
   $ctr = 1;
-  while ($ctr <= count($table)) {
+  while ($ctr <= count(value: $table)) {
     // echo "<br>Setting table[" . $ctr . "][1][1] = 1";
     $table[$ctr][1][1] = "1 (Dealer)";
     $position = $maxPlayers;
@@ -169,11 +169,11 @@ if (0 < $count) {
     $shortTable = false;
     $checkCtr = $ctr2;
     // adjust blinds for empty seat at table
-    if ($table[$ctr][count($table[$ctr])][0] == "EMPTY") {
+    if ($table[$ctr][count(value: $table[$ctr])][0] == "EMPTY") {
       // echo "<br>Setting short table flag";
       $shortTable = true;
     }
-    while ($ctr2 <= count($table[$ctr])) {
+    while ($ctr2 <= count(value: $table[$ctr])) {
       // echo "<br>Setting table[" . $ctr . "][" . $ctr2 . "][1] = " . $position;
       $table[$ctr][$ctr2][1] = $position;
       // if short table adjust check by 1
@@ -209,15 +209,15 @@ if (0 < $count) {
   $output .= "    <div class=\"clear\"></div>\n";
   $params = array(1, 1);
   $resultList = $databaseResult->getGroupPayoutById(params: $params);
-  if (0 < count($resultList)) {
+  if (0 < count(value: $resultList)) {
     $ctr = 0;
-    while ($ctr < count($resultList)) {
+    while ($ctr < count(value: $resultList)) {
       $groupPayout = $resultList[$ctr];
       $payouts = $groupPayout->getPayouts();
       $structures = $payouts[0]->getStructures();
       foreach ($structures as $structure) {
         $output .= "    <div class=\"column\">" . $structure->getPlace() . " (" . $structure->getPercentage() * 100 . "%)</div>\n";
-        $output .= "    <div class=\"column\">$" . round($prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
+        $output .= "    <div class=\"column\">$" . round(num: $prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
         $output .= "    <div class=\"clear\"></div>\n";
       }
       $ctr ++;
@@ -244,10 +244,10 @@ if (0 < $count) {
   $output .= "    <br />\n";
   $output .= "    <div class=\"heading\"><strong>* represent winners</strong></div>\n";
   $ctr = 0;
-  while ($ctr < count($table)) {
+  while ($ctr < count(value: $table)) {
     $ctr ++;
     $ctr2 = 0;
-    while ($ctr2 < count($table[$ctr])) {
+    while ($ctr2 < count(value: $table[$ctr])) {
       $ctr2 ++;
       $output .= "    <div class=\"clear\"></div>\n";
       if ($ctr2 == 1) {

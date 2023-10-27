@@ -3,13 +3,13 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class Base extends Root {
   public function __construct(protected bool $debug, private string|int|null $id) {
-    $this->id = Base::build($id, null);
+    $this->id = Base::build(value: $id, suffix: null);
   }
   public function getId() {
     return $this->id;
   }
   public function setId(int $id) {
-    $this->id = $this->build($id, null);
+    $this->id = $this->build(value: $id, suffix: null);
   }
   public function __toString() {
     $output = parent::__toString();
@@ -20,20 +20,20 @@ abstract class Base extends Root {
   public static function build(string|int|null $value, string|null $suffix) {
     $idTemp = "";
     if (isset($value)) {
-      $temp = explode(" ", (string) $value);
-      if (count($temp) > 1) {
+      $temp = explode(separator: " ", string: (string) $value);
+      if (count(value: $temp) > 1) {
         $counter = 0;
         foreach ($temp as $val) {
           if (0 == $counter) {
-            $val = strtolower($val);
+            $val = strtolower(string: $val);
           } else {
-            $val = ucfirst($val);
+            $val = ucfirst(string: $val);
           }
           $idTemp .= $val;
           $counter ++;
         }
       } else {
-        $idTemp = lcfirst((string) $value);
+        $idTemp = lcfirst(string: (string) $value);
       }
       if (isset($suffix)) {
         $idTemp .= $suffix;

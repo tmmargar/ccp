@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Notification extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getDescription() {
     return $this->description;
