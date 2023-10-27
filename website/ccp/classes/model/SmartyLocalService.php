@@ -12,11 +12,11 @@ class SmartyLocalService {
     return $this->smarty;
   }
   public function initialize(bool $debug) {
-    $this->smarty->setTemplateDir("../templates/smarty");
-    $this->smarty->setCompileDir("../templates/smarty/compiled");
-    $this->smarty->setCacheDir("../classes/common/smarty/cache");
-    $this->smarty->setConfigDir("../classes/common/smarty/configs");
-    $this->smarty->setDebugging($debug);
+    $this->smarty->setTemplateDir(template_dir: "../templates/smarty");
+    $this->smarty->setCompileDir(compile_dir: "../templates/smarty/compiled");
+    $this->smarty->setCacheDir(cache_dir: "../classes/common/smarty/cache");
+    $this->smarty->setConfigDir(config_dir: "../classes/common/smarty/configs");
+    $this->smarty->setDebugging(debugging: $debug);
 //     $this->smarty->registerClass("htmlUtility", "\ccp\classes\utility\HtmlUtility");
   }
   public function setSmarty(Smarty $smarty) {

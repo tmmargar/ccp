@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class HtmlLink extends HtmlBase {
   public function __construct(protected string|null $accessKey, protected array|null $class, protected bool $debug, protected string $href, protected string|int|null $id, protected array|null $paramName, protected array|null $paramValue, protected int $tabIndex, protected string $text, protected string|null $title) {
-    parent::__construct($accessKey, $class, $debug, $id, $tabIndex, $title);
+    parent::__construct(accessKey: $accessKey, class: $class, debug: $debug, id: $id, tabIndex: $tabIndex, title: $title);
   }
   private function getParamString() {
     $output = "";

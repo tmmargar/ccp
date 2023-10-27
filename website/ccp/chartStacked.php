@@ -16,7 +16,7 @@ try {
   $endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $params = array($startDate, $endDate, null, false);
   $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-  if (0 < count($resultList)) {
+  if (0 < count(value: $resultList)) {
     $tournamentsTotal = $resultList[0];
     $labelIncrement = $tournamentsTotal / 4;
     $labelPlayed1 = $labelIncrement;
@@ -32,7 +32,7 @@ try {
   // $startDate = "2019-10-01";
   $params = array($startDate, $endDate, null, false);
   $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-  if (0 < count($resultList)) {
+  if (0 < count(value: $resultList)) {
     $tournamentsLeft = $resultList[0];
     $yellowFrom = 0;
     $yellowTo = $tournamentsLeft / 2;
@@ -45,7 +45,7 @@ try {
     $labelNeed4 = $tournamentsLeft;
   }
 } catch (Exception $e) {
-  $output .= HtmlUtility::buildErrorMessage($e);
+  //$output .= HtmlUtility::buildErrorMessage($e);
 }
 $output .= " <script>\n";
 $output .= "  google.charts.load('current', {'packages':['gauge']});\n";

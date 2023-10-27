@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Location extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map, protected string|null $mapName, protected int $tournamentCount) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function buildMapUrl() {
     return "<a href =\"" . Constant::PATH_MAP() . "/" . $this->getMapName() . "\">Map</a>\n";
@@ -52,7 +52,7 @@ class Location extends Base {
   }
   public function getLink() {
 //     return HtmlUtility::buildLink("manageLocation.php", "modify", $this->getId(), $this->getName());
-    $link = new HtmlLink(null, null, $this->isDebug(), "manageLocation.php", null, array("userId", "mode"),  array($this->getId(). "modify"), -1, $this->getName(), null);
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageLocation.php", id: null, paramName: array("userId", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getName(), title: null);
     return $link->getHtml();
   }
   public function __toString() {
@@ -64,7 +64,7 @@ class Location extends Base {
     $output .= "], count = ";
     $output .= $this->count;
     $output .= ", active = ";
-    $output .= var_export($this->active, true);
+    $output .= var_export(value: $this->active, return: true);
     $output .= ", map = '";
     $output .= $this->map;
     $output .= "', mapName = '";

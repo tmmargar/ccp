@@ -12,7 +12,7 @@ abstract class Root {
   public function __toString() {
     $output = "debug = ";
     if (isset($this->debug)) {
-      $output .= var_export($this->debug, true);
+      $output .= var_export(value: $this->debug, return: true);
     }
     return $output;
   }

@@ -2,7 +2,7 @@
 import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
   initializeDataTable : function() {
-    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name" }, null, { "type" : "register" }, {"searchable": false, "visible": false }], aryOrder: [[1, "desc"], [2, "asc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name" }, null, null, { "type" : "register" }, {"searchable": false, "visible": false }], aryOrder: [[3, "asc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
   postProcessing : function() {
     input.enableView();
@@ -17,10 +17,11 @@ export const inputLocal = {
     for (let idx = 0; idx < selectedRows.length; idx++) {
       const selectedRow = selectedRows[idx];
       const inp = document.createElement("div");
-      inp.innerHTML = selectedRow[3];
+      inp.innerHTML = selectedRow[4];
       playerIds += inp.children[0].value + ", ";
       inp.remove();
-      statuses += selectedRow[1] + ", ";
+      // remove text after registered or not registered (fee listed in parenthesis)
+      statuses += selectedRow[2] + ", ";
     }
     document.querySelector("#ids").value = playerIds.substring(0, playerIds.length - 2);
     document.querySelector("#tournamentPlayerStatus").value = statuses.substring(0, statuses.length - 2);

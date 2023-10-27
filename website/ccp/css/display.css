@@ -172,7 +172,7 @@ input:invalid:out-of-range {
   width: 23vw;
 }
 .dialog#dialogFeeDetail {
-  width: 28vw;
+  width: 40vw;
 }
 .dialog::backdrop {
   background-color: #5e68df;

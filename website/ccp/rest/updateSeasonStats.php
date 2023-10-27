@@ -10,12 +10,12 @@ use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 $output = "";
 $params = array(Constant::$FLAG_YES_DATABASE);
-$resultList = $databaseResult->getSeasonByActive($params);
+$resultList = $databaseResult->getSeasonByActive(params: $params);
 $season = $resultList[0];
 $params = array($season->getStartDate()->getDatabaseFormat(), $season->getEndDate()->getDatabaseFormat());
 //$params = array("2022-01-01", "2022-11-30");
 $resultList = $databaseResult->getSeasonStats(params: $params);
-if (0 < count($resultList)) {
+if (0 < count(value: $resultList)) {
 //   print_r($resultList);die();
   $count = 0;
   $output .= " <table id=\"output\">\n";

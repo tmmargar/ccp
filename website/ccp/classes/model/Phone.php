@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Phone extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $value) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getValue() {
     return $this->value == "0" ? "0000000000" : $this->value;
@@ -17,8 +17,8 @@ class Phone extends Base {
       return '';
     }
     // note: strip out everything but numbers
-    $valueNumbersOnly = preg_replace("/[^0-9]/", "", $this->value);
-    $length = strlen($valueNumbersOnly);
+    $valueNumbersOnly = preg_replace(pattern: "/[^0-9]/", replacement: "", subject: $this->value);
+    $length = strlen(string: $valueNumbersOnly);
     switch ($length) {
       case 7:
         return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $valueNumbersOnly);

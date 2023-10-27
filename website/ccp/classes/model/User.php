@@ -6,10 +6,10 @@ class User extends Base {
   private string $lastName;
   private int $idPrevious;
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string|null $username, protected string|null $password, protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate, protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName, protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
-    parent::__construct($debug, $id);
-    $nameFull = explode(" ", $name);
-    $this->setFirstName($nameFull[0]);
-    $this->setLastName(implode(" ", array_slice($nameFull, 1)));
+    parent::__construct(debug: $debug, id: $id);
+    $nameFull = explode(separator: " ", string: $name);
+    $this->setFirstName(firstName: $nameFull[0]);
+    $this->setLastName(lastName: implode(separator: " ", array: array_slice(array: $nameFull, offset: 1)));
     $this->idPrevious = 0;
   }
   public function getFirstName() {
@@ -157,15 +157,15 @@ class User extends Base {
   }
   // pass in full name which gets split and set
   public function setName($name) {
-    $names = explode(" ", $name);
+    $names = explode(separator: " ", string: $name);
     $this->firstName = $names[0];
-    if (1 < count($names)) {
-      $this->lastName = implode(" ", array_slice($names, 1));
+    if (1 < count(value: $names)) {
+      $this->lastName = implode(separator: " ", array: array_slice(array: $names, offset: 1));
     }
   }
   public function getLink() {
     // return "<a href=\"manageUser.php?mode=modify&id=" . $this->getId() . "\">" . $this->getName() . "<\a>\n";
-    $link = new HtmlLink(null, null, $this->isDebug(), "manageUser.php", null, array("id", "mode"),  array($this->getId(). "modify"), -1, $this->getName(), null);
+    $link = new HtmlLink(accessKey: null, class: null, debugP: $this->isDebug(), href: "manageUser.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getName(), title: null);
     return $link->getHtml();
   }
   public function __toString() {

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class HtmlBase extends Base {
   public function __construct(protected string|null $accessKey, protected array|null $class, protected bool $debug, protected string|int|null $id, protected int $tabIndex, protected string|null $title) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getAccessKey() {
     return $this->accessKey;
@@ -12,7 +12,7 @@ abstract class HtmlBase extends Base {
     return $this->class;
   }
   public function getClassAsString() {
-    return is_array($this->class) ? implode(" ", array_filter($this->class)) : "";
+    return is_array($this->class) ? implode(separator: " ", array: array_filter($this->class)) : "";
   }
   public function getTabIndex() {
     return $this->tabIndex;
@@ -37,7 +37,7 @@ abstract class HtmlBase extends Base {
     $output .= ", accessKey = '";
     $output .= $this->accessKey;
     $output .= "', class = ";
-    $output .= print_r($this->class, true);
+    $output .= print_r(value: $this->class, return: true);
     $output .= ", tabIndex = ";
     $output .= $this->tabIndex;
     $output .= ", title = '";

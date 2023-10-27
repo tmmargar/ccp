@@ -41,6 +41,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $resultList = $databaseResult->getUserById(params: $params);
     if (count($resultList) > 0) {
       $cnt = 0;
+      $userId = $resultList[0]->getId();
       $userName = $resultList[0]->getName();
       $userEmail = $resultList[0]->getEmail();
     }
@@ -72,8 +73,8 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
           while ($cnt < count($resultList)) {
             $values = $resultList[$cnt];
             // make sure not a wait listed person (register order <= max players)
-            if ($registerOrder <= $values[2]) {
-              $emailInfo[$cnt] = array($values[0], $values[1]);
+            if ($registerOrder <= $values[3]) {
+              $emailInfo[$cnt] = array($values[0], $values[1], $values[2]);
             }
             $cnt ++;
           }
@@ -94,6 +95,9 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       $tournament = $resultList[0];
       $tournamentAddress = $tournament->getLocation()->getUser()->getAddress();
       $waitListCount = ($tournament->getMaxPlayers() - $tournament->getRegisteredCount()) < 0 ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
+      $paramsNested = array($userId, $tournament->getId());
+      $resultListNested = $databaseResult->getFeeByTournamentAndPlayer(params: $paramsNested);
+      $feeStatus = $resultListNested[0]->getStatus();
 //       $debug, $fromName, $fromEmail, $toName, $toEmail, $ccName, $ccEmail, $bccName, $bccEmail, $subject, $body
       $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($userName), toEmail: array($userEmail), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
 //       $debug, $id, $address, $city, $state, $zip, $phone) {
@@ -104,7 +108,7 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       if ("cancelling" == $state) {
         $message = $email->sendCancelledEmail(address: $emailAddress, tournament: $emailTournament);
       } else {
-        $message = $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, waitList: $waitListCount);
+        $message = $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, feeStatus: $feeStatus, waitList: $waitListCount);
       }
       $output .= "aryMessages.push(\"" . $message . "\");\n";
     }
@@ -113,10 +117,13 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
     $cnt = 0;
     // send email to people moved from wait list to registered
     while ($cnt < count($emailInfo)) {
-      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($emailInfo[$cnt][0]), toEmail: array($emailInfo[$cnt][1]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
+      $paramsNested = array($emailInfo[$cnt][0], $tournamentId);
+      $resultListNested = $databaseResult->getFeeByTournamentAndPlayer(params: $paramsNested);
+      $feeStatus = $resultListNested[0]->getStatus();
+      $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($emailInfo[$cnt][1]), toEmail: array($emailInfo[$cnt][2]), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
       $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
       $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: $tournament->getId(), description: null, comment: null, limitType: null, gameType: null, specialType: null, chipCount: 0, location: null, date: $tournament->getDate(), startTime: $tournament->getStartTime(), endTime: null, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: null, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
-      $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $emailTournament, - 99) . "\");\n";
+      $output .= "aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $emailTournament, feeStatus: $feeStatus, waitList: -99) . "\");\n";
       $cnt ++;
     }
   }
@@ -138,18 +145,7 @@ if ($mode == Constant::$MODE_VIEW) {
     $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: !isset($tournamentId) ? DEFAULT_VALUE_TOURNAMENT_ID : "", suffix: null, text: Constant::$TEXT_NONE, value: DEFAULT_VALUE_TOURNAMENT_ID);
     $output .= $option->getHtml();
     foreach ($resultList as $tournament) {
-      $optionText = $tournament->getDate()->getDisplayFormat();
-      $optionText .= "@" . $tournament->getStartTime()->getDisplayAmPmFormat();
-      $optionText .= " (" . $tournament->getLocation()->getName() . ")";
-      $optionText .= " " . $tournament->getLimitType()->getName();
-      $optionText .= " " . $tournament->getGameType()->getName();
-      $optionText .= " " . $tournament->getMaxRebuys() . "r" . (0 != $tournament->getAddonAmount() ? "+a" : "");
-      $waitListCnt = $tournament->getRegisteredCount() - $tournament->getMaxPlayers();
-      $optionText .= " (" . $tournament->getRegisteredCount() . ($waitListCnt > 0 ? "+" . $waitListCnt . "wl" : "") . "np/" . $tournament->getBuyinsPaid() . "p";
-      $optionText .= "+" . $tournament->getRebuysPaid() . "r";
-      $optionText .= "+" . $tournament->getAddonsPaid() . "a";
-      $optionText .= "/" . $tournament->getEnteredCount() . "ent)";
-      $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId, suffix: null, text: $optionText, value: $tournament->getId());
+      $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $tournamentId, suffix: null, text: $tournament->getDisplayDetails(), value: $tournament->getId());
       $output .= $option->getHtml();
     }
     $output .= "    </select>\n";

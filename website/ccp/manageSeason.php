@@ -102,9 +102,14 @@ if (Constant::$MODE_CREATE == $mode || Constant::$MODE_MODIFY == $mode) {
       if (Constant::$MODE_SAVE_CREATE == $mode) {
         $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
         $rowCount = $databaseResult->insertSeason(params: $params);
+        $resultList = $databaseResult->getSeasonMaxId();
+        $params = array($resultList[0] - 1);
+        $resultList2 = $databaseResult->getTournamentIdMax(params: $params);
+        $params = array($resultList[0], $resultList2[0] + 1);
+        $rowCount = $databaseResult->insertFeeUsersForYear(params: $params);
       } elseif (Constant::$MODE_SAVE_MODIFY == $mode) {
         $params = array($seasonId, $seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
-          $rowCount = $databaseResult->updateSeason(params: $params);
+        $rowCount = $databaseResult->updateSeason(params: $params);
       }
       if (!is_numeric($rowCount)) {
         $output .=
@@ -127,8 +132,9 @@ if (Constant::$MODE_VIEW == $mode || Constant::$MODE_DELETE == $mode || Constant
   if (Constant::$MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
       $params = array($ids);
+      $rowCount = $databaseResult->deleteFeeBySeason(params: $params);
       $rowCount = $databaseResult->deleteSeason(params: $params);
-      if (! is_numeric($rowCount)) {
+      if (!is_numeric($rowCount)) {
         $output .= 
           "<script type=\"module\">\n" .
           "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .

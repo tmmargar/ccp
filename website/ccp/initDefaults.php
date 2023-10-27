@@ -21,9 +21,9 @@ if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["S
   }
 }
 $smarty->assign("header", $header);
-$aryScriptFull = explode("/", $_SERVER["SCRIPT_NAME"]);
+$aryScriptFull = explode(separator: "/", string: $_SERVER["SCRIPT_NAME"]);
 $scriptName = $aryScriptFull[count($aryScriptFull) - 1];
-$aryScript = explode(".", $scriptName);
+$aryScript = explode(separator: ".", string: $scriptName);
 $scriptNameNoExtension = $aryScript[0];
 $smarty->assign("script", "<script src=\"scripts/" . $scriptNameNoExtension . ".js\" type=\"module\"></script>\n");
 $smarty->assign("style", "");

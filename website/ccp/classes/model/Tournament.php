@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getDescription() {
     return $this->description;
@@ -66,7 +66,7 @@ class Tournament extends Base {
     $close = "";
     if (isset($this->startTime)) {
       $close = clone $this->startTime;
-      $interval = new \DateInterval("PT2H"); // 2 hours
+      $interval = new \DateInterval(duration: "PT2H"); // 2 hours
       $close->getTime()->sub($interval);
     }
     return $close;
@@ -172,11 +172,25 @@ class Tournament extends Base {
   }
   public function getLink() {
 //     return HtmlUtility::buildLink("manageTournament.php", "modify", $this->getId(), $this->getDescription());
-    $link = new HtmlLink(null, null, $this->isDebug(), "manageTournament.php", null, array("id", "mode"),  array($this->getId(). "modify"), -1, $this->getDescription(), null);
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageTournament.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getDescription(), title: null);
     return $link->getHtml();
   }
   public function getDateAndTime() {
     return new DateTime(debug: $this->isDebug(), id: null, time: $this->getDate()->getDatabaseFormat() . " " . $this->getStartTime()->getDatabaseTimeFormat());
+  }
+  public function getDisplayDetails() {
+    $optionText = $this->getDate()->getDisplayFormat();
+    $optionText .= "@" . $this->getStartTime()->getDisplayAmPmFormat();
+    $optionText .= " (" . $this->getLocation()->getName() . ")";
+    $optionText .= " " . $this->getLimitType()->getName();
+    $optionText .= " " . $this->getGameType()->getName();
+    $optionText .= " " . $this->getMaxRebuys() . "r" . (0 != $this->getAddonAmount() ? "+a" : "");
+    $waitListCnt = $this->getRegisteredCount() - $this->getMaxPlayers();
+    $optionText .= " (" . ($waitListCnt > 0 ? $this->getMaxPlayers() : $this->getRegisteredCount()) . ($waitListCnt > 0 ? "+" . $waitListCnt . "wl" : "") . "np/" . $this->getBuyinsPaid() . "p";
+    $optionText .= "+" . $this->getRebuysPaid() . "rp";
+    $optionText .= "+" . $this->getAddonsPaid() . "ap";
+    $optionText .= "/" . $this->getEnteredCount() . "ent)";
+    return $optionText;
   }
   public function __toString() {
     $output = parent::__toString();

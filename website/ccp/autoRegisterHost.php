@@ -30,10 +30,10 @@ if (count($resultList) == 0) {
     $tournamentAddress = $user->getAddress();
     $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
     $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
-    $output .= (isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $tournament, 0) . "\");\n" : "\r");
+    $output .= (isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $tournament, feeStatus: "Paid", waitList: 0) . "\");\n" : "\r");
     $email = new Email(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), fromName: array(Constant::$NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::$NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
     $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
-    $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail($emailAddress, $tournament, 0, $user->getName()) . "\");\n" : "\r";
+    $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $tournament, feeStatus: "Paid", waitList: 0, autoRegister: $user->getName()) . "\");\n" : "\r";
   }
 }
 $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";

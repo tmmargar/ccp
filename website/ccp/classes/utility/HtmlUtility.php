@@ -4,7 +4,7 @@ use ccp\classes\model\Constant;
 class HtmlUtility {
   public static function buildClasses(array $aryClasses, string|int|float $value) {
   $class = "";
-  for ($idx = 0; $idx < count($aryClasses); $idx ++) {
+  for ($idx = 0; $idx < count(value: $aryClasses); $idx ++) {
     if ($class != "") {
       $class .= " ";
     }
@@ -63,7 +63,7 @@ class HtmlUtility {
             $temp .= $value * 100;
           }
           if (- 1 != $format[2]) {
-            $temp .= number_format($value, $format[2]);
+            $temp .= number_format(num: $value, decimals: $format[2]);
           }
           if ($temp != "") {
             $temp = $prefix . $temp . $suffix;

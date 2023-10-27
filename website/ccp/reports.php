@@ -285,12 +285,12 @@ if (!isset($reportId)) {
   if ($reportId == REPORT_ID_FEES) {
     $query = $databaseResult->getFeeDetail();
     $result = $databaseResult->getConnection()->query($query);
-    $colFormats = array(array(3, "currency", 0), array(4, "currency", 0), array(5, "currency", 0));
+    $colFormats = array(array(4, "currency", 0), array(5, "currency", 0), array(6, "currency", 0));
 //     $hiddenAdditional = array(array("seasonId", 0));
-//     $hideColIndexes = array(0);
+    $hideColIndexes = null; // array(0);
     //         $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
 //     $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
-    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: null, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
+    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
     $outputTemp = $htmlTable->getHtml();
     if (0 < $result->rowCount()) {
       $outputDialog =

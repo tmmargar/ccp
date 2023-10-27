@@ -5,7 +5,7 @@ use ccp\classes\utility\SessionUtility;
 class Security extends Base {
   private Season $season;
   public function __construct(protected bool $debug, protected string|int|null $id, protected Login $login, protected User $user) {
-    parent::__construct($debug, $id);
+    parent::__construct(debug: $debug, id: $id);
   }
   public function getLogin() {
     return $this->login;
@@ -25,18 +25,18 @@ class Security extends Base {
     }
   }
   private function loginSuccess() {
-    $databaseResult = new DatabaseResult($this->isDebug());
+    $databaseResult = new DatabaseResult(debug: $this->isDebug());
     $params = array($this->login->getUsername());
-    $resultList = $databaseResult->getUserByUsername($params);
-    if (0 < count($resultList)) {
-      $this->setUser($resultList[0]);
-      SessionUtility::setValue(SessionUtility::$OBJECT_NAME_SECURITY, $this);
+    $resultList = $databaseResult->getUserByUsername(params: $params);
+    if (0 < count(value: $resultList)) {
+      $this->setUser(user: $resultList[0]);
+      SessionUtility::setValue(name: SessionUtility::$OBJECT_NAME_SECURITY, value: $this);
     }
     $params = array(Constant::$FLAG_YES_DATABASE);
-    $resultList = $databaseResult->getSeasonByActive($params);
-    if (0 < count($resultList)) {
-      $this->setSeason($resultList[0]);
-      SessionUtility::setValue(SessionUtility::$OBJECT_NAME_SEASON, $resultList[0]);
+    $resultList = $databaseResult->getSeasonByActive(params: $params);
+    if (0 < count(value: $resultList)) {
+      $this->setSeason(season: $resultList[0]);
+      SessionUtility::setValue(name: SessionUtility::$OBJECT_NAME_SEASON, value: $resultList[0]);
     }
   }
   /*
@@ -115,9 +115,9 @@ class Security extends Base {
   }
   private function validatePassword() {
     $found = false;
-    $databaseResult = new DatabaseResult($this->isDebug());
-    $resultList = $databaseResult->getLogin($this->login->getUsername());
-    if (0 < count($resultList)) {
+    $databaseResult = new DatabaseResult(debug: $this->isDebug());
+    $resultList = $databaseResult->getLogin(userName: $this->login->getUsername());
+    if (0 < count(value: $resultList)) {
 //       echo "<br>" . $this->login->getPassword() . " -- " . $resultList[0];
 //       $t_hasher = new PasswordHash(8, FALSE);
 //       echo "<br>hasher check ->" . $t_hasher->CheckPassword($this->login->getPassword(), $resultList[0]);
@@ -126,7 +126,7 @@ class Security extends Base {
 //         $found = true;
 //       } else {
 //          echo "<br>hashed -> " . password_hash($this->login->getPassword(), PASSWORD_DEFAULT);
-        if (password_verify($this->login->getPassword(), $resultList[0])) {
+        if (password_verify(password: $this->login->getPassword(), hash: $resultList[0])) {
 //           echo "<br>MATCH NEW";
           $found = true;
           // } else {

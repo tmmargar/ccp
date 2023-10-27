@@ -3,16 +3,18 @@ import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
   buildData : function({objTableId, mode} = {}) {
     const objPlayers = document.querySelector("#ids");
+    const objFeePaid = document.querySelector("#feePaid");
     const objAllPaid = document.querySelector("#buyinPaid");
     const objAllRebuy = document.querySelector("#rebuyPaid");
     const objAllRebuyCount = document.querySelector("#rebuyCount");
     const objAllAddon = document.querySelector("#addonPaid");
     objPlayers.value = "";
+    objFeePaid.value = "";
     objAllPaid.value = "";
     objAllRebuy.value = "";
     objAllRebuyCount.value = "";
     objAllAddon.value = "";
-    // if mode is create or modify then build list of player ids for paid, rebuy, addon
+    // if mode is create or modify then build list of player ids for fee, paid, rebuy, addon
     if (("create" == mode) || ("modify" == mode)) {
       // for each table row except header
       Array.from(document.querySelectorAll("#" + objTableId + " tr")).slice("1").forEach(row => {
@@ -20,6 +22,7 @@ export const inputLocal = {
         const placeholder = document.createElement("div");
         placeholder.innerHTML = aryInput[aryInput.length - 1];
         const playerId = placeholder.firstElementChild.value;
+        objFeePaid.value = objFeePaid.value + (0 < objFeePaid.value.length ? ", " : "") + (document.querySelector("#feePaid_" + playerId).disabled || (parseInt(document.querySelector("#feePaid_" + playerId).dataset.originalValue) == parseInt(document.querySelector("#feePaid_" + playerId).value)) ? " " : document.querySelector("#feePaid_" + playerId).value);
         objAllPaid.value = objAllPaid.value + (0 < objAllPaid.value.length ? ", " : "") + document.querySelector("#buyin_" + playerId).checked;
         objAllRebuy.value = objAllRebuy.value + (0 < objAllRebuy.value.length ? ", " : "") + document.querySelector("#rebuy_" + playerId).checked;
         objAllRebuyCount.value = objAllRebuyCount.value + (0 < objAllRebuyCount.value.length ? ", " : "") + document.querySelector("#rebuyCount_" + playerId).value;
@@ -27,6 +30,23 @@ export const inputLocal = {
         objPlayers.value = objPlayers.value + (0 < objPlayers.value.length ? ", " : "") + playerId;
       });
     }
+  },
+  calculateFeePaid : function() {
+    // fee paid amount
+    let feePaidTotal = 0;
+    let feePaidTotalCalculation = "(";
+    document.querySelectorAll("[id^='feePaid_']")?.forEach(obj => {
+      // only check enabled
+      if (!obj.disabled) {
+        //feePaidTotal += obj.value - obj.dataset.originalValue;
+        feePaidTotal += parseInt(obj.value);
+        feePaidTotalCalculation += (feePaidTotalCalculation != "(" ? " + " : "") + "$" + obj.value;
+      }
+    });
+    feePaidTotalCalculation += ")";
+    document.querySelector("#totalSeasonFee").value = parseInt(document.querySelector("#totalSeasonFee").value) + feePaidTotal;
+    document.querySelector("#feePaidTotal").innerHTML = "$" + feePaidTotal;
+    document.querySelector("#feePaidTotalCalculation").innerHTML = feePaidTotalCalculation;
   },
   disableCheckboxAll : function({hasFlag, name, countNotCheckedPaid} = {}) {
     // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
@@ -42,7 +62,7 @@ export const inputLocal = {
     }
   },
   initializeDataTable : function() {
-    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name", "width" : "34%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "type" : "name", "width" : "30%" }, {"width": "16%"}, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "orderable": false, "searchable": false, "width" : "18%" }, { "orderable": false, "searchable": false, "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
   markCheckboxes : function({hasFlag, obj, name, id} = {}) {
     // if need to check flag and flag is set or no need to check flag then mark checkbox and check check all checkbox appropriately
@@ -53,6 +73,15 @@ export const inputLocal = {
   },
   postProcessing : function() {
     let countNotCheckedPaid = 0;
+    // fee paid amount
+    document.querySelectorAll("[id^='feePaid_']")?.forEach(obj => {
+      obj.disabled = document.querySelector("#seasonFee").value == obj.value ? true : false;
+      obj.style.width = "35px";
+      obj.min = 0;
+      obj.max = 30;
+      obj.dataset.originalValue = obj.value;
+      inputLocal.validate(obj);
+    });
     // for each paid checkbox
     document.querySelectorAll("[id^='buyin_']")?.forEach(obj => {
       // parse out number from id to use for other objects 
@@ -86,6 +115,7 @@ export const inputLocal = {
     if (document.querySelector("#mode")) {
       document.querySelector("#mode").value = "modify";
     }
+    inputLocal.calculateFeePaid();
   },
   processAllCheckAll : function({countNotCheckedPaid} = {}) {
     input.toggleCheckAll({id: "buyin", idAll: "buyin"});
@@ -124,6 +154,9 @@ export const inputLocal = {
         }
       }
     });
+  },
+  validate : function(objFeePaid) {
+    objFeePaid.setCustomValidity(objFeePaid.validity.valueMissing ? "You must enter an amount " : objFeePaid.validity.rangeUnderflow ? "You must enter an amount >= " + objFeePaid.min : objFeePaid.validity.rangeOverflow ? "You must enter an amount <= " + objFeePaid.max : "");
   },
   validateField : function({obj, event} = {}) {
     input.validateNumberOnly({obj: obj, event: event, storeValue: false});
@@ -192,10 +225,13 @@ document.addEventListener("click", (event) => {
     input.countUpdate({prefix: "addon"});
   } else if (event.target && event.target.id.includes("reset")) {
     input.restorePreviousValue({selectors: ["[id^='notificationStartDate_']", "[id^='notificationEndDate_']"]});
-    inputLocal.validate();
+    inputLocal.validate(event.target);
   } else if (event.target && event.target.id.includes("save")) {
     inputLocal.setIds();
   }
+});
+document.addEventListener("input", (event) => {
+  inputLocal.validate(event.target);
 });
 document.addEventListener("keyup", (event) => {
   if (event.target && event.target.id.includes("rebuyCount")) {
