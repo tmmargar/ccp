@@ -14,7 +14,7 @@ $output = "";
 $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
 $startDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
 $endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
-$params = array($startDate, $endDate);
+$params = array($startDate,$endDate);
 $resultList = $databaseResult->getPrizePoolForSeason(params: $params, returnQuery: false);
 if (0 < count($resultList)) {
   $prizePool = $resultList[0];
@@ -52,8 +52,7 @@ $aryPosition[5] = 5;
 $aryPosition[6] = 4;
 $aryPosition[7] = 3;
 $aryPosition[8] = 2;
-
-$params = array($startDate, $endDate, SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+$params = array($startDate,$endDate,SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
 $count = count(value: $resultList) - count(value: $aryAbsentIds);
 if (0 < $count) {
@@ -65,12 +64,12 @@ if (0 < $count) {
   $additionalPlayers = 36 - $countWinners;
   while ($ctr < count(value: $resultList)) {
     $aryResult = $resultList[$ctr];
-//     echo "<br>".$ctr."-->".$index."->".$aryResult[0];
+    // echo "<br>".$ctr."-->".$index."->".$aryResult[0];
     if (in_array($aryResult[0], $aryAbsentNames)) {
       foreach ($aryAbsentNames as $aryAbsentName) {
-//         echo "<Br>" . $aryResult[0] . " == " . $aryAbsentName;
+        // echo "<Br>" . $aryResult[0] . " == " . $aryAbsentName;
         if ($aryResult[0] == $aryAbsentName) {
-//           $aryAbsentSeeds[$absentCtr] = $ctr + 1;
+          // $aryAbsentSeeds[$absentCtr] = $ctr + 1;
           $aryAbsentSeeds[$aryAbsentName] = $ctr + 1;
           $absentCtr ++;
         }
@@ -142,8 +141,8 @@ if (0 < $count) {
     }
     $ctr ++;
   }
-  $maxPlayers = round(num, count(value: $aryNames) / $numTables); // ceil(count($aryNames) / $numTables);
-                                                      // $numEmpty = $totalPlayers - count($aryNames);
+  $maxPlayers = round(num: count(value: $aryNames) / $numTables); // ceil(count($aryNames) / $numTables);
+                                                                  // $numEmpty = $totalPlayers - count($aryNames);
   $tableNumber = 0;
   $index = 1;
   $ctr = 0;
@@ -207,7 +206,7 @@ if (0 < $count) {
   $output .= "    <div class=\"column\"><strong><i>Position<br />(% of total)</i></strong></div>\n";
   $output .= "    <div class=\"column\"><strong><i>Payout</i></strong></div>\n";
   $output .= "    <div class=\"clear\"></div>\n";
-  $params = array(1, 1);
+  $params = array(1,1);
   $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (0 < count(value: $resultList)) {
     $ctr = 0;
@@ -229,14 +228,14 @@ if (0 < $count) {
   $output .= "    <div><strong><i>Original seat</i></strong></div>\n";
   $output .= "    <div class=\"clear\"></div>\n";
   $ctr = 0;
-//   echo "<br>aryAbsentNames " . print_r($aryAbsentNames, true);
-//   echo "<br>aryAbsentSeeds " . print_r($aryAbsentSeeds, true);
-//   echo print_r($aryPosition, true);
+  // echo "<br>aryAbsentNames " . print_r($aryAbsentNames, true);
+  // echo "<br>aryAbsentSeeds " . print_r($aryAbsentSeeds, true);
+  // echo print_r($aryPosition, true);
   foreach ($aryAbsentNames as $absentName) {
     $output .= "    <div class=\"column\">" . $absentName . "</div>\n";
     $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
     $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[$aryAbsentSeeds[$absentName] / $numTables];
-//     echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
+    // echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
     $output .= "    <div class=\"column2\">Table " . $tableNum . " Position " . $positionNum . "</div>\n";
     $output .= "    <div class=\"clear\"></div>\n";
     $ctr ++;
@@ -262,7 +261,8 @@ if (0 < $count) {
     }
   }
 } else {
-  $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
+  $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " .
+    SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
 }
 $smarty->assign("content", $output);
 $smarty->display("championship.tpl");
