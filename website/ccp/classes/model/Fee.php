@@ -5,40 +5,31 @@ class Fee extends Base {
   public function __construct(protected bool $debug, protected int $seasonId, protected int $playerId, protected int $amount, protected string $status) {
     parent::__construct(debug: $debug, id: null);
   }
-  
-  public function getAmount() {
+  public function getAmount(): int {
     return $this->amount;
   }
-  
-  public function getPlayerId() {
+  public function getPlayerId(): int {
     return $this->playerId;
   }
-  
-  public function getSeasonId() {
+  public function getSeasonId(): int {
     return $this->seasonId;
   }
-  
-  public function getStatus() {
+  public function getStatus(): string {
     return $this->status;
   }
-  
   public function setAmount(int $amount) {
     $this->amount = $amount;
   }
-
   public function setPlayerId(string $playerId) {
     $this->playerId = $playerId;
   }
-
   public function setSeasonId(string $seasonId) {
     $this->seasonId = $seasonId;
   }
-  
   public function setStatus(string $status) {
     $this->status = $status;
   }
-  
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", amount = ";
     $output .= $this->amount;

@@ -26,7 +26,7 @@ class LimitTypeTest extends BaseTest {
     $limitType = new LimitType();
     $limitType->setId(1);
     $limitType->setName("lt nm");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $limitType->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $limitType->toString());
   }
   public static function runAllTests() {
     LimitTypeTest::testGetIdBlank();

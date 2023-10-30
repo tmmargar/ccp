@@ -34,7 +34,7 @@ class StatusTest extends BaseTest {
     $status->setCode(Constant::STATUS_CODE_FINISHED);
     $status->setId(1);
     $status->setName("st nm");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $status->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $status->toString());
   }
   public static function runAllTests() {
     StatusTest::testGetCodeBlank();

@@ -114,7 +114,7 @@ class PayoutTest extends BaseTest {
     $structure2->setPlace(1);
     $structures = array($structure, $structure2);
     $payout->setStructures($structures);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $payout->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $payout->toString());
   }
   public static function runAllTests() {
     PayoutTest::testGetIdBlank();

@@ -14,7 +14,7 @@ if ($values[1] != "") {
   header(header: "Location: " . $values[1]);
 }
 // TODO: NOT SURE WHERE TO PUT THIS
-date_default_timezone_set(timezoneId: Constant::$NAME_TIME_ZONE);
+date_default_timezone_set(timezoneId: Constant::NAME_TIME_ZONE);
 if (strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "index.php") === false) {
   require_once "../initDefine.php";
   require_once "initSmarty.php";

@@ -145,7 +145,7 @@ export const inputLocal = {
   },
   initializeDataTable : function() {
     if (document.querySelector("#mode").value == "view" || document.querySelector("#mode").value == "delete") {
-      dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderable": false, "type" : "name", "width" : "30%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "type" : "name", "width" : "30%" }, { "searchable": false, "visible": false }, { "searchable": false, "visible": false }], aryOrder: [[4, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
+      dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderable": false, "type" : "name", "width" : "30%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "type" : "name", "width" : "30%" }, { "searchable": false, "visible": false }], aryOrder: [[4, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
     } else if (document.querySelector("#mode").value == "create" || document.querySelector("#mode").value == "modify") {
       dataTable.initialize({tableId: "inputs", aryColumns: null, aryOrder: [], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "", searching: false });
     }

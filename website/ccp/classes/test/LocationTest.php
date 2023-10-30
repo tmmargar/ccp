@@ -95,7 +95,7 @@ class LocationTest extends BaseTest {
     $user->setType("Administrator");
     $user->setUsername("username");
     $location->setUser($user);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $location->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $location->toString());
   }
   public static function runAllTests() {
     LocationTest::testGetIdBlank();

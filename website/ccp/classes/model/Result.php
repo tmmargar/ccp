@@ -2,46 +2,48 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Result extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder, protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy, protected string|null $food, protected string|null $feeStatus) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder,
+    protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy,
+    protected string|null $food, protected string|null $feeStatus) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getTournament() {
+  public function getTournament(): Tournament {
     return $this->tournament;
   }
-  public function getUser() {
+  public function getUser(): User {
     return $this->user;
   }
-  public function getStatus() {
+  public function getStatus(): Status {
     return $this->status;
   }
-  public function getRegisterOrder() {
+  public function getRegisterOrder(): int {
     return $this->registerOrder;
   }
-  public function isBuyinPaid() {
+  public function isBuyinPaid(): bool {
     return $this->buyinPaid;
   }
-  public function isRebuyPaid() {
+  public function isRebuyPaid(): bool {
     return $this->rebuyPaid;
   }
-  public function isAddonPaid() {
+  public function isAddonPaid(): bool {
     return $this->addonPaid;
   }
-  public function getRebuyCount() {
+  public function getRebuyCount(): int {
     return $this->rebuyCount;
   }
-  public function isAddonFlag() {
+  public function isAddonFlag(): bool {
     return $this->addonFlag;
   }
-  public function getPlace() {
+  public function getPlace(): int {
     return $this->place;
   }
-  public function getKnockedOutBy() {
+  public function getKnockedOutBy(): User {
     return $this->knockedOutBy;
   }
-  public function getFood() {
+  public function getFood(): string {
     return $this->food;
   }
-  public function getFeeStatus() {
+  public function getFeeStatus(): string {
     return $this->feeStatus;
   }
   public function setTournament(Tournament $tournament) {
@@ -83,12 +85,12 @@ class Result extends Base {
   public function setFeeStatus(string $feeStatus) {
     $this->feeStatus = $feeStatus;
   }
-  public function getLink() {
-//     return HtmlUtility::buildLink("manageResult.php", "modify", $this->getId(), $this->getTournament()->getDescription());
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageResult.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getTournament()->getDescription(), title: null);
+  public function getLink(): string {
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageResult.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getTournament()->getDescription(), title: null);
     return $link->getHtml();
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= "tournament = [";
     $output .= $this->tournament;

@@ -3,14 +3,14 @@ declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
 require_once "init.php";
-$params = array(Constant::$FLAG_YES_DATABASE);
+$params = array(Constant::FLAG_YES_DATABASE);
 $resultList = $databaseResult->getSeasonByActive(params: $params);
 $season = $resultList[0];
 $params = array($_POST["tournamentDate"],$_POST["tournamentDate"]);
 $paramsNested = array($season->getStartDate()->getDatabaseFormat(),$season->getEndDate()->getDatabaseFormat(),$season->getChampionshipQualify());
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: null);
 $tournament = $resultList[$_POST["first"]];
-$params = array(null,null,null,Constant::$CODE_STATUS_PAID,0,"null",$tournament->getId()); // , $maxPlace);
+$params = array(null,null,null,Constant::CODE_STATUS_PAID,0,"null",$tournament->getId()); // , $maxPlace);
 $rowCount = $databaseResult->updateResultByTournamentIdAndPlace(params: $params);
 echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to paid";
 $index = - 1;
@@ -42,7 +42,7 @@ foreach ($_POST["firstName"] as $firstName) {
   $resultList = $databaseResult->getResultByTournamentIdAndPlayerId(params: $params);
   $userResult = $resultList[0];
   // rebuycount, rebuypaid, addonpaid, statuscode, place, kobyid, playerid
-  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::$CODE_STATUS_FINISHED,$_POST["place"][$index],null == $userKO ? "null" : $userKO->getId(),$tournament->getId(),$user->getId());
+  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],null == $userKO ? "null" : $userKO->getId(),$tournament->getId(),$user->getId());
   $rowCount = $databaseResult->updateResult(params: $params);
   echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $tournament->getId() . " and user id " . $user->getId();
 }

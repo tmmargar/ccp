@@ -3,21 +3,21 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 use Exception;
 class Status extends Base {
-  private static array $codeList = array("P" => "Paid", "R" => "Registered", "F" => "Finished");
+  private const codeList = array("P" => "Paid","R" => "Registered","F" => "Finished");
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $code, protected string $name) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getCode() {
+  public function getCode(): string {
     return $this->code;
   }
-  public function getName() {
+  public function getName(): string {
     return $this->name;
   }
-  public function getDescription() {
-    return self::$codeList[$this->code];
+  public function getDescription(): string {
+    return self::codeList[$this->code];
   }
   public function setCode(string $code) {
-    if (array_key_exists(key: $code, array: self::$codeList)) {
+    if (array_key_exists(key: $code, array: self::codeList)) {
       $this->code = $code;
     } else {
       throw new Exception(message: $code . " is not a valid status code");
@@ -26,7 +26,7 @@ class Status extends Base {
   public function setName(string $name) {
     $this->name = $name;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", code = '";
     $output .= $this->code;

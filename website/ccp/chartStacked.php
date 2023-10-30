@@ -12,8 +12,8 @@ $userId = isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset
 $output = "";
 $output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 try {
-  $startDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
-  $endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
+  $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
+  $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $params = array($startDate, $endDate, null, false);
   $resultList = $databaseResult->getCountTournamentForDates(params: $params);
   if (0 < count(value: $resultList)) {

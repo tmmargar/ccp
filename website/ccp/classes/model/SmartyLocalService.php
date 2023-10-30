@@ -6,9 +6,8 @@ class SmartyLocalService {
   private Smarty $smarty;
   public function __construct() {
     $this->smarty = new Smarty();
-//     $this->smarty->initialize();
   }
-  public function getSmarty() {
+  public function getSmarty(): Smarty {
     return $this->smarty;
   }
   public function initialize(bool $debug) {
@@ -17,7 +16,6 @@ class SmartyLocalService {
     $this->smarty->setCacheDir(cache_dir: "../classes/common/smarty/cache");
     $this->smarty->setConfigDir(config_dir: "../classes/common/smarty/configs");
     $this->smarty->setDebugging(debugging: $debug);
-//     $this->smarty->registerClass("htmlUtility", "\ccp\classes\utility\HtmlUtility");
   }
   public function setSmarty(Smarty $smarty) {
     $this->smarty = $smarty;

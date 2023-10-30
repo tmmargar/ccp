@@ -2,67 +2,71 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType, protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date, protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType,
+    protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date,
+    protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
+    protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid,
+    protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getDescription() {
+  public function getDescription(): string|null {
     return $this->description;
   }
-  public function getComment() {
+  public function getComment(): string|null {
     return $this->comment;
   }
-  public function getLimitType() {
+  public function getLimitType(): LimitType|null {
     return $this->limitType;
   }
-  public function getGameType() {
+  public function getGameType(): GameType|null {
     return $this->gameType;
   }
-  public function getSpecialType() {
+  public function getSpecialType(): SpecialType|null {
     return $this->specialType;
   }
-  public function getChipCount() {
+  public function getChipCount(): int {
     return $this->chipCount;
   }
-  public function getLocation() {
+  public function getLocation(): Location|null {
     return $this->location;
   }
-  public function getDate() {
+  public function getDate(): DateTime|null {
     return $this->date;
   }
-  public function getStartTime() {
+  public function getStartTime(): DateTime|null {
     return $this->startTime;
   }
-  public function getEndTime() {
+  public function getEndTime(): DateTime|null {
     return $this->endTime;
   }
-  public function getBuyinAmount() {
+  public function getBuyinAmount(): int {
     return $this->buyinAmount;
   }
-  public function getMaxPlayers() {
+  public function getMaxPlayers(): int {
     return $this->maxPlayers;
   }
-  public function getMaxRebuys() {
+  public function getMaxRebuys(): int {
     return $this->maxRebuys;
   }
-  public function getRebuyAmount() {
+  public function getRebuyAmount(): int {
     return $this->rebuyAmount;
   }
-  public function getAddonAmount() {
+  public function getAddonAmount(): int {
     return $this->addonAmount;
   }
-  public function getAddonChipCount() {
+  public function getAddonChipCount(): int {
     return $this->addonChipCount;
   }
-  public function getGroupPayout() {
+  public function getGroupPayout(): GroupPayout|null {
     return $this->groupPayout;
   }
-  public function getRake() {
+  public function getRake(): float {
     return $this->rake;
   }
-  public function getRakeForCalculation() {
+  public function getRakeForCalculation(): float {
     return $this->rake / 100;
   }
-  public function getRegistrationClose() {
+  public function getRegistrationClose(): DateTime {
     $close = "";
     if (isset($this->startTime)) {
       $close = clone $this->startTime;
@@ -71,28 +75,28 @@ class Tournament extends Base {
     }
     return $close;
   }
-  public function getRegistrationOpen() {
+  public function getRegistrationOpen(): DateTime {
     return new DateTime(debug: $this->isDebug(), id: null, time: "12:00");
   }
-  public function getRegisteredCount() {
+  public function getRegisteredCount(): int {
     return $this->registeredCount;
   }
-  public function getBuyinsPaid() {
+  public function getBuyinsPaid(): int {
     return $this->buyinsPaid;
   }
-  public function getRebuysPaid() {
+  public function getRebuysPaid(): int {
     return $this->rebuysPaid;
   }
-  public function getRebuysCount() {
+  public function getRebuysCount(): int {
     return $this->rebuysCount;
   }
-  public function getAddonsPaid() {
+  public function getAddonsPaid(): int {
     return $this->addonsPaid;
   }
-  public function getEnteredCount() {
+  public function getEnteredCount(): int {
     return $this->enteredCount;
   }
-  public function getEarnings() {
+  public function getEarnings(): int {
     return $this->earnings;
   }
   public function setDescription(string $description) {
@@ -171,8 +175,8 @@ class Tournament extends Base {
     $this->earnings = $earnings;
   }
   public function getLink() {
-//     return HtmlUtility::buildLink("manageTournament.php", "modify", $this->getId(), $this->getDescription());
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageTournament.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getDescription(), title: null);
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageTournament.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getDescription(), title: null);
     return $link->getHtml();
   }
   public function getDateAndTime() {
@@ -192,7 +196,7 @@ class Tournament extends Base {
     $optionText .= "/" . $this->getEnteredCount() . "ent)";
     return $optionText;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", description = '";
     $output .= $this->description;
@@ -232,8 +236,6 @@ class Tournament extends Base {
     $output .= $this->rake;
     $output .= ", registrationClose = ";
     $output .= $this->getRegistrationClose()->getDisplayAmPmFormat();
-//     $output .= ", directions = '";
-//     $output .= $this->directions;
     $output .= "', registeredCount = ";
     $output .= $this->registeredCount;
     $output .= ", enteredCount = ";

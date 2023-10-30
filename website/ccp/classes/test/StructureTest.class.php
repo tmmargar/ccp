@@ -46,7 +46,7 @@ class StructureTest extends BaseTest {
     $structure->setId(1);
     $structure->setPercentage(.2);
     $structure->setPlace(1);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $structure->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $structure->toString());
   }
   public static function runAllTests() {
     StructureTest::testGetPlaceBlank();

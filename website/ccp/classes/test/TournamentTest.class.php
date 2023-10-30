@@ -127,7 +127,7 @@ class TournamentTest extends BaseTest {
   }
   public static function testGetDateNotBlank() {
     $tournament = new Tournament();
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setDate($dateTime);
     echo "<br>testGetDateNotBlank " . (($tournament->getDate() == $dateTime) ? self::getPassOutput() : self::getFailOutput());
   }
@@ -146,7 +146,7 @@ class TournamentTest extends BaseTest {
   }
   public static function testGetStartTimeNotBlank() {
     $tournament = new Tournament();
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setStartTime($dateTime);
     echo "<br>testGetStartTimeNotBlank " . (($tournament->getStartTime() == $dateTime) ? self::getPassOutput() : self::getFailOutput());
   }
@@ -165,7 +165,7 @@ class TournamentTest extends BaseTest {
   }
   public static function testGetEndTimeNotBlank() {
     $tournament = new Tournament();
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setEndTime($dateTime);
     echo "<br>testGetEndTimeNotBlank " . (($tournament->getEndTime() == $dateTime) ? self::getPassOutput() : self::getFailOutput());
   }
@@ -360,10 +360,10 @@ class TournamentTest extends BaseTest {
     $tournament->setBuyinsPaid(5);
     $tournament->setChipCount(2500);
     $tournament->setComment("comment");
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setDate($dateTime->getTime());
     $tournament->setDescription("desc");
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setEndTime($dateTime->getTime());
     $gameType = new GameType();
     $gameType->setId(1);
@@ -422,9 +422,9 @@ class TournamentTest extends BaseTest {
     $tournament->setRake(.2);
     $tournament->setRebuyAmount(25);
     $tournament->setRebuysPaid(0);
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
     $tournament->setStartTime($dateTime->getTime());
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $tournament->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $tournament->toString());
   }
   public static function runAllTests() {
     TournamentTest::testGetIdBlank();

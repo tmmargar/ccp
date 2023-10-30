@@ -5,22 +5,22 @@ class Database extends Root {
   public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port) {
     parent::__construct(debug: $debug);
   }
-  public function getDsn() {
+  public function getDsn(): string {
     return 'mysql:dbname=' . $this->getDatabaseName() . ';host=' . $this->getHostName() . ';port=' . $this->port;
   }
-  public function getHostName() {
+  public function getHostName(): string {
     return $this->hostName;
   }
-  public function getUserid() {
+  public function getUserid(): string {
     return $this->userid;
   }
-  public function getPassword() {
+  public function getPassword(): string {
     return $this->password;
   }
-  public function getDatabaseName() {
+  public function getDatabaseName(): string {
     return $this->databaseName;
   }
-  public function getPort() {
+  public function getPort(): int {
     return $this->port;
   }
   public function setHostName(string $hostName) {
@@ -38,7 +38,7 @@ class Database extends Root {
   public function setPort(int $port) {
     $this->port = $port;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", hostName = '";
     $output .= $this->getHostName();

@@ -1,7 +1,7 @@
 <?php
 namespace ccp\classes\utility;
-class FileUtility {
-  public static function getFileNames(string $directory, string $excludeFileNames) {
+abstract class FileUtility {
+  public static function getFileNames(string $directory, string $excludeFileNames): string {
     $validFileNames = array_diff(array: scandir(directory: $directory), arrays: $excludeFileNames);
     $result = "";
     foreach ($validFileNames as $fileName) {

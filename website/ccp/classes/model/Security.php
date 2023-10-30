@@ -7,16 +7,16 @@ class Security extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected Login $login, protected User $user) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getLogin() {
+  public function getLogin(): Login {
     return $this->login;
   }
-  public function getSeason() {
+  public function getSeason(): Season {
     return $this->season;
   }
-  public function getUser() {
+  public function getUser(): User {
     return $this->user;
   }
-  public function login() {
+  public function login(): bool {
     if ($this->validatePassword()) {
       $this->loginSuccess();
       return true;
@@ -30,13 +30,13 @@ class Security extends Base {
     $resultList = $databaseResult->getUserByUsername(params: $params);
     if (0 < count(value: $resultList)) {
       $this->setUser(user: $resultList[0]);
-      SessionUtility::setValue(name: SessionUtility::$OBJECT_NAME_SECURITY, value: $this);
+      SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SECURITY, value: $this);
     }
-    $params = array(Constant::$FLAG_YES_DATABASE);
+    $params = array(Constant::FLAG_YES_DATABASE);
     $resultList = $databaseResult->getSeasonByActive(params: $params);
     if (0 < count(value: $resultList)) {
       $this->setSeason(season: $resultList[0]);
-      SessionUtility::setValue(name: SessionUtility::$OBJECT_NAME_SEASON, value: $resultList[0]);
+      SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SEASON, value: $resultList[0]);
     }
   }
   /*
@@ -61,7 +61,7 @@ class Security extends Base {
    * // Get token for username
    * // $userToken = $auth->getTokenByUsername($_COOKIE["remember_username"], 0);
    * $databaseResult = new DatabaseResult();
-   * $databaseResult->setDebug(SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG));
+   * $databaseResult->setDebug(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
    * $params = array(
    * $_COOKIE["remember_username"]
    * );
@@ -107,33 +107,20 @@ class Security extends Base {
   public function setUser(User $user) {
     $this->user = $user;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", login = [" . $this->login;
     $output .= "], user = [" . $this->user . "]";
     return $output;
   }
-  private function validatePassword() {
+  private function validatePassword(): bool {
     $found = false;
     $databaseResult = new DatabaseResult(debug: $this->isDebug());
     $resultList = $databaseResult->getLogin(userName: $this->login->getUsername());
     if (0 < count(value: $resultList)) {
-//       echo "<br>" . $this->login->getPassword() . " -- " . $resultList[0];
-//       $t_hasher = new PasswordHash(8, FALSE);
-//       echo "<br>hasher check ->" . $t_hasher->CheckPassword($this->login->getPassword(), $resultList[0]);
-//       if ($t_hasher->CheckPassword($this->login->getPassword(), $resultList[0])) {
-//         echo "<br>MATCH OLD";
-//         $found = true;
-//       } else {
-//          echo "<br>hashed -> " . password_hash($this->login->getPassword(), PASSWORD_DEFAULT);
-        if (password_verify(password: $this->login->getPassword(), hash: $resultList[0])) {
-//           echo "<br>MATCH NEW";
-          $found = true;
-          // } else {
-          // echo "<br>NO MATCH NEW";
-        }
-//       }
-//       die();
+      if (password_verify(password: $this->login->getPassword(), hash: $resultList[0])) {
+        $found = true;
+      }
     }
     return $found;
   }

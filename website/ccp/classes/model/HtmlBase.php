@@ -5,19 +5,19 @@ abstract class HtmlBase extends Base {
   public function __construct(protected string|null $accessKey, protected array|null $class, protected bool $debug, protected string|int|null $id, protected int $tabIndex, protected string|null $title) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getAccessKey() {
+  public function getAccessKey(): string|null {
     return $this->accessKey;
   }
-  public function getClass() {
+  public function getClass(): array|null {
     return $this->class;
   }
-  public function getClassAsString() {
+  public function getClassAsString(): string {
     return is_array($this->class) ? implode(separator: " ", array: array_filter($this->class)) : "";
   }
-  public function getTabIndex() {
+  public function getTabIndex(): int {
     return $this->tabIndex;
   }
-  public function getTitle() {
+  public function getTitle(): string|null {
     return $this->title;
   }
   public function setAccessKey(string $acccessKey) {
@@ -32,7 +32,7 @@ abstract class HtmlBase extends Base {
   public function setTitle(string $title) {
     $this->title = $title;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", accessKey = '";
     $output .= $this->accessKey;

@@ -26,7 +26,7 @@ class GameTypeTest extends BaseTest {
     $gameType = new GameType();
     $gameType->setId(1);
     $gameType->setName("gt nm");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $gameType->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $gameType->toString());
   }
   public static function runAllTests() {
     GameTypeTest::testGetIdBlank();

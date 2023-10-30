@@ -14,13 +14,13 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 }
 set_error_handler("errorHandler");
 class BaseTest {
-  public static $CLASS_NAME_PASS = "pass";
-  public static $CLASS_NAME_FAIL = "fail";
+  public const CLASS_NAME_PASS = "pass";
+  public const CLASS_NAME_FAIL = "fail";
   protected static function getPassOutput() {
-    return BaseTest::getTextOutput(BaseTest::$CLASS_NAME_PASS, "passed");
+    return BaseTest::getTextOutput(BaseTest::CLASS_NAME_PASS, "passed");
   }
   protected static function getFailOutput() {
-    return BaseTest::getTextOutput(BaseTest::$CLASS_NAME_FAIL, "failed");
+    return BaseTest::getTextOutput(BaseTest::CLASS_NAME_FAIL, "failed");
   }
   protected static function getTextOutput($class, $text) {
     return "<span class=\"" . $class . "\">" . $text . "</span>";

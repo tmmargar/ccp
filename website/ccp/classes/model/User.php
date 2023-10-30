@@ -5,56 +5,60 @@ class User extends Base {
   private string $firstName;
   private string $lastName;
   private int $idPrevious;
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string|null $username, protected string|null $password, protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate, protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName, protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string|null $username, protected string|null $password,
+    protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate,
+    protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName,
+    protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken,
+    protected $rememberExpires) {
     parent::__construct(debug: $debug, id: $id);
     $nameFull = explode(separator: " ", string: $name);
     $this->setFirstName(firstName: $nameFull[0]);
     $this->setLastName(lastName: implode(separator: " ", array: array_slice(array: $nameFull, offset: 1)));
     $this->idPrevious = 0;
   }
-  public function getFirstName() {
+  public function getFirstName(): string {
     return $this->firstName;
   }
-  public function getLastName() {
+  public function getLastName(): string {
     return $this->lastName;
   }
-  public function getEmail() {
+  public function getEmail(): string|null {
     return $this->email;
   }
-  public function getPhone() {
+  public function getPhone(): Phone|null {
     return $this->phone;
   }
-  public function getUsername() {
+  public function getUsername(): string|null {
     return $this->username;
   }
-  public function getPassword() {
+  public function getPassword(): string|null {
     return $this->password;
   }
-  public function getAdministrator() {
+  public function getAdministrator(): int {
     return $this->administrator;
   }
-  public function getRegistrationDate() {
+  public function getRegistrationDate(): string|null {
     return $this->registrationDate;
   }
-  public function getApprovalDate() {
+  public function getApprovalDate(): string|null {
     return $this->approvalDate;
   }
-  public function getApprovalUserid() {
+  public function getApprovalUserid(): int|null {
     return $this->approvalUserid;
   }
-  public function getApprovalName() {
+  public function getApprovalName(): string|null {
     return $this->approvalName;
   }
-  public function getRejectionDate() {
+  public function getRejectionDate(): string|null {
     return $this->rejectionDate;
   }
-  public function getRejectionUserid() {
+  public function getRejectionUserid(): int|null {
     return $this->rejectionUserid;
   }
-  public function getRejectionName() {
+  public function getRejectionName(): string|null {
     return $this->rejectionName;
   }
-  public function getActive() {
+  public function getActive(): int {
     return $this->active;
   }
   public function getResetSelector() {
@@ -75,13 +79,13 @@ class User extends Base {
   public function getRememberExpires() {
     return $this->rememberExpires;
   }
-  public function getAddress() {
+  public function getAddress(): Address|null {
     return $this->address;
   }
-  public function getName() {
+  public function getName(): string {
     return $this->firstName . (isset($this->lastName) ? (" " . $this->lastName) : "");
   }
-  public function getIdPrevious() {
+  public function getIdPrevious(): int {
     return $this->idPrevious;
   }
   public function setFirstName(string $firstName) {
@@ -91,7 +95,6 @@ class User extends Base {
     $this->lastName = $lastName;
   }
   public function setEmail(string $email) {
-    // TODO: validate
     $this->email = $email;
   }
   public function setPhone(Phone|null $phone) {
@@ -101,7 +104,6 @@ class User extends Base {
     $this->username = $username;
   }
   public function setPassword(string $password) {
-    // TODO: encryption or hiding
     $this->password = $password;
   }
   public function setAdministrator(int $administrator) {
@@ -155,7 +157,6 @@ class User extends Base {
   public function setIdPrevious(int $idPrevious) {
     $this->idPrevious = $idPrevious;
   }
-  // pass in full name which gets split and set
   public function setName($name) {
     $names = explode(separator: " ", string: $name);
     $this->firstName = $names[0];
@@ -163,12 +164,12 @@ class User extends Base {
       $this->lastName = implode(separator: " ", array: array_slice(array: $names, offset: 1));
     }
   }
-  public function getLink() {
-    // return "<a href=\"manageUser.php?mode=modify&id=" . $this->getId() . "\">" . $this->getName() . "<\a>\n";
-    $link = new HtmlLink(accessKey: null, class: null, debugP: $this->isDebug(), href: "manageUser.php", id: null, paramName: array("id", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getName(), title: null);
+  public function getLink(): string {
+    $link = new HtmlLink(accessKey: null, class: null, debugP: $this->isDebug(), href: "manageUser.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getName(), title: null);
     return $link->getHtml();
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", firstName = '";
     $output .= $this->firstName;

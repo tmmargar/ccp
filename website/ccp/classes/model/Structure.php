@@ -5,11 +5,10 @@ class Structure extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected int $place, protected float $percentage) {
     parent::__construct(debug: $debug, id: $id);
   }
-
-  public function getPlace() {
+  public function getPlace(): int {
     return $this->place;
   }
-  public function getPercentage() {
+  public function getPercentage(): float {
     return $this->percentage;
   }
   public function setPlace(int $place) {
@@ -18,7 +17,7 @@ class Structure extends Base {
   public function setPercentage(float $percentage) {
     $this->percentage = $percentage;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", place = ";
     $output .= $this->place;

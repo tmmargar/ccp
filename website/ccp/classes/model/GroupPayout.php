@@ -5,10 +5,10 @@ class GroupPayout extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected Group $group, protected array $payouts) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getGroup() {
+  public function getGroup(): Group {
     return $this->group;
   }
-  public function getPayouts() {
+  public function getPayouts(): array {
     return $this->payouts;
   }
   public function setGroup(Group $group) {
@@ -17,7 +17,7 @@ class GroupPayout extends Base {
   public function setPayouts(array $payouts) {
     $this->payouts = $payouts;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= "group = [";
     $output .= $this->group;

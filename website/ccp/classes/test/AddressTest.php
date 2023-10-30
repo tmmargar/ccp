@@ -93,7 +93,7 @@ class AddressTest extends BaseTest {
     $address->setId(1);
     $address->setState("MI");
     $address->setZip(99999);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $address->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $address->toString());
   }
   public static function runAllTests() {
     AddressTest::testGetIdBlank();

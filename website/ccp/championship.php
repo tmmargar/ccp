@@ -11,9 +11,9 @@ $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("heading", "Championship");
 $smarty->assign("style", "");
 $output = "";
-$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
-$startDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
-$endDate = SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
+$startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
+$endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
 $params = array($startDate,$endDate);
 $resultList = $databaseResult->getPrizePoolForSeason(params: $params, returnQuery: false);
 if (0 < count($resultList)) {
@@ -52,7 +52,7 @@ $aryPosition[5] = 5;
 $aryPosition[6] = 4;
 $aryPosition[7] = 3;
 $aryPosition[8] = 2;
-$params = array($startDate,$endDate,SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+$params = array($startDate,$endDate,SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
 $count = count(value: $resultList) - count(value: $aryAbsentIds);
 if (0 < $count) {
@@ -261,8 +261,8 @@ if (0 < $count) {
     }
   }
 } else {
-  $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " .
-    SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
+  $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " .
+    SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
 }
 $smarty->assign("content", $output);
 $smarty->display("championship.tpl");

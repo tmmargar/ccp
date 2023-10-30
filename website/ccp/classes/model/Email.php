@@ -3,28 +3,29 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\common\PHPMailer\PHPMailer;
 class Email extends Base {
-  private static string $EMAIL_ADDRESS_LOCAL = "me@localhost.com";
+  private const EMAIL_ADDRESS_LOCAL = "me@localhost.com";
   private bool $local;
   private array $localEmail;
-  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|null $ccName, protected array|null $ccEmail, protected array|null $bccName, protected array|null $bccEmail, protected string|null $subject, protected string|null $body) {
+  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|null $ccName,
+    protected array|null $ccEmail, protected array|null $bccName, protected array|null $bccEmail, protected string|null $subject, protected string|null $body) {
     parent::__construct(debug: $debug, id: null);
     $this->local = Constant::FLAG_LOCAL();
   }
-  public function getFromName() {
+  public function getFromName(): array {
     return $this->fromName;
   }
-  public function getFromEmail() {
+  public function getFromEmail(): array {
     return $this->fromEmail;
   }
-  public function getToName() {
+  public function getToName(): array {
     return $this->toName;
   }
-  public function getToEmail() {
+  public function getToEmail(): array {
     $toEmail = $this->toEmail;
     if ($this->isLocal()) {
       $this->setLocalEmail($toEmail);
       foreach ($toEmail as $key => $value) {
-        $toEmail[$key] = self::$EMAIL_ADDRESS_LOCAL;
+        $toEmail[$key] = self::EMAIL_ADDRESS_LOCAL;
       }
       unset($value);
       $this->setLocalEmail($toEmail);
@@ -32,28 +33,28 @@ class Email extends Base {
     }
     return $toEmail;
   }
-  public function getCcName() {
+  public function getCcName(): array|null {
     return $this->ccName;
   }
-  public function getCcEmail() {
+  public function getCcEmail(): array|null {
     return $this->ccEmail;
   }
-  public function getBccName() {
+  public function getBccName(): array|null {
     return $this->bccName;
   }
-  public function getBccEmail() {
+  public function getBccEmail(): array|null {
     return $this->bccEmail;
   }
-  public function getSubject() {
+  public function getSubject(): string|null {
     return $this->subject;
   }
-  public function getBody() {
+  public function getBody(): string|null {
     return $this->body;
   }
-  public function isLocal() {
+  public function isLocal(): bool {
     return $this->local;
   }
-  public function getLocalEmail() {
+  public function getLocalEmail(): array {
     return $this->localEmail;
   }
   public function setFromName(array $fromName) {
@@ -72,11 +73,11 @@ class Email extends Base {
     $this->ccName = $ccName;
   }
   public function setCcEmail(array $ccEmail) {
-    $this->ccEmail = $ccEmail;
     if ($this->isLocal()) {
       $this->setBody("<br>CC to " . print_r(value: $ccEmail, return: true) . "\n\n" . $this->getBody());
       $ccEmail = array($this->localEmail);
     }
+    $this->ccEmail = $ccEmail;
   }
   public function setBccName(array $bccName) {
     $this->bccName = $bccName;
@@ -96,7 +97,7 @@ class Email extends Base {
   public function setLocalEmail(array|null $localEmail) {
     $this->localEmail = $localEmail;
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= " fromName = ";
     $output .= print_r(value: $this->fromName, return: true);
@@ -128,14 +129,14 @@ class Email extends Base {
   // user@example.com
   // User <user@example.com>
   // each body line < 70 characters and separated with \n
-  public function sendEmail() {
+  public function sendEmail(): string {
     $mail = new PHPMailer(true);
     $mail->SMTPDebug = $this->isDebug();
     $mail->isSMTP();
     $mail->Timeout = 60;
     $mail->Host = Constant::SERVER_EMAIL();
     $mail->isHTML(true);
-    for ($idx = 0; $idx < count($this->fromName); $idx++) {
+    for ($idx = 0; $idx < count($this->fromName); $idx ++) {
       $mail->SetFrom(address: $this->getFromEmail()[$idx], name: $this->getFromName()[$idx]);
       $mail->AddAddress(address: $this->getToEmail()[$idx], name: $this->getToName()[$idx]);
       if (isset($this->getCcEmail()[$idx]) && isset($this->getCcName()[$idx])) {
@@ -147,22 +148,21 @@ class Email extends Base {
       $mail->Subject = $this->getSubject();
       $mail->Body = $this->getBody();
       $message = "";
-        if(!$mail->send()) {
-          $message .= "Message could not be sent to " . $this->getToName()[$idx] . " due to " . $mail->ErrorInfo;
-        } else {
-          $message .= "Message has been sent to " . $this->getToName()[$idx] . " at " . $this->getToEmail()[$idx];
-          if (isset($this->getCcEmail()[$idx]) && isset($this->getCcName()[$idx])) {
-            $message .= " and cc to " . $this->getCcName()[$idx] . " at " . $this->getCcEmail()[$idx];
-          }
+      if (! $mail->send()) {
+        $message .= "Message could not be sent to " . $this->getToName()[$idx] . " due to " . $mail->ErrorInfo;
+      } else {
+        $message .= "Message has been sent to " . $this->getToName()[$idx] . " at " . $this->getToEmail()[$idx];
+        if (isset($this->getCcEmail()[$idx]) && isset($this->getCcName()[$idx])) {
+          $message .= " and cc to " . $this->getCcName()[$idx] . " at " . $this->getCcEmail()[$idx];
         }
+      }
     }
     return $message;
   }
-
-  public function sendRegisteredEmail(Address $address, Tournament $tournament, string $feeStatus, string|int $waitList, string $autoRegister = null) {
+  public function sendRegisteredEmail(Address $address, Tournament $tournament, string $feeStatus, string|int $waitList, string $autoRegister = null): string {
     $result = "";
     $url = "";
-    for ($idx = 0; $idx < count($this->fromName); $idx++) {
+    for ($idx = 0; $idx < count($this->fromName); $idx ++) {
       $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
       if (isset($autoRegister)) {
         $subject = "Auto registration of " . $autoRegister . " was successful for the tournament on ";
@@ -173,7 +173,7 @@ class Email extends Base {
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />&nbsp;&nbsp;Your season fee is " . $feeStatus . ".<BR />";
       if (is_string($waitList)) {
-        $body .= "&nbsp;&nbsp;" . $waitList  . " was successfully moved from the wait list to registered ";
+        $body .= "&nbsp;&nbsp;" . $waitList . " was successfully moved from the wait list to registered ";
       } else {
         if (isset($autoRegister)) {
           $body .= "&nbsp;&nbsp;Auto registration of " . $autoRegister . " was successful ";
@@ -182,7 +182,7 @@ class Email extends Base {
         }
         if ($waitList > 0) {
           $body .= "(you were added to the wait list) ";
-        } else if ($waitList == -99) {
+        } else if ($waitList == - 99) {
           $body .= "(you were moved from the wait list to registered) ";
         }
       }
@@ -195,11 +195,10 @@ class Email extends Base {
     }
     return $result;
   }
-
-  public function sendReminderEmail(Address $address, Tournament $tournament, int $waitListCount) {
+  public function sendReminderEmail(Address $address, Tournament $tournament, int $waitListCount): string {
     $result = "";
     $url = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
       $subject = " registration is open reminder for the tournament on ";
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
@@ -209,13 +208,15 @@ class Email extends Base {
       if ($waitListCount > 0) {
         $body .= "(on the wait list) ";
       }
-//       $body .= "for the tournament on " . DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime()) . " with additional details below:<br />";
+      // $body .= "for the tournament on " . DateTimeUtility::getDateDisplayFormat($tournament->getDate()) . " starting at " . DateTimeUtility::getTimeDisplayAmPmFormat($tournament->getStartTime()) . " with additional details below:<br />";
       $body .= "for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . " with additional details below:<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getDescription() . "<br />";
-      $body .= "&nbsp;&nbsp;&nbsp;&nbsp;Hosted by " . $tournament->getLocation()->getUser()->getName() . "<br />";
+      $body .= "&nbsp;&nbsp;&nbsp;&nbsp;Hosted by " . $tournament->getLocation()
+        ->getUser()
+        ->getName() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getBuyinAmount() . " for " . $tournament->getChipCount() . " chips<br />";
-      $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getMaxRebuys() . " rebuy(s) in first hour, $" . $tournament->getRebuyAmount() . " for " .$tournament->getChipCount() . " chips<br />";
+      $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getMaxRebuys() . " rebuy(s) in first hour, $" . $tournament->getRebuyAmount() . " for " . $tournament->getChipCount() . " chips<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getAddress() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
       $body .= "&nbsp;&nbsp;If you need to register for this tournament, please <a href=\"" . $url . "\">click here</a>";
@@ -224,17 +225,17 @@ class Email extends Base {
     }
     return $result;
   }
-
-  public function sendCancelledEmail(Address $address, Tournament $tournament) {
+  public function sendCancelledEmail(Address $address, Tournament $tournament): string {
     $result = "";
     $url = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
       $subject = "registration cancelled for the tournament on ";
       $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-      $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat()  . " with additional details below:<br />";
+      $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() .
+        " with additional details below:<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getAddress() . "<br />";
       $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $address->getCity() . ", " . $address->getState() . " " . $address->getZip() . "<br />";
       $body .= "&nbsp;&nbsp;If you need to re-register for this tournament, please <a href=\"" . $url . "\">click here</a>";
@@ -243,9 +244,9 @@ class Email extends Base {
     }
     return $result;
   }
-  public function sendSignUpEmail() {
+  public function sendSignUpEmail(): string {
     $result = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $subject = "sign up request sent for approval";
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
@@ -255,21 +256,22 @@ class Email extends Base {
     }
     return $result;
   }
-  public function sendSignUpApprovalEmail() {
+  public function sendSignUpApprovalEmail(): string {
     $result = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $subject = "sign up request needs approval";
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-      $body .= "&nbsp;&nbsp;" . $this->fromName[$idx]  . " sign up request requires your approval. Please <a href=\"" . (Constant::PATH()) . "manageSignupApproval.php\">click here</a> to go to the approval screen.";
+      $body .= "&nbsp;&nbsp;" . $this->fromName[$idx] . " sign up request requires your approval. Please <a href=\"" . (Constant::PATH()) .
+        "manageSignupApproval.php\">click here</a> to go to the approval screen.";
       $this->setBody(body: $body);
       $result .= $this->sendEmail();
     }
     return $result;
   }
-  public function sendApprovedEmail() {
+  public function sendApprovedEmail(): string {
     $result = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $subject = "sign up request approved";
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
@@ -279,9 +281,9 @@ class Email extends Base {
     }
     return $result;
   }
-  public function sendRejectedEmail() {
+  public function sendRejectedEmail(): string {
     $result = "";
-    for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
       $subject = "sign up request rejected";
       $this->setSubject(subject: $subject);
       $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
@@ -292,30 +294,30 @@ class Email extends Base {
     return $result;
   }
   // array of username, email, selector and validator
-  public function sendPasswordResetRequestEmail(array $info, array $selectorAndToken) {
-      $result = "";
-      for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
-          $subject = "password reset request";
-          $this->setSubject(subject: $subject);
-          $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-          $url = Constant::PATH() . "resetPassword.php?mode=resetPassword&username=" . $info[0] . "&email=" . $info[1] . "&selector=" . $selectorAndToken[0] . "&validator=" . $selectorAndToken[1];
-          $body .= "&nbsp;&nbsp;Your request has been received. Please <a href=\"" . $url . "\">click here</a> to reset your password.";
-          $this->setBody(body: $body);
-          $result .= $this->sendEmail();
-      }
-      return $result;
+  public function sendPasswordResetRequestEmail(array $info, array $selectorAndToken): string {
+    $result = "";
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
+      $subject = "password reset request";
+      $this->setSubject(subject: $subject);
+      $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
+      $url = Constant::PATH() . "resetPassword.php?mode=resetPassword&username=" . $info[0] . "&email=" . $info[1] . "&selector=" . $selectorAndToken[0] . "&validator=" . $selectorAndToken[1];
+      $body .= "&nbsp;&nbsp;Your request has been received. Please <a href=\"" . $url . "\">click here</a> to reset your password.";
+      $this->setBody(body: $body);
+      $result .= $this->sendEmail();
+    }
+    return $result;
   }
-  public function sendPasswordResetSuccessfulEmail() {
-      $result = "";
-      for ($idx = 0; $idx < count(value: $this->fromName); $idx++) {
-          $subject = "password reset successfully";
-          $this->setSubject(subject: $subject);
-          $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-          $url = Constant::PATH() . "login.php";
-          $body .= "&nbsp;&nbsp;Your password was changed successfully. Please <a href=\"" . $url . "\">click here</a> to login.";
-          $this->setBody(body: $body);
-          $result .= $this->sendEmail();
-      }
-      return $result;
+  public function sendPasswordResetSuccessfulEmail(): string {
+    $result = "";
+    for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
+      $subject = "password reset successfully";
+      $this->setSubject(subject: $subject);
+      $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
+      $url = Constant::PATH() . "login.php";
+      $body .= "&nbsp;&nbsp;Your password was changed successfully. Please <a href=\"" . $url . "\">click here</a> to login.";
+      $this->setBody(body: $body);
+      $result .= $this->sendEmail();
+    }
+    return $result;
   }
 }

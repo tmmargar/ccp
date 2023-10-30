@@ -44,9 +44,11 @@ export const inputLocal = {
       }
     });
     feePaidTotalCalculation += ")";
-    document.querySelector("#totalSeasonFee").value = parseInt(document.querySelector("#totalSeasonFee").value) + feePaidTotal;
-    document.querySelector("#feePaidTotal").innerHTML = "$" + feePaidTotal;
-    document.querySelector("#feePaidTotalCalculation").innerHTML = feePaidTotalCalculation;
+    if (document.querySelector("#totalSeasonFee")) {
+      document.querySelector("#totalSeasonFee").value = parseInt(document.querySelector("#totalSeasonFee").value) + feePaidTotal;
+      document.querySelector("#feePaidTotal").innerHTML = "$" + feePaidTotal;
+      document.querySelector("#feePaidTotalCalculation").innerHTML = feePaidTotalCalculation;
+    }
   },
   disableCheckboxAll : function({hasFlag, name, countNotCheckedPaid} = {}) {
     // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)

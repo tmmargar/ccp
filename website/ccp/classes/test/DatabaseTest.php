@@ -56,7 +56,7 @@ class DatabaseTest extends BaseTest {
     $database->setPassword("pwd");
     $database->setTableNames(array("tbl1", "tbl2"));
     $database->setUserid("userid");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $database->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $database->toString());
   }
   public static function runAllTests() {
     DatabaseTest::testGetHostNameBlank();

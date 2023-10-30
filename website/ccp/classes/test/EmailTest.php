@@ -181,7 +181,7 @@ class EmailTest extends BaseTest {
     $email->setTest(true);
     $email->setToEmail(array("test@to.com"));
     $email->setToName(array("to nm"));
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $email->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $email->toString());
   }
   public static function runAllTests() {
     EmailTest::testGetFromNameBlank();

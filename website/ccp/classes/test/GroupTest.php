@@ -26,7 +26,7 @@ class GroupTest extends BaseTest {
     $group = new Group();
     $group->setId(1);
     $group->setName("gp nm");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $group->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $group->toString());
   }
   public static function runAllTests() {
     GroupTest::testGetIdBlank();

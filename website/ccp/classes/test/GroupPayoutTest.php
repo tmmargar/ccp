@@ -70,7 +70,7 @@ class GroupPayoutTest extends BaseTest {
     $payout2->setNumPlayers(24);
     $payouts = array($payout, $payout2);
     $groupPayout->setPayouts($payouts);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $groupPayout->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $groupPayout->toString());
   }
   public static function runAllTests() {
     GroupPayoutTest::testGetGroupBlank();

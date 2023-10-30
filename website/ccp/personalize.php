@@ -10,7 +10,7 @@ $outputPersonalize =
   "<div class=\"responsive responsive--4cols responsive--collapse\">\n";
 $heading = "";
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : "";
-if ($userId == "" || SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_USERID) == $userId) {
+if ($userId == "" || SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_USERID) == $userId) {
   $heading .= "My";
 } else {
   $params = array($userId);

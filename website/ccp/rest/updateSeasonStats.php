@@ -9,7 +9,7 @@ use ccp\classes\model\User;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 $output = "";
-$params = array(Constant::$FLAG_YES_DATABASE);
+$params = array(Constant::FLAG_YES_DATABASE);
 $resultList = $databaseResult->getSeasonByActive(params: $params);
 $season = $resultList[0];
 $params = array($season->getStartDate()->getDatabaseFormat(), $season->getEndDate()->getDatabaseFormat());

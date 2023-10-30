@@ -55,7 +55,7 @@ class FeeTest extends BaseTest {
     $user->setUsername("username");
     $fee->setUser($user);
     $fee->setYear(2013);
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $fee->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $fee->toString());
   }
   public static function runAllTests() {
     FeeTest::testGetUserBlank();

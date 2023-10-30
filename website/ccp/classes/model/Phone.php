@@ -5,17 +5,15 @@ class Phone extends Base {
   public function __construct(protected bool $debug, protected string|int|null $id, protected string $value) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getValue() {
+  public function getValue(): string {
     return $this->value == "0" ? "0000000000" : $this->value;
   }
   public function setValue(string $value) {
     $this->value = $value;
   }
-  public function getDisplayFormatted() {
+  public function getDisplayFormatted(): string {
     // note: making sure we have something
-    if (! isset($this->value[3])) {
-      return '';
-    }
+    if (! isset($this->value[3])) {return '';}
     // note: strip out everything but numbers
     $valueNumbersOnly = preg_replace(pattern: "/[^0-9]/", replacement: "", subject: $this->value);
     $length = strlen(string: $valueNumbersOnly);
@@ -34,7 +32,7 @@ class Phone extends Base {
         break;
     }
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", value = '";
     $output .= $this->value;

@@ -3,112 +3,105 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormControl extends FormBase {
   // DO NOT USE FormInput eclipse shows errors even though code runs
-  public static string $TYPE_INPUT_BUTTON    = "button";
-  public static string $TYPE_INPUT_CHECKBOX  = "checkbox";
-  public static string $TYPE_INPUT_DATE_TIME = "datetime-local";
-  public static string $TYPE_INPUT_EMAIL     = "email";
-  public static string $TYPE_INPUT_HIDDEN    = "hidden";
-  public static string $TYPE_INPUT_NUMBER    = "number";
-  public static string $TYPE_INPUT_PASSWORD  = "password";
-  public static string $TYPE_INPUT_RESET     = "reset";
-  public static string $TYPE_INPUT_SUBMIT    = "submit";
-  public static string $TYPE_INPUT_TELEPHONE = "tel";
-  public static string $TYPE_INPUT_TEXTAREA  = "textarea";
-  public static string $TYPE_INPUT_TEXTBOX   = "text";
-  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked, protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name, protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size, protected string|null $suffix, protected string|null $type, protected array|string|int|null $value, protected string|null $wrap, protected string|null $import = null, protected bool|null $noValidate = false) {
-    parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), name: $name . (self::$TYPE_INPUT_RESET == $type ? "Button" : ""), suffix: $suffix, value: $value);
+  public const TYPE_INPUT_BUTTON = "button";
+  public const TYPE_INPUT_CHECKBOX = "checkbox";
+  public const TYPE_INPUT_DATE_TIME = "datetime-local";
+  public const TYPE_INPUT_EMAIL = "email";
+  public const TYPE_INPUT_HIDDEN = "hidden";
+  public const TYPE_INPUT_NUMBER = "number";
+  public const TYPE_INPUT_PASSWORD = "password";
+  public const TYPE_INPUT_RESET = "reset";
+  public const TYPE_INPUT_SUBMIT = "submit";
+  public const TYPE_INPUT_TELEPHONE = "tel";
+  public const TYPE_INPUT_TEXTAREA = "textarea";
+  public const TYPE_INPUT_TEXTBOX = "text";
+  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked,
+    protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name,
+    protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size,
+    protected string|null $suffix, protected string|null $type, protected array|string|int|null $value, protected string|null $wrap, protected string|null $import = null,
+    protected bool|null $noValidate = false) {
+    parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id . (self::TYPE_INPUT_RESET == $type ? "Button" : ""), name: $name . (self::TYPE_INPUT_RESET == $type ? "Button" : ""),
+      suffix: $suffix, value: $value);
   }
-  public function getAccessKey() {
+  public function getAccessKey(): string|null {
     return $this->accessKey;
   }
-  public function getAutoComplete() {
+  public function getAutoComplete(): string|null {
     return $this->autoComplete;
   }
-  public function getAutoFocus() {
-    return $this->autoFocus;
-  }
-  public function getCols() {
+  public function getCols(): int|null {
     return $this->cols;
   }
-  public function getHtml() {
+  public function getHtml(): string {
     $temp = "";
     if (isset($this->onClick)) {
-      $temp =
-        "<script type=\"module\">\n" .
-        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-        $this->import .
-        "  document.querySelector(\"#" . $this->getId() . "\").addEventListener(\"click\", (evt) => { " . $this->onClick . " });\n" .
-        "</script>\n";
+      $temp = "<script type=\"module\">\n" . "  import { dataTable, display, input } from \"./scripts/import.js\";\n" . $this->import . "  document.querySelector(\"#" . $this->getId() .
+        "\").addEventListener(\"click\", (evt) => { " . $this->onClick . " });\n" . "</script>\n";
     }
     return $temp .
-      (self::$TYPE_INPUT_TEXTAREA == $this->type ? "<textarea" : (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type ? "<button" : "<input")) .
-      (isset($this->accessKey) ? " accesskey=\"" . $this->accessKey . "\"" : "") .
-      (isset($this->autoComplete) ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
-      (isset($this->autoFocus) && $this->autoFocus ? " autofocus" : "") .
-      (isset($this->checked) && $this->checked ? " checked" : "") .
-      ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") .
-      (isset($this->cols) ? " cols=\"" . $this->cols . "\"" : "") .
-//       data-mask-clearifnotmatch=\"true\"
-//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-inputmask=\"'mask': '(000) 000-0000'\"" : "") .
-      (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") .
-      (isset($this->onClick) ? " href=\"#\"" : "") .
-      " id=\"" . $this->getId() . "\"" .
-      (isset($this->maxLength) ? " maxlength=\"" . $this->maxLength . "\"" : "") .
-      " name=\"" . $this->getName() . "\"" .
-//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[\(]\d{3}[\)] \d{3}[\-]\d{4}\"" : "") .
-//       (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : (self::$TYPE_INPUT_TELEPHONE == $this->type ? " placeholder=\"(999) 999-9999\"" : "")) .
+      (self::TYPE_INPUT_TEXTAREA == $this->type ? "<textarea" : (self::TYPE_INPUT_BUTTON == $this->type || self::TYPE_INPUT_SUBMIT == $this->type || self::TYPE_INPUT_RESET == $this->type ? "<button" : "<input")) .
+      (isset($this->accessKey) ? " accesskey=\"" . $this->accessKey . "\"" : "") . (isset($this->autoComplete) ? " autocomplete=\"" . $this->autoComplete . "\"" : "") .
+      (isset($this->autoFocus) && $this->autoFocus ? " autofocus" : "") . (isset($this->checked) && $this->checked ? " checked" : "") .
+      ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") . (isset($this->cols) ? " cols=\"" . $this->cols . "\"" : "") .
+      // data-mask-clearifnotmatch=\"true\"
+      // (self::TYPE_INPUT_TELEPHONE == $this->type ? " data-inputmask=\"'mask': '(000) 000-0000'\"" : "") .
+      (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . (isset($this->onClick) ? " href=\"#\"" : "") . " id=\"" . $this->getId() . "\"" .
+      (isset($this->maxLength) ? " maxlength=\"" . $this->maxLength . "\"" : "") . " name=\"" . $this->getName() . "\"" .
+      // (self::TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[\(]\d{3}[\)] \d{3}[\-]\d{4}\"" : "") .
+      // (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : (self::TYPE_INPUT_TELEPHONE == $this->type ? " placeholder=\"(999) 999-9999\"" : "")) .
       (isset($this->readOnly) && $this->readOnly ? " readonly" : "") .
-//       (isset($this->required) ? " required=\"" . $this->required . "\"" : "") .
-      ($this->required ? " required" : "") .
-      (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") .
-      (isset($this->size) ? " size=\"" . $this->size . "\"" : "") .
-      " type=\"" . ((self::$TYPE_INPUT_RESET == $this->type) ? self::$TYPE_INPUT_BUTTON : $this->type) . "\"" .
-//     " type=\"" . (self::$TYPE_INPUT_TELEPHONE == $this->type ? self::$TYPE_INPUT_TELEPHONE : $this->type) . "\"" .
-    (self::$TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities((string) $this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+      // (isset($this->required) ? " required=\"" . $this->required . "\"" : "") .
+      ($this->required ? " required" : "") . (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") . (isset($this->size) ? " size=\"" . $this->size . "\"" : "") . " type=\"" .
+      ((self::TYPE_INPUT_RESET == $this->type) ? self::TYPE_INPUT_BUTTON : $this->type) . "\"" .
+      // " type=\"" . (self::TYPE_INPUT_TELEPHONE == $this->type ? self::TYPE_INPUT_TELEPHONE : $this->type) . "\"" .
+      (self::TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities((string) $this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
-//       (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
-      (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type || self::$TYPE_INPUT_RESET == $this->type || self::$TYPE_INPUT_HIDDEN == $this->type || self::$TYPE_INPUT_CHECKBOX == $this->type ? "" : " onfocus=\"this.select();\"") .
-//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" placeholder=\"(999) 999-9999\"" : "") .
-//       (self::$TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"1 (000) 000-0000\"" : "") .
-    (self::$TYPE_INPUT_TEXTAREA == $this->type ? ">" . $this->getValue() . "</textarea>\n" :
-      (self::$TYPE_INPUT_DATE_TIME == $this->type ? ">" :
-      (self::$TYPE_INPUT_RESET == $this->type || $this->noValidate ? " formnovalidate>" . $this->getValue() . "</button>" :
-      (self::$TYPE_INPUT_BUTTON == $this->type || self::$TYPE_INPUT_SUBMIT == $this->type ? ">" . $this->getValue() . "</button>" : " />\n"))));
+      // (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
+      (self::TYPE_INPUT_BUTTON == $this->type || self::TYPE_INPUT_SUBMIT == $this->type || self::TYPE_INPUT_RESET == $this->type || self::TYPE_INPUT_HIDDEN == $this->type ||
+      self::TYPE_INPUT_CHECKBOX == $this->type ? "" : " onfocus=\"this.select();\"") .
+      // (self::TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" placeholder=\"(999) 999-9999\"" : "") .
+      // (self::TYPE_INPUT_TELEPHONE == $this->type ? " data-mask=\"1 (000) 000-0000\"" : "") .
+      (self::TYPE_INPUT_TEXTAREA == $this->type ? ">" . $this->getValue() . "</textarea>\n" : (self::TYPE_INPUT_DATE_TIME == $this->type ? ">" : (self::TYPE_INPUT_RESET == $this->type ||
+      $this->noValidate ? " formnovalidate>" . $this->getValue() . "</button>" : (self::TYPE_INPUT_BUTTON == $this->type || self::TYPE_INPUT_SUBMIT == $this->type ? ">" . $this->getValue() .
+      "</button>" : " />\n"))));
   }
-  public function getImport() {
+  public function getImport(): string|null {
     return $this->import;
   }
-  public function getMaxLength() {
+  public function getMaxLength(): int|null {
     return $this->maxLength;
   }
-  public function getOnClick() {
+  public function getOnClick(): string|null {
     return $this->onClick;
   }
-  public function getPlaceholder() {
+  public function getPlaceholder(): string|null {
     return $this->placeholder;
   }
-  public function getRows() {
+  public function getRows(): int|null {
     return $this->rows;
   }
-  public function getSize() {
+  public function getSize(): int|null {
     return $this->size;
   }
-  public function getType() {
+  public function getType(): string|null {
     return $this->type;
   }
-  public function getWrap() {
+  public function getWrap(): string|null {
     return $this->wrap;
   }
-  public function isChecked() {
+  public function isAutoFocus(): bool|null {
+    return $this->autoFocus;
+  }
+  public function isChecked(): bool|null {
     return $this->checked;
   }
-  public function isNoValidate() {
+  public function isNoValidate(): bool|null {
     return $this->noValidate;
   }
-  public function isReadOnly() {
+  public function isReadOnly(): bool {
     return $this->readOnly;
   }
-  public function isRequired() {
+  public function isRequired(): bool|null {
     return $this->required;
   }
   public function setAccessKey(string|null $accessKey) {
@@ -159,7 +152,7 @@ class FormControl extends FormBase {
   public function setWrap(string|null $wrap) {
     $this->wrap = $wrap;
   }
-  public function toString() {
+  public function toString(): string {
     $output = parent::__toString();
     $output .= ", accessKey = '";
     $output .= $this->accessKey;
@@ -193,7 +186,10 @@ class FormControl extends FormBase {
     $output .= $this->type;
     $output .= "', wrap = ";
     $output .= $this->wrap;
-    $output .= "'";
+    $output .= "', import = ";
+    $output .= $this->import;
+    $output .= "', noValidate = ";
+    $output .= var_export(value: $this->noValidate, return: true);
     return $output;
   }
 }

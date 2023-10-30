@@ -124,7 +124,7 @@ class UserTest extends BaseTest {
     $user->setPassword("pwd");
     $user->setType("Administrator");
     $user->setUsername("username");
-    echo "<br>testToString " . self::getTextOutput(BaseTest::$CLASS_NAME_PASS, $user->toString());
+    echo "<br>testToString " . self::getTextOutput(BaseTest::CLASS_NAME_PASS, $user->toString());
   }
   public static function runAllTests() {
     UserTest::testGetIdBlank();

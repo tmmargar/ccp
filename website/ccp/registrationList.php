@@ -17,14 +17,14 @@ $output = "";
 if (null != $limitCount) {
   $output .= "<div class=\"title\">Upcoming Events</div>\n";
 }
-$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: "now");
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
-$paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+$paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
   $startTime = $tournament->getStartTime()->getDisplayAmPmFormat();
-  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationOpen()->getDisplayAmPmFormat());
-  $interval = new DateInterval(Constant::$INTERVAL_DATE_REGISTRATION_OPEN);
+  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationOpen()->getDisplayAmPmFormat());
+  $interval = new DateInterval(Constant::INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
   $registrationOpen = ($now >= $registrationOpenDate);
@@ -62,11 +62,11 @@ foreach ($resultList as $tournament) {
     $output .= $tournament->getLimitType()->getName();
     $output .= " ";
     $output .= $tournament->getGameType()->getName();
-    $output .= ($tournament->getRebuyAmount() != 0 ? Constant::$DISPLAY_REBUY : "");
+    $output .= ($tournament->getRebuyAmount() != 0 ? Constant::DISPLAY_REBUY : "");
     if ($tournament->getRebuyAmount() == 0 && $tournament->getAddonAmount() != 0) {
       $output .= " ";
     }
-    $output .= ($tournament->getAddonAmount() != 0 ? Constant::$DISPLAY_ADDON : "");
+    $output .= ($tournament->getAddonAmount() != 0 ? Constant::DISPLAY_ADDON : "");
     $waitListCnt = $tournament->getRegisteredCount() - $tournament->getMaxPlayers();
     $output .= "<br />\n";
     $output .= $tournament->getLocation()->getName();
@@ -83,11 +83,11 @@ foreach ($resultList as $tournament) {
     $output .= $tournament->getLimitType()->getName();
     $output .= " ";
     $output .= $tournament->getGameType()->getName();
-    $output .= ($tournament->getRebuyAmount() != 0 ? Constant::$DISPLAY_REBUY : "");
+    $output .= ($tournament->getRebuyAmount() != 0 ? Constant::DISPLAY_REBUY : "");
     if ($tournament->getRebuyAmount() == 0 && $tournament->getAddonAmount() != 0) {
       $output .= " ";
     }
-    $output .= ($tournament->getAddonAmount() != 0 ? Constant::$DISPLAY_ADDON : "");
+    $output .= ($tournament->getAddonAmount() != 0 ? Constant::DISPLAY_ADDON : "");
     $output .= "<br />\n";
     $output .= $tournament->getLocation()->getName();
     $output .= "<br />\n";

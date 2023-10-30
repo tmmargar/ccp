@@ -118,7 +118,7 @@ if (!isset($parentObjectId)) {
 } else {
   $output = "";
 }
-$userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::$OBJECT_NAME_USERID);
+$userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID);
 if (!isset($navigation)) {
   $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : null;
 }
@@ -228,8 +228,8 @@ switch ($reportId) {
 if (!isset($reportId) || "" == $reportId) {
   $output .= "Unable to identify report to view";
 } else {
-  $startDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat();
-  $endDate = SessionUtility::getValue(SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat();
+  $startDate = SessionUtility::getValue(SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
+  $endDate = SessionUtility::getValue(SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $width = "100%";
   $colFormats = null;
   $hideColIndexes = null;
@@ -468,19 +468,20 @@ if (!isset($reportId) || "" == $reportId) {
   }
   if (PRIZE_POOL_FOR_SEASON == $reportId) {
     $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-    $output .= "<div class=\"center number positive\">" . Constant::$SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</div>\n";
+    $output .= "<div class=\"center number positive\">" . Constant::SYMBOL_CURRENCY_DEFAULT . number_format((float) $resultList[0], 0) . "</div>\n";
   } else {
     $mode = "";
     $caption = "";
     $hiddenId = null;
     $selectedColumnVals = null;
-    $delimiter = Constant::$DELIMITER_DEFAULT;
+    $delimiter = Constant::DELIMITER_DEFAULT;
     $foreignKeys = null;
     $html = NULL;
     $showNote = false;
     $hiddenAdditional = null;
     $colSpan = null;
     $tableIdSuffix = null;
+    $rankClasses = "";
     switch ($reportId) {
       case POINTS_TOTAL_FOR_SEASON_FOR_USER:
       case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
@@ -586,7 +587,7 @@ if (!isset($reportId) || "" == $reportId) {
         $rank[3] += 1;
         $result = $databaseResult->getConnection()->query($query);
 //         $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-        $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "Rank" . $suffix, width: "100%");
+        $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "Rank" . $suffix, width: "100%");
         $outputTemp = $htmlTable->getHtml();
         if (0 < $result->rowCount()) {
           // unable to get ranking to use where clause so loop through and find matching user
@@ -600,13 +601,13 @@ if (!isset($reportId) || "" == $reportId) {
           $rowUser[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowUser[$value[3]]);
           $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowUser[$value[3]] . "</div>\n";
           $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowUser[$rank[3]]);
-          $output .= 
+          $output .=
             "<script type=\"module\">\n" .
             "  import { inputLocal } from \"./scripts/top5.js\";\n" .
-            "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList({title: '" . $dialogParameters[0] . "', userFullName: '" . SessionUtility::getValue(SessionUtility::$OBJECT_NAME_NAME) . "'}));\n" .
+            "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList({title: '" . $dialogParameters[0] . "', userFullName: '" . SessionUtility::getValue(SessionUtility::OBJECT_NAME_NAME) . "'}));\n" .
             "</script>\n";
           $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
-          $output .= 
+          $output .=
             "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
             " <form method=\"dialog\">\n" .
             "  <header>\n" .
@@ -628,10 +629,10 @@ if (!isset($reportId) || "" == $reportId) {
         $titleText = "Tournaments Won";
         $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
         $params = array($userId);
-        $paramsNested = array(SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::$OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
+        $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
         $resultList = $databaseResult->getTournamentsWonByPlayerId(params: $params, paramsNested: $paramsNested);
         if (0 < count($resultList)) {
-          $output .= 
+          $output .=
             "<script type=\"module\">\n" .
             "  $(document).ready(function() {\$(\"#title" . ucfirst($reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count($resultList) . " + ')');});\n" .
             "</script>\n";
@@ -668,9 +669,9 @@ if (!isset($reportId) || "" == $reportId) {
           $tableIdSuffix = ucfirst($reportId);
         }
         $output .= "<div class=\"center title\" id=\"title" . $tableIdSuffix . "\">" . $titleText . "</div>\n";
-        $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: $tableIdSuffix, width: $width);
+        $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: $tableIdSuffix, width: $width);
         $output .= $htmlTable->getHtml();
-        $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
+        $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
         $outputTemp = $htmlTable2->getHtml();
         if (NEMESIS_FOR_USER == $reportId || BULLY_FOR_USER == $reportId) {
           if (NEMESIS_FOR_USER == $reportId) {
@@ -704,9 +705,9 @@ if (!isset($reportId) || "" == $reportId) {
         break;
     }
   }
-  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_PARAM_NAME), cols: null, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: null, name: REPORT_ID_PARAM_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
+  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_PARAM_NAME), cols: null, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: null, name: REPORT_ID_PARAM_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
   $output .= $hiddenReportId->getHtml();
-  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::$OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::$FIELD_NAME_MODE, maxLength: null, name: Constant::$FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::$TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: null, name: Constant::FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
   $output .= $hiddenMode->getHtml();
   if (!isset($parentObjectId)) {
     $output .= "</div>\n";

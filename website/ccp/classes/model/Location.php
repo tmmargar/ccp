@@ -2,31 +2,32 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Location extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map, protected string|null $mapName, protected int $tournamentCount) {
+  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map,
+    protected string|null $mapName, protected int $tournamentCount) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function buildMapUrl() {
+  public function buildMapUrl(): string {
     return "<a href =\"" . Constant::PATH_MAP() . "/" . $this->getMapName() . "\">Map</a>\n";
   }
-  public function getName() {
+  public function getName(): string {
     return $this->name;
   }
-  public function getUser() {
+  public function getUser(): User {
     return $this->user;
   }
-  public function getCount() {
+  public function getCount(): int {
     return $this->count;
   }
-  public function getActive() {
+  public function getActive(): int {
     return $this->active;
   }
   public function getMap() {
     return $this->map;
   }
-  public function getMapName() {
+  public function getMapName(): string {
     return $this->mapName;
   }
-  public function getTournamentCount() {
+  public function getTournamentCount(): int {
     return $this->tournamentCount;
   }
   public function setName(string $name) {
@@ -50,12 +51,12 @@ class Location extends Base {
   public function setTournamentCount(int $tournamentCount) {
     $this->tournamentCount = $tournamentCount;
   }
-  public function getLink() {
-//     return HtmlUtility::buildLink("manageLocation.php", "modify", $this->getId(), $this->getName());
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageLocation.php", id: null, paramName: array("userId", "mode"), paramValue: array($this->getId(). "modify"), tabIndex: -1, text: $this->getName(), title: null);
+  public function getLink(): string {
+    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageLocation.php", id: null, paramName: array("userId","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getName(), title: null);
     return $link->getHtml();
   }
-  public function __toString() {
+  public function __toString(): string {
     $output = parent::__toString();
     $output .= ", name = '";
     $output .= $this->name;
