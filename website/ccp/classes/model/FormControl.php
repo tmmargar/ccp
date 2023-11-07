@@ -15,21 +15,21 @@ class FormControl extends FormBase {
   public const TYPE_INPUT_TELEPHONE = "tel";
   public const TYPE_INPUT_TEXTAREA = "textarea";
   public const TYPE_INPUT_TEXTBOX = "text";
-  public function __construct(protected bool $debug, protected string|null $accessKey, protected string|null $autoComplete, protected bool $autoFocus, protected bool|null $checked,
-    protected array|null $class, protected int|null $cols, protected bool $disabled, protected string|int|null $id, protected int|null $maxLength, protected string|null $name,
-    protected string|null $onClick, protected string|null $placeholder, protected bool $readOnly, protected bool|null $required, protected int|null $rows, protected int|null $size,
-    protected string|null $suffix, protected string|null $type, protected array|string|int|null $value, protected string|null $wrap, protected string|null $import = null,
-    protected bool|null $noValidate = false) {
+  public function __construct(protected bool $debug, protected string|NULL $accessKey, protected string|NULL $autoComplete, protected bool $autoFocus, protected bool|NULL $checked,
+    protected array|NULL $class, protected int|NULL $cols, protected bool $disabled, protected string|int|NULL $id, protected int|NULL $maxLength, protected string|NULL $name,
+    protected string|NULL $onClick, protected string|NULL $placeholder, protected bool $readOnly, protected bool|NULL $required, protected int|NULL $rows, protected int|NULL $size,
+    protected string|NULL $suffix, protected string|NULL $type, protected array|string|int|NULL $value, protected string|NULL $wrap, protected string|NULL $import = NULL,
+    protected bool|NULL $noValidate = false) {
     parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id . (self::TYPE_INPUT_RESET == $type ? "Button" : ""), name: $name . (self::TYPE_INPUT_RESET == $type ? "Button" : ""),
       suffix: $suffix, value: $value);
   }
-  public function getAccessKey(): string|null {
+  public function getAccessKey(): string|NULL {
     return $this->accessKey;
   }
-  public function getAutoComplete(): string|null {
+  public function getAutoComplete(): string|NULL {
     return $this->autoComplete;
   }
-  public function getCols(): int|null {
+  public function getCols(): int|NULL {
     return $this->cols;
   }
   public function getHtml(): string {
@@ -45,7 +45,7 @@ class FormControl extends FormBase {
       ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") . (isset($this->cols) ? " cols=\"" . $this->cols . "\"" : "") .
       // data-mask-clearifnotmatch=\"true\"
       // (self::TYPE_INPUT_TELEPHONE == $this->type ? " data-inputmask=\"'mask': '(000) 000-0000'\"" : "") .
-      (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . (isset($this->onClick) ? " href=\"#\"" : "") . " id=\"" . $this->getId() . "\"" .
+      (NULL !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . (isset($this->onClick) ? " href=\"#\"" : "") . " id=\"" . $this->getId() . "\"" .
       (isset($this->maxLength) ? " maxlength=\"" . $this->maxLength . "\"" : "") . " name=\"" . $this->getName() . "\"" .
       // (self::TYPE_INPUT_TELEPHONE == $this->type ? " pattern=\"[\(]\d{3}[\)] \d{3}[\-]\d{4}\"" : "") .
       // (isset($this->placeholder) ? " placeholder=\"" . $this->placeholder . "\"" : (self::TYPE_INPUT_TELEPHONE == $this->type ? " placeholder=\"(999) 999-9999\"" : "")) .
@@ -54,7 +54,7 @@ class FormControl extends FormBase {
       ($this->required ? " required" : "") . (isset($this->rows) ? " rows=\"" . $this->rows . "\"" : "") . (isset($this->size) ? " size=\"" . $this->size . "\"" : "") . " type=\"" .
       ((self::TYPE_INPUT_RESET == $this->type) ? self::TYPE_INPUT_BUTTON : $this->type) . "\"" .
       // " type=\"" . (self::TYPE_INPUT_TELEPHONE == $this->type ? self::TYPE_INPUT_TELEPHONE : $this->type) . "\"" .
-      (self::TYPE_INPUT_BUTTON !== $this->type && null !== $this->getValue() ? " value=\"" . htmlentities((string) $this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
+      (self::TYPE_INPUT_BUTTON !== $this->type && NULL !== $this->getValue() ? " value=\"" . htmlentities((string) $this->getValue(), ENT_NOQUOTES, "UTF-8") . "\"" : "") .
       (isset($this->wrap) ? " wrap=\"" . $this->wrap . "\"" : "") .
       // (isset($this->onClick) ? " onclick=\"" . $this->onClick . "\"" : "") .
       (self::TYPE_INPUT_BUTTON == $this->type || self::TYPE_INPUT_SUBMIT == $this->type || self::TYPE_INPUT_RESET == $this->type || self::TYPE_INPUT_HIDDEN == $this->type ||
@@ -65,46 +65,46 @@ class FormControl extends FormBase {
       $this->noValidate ? " formnovalidate>" . $this->getValue() . "</button>" : (self::TYPE_INPUT_BUTTON == $this->type || self::TYPE_INPUT_SUBMIT == $this->type ? ">" . $this->getValue() .
       "</button>" : " />\n"))));
   }
-  public function getImport(): string|null {
+  public function getImport(): string|NULL {
     return $this->import;
   }
-  public function getMaxLength(): int|null {
+  public function getMaxLength(): int|NULL {
     return $this->maxLength;
   }
-  public function getOnClick(): string|null {
+  public function getOnClick(): string|NULL {
     return $this->onClick;
   }
-  public function getPlaceholder(): string|null {
+  public function getPlaceholder(): string|NULL {
     return $this->placeholder;
   }
-  public function getRows(): int|null {
+  public function getRows(): int|NULL {
     return $this->rows;
   }
-  public function getSize(): int|null {
+  public function getSize(): int|NULL {
     return $this->size;
   }
-  public function getType(): string|null {
+  public function getType(): string|NULL {
     return $this->type;
   }
-  public function getWrap(): string|null {
+  public function getWrap(): string|NULL {
     return $this->wrap;
   }
-  public function isAutoFocus(): bool|null {
+  public function isAutoFocus(): bool|NULL {
     return $this->autoFocus;
   }
-  public function isChecked(): bool|null {
+  public function isChecked(): bool|NULL {
     return $this->checked;
   }
-  public function isNoValidate(): bool|null {
+  public function isNoValidate(): bool|NULL {
     return $this->noValidate;
   }
   public function isReadOnly(): bool {
     return $this->readOnly;
   }
-  public function isRequired(): bool|null {
+  public function isRequired(): bool|NULL {
     return $this->required;
   }
-  public function setAccessKey(string|null $accessKey) {
+  public function setAccessKey(string|NULL $accessKey) {
     $this->accessKey = $accessKey;
   }
   public function setAutoComplete($autoComplete) {
@@ -113,43 +113,43 @@ class FormControl extends FormBase {
   public function setAutoFocus(bool $autoFocus) {
     $this->autoFocus = $autoFocus;
   }
-  public function setChecked(bool|null $checked) {
+  public function setChecked(bool|NULL $checked) {
     $this->checked = $checked;
   }
-  public function setCols(int|null $cols) {
+  public function setCols(int|NULL $cols) {
     $this->cols = $cols;
   }
-  public function setImport(string|null $import) {
+  public function setImport(string|NULL $import) {
     $this->import = $import;
   }
-  public function setMaxLength(int|null $maxLength) {
+  public function setMaxLength(int|NULL $maxLength) {
     $this->maxLength = $maxLength;
   }
-  public function setNoValidate(bool|null $noValidate) {
+  public function setNoValidate(bool|NULL $noValidate) {
     $this->noValidate = $noValidate;
   }
-  public function setOnClick(string|null $onClick) {
+  public function setOnClick(string|NULL $onClick) {
     $this->onClick = $onClick;
   }
-  public function setPlaceholder(string|null $placeholder) {
+  public function setPlaceholder(string|NULL $placeholder) {
     $this->placeholder = $placeholder;
   }
   public function setReadOnly(bool $readOnly) {
     $this->readOnly = $readOnly;
   }
-  public function setRequired(bool|null $required) {
+  public function setRequired(bool|NULL $required) {
     $this->required = $required;
   }
-  public function setRows(int|null $rows) {
+  public function setRows(int|NULL $rows) {
     $this->rows = $rows;
   }
-  public function setSize(int|null $size) {
+  public function setSize(int|NULL $size) {
     $this->size = $size;
   }
-  public function setType(string|null $type) {
+  public function setType(string|NULL $type) {
     $this->type = $type;
   }
-  public function setWrap(string|null $wrap) {
+  public function setWrap(string|NULL $wrap) {
     $this->wrap = $wrap;
   }
   public function toString(): string {

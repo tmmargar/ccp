@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Location extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map,
-    protected string|null $mapName, protected int $tournamentCount) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected User $user, protected int $count, protected int $active, protected $map,
+    protected string|NULL $mapName, protected int $tournamentCount) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function buildMapUrl(): string {
@@ -52,8 +52,8 @@ class Location extends Base {
     $this->tournamentCount = $tournamentCount;
   }
   public function getLink(): string {
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageLocation.php", id: null, paramName: array("userId","mode"), paramValue: array($this->getId() . "modify"),
-      tabIndex: - 1, text: $this->getName(), title: null);
+    $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageLocation.php", id: NULL, paramName: array("userId","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getName(), title: NULL);
     return $link->getHtml();
   }
   public function __toString(): string {

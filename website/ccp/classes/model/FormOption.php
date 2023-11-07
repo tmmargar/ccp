@@ -2,17 +2,17 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormOption extends FormBase {
-  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected string|null $name,
-    protected string|int|null $selectedValue, protected string|null $suffix, protected string $text, protected array|string|int|null $value) {
+  public function __construct(protected bool $debug, protected array|NULL $class, protected bool $disabled, protected int|string|NULL $id, protected string|NULL $name,
+    protected string|int|NULL $selectedValue, protected string|NULL $suffix, protected string $text, protected array|string|int|NULL $value) {
     parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id, name: $name, suffix: $suffix, value: $value);
   }
   public function getHtml(): string {
     return "<option" .
     // (isset($this->isDisabled()) && $this->isDisabled() ? " disabled" : "") .
-    (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . " value=\"" . $this->getValue() . "\"" .
+    (NULL !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . " value=\"" . $this->getValue() . "\"" .
       (isset($this->selectedValue) && ($this->selectedValue == $this->getValue()) ? " selected" : "") . ">" . htmlentities(string: $this->text, flags: ENT_NOQUOTES, encoding: "UTF-8") . "</option>\n";
   }
-  public function getSelectedValue(): string|null {
+  public function getSelectedValue(): string|NULL {
     return $this->selectedValue;
   }
   public function getText(): string {

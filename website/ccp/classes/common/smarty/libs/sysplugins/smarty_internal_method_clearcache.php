@@ -37,10 +37,10 @@ class Smarty_Internal_Method_ClearCache
     public function clearCache(
         Smarty $smarty,
         $template_name,
-        $cache_id = null,
-        $compile_id = null,
-        $exp_time = null,
-        $type = null
+        $cache_id = NULL,
+        $compile_id = NULL,
+        $exp_time = NULL,
+        $type = NULL
     ) {
         $smarty->_clearTemplateCache();
         // load cache resource and call clear

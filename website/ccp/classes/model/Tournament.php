@@ -2,41 +2,41 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string|null $description, protected string|null $comment, protected LimitType|null $limitType,
-    protected GameType|null $gameType, protected SpecialType|null $specialType, protected int $chipCount, protected Location|null $location, protected DateTime|null $date,
-    protected DateTime|null $startTime, protected DateTime|null $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
-    protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|null $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid,
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string|NULL $description, protected string|NULL $comment, protected LimitType|NULL $limitType,
+    protected GameType|NULL $gameType, protected SpecialType|NULL $specialType, protected int $chipCount, protected Location|NULL $location, protected DateTime|NULL $date,
+    protected DateTime|NULL $startTime, protected DateTime|NULL $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
+    protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|NULL $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid,
     protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getDescription(): string|null {
+  public function getDescription(): string|NULL {
     return $this->description;
   }
-  public function getComment(): string|null {
+  public function getComment(): string|NULL {
     return $this->comment;
   }
-  public function getLimitType(): LimitType|null {
+  public function getLimitType(): LimitType|NULL {
     return $this->limitType;
   }
-  public function getGameType(): GameType|null {
+  public function getGameType(): GameType|NULL {
     return $this->gameType;
   }
-  public function getSpecialType(): SpecialType|null {
+  public function getSpecialType(): SpecialType|NULL {
     return $this->specialType;
   }
   public function getChipCount(): int {
     return $this->chipCount;
   }
-  public function getLocation(): Location|null {
+  public function getLocation(): Location|NULL {
     return $this->location;
   }
-  public function getDate(): DateTime|null {
+  public function getDate(): DateTime|NULL {
     return $this->date;
   }
-  public function getStartTime(): DateTime|null {
+  public function getStartTime(): DateTime|NULL {
     return $this->startTime;
   }
-  public function getEndTime(): DateTime|null {
+  public function getEndTime(): DateTime|NULL {
     return $this->endTime;
   }
   public function getBuyinAmount(): int {
@@ -57,7 +57,7 @@ class Tournament extends Base {
   public function getAddonChipCount(): int {
     return $this->addonChipCount;
   }
-  public function getGroupPayout(): GroupPayout|null {
+  public function getGroupPayout(): GroupPayout|NULL {
     return $this->groupPayout;
   }
   public function getRake(): float {
@@ -76,7 +76,7 @@ class Tournament extends Base {
     return $close;
   }
   public function getRegistrationOpen(): DateTime {
-    return new DateTime(debug: $this->isDebug(), id: null, time: "12:00");
+    return new DateTime(debug: $this->isDebug(), id: NULL, time: "12:00");
   }
   public function getRegisteredCount(): int {
     return $this->registeredCount;
@@ -175,12 +175,12 @@ class Tournament extends Base {
     $this->earnings = $earnings;
   }
   public function getLink() {
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageTournament.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
-      tabIndex: - 1, text: $this->getDescription(), title: null);
+    $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageTournament.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getDescription(), title: NULL);
     return $link->getHtml();
   }
   public function getDateAndTime() {
-    return new DateTime(debug: $this->isDebug(), id: null, time: $this->getDate()->getDatabaseFormat() . " " . $this->getStartTime()->getDatabaseTimeFormat());
+    return new DateTime(debug: $this->isDebug(), id: NULL, time: $this->getDate()->getDatabaseFormat() . " " . $this->getStartTime()->getDatabaseTimeFormat());
   }
   public function getDisplayDetails() {
     $optionText = $this->getDate()->getDisplayFormat();

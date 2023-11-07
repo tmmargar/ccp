@@ -70,8 +70,8 @@ class Smarty_Resource_Mysqls extends Smarty_Resource_Custom
             $source = $row[ 'source' ];
             $mtime = strtotime($row[ 'modified' ]);
         } else {
-            $source = null;
-            $mtime = null;
+            $source = NULL;
+            $mtime = NULL;
         }
     }
 }

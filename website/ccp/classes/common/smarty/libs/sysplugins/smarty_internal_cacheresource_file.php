@@ -96,7 +96,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
      */
     public function process(
         Smarty_Internal_Template $_smarty_tpl,
-        Smarty_Template_Cached $cached = null,
+        Smarty_Template_Cached $cached = NULL,
         $update = false
     ) {
         $_smarty_tpl->cached->valid = false;
@@ -165,9 +165,9 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
      *
      * @return integer number of cache files deleted
      */
-    public function clearAll(Smarty $smarty, $exp_time = null)
+    public function clearAll(Smarty $smarty, $exp_time = NULL)
     {
-        return $smarty->ext->_cacheResourceFile->clear($smarty, null, null, null, $exp_time);
+        return $smarty->ext->_cacheResourceFile->clear($smarty, NULL, NULL, NULL, $exp_time);
     }
 
     /**
@@ -197,7 +197,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
     public function hasLock(Smarty $smarty, Smarty_Template_Cached $cached)
     {
         clearstatcache(true, $cached->lock_id ?? '');
-        if (null !== $cached->lock_id && is_file($cached->lock_id)) {
+        if (NULL !== $cached->lock_id && is_file($cached->lock_id)) {
             $t = filemtime($cached->lock_id);
             return $t && (time() - $t < $smarty->locking_timeout);
         } else {

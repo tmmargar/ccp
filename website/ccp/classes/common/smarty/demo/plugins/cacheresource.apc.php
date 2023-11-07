@@ -50,7 +50,7 @@ class Smarty_CacheResource_Apc extends Smarty_CacheResource_KeyValueStore
      *
      * @return boolean true on success, false on failure
      */
-    protected function write(array $keys, $expire = null)
+    protected function write(array $keys, $expire = NULL)
     {
         foreach ($keys as $k => $v) {
             apc_store($k, $v, $expire);

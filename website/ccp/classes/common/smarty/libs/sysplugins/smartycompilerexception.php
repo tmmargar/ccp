@@ -12,16 +12,16 @@ class SmartyCompilerException extends SmartyException
      *
      * @param string         $message  The Exception message to throw.
      * @param int            $code     The Exception code.
-     * @param string|null    $filename The filename where the exception is thrown.
-     * @param int|null       $line     The line number where the exception is thrown.
-     * @param Throwable|null $previous The previous exception used for the exception chaining.
+     * @param string|NULL    $filename The filename where the exception is thrown.
+     * @param int|NULL       $line     The line number where the exception is thrown.
+     * @param Throwable|NULL $previous The previous exception used for the exception chaining.
      */
     public function __construct(
         string $message = "",
         int $code = 0,
-        ?string $filename = null,
-        ?int $line = null,
-        Throwable $previous = null
+        ?string $filename = NULL,
+        ?int $line = NULL,
+        Throwable $previous = NULL
     ) {
         parent::__construct($message, $code, $previous);
 
@@ -53,21 +53,21 @@ class SmartyCompilerException extends SmartyException
     /**
      * The template source snippet relating to the error
      *
-     * @type string|null
+     * @type string|NULL
      */
-    public $source = null;
+    public $source = NULL;
 
     /**
      * The raw text of the error message
      *
-     * @type string|null
+     * @type string|NULL
      */
-    public $desc = null;
+    public $desc = NULL;
 
     /**
      * The resource identifier or template name
      *
-     * @type string|null
+     * @type string|NULL
      */
-    public $template = null;
+    public $template = NULL;
 }

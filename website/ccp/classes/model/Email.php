@@ -6,9 +6,9 @@ class Email extends Base {
   private const EMAIL_ADDRESS_LOCAL = "me@localhost.com";
   private bool $local;
   private array $localEmail;
-  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|null $ccName,
-    protected array|null $ccEmail, protected array|null $bccName, protected array|null $bccEmail, protected string|null $subject, protected string|null $body) {
-    parent::__construct(debug: $debug, id: null);
+  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|NULL $ccName,
+    protected array|NULL $ccEmail, protected array|NULL $bccName, protected array|NULL $bccEmail, protected string|NULL $subject, protected string|NULL $body) {
+    parent::__construct(debug: $debug, id: NULL);
     $this->local = Constant::FLAG_LOCAL();
   }
   public function getFromName(): array {
@@ -33,22 +33,22 @@ class Email extends Base {
     }
     return $toEmail;
   }
-  public function getCcName(): array|null {
+  public function getCcName(): array|NULL {
     return $this->ccName;
   }
-  public function getCcEmail(): array|null {
+  public function getCcEmail(): array|NULL {
     return $this->ccEmail;
   }
-  public function getBccName(): array|null {
+  public function getBccName(): array|NULL {
     return $this->bccName;
   }
-  public function getBccEmail(): array|null {
+  public function getBccEmail(): array|NULL {
     return $this->bccEmail;
   }
-  public function getSubject(): string|null {
+  public function getSubject(): string|NULL {
     return $this->subject;
   }
-  public function getBody(): string|null {
+  public function getBody(): string|NULL {
     return $this->body;
   }
   public function isLocal(): bool {
@@ -94,7 +94,7 @@ class Email extends Base {
   public function setLocal(bool $local) {
     $this->local = $local;
   }
-  public function setLocalEmail(array|null $localEmail) {
+  public function setLocalEmail(array|NULL $localEmail) {
     $this->localEmail = $localEmail;
   }
   public function __toString(): string {
@@ -159,7 +159,7 @@ class Email extends Base {
     }
     return $message;
   }
-  public function sendRegisteredEmail(Address $address, Tournament $tournament, string $feeStatus, string|int $waitList, string $autoRegister = null): string {
+  public function sendRegisteredEmail(Address $address, Tournament $tournament, string $feeStatus, string|int $waitList, string $autoRegister = NULL): string {
     $result = "";
     $url = "";
     for ($idx = 0; $idx < count($this->fromName); $idx ++) {

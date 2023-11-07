@@ -18,10 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `$smarty->muteUndefinedOrNullWarnings()` now also mutes PHP7 notices for undefined array indexes [#736](https://github.com/smarty-php/smarty/issues/736)
-- `$smarty->muteUndefinedOrNullWarnings()` now treats undefined vars and array access of a null or false variables 
+- `$smarty->muteUndefinedOrNullWarnings()` now treats undefined vars and array access of a NULL or false variables 
   equivalent across all supported PHP versions
 - `$smarty->muteUndefinedOrNullWarnings()` now allows dereferencing of non-objects across all supported PHP versions [#831](https://github.com/smarty-php/smarty/issues/831)
-- PHP 8.1 deprecation warnings on null strings in modifiers [#834](https://github.com/smarty-php/smarty/pull/834)
+- PHP 8.1 deprecation warnings on NULL strings in modifiers [#834](https://github.com/smarty-php/smarty/pull/834)
 
 ## [4.3.0] - 2022-11-22
 
@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed PHP8.1 deprecation errors in strip_tags 
 - Fix Variable Usage in Exception message when unable to load subtemplate [#808](https://github.com/smarty-php/smarty/pull/808)
 - Fixed PHP8.1 deprecation notices for strftime [#672](https://github.com/smarty-php/smarty/issues/672)
-- Fixed PHP8.1 deprecation errors passing null to parameter in trim [#807](https://github.com/smarty-php/smarty/pull/807)
+- Fixed PHP8.1 deprecation errors passing NULL to parameter in trim [#807](https://github.com/smarty-php/smarty/pull/807)
 - Adapt Smarty upper/lower functions to be codesafe (e.g. for Turkish locale) [#586](https://github.com/smarty-php/smarty/pull/586)
 - Bug fix for underscore and limited length in template name in custom resources [#581](https://github.com/smarty-php/smarty/pull/581)
 
@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.0.0-rc.0] - 2021-10-13
 
 ### Added
-- You can now use `$smarty->muteUndefinedOrNullWarnings()` to activate convert warnings about undefined or null template vars to notices when running PHP8
+- You can now use `$smarty->muteUndefinedOrNullWarnings()` to activate convert warnings about undefined or NULL template vars to notices when running PHP8
 
 ### Changed
 - Switch CI from Travis to Github CI
@@ -165,7 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - fix foreachelse on arrayiterators https://github.com/smarty-php/smarty/issues/506
  - fix files contained in git export archive for package maintainers https://github.com/smarty-php/smarty/issues/325
  - throw SmartyException when setting caching attributes for cacheable plugin https://github.com/smarty-php/smarty/issues/457
- - fix errors that occured where isset was replaced with null check such as https://github.com/smarty-php/smarty/issues/453
+ - fix errors that occured where isset was replaced with NULL check such as https://github.com/smarty-php/smarty/issues/453
  - unit tests are now in the repository
 
 ## 3.1.34 release - 05.11.2019
@@ -466,7 +466,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - improvement make Smarty::clearCompiledTemplate() on custom resource independent from changes of templateId computation
 
  11.09.2016
-  - improvement {math} misleading E_USER_WARNING messages when parameter value = null https://github.com/smarty-php/smarty/issues/288
+  - improvement {math} misleading E_USER_WARNING messages when parameter value = NULL https://github.com/smarty-php/smarty/issues/288
   - improvement move often used code snippets into methods
   - performance Smarty::configLoad() did load unneeded template source object
 
@@ -1063,7 +1063,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - bugfix at a template function containing nocache code a parmeter could overwrite a template variable of same name
 
  27.03.2015
-  - bugfix Smarty_Security->allow_constants=false; did also disable true, false and null (change of 16.03.2015)
+  - bugfix Smarty_Security->allow_constants=false; did also disable true, false and NULL (change of 16.03.2015)
   - improvement added a whitelist for trusted constants to security Smarty_Security::$trusted_constants (forum topic 25471)
 
  20.03.2015
@@ -1134,7 +1134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - bugfix resolve parser ambiguity between constant print tag {CONST} and other smarty tags after change of 09.12.2014
 
  09.12.2014
-  - bugfix variables $null, $true and $false did not work after the change of 12.11.2014 (forum 25342)
+  - bugfix variables $NULL, $true and $false did not work after the change of 12.11.2014 (forum 25342)
   - bugfix call of template function by a variable name did not work after latest changes (forum 25342)
 
  23.11.2014
@@ -1161,7 +1161,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (ATTENTION: parameter order has changed to be able to specify maximum recursion)
  - bugfix Debug consol did not include subtemplate information with $smarty->merge_compiled_includes = true
  - improvement The template variables are no longer displayed as objects on the Debug Console
- - improvement $smarty->createData($parent = null, $name = null) new optional name parameter for display at Debug Console
+ - improvement $smarty->createData($parent = NULL, $name = NULL) new optional name parameter for display at Debug Console
  - addition of some hooks for future extension of Debug Console
 
  01.11.2014
@@ -1749,7 +1749,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bugfix testInstall() would not show path to internal plugins_dir (Forum Post 74627)
 - improvement testInstall() now showing resolved paths and checking the include_path if necessary
 - bugfix html_options plugin did not handle object values properly (Issue #49, Forum Topic 20049)
-- improvement html_checkboxes and html_radios to accept null- and object values, and label_ids attribute
+- improvement html_checkboxes and html_radios to accept NULL- and object values, and label_ids attribute
 - improvement removed some unnecessary count()s
 - bugfix parent pointer was not set when fetch() for other template was called on template object
 
@@ -1761,7 +1761,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bugfix of problem introduced with r4342 by replacing strlen() with isset()
 - add environment configuration issue with mbstring.func_overload Smarty cannot compensate for (Issue #45)
 - bugfix nofilter tag option did not disable default modifier
-- bugfix html_options plugin did not handle null- and object values properly (Issue #49, Forum Topic 20049)
+- bugfix html_options plugin did not handle NULL- and object values properly (Issue #49, Forum Topic 20049)
 
 04.10.2011
 - bugfix assign() in plugins called in subtemplates did change value also in parent template
@@ -2262,7 +2262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bugfix changed code when writing temporary compiled files to allow stream_wrapper
 
 06/12/2010
-- bugfix getTemplateVars() should return 'null' instead dropping E_NOTICE on an unassigned variable
+- bugfix getTemplateVars() should return 'NULL' instead dropping E_NOTICE on an unassigned variable
 
 05/12/2010
 - bugfix missing declaration of $smarty in Smarty class
@@ -2627,7 +2627,7 @@ request_use_auto_globals
 
 12/04/2010
 - bugfix in smarty_internal_templatecompilerbase (overloaded property)
-- removed parser restrictions in using true,false and null as ID
+- removed parser restrictions in using true,false and NULL as ID
 
 07/04/2010
 - bugfix typo in smarty_internal_templatecompilerbase
@@ -3122,9 +3122,9 @@ NOTICE: existing compiled template and cache files must be deleted
     the compiled code of included templates is merged into the compiled code of the parent template
 - added logical operator "xor" for {if} tag
 - changed parameter ordering for Smarty2 BC
-    fetch($template, $cache_id = null, $compile_id = null, $parent = null)
-    display($template, $cache_id = null, $compile_id = null, $parent = null)
-    createTemplate($template, $cache_id = null, $compile_id = null, $parent = null)
+    fetch($template, $cache_id = NULL, $compile_id = NULL, $parent = NULL)
+    display($template, $cache_id = NULL, $compile_id = NULL, $parent = NULL)
+    createTemplate($template, $cache_id = NULL, $compile_id = NULL, $parent = NULL)
 - property resource_char_set is now replaced by constant SMARTY_RESOURCE_CHAR_SET
 - fixed handling of classes in registered blocks
 - speed improvement of lexer on text sections
@@ -3480,7 +3480,7 @@ NOTICE: existing compiled template and cache files must be deleted
 02/24/2009
 - bugfix {php} {/php} tags for backward compatibility
 - bugfix for expressions on arrays
-- fixed usage of "null" value
+- fixed usage of "NULL" value
 - added $smarty.foreach.foo.first and $smarty.foreach.foo.last
 
 02/06/2009

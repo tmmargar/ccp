@@ -124,7 +124,7 @@ class OAuth implements OAuthTokenProvider
     public function getOauth64()
     {
         //Get a new token if it's not available or has expired
-        if (null === $this->oauthToken || $this->oauthToken->hasExpired()) {
+        if (NULL === $this->oauthToken || $this->oauthToken->hasExpired()) {
             $this->oauthToken = $this->getToken();
         }
 

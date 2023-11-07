@@ -70,7 +70,7 @@ class Smarty_Security
      *         'class_1' => array('method_1', 'method_2'), // allowed methods listed
      *         'class_2' => array(),                       // all methods of class allowed
      *       )
-     * If set to null none is allowed.
+     * If set to NULL none is allowed.
      *
      * @var array
      */
@@ -84,7 +84,7 @@ class Smarty_Security
      *         'class_1' => array('prop_1', 'prop_2'), // allowed properties listed
      *         'class_2' => array(),                   // all properties of class allowed
      *       )
-     * If set to null none is allowed.
+     * If set to NULL none is allowed.
      *
      * @var array
      */
@@ -93,7 +93,7 @@ class Smarty_Security
     /**
      * This is an array of trusted PHP functions.
      * If empty all functions are allowed.
-     * To disable all PHP functions set $php_functions = null.
+     * To disable all PHP functions set $php_functions = NULL.
      *
      * @var array
      */
@@ -102,7 +102,7 @@ class Smarty_Security
     /**
      * This is an array of trusted PHP modifiers.
      * If empty all modifiers are allowed.
-     * To disable all modifier set $php_modifiers = null.
+     * To disable all modifier set $php_modifiers = NULL.
      *
      * @var array
      */
@@ -150,7 +150,7 @@ class Smarty_Security
     /**
      * This is an array of trusted streams.
      * If empty all streams are allowed.
-     * To disable all streams set $streams = null.
+     * To disable all streams set $streams = NULL.
      *
      * @var array
      */
@@ -217,14 +217,14 @@ class Smarty_Security
      *
      * @var array
      */
-    protected $_php_resource_dir = null;
+    protected $_php_resource_dir = NULL;
 
     /**
      * Cache for $trusted_dir lookup
      *
      * @var array
      */
-    protected $_trusted_dir = null;
+    protected $_trusted_dir = NULL;
 
     /**
      * Cache for include path status
@@ -371,12 +371,12 @@ class Smarty_Security
             if (empty($this->disabled_tags) || !in_array($tag_name, $this->disabled_tags)) {
                 return true;
             } else {
-                $compiler->trigger_template_error("tag '{$tag_name}' disabled by security setting", null, true);
+                $compiler->trigger_template_error("tag '{$tag_name}' disabled by security setting", NULL, true);
             }
         } elseif (in_array($tag_name, $this->allowed_tags) && !in_array($tag_name, $this->disabled_tags)) {
             return true;
         } else {
-            $compiler->trigger_template_error("tag '{$tag_name}' not allowed by security setting", null, true);
+            $compiler->trigger_template_error("tag '{$tag_name}' not allowed by security setting", NULL, true);
         }
         return false; // should not, but who knows what happens to the compiler in the future?
     }
@@ -396,7 +396,7 @@ class Smarty_Security
         } else {
             $compiler->trigger_template_error(
                 "special variable '\$smarty.{$var_name}' not allowed by security setting",
-                null,
+                NULL,
                 true
             );
         }
@@ -424,7 +424,7 @@ class Smarty_Security
             } else {
                 $compiler->trigger_template_error(
                     "modifier '{$modifier_name}' disabled by security setting",
-                    null,
+                    NULL,
                     true
                 );
             }
@@ -435,7 +435,7 @@ class Smarty_Security
         } else {
             $compiler->trigger_template_error(
                 "modifier '{$modifier_name}' not allowed by security setting",
-                null,
+                NULL,
                 true
             );
         }
@@ -452,7 +452,7 @@ class Smarty_Security
      */
     public function isTrustedConstant($const, $compiler)
     {
-        if (in_array($const, array('true', 'false', 'null'))) {
+        if (in_array($const, array('true', 'false', 'NULL'))) {
             return true;
         }
         if (!empty($this->trusted_constants)) {
@@ -489,12 +489,12 @@ class Smarty_Security
      * Check if directory of file resource is trusted.
      *
      * @param string    $filepath
-     * @param null|bool $isConfig
+     * @param NULL|bool $isConfig
      *
      * @return bool true if directory is trusted
      * @throws \SmartyException if directory is not trusted
      */
-    public function isTrustedResourceDir($filepath, $isConfig = null)
+    public function isTrustedResourceDir($filepath, $isConfig = NULL)
     {
         if ($this->_include_path_status !== $this->smarty->use_include_path) {
             $_dir =
@@ -630,7 +630,7 @@ class Smarty_Security
         } elseif (is_object($security_class)) {
             throw new SmartyException("Class '" . get_class($security_class) . "' must extend Smarty_Security.");
         }
-        if ($security_class === null) {
+        if ($security_class === NULL) {
             $security_class = $smarty->security_class;
         }
         if (!class_exists($security_class)) {

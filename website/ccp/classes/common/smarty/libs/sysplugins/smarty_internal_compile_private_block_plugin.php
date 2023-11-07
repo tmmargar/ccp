@@ -44,7 +44,7 @@ class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_Compi
      * @throws \SmartyCompilerException
      * @throws \SmartyException
      */
-    public function compile($args, Smarty_Internal_TemplateCompilerBase $compiler, $parameter, $tag, $function = null)
+    public function compile($args, Smarty_Internal_TemplateCompilerBase $compiler, $parameter, $tag, $function = NULL)
     {
         if (!isset($tag[ 5 ]) || substr($tag, -5) !== 'close') {
             // opening tag of block plugin
@@ -57,14 +57,14 @@ class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_Compi
             // compile code
             $output = "<?php ";
             if (is_array($callback)) {
-                $output .= "\$_block_plugin{$this->nesting} = isset({$callback[0]}) ? {$callback[0]} : null;\n";
+                $output .= "\$_block_plugin{$this->nesting} = isset({$callback[0]}) ? {$callback[0]} : NULL;\n";
                 $callback = "\$_block_plugin{$this->nesting}{$callback[1]}";
             }
             if (isset($callable)) {
                 $output .= "if (!is_callable({$callable})) {\nthrow new SmartyException('block tag \'{$tag}\' not callable or registered');\n}\n";
             }
             $output .= "\$_smarty_tpl->smarty->_cache['_tag_stack'][] = array('{$tag}', {$_params});\n";
-            $output .= "\$_block_repeat=true;\necho {$callback}({$_params}, null, \$_smarty_tpl, \$_block_repeat);\nwhile (\$_block_repeat) {\nob_start();?>";
+            $output .= "\$_block_repeat=true;\necho {$callback}({$_params}, NULL, \$_smarty_tpl, \$_block_repeat);\nwhile (\$_block_repeat) {\nob_start();?>";
             $this->openTag($compiler, $tag, array($_params, $compiler->nocache, $callback));
             // maybe nocache because of nocache variables or nocache plugin
             $compiler->nocache = $compiler->nocache | $compiler->tag_nocache;
@@ -119,6 +119,6 @@ class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_Compi
                 $_paramsArray[] = "'$_key'=>$_value";
             }
         }
-        return array($function, $_paramsArray, null);
+        return array($function, $_paramsArray, NULL);
     }
 }

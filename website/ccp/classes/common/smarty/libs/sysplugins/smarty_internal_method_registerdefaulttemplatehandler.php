@@ -54,7 +54,7 @@ class Smarty_Internal_Method_RegisterDefaultTemplateHandler
         } else {
             $default_handler = $source->smarty->default_template_handler_func;
         }
-        $_content = $_timestamp = null;
+        $_content = $_timestamp = NULL;
         $_return = call_user_func_array(
             $default_handler,
             array($source->type, $source->name, &$_content, &$_timestamp, $source->smarty)

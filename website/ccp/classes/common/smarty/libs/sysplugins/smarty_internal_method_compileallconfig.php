@@ -29,7 +29,7 @@ class Smarty_Internal_Method_CompileAllConfig extends Smarty_Internal_Method_Com
         $extension = '.conf',
         $force_compile = false,
         $time_limit = 0,
-        $max_errors = null
+        $max_errors = NULL
     ) {
         return $this->compileAll($smarty, $extension, $force_compile, $time_limit, $max_errors, true);
     }

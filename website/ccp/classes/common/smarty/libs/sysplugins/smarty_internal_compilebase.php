@@ -87,7 +87,7 @@ abstract class Smarty_Internal_CompileBase
                     $_indexed_attr[ $this->shorttag_order[ $key ] ] = $mixed;
                 } else {
                     // too many shorthands
-                    $compiler->trigger_template_error('too many shorthand attributes', null, true);
+                    $compiler->trigger_template_error('too many shorthand attributes', NULL, true);
                 }
                 // named attribute
             } else {
@@ -106,7 +106,7 @@ abstract class Smarty_Internal_CompileBase
                                 $compiler->trigger_template_error(
                                     "illegal value '" . var_export($v, true) .
                                     "' for option flag '{$k}'",
-                                    null,
+                                    NULL,
                                     true
                                 );
                             }
@@ -121,7 +121,7 @@ abstract class Smarty_Internal_CompileBase
         // check if all required attributes present
         foreach ($this->required_attributes as $attr) {
             if (!isset($_indexed_attr[ $attr ])) {
-                $compiler->trigger_template_error("missing '{$attr}' attribute", null, true);
+                $compiler->trigger_template_error("missing '{$attr}' attribute", NULL, true);
             }
         }
         // check for not allowed attributes
@@ -139,7 +139,7 @@ abstract class Smarty_Internal_CompileBase
             }
             foreach ($_indexed_attr as $key => $dummy) {
                 if (!isset($this->mapCache[ 'all' ][ $key ]) && $key !== 0) {
-                    $compiler->trigger_template_error("unexpected '{$key}' attribute", null, true);
+                    $compiler->trigger_template_error("unexpected '{$key}' attribute", NULL, true);
                 }
             }
         }
@@ -163,7 +163,7 @@ abstract class Smarty_Internal_CompileBase
      * @param string $openTag  the opening tag's name
      * @param mixed  $data     optional data saved
      */
-    public function openTag($compiler, $openTag, $data = null)
+    public function openTag($compiler, $openTag, $data = NULL)
     {
         array_push($compiler->_tag_stack, array($openTag, $data));
     }
@@ -197,7 +197,7 @@ abstract class Smarty_Internal_CompileBase
             return;
         }
         // wrong nesting of tags
-        $compiler->trigger_template_error('unexpected closing tag', null, true);
+        $compiler->trigger_template_error('unexpected closing tag', NULL, true);
         return;
     }
 }

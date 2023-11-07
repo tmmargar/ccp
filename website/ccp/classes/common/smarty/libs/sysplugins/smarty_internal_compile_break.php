@@ -79,11 +79,11 @@ class Smarty_Internal_Compile_Break extends Smarty_Internal_CompileBase
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
         if ($_attr[ 'nocache' ] === true) {
-            $compiler->trigger_template_error('nocache option not allowed', null, true);
+            $compiler->trigger_template_error('nocache option not allowed', NULL, true);
         }
         if (isset($_attr[ 'levels' ])) {
             if (!is_numeric($_attr[ 'levels' ])) {
-                $compiler->trigger_template_error('level attribute must be a numeric constant', null, true);
+                $compiler->trigger_template_error('level attribute must be a numeric constant', NULL, true);
             }
             $levels = $_attr[ 'levels' ];
         } else {
@@ -107,7 +107,7 @@ class Smarty_Internal_Compile_Break extends Smarty_Internal_CompileBase
             $stack_count--;
         }
         if ($level_count !== 0) {
-            $compiler->trigger_template_error("cannot {$this->tag} {$levels} level(s)", null, true);
+            $compiler->trigger_template_error("cannot {$this->tag} {$levels} level(s)", NULL, true);
         }
         if ($lastTag === 'foreach' && $this->tag === 'break' && $foreachLevels > 0) {
             $foreachLevels--;

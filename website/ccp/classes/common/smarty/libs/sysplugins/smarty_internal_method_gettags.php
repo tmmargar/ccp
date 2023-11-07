@@ -25,13 +25,13 @@ class Smarty_Internal_Method_GetTags
      * @link https://www.smarty.net/docs/en/api.get.tags.tpl
      *
      * @param \Smarty_Internal_TemplateBase|\Smarty_Internal_Template|\Smarty $obj
-     * @param null|string|Smarty_Internal_Template                            $template
+     * @param NULL|string|Smarty_Internal_Template                            $template
      *
      * @return array of tag/attributes
      * @throws \Exception
      * @throws \SmartyException
      */
-    public function getTags(Smarty_Internal_TemplateBase $obj, $template = null)
+    public function getTags(Smarty_Internal_TemplateBase $obj, $template = NULL)
     {
         /* @var Smarty $smarty */
         $smarty = $obj->_getSmartyObj();

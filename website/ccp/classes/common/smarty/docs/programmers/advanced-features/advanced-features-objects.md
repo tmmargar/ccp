@@ -70,7 +70,7 @@ behave like block-function-plugins.
     $smarty->registerObject('foobar',$myobj,array('meth1','meth2','prop1'));
 
     // if you want to use the traditional object parameter format, pass a boolean of false
-    $smarty->registerObject('foobar',$myobj,null,false);
+    $smarty->registerObject('foobar',$myobj,NULL,false);
 
     // We can also assign objects. assign_by_ref when possible.
     $smarty->assign_by_ref('myobj', $myobj);

@@ -42,8 +42,8 @@ function smarty_modifier_regex_replace($string, $search, $replace, $limit = -1)
  */
 function _smarty_regex_replace_check($search)
 {
-    // null-byte injection detection
-    // anything behind the first null-byte is ignored
+    // NULL-byte injection detection
+    // anything behind the first NULL-byte is ignored
     if (($pos = strpos($search, "\0")) !== false) {
         $search = substr($search, 0, $pos);
     }

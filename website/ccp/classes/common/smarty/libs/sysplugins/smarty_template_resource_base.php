@@ -14,7 +14,7 @@ abstract class Smarty_Template_Resource_Base
      *
      * @var string
      */
-    public $filepath = null;
+    public $filepath = NULL;
 
     /**
      * Compiled Timestamp
@@ -35,7 +35,7 @@ abstract class Smarty_Template_Resource_Base
      *
      * @var string
      */
-    public $compile_id = null;
+    public $compile_id = NULL;
 
     /**
      * Compiled Content Loaded
@@ -70,7 +70,7 @@ abstract class Smarty_Template_Resource_Base
      *
      * @var string
      */
-    public $content = null;
+    public $content = NULL;
 
     /**
      * Included sub templates
@@ -103,7 +103,7 @@ abstract class Smarty_Template_Resource_Base
      *
      * @throws \Exception
      */
-    public function getRenderedTemplateCode(Smarty_Internal_Template $_template, $unifunc = null)
+    public function getRenderedTemplateCode(Smarty_Internal_Template $_template, $unifunc = NULL)
     {
         $smarty = &$_template->smarty;
         $_template->isRenderingCache = $this->isCache;

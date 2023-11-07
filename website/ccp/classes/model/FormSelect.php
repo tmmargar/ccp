@@ -2,20 +2,20 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormSelect extends FormBase {
-  public function __construct(protected bool $debug, protected string $accessKey, protected array|null $class, protected bool $disabled, protected int|string|null $id, protected bool $multiple,
-    protected string|null $name, protected string|null $onClick, protected bool $readOnly, protected int $size, protected string|null $suffix, protected array|string|int|null $value) {
+  public function __construct(protected bool $debug, protected string $accessKey, protected array|NULL $class, protected bool $disabled, protected int|string|NULL $id, protected bool $multiple,
+    protected string|NULL $name, protected string|NULL $onClick, protected bool $readOnly, protected int $size, protected string|NULL $suffix, protected array|string|int|NULL $value) {
     parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id, name: $name, suffix: $suffix, value: $value);
   }
   public function getAccessKey(): string {
     return $this->accessKey;
   }
   public function getHtml(): string {
-    return "<select" . ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") . (null !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . " id=\"" .
-      $this->getId() . "\"" . (null !== $this->isMultiple() && $this->isMultiple() ? " multiple" : "") . " name=\"" . $this->getName() . "\"" .
-      (null !== $this->isReadOnly() && $this->isReadOnly() ? " readonly" : "") . " size=\"" . $this->getSize() . "\"" . ("" != $this->getOnClick() ? " onclick=\"" . $this->getOnClick() . "\"" : "") .
+    return "<select" . ("" != $this->getClassAsString() ? " class=\"" . $this->getClassAsString() . "\"" : "") . (NULL !== $this->isDisabled() && $this->isDisabled() ? " disabled" : "") . " id=\"" .
+      $this->getId() . "\"" . (NULL !== $this->isMultiple() && $this->isMultiple() ? " multiple" : "") . " name=\"" . $this->getName() . "\"" .
+      (NULL !== $this->isReadOnly() && $this->isReadOnly() ? " readonly" : "") . " size=\"" . $this->getSize() . "\"" . ("" != $this->getOnClick() ? " onclick=\"" . $this->getOnClick() . "\"" : "") .
       ">\n";
   }
-  public function getOnClick(): string|null {
+  public function getOnClick(): string|NULL {
     return $this->onClick;
   }
   public function getSize(): int {

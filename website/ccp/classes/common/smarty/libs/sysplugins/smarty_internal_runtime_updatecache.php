@@ -161,7 +161,7 @@ class Smarty_Internal_Runtime_UpdateCache
         if (!$_template->source->handler->recompiled) {
             $cached = $_template->cached;
             if ($cached->handler->writeCachedContent($_template, $content)) {
-                $cached->content = null;
+                $cached->content = NULL;
                 $cached->timestamp = time();
                 $cached->exists = true;
                 $cached->valid = true;
@@ -172,7 +172,7 @@ class Smarty_Internal_Runtime_UpdateCache
                 }
                 return true;
             }
-            $cached->content = null;
+            $cached->content = NULL;
             $cached->timestamp = false;
             $cached->exists = false;
             $cached->valid = false;

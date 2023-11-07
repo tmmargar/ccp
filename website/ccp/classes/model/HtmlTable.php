@@ -1,72 +1,84 @@
 <?php
 declare(strict_types = 1);
 namespace ccp\classes\model;
+
+use ccp\classes\utility\SessionUtility;
+use PDOStatement;
+
 class HtmlTable extends HtmlBase {
   /*
-   * $query is sql query
-   * $mode is page mode
-   * $classNames is style class names (default is NULL)
    * $caption is additional info about table (default is NULL)
-   * $colFormats is delimited string of column formats (default is NULL)
-   * $hiddenId is name prefix of field to store row identifier (default is NULL)
-   * $selectedColumnVals is delimited string of selected rows (default is "")
+   * $class is style class names (default is NULL)
+   * $colSpan is array of arrays (array of names, array of columns to colspan, array of array of columns to ignore) (default is NULL)
+   * $columnFormat is delimited string of column formats (default is NULL)
    * $delimiter is delimiter (default is ", ")
    * $foreignKeys is delimited string of foreign key queries (default is NULL)
-   * $html is array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes) (default is NULL)
-   * $headerRow is whether to display header row or not (default is true)
-   * $showNote is true to display sorting note, false to hide (default is true)
+   * $header is whether to display header row or not (default is true)
    * $hiddenAdditional is array of name and index of value to store (default is NULL)
+   * $hiddenId is name prefix of field to store row identifier (default is NULL)
    * $hideColIndexes is array of column indexes to hide that are returned from query (default is NULL)
-   * $colSpan is array of arrays (array of names, array of columns to colspan, array of array of columns to ignore) (default is NULL)
-   * $tableIdSuffix is suffix of table id (default is NULL)
-   * $width is width of table (default is 100%)
+   * $html is array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes) (default is NULL)
    * $link is array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name) (default is NULL)
+   * $note is true to display sorting note, false to hide (default is true)
+   * $pdoStatement is PDOStatement object
+   * $query is sql query
+   * $selectedRow is delimited string of selected rows (default is "")
+   * $suffix is suffix of table id (default is NULL)
+   * $width is width of table (default is 100%)
    */
-  // private string $query; // query
-  // private array|null $class; // array of class names
-  // private string|null $caption; // additional info about table
-  // private array|null $columnFormat; // array of column formats
-  // private string|null $hiddenId; // name prefix of field to store row identifier
-  // private string|null $selectedRow; // array of selected rows
+  // private string|NULL $caption; // additional info about table
+  // private array|NULL $class; // array of class names
+  // private array|NULL $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
+  // private array|NULL $columnFormat; // array of column formats
   // private string $delimiter; // delimiter (default is ", ")
-  // private array|null $foreignKeys; // array of foreign key queries
-  // private array|null $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+  // private array|NULL $foreignKeys; // array of foreign key queries
   // private bool $header; // boolean to display header row or not
+  // private array|NULL $hiddenAdditional; // array of name and index of value to store
+  // private string|NULL $hiddenId; // name prefix of field to store row identifier
+  // private array|NULL $hideColumnIndexes; // array of column indexes to hide that are returned from query
+  // private array|NULL $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+  // private array|NULL $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
   // private bool $note; // boolean true to display sorting note, false to hide
-  // private array|null $hiddenAdditional; // array of name and index of value to store
-  // private array|null $hideColumnIndexes; // array of column indexes to hide that are returned from query
-  // private array|null $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
-  // private string|null $suffix; // suffix of table id
+  // private PDOStatement $pdoStatement; // PDOStatement object
+  // private string $query; // query
+  // private string|NULL $selectedRow; // array of selected rows
+  // private string|NULL $suffix; // suffix of table id
   // private string $width; // width of table
-  // private array|null $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
-  public function __construct(protected string|null $caption, protected array|null $class, protected array|null $colspan, protected array|null $columnFormat, protected bool $debug,
-    protected string $delimiter, protected array|null $foreignKeys, protected bool $header, protected array|null $hiddenAdditional, protected string|null $hiddenId,
-    protected array|null $hideColumnIndexes, protected array|null $html, protected string|int|null $id, protected array|null $link, protected bool $note, protected string $query,
-    protected string|null $selectedRow, protected string|null $suffix, protected string $width) {
-    parent::__construct(accessKey: null, class: $class, debug: $debug, id: $id, tabIndex: - 1, title: null);
+  public function __construct(protected string|NULL $caption, protected array|NULL $class, protected array|NULL $colspan, protected array|NULL $columnFormat, protected bool $debug,
+    protected string $delimiter, protected array|NULL $foreignKeys, protected bool $header, protected array|NULL $hiddenAdditional, protected string|NULL $hiddenId,
+    protected array|NULL $hideColumnIndexes, protected array|NULL $html, protected string|int|NULL $id, protected array|NULL $link, protected bool $note, protected PDOStatement|NULL $pdoStatement,
+    protected string $query, protected string|NULL $selectedRow, protected string|NULL $suffix, protected string $width) {
+    parent::__construct(accessKey: NULL, class: $class, debug: $debug, id: $id, tabIndex: - 1, title: NULL);
   }
-  public function getCaption(): string|null {
+  public function getCaption(): string|NULL {
     return $this->caption;
   }
-  public function getColspan(): array|null {
+  public function getColspan(): array|NULL {
     return $this->colspan;
   }
-  public function getColumnFormat(): array|null {
+  public function getColumnFormat(): array|NULL {
     return $this->columnFormat;
   }
   public function getDelimiter(): string {
     return $this->delimiter;
   }
-  public function getForeignKeys(): array|null {
+  public function getForeignKeys(): array|NULL {
     return $this->foreignKeys;
   }
   public function getHtml(): string {
     $output = "";
     $hasRecords = false;
-    $databaseResult = new DatabaseResult(debug: $this->isDebug());
-    $result = $databaseResult->getConnection()->query(query: $this->query);
+    $databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
+    if (!$this->pdoStatement instanceof \PDOStatement) {
+      $this->pdoStatement = $databaseResult->getConnection()->prepare(query: $this->query);
+    }
+    $result = $this->pdoStatement->execute(); // true/false returned
+    if ($this->isDebug()) {
+      echo "<br>";
+      $this->pdoStatement->debugDumpParams();
+    }
     if ($result) {
-      $numRecords = $result->rowCount();
+      $numRecords = $this->pdoStatement->rowCount();
       $hasRecords = 0 < $numRecords;
     }
     if ($hasRecords) {
@@ -75,12 +87,12 @@ class HtmlTable extends HtmlBase {
       if ("" != $this->selectedRow) {
         $ary = explode(separator: $this->delimiter, string: $this->selectedRow);
       }
-      $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display" . (null !== $this->getClassAsString() ? " " . $this->getClassAsString() : "") . "\" id=\"" .
+      $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"display" . (NULL !== $this->getClassAsString() ? " " . $this->getClassAsString() : "") . "\" id=\"" .
         Constant::ID_TABLE_DATA . (isset($this->suffix) ? $this->suffix : "") . "\" style=\"width: " . $this->width . ";\">\n";
       if (isset($this->caption)) {
         $output .= "<caption>" . $this->caption . "</caption>";
       }
-      $count = $result->columnCount();
+      $count = $this->pdoStatement->columnCount();
       if (isset($this->colspan)) {
         $colSpanIgnoreAllIndexes = array();
         foreach ($this->colspan[2] as $ary) {
@@ -89,7 +101,7 @@ class HtmlTable extends HtmlBase {
         $colSpanAllIndexes = array_merge($this->colspan[1], $colSpanIgnoreAllIndexes);
       }
       $linkIdCounter = 0;
-      while ($row = $result->fetch()) {
+      while ($row = $this->pdoStatement->fetch()) {
         if ($this->header && $firstRow) {
           $output .= "     <thead>\n";
           if (isset($this->colspan)) {
@@ -119,7 +131,7 @@ class HtmlTable extends HtmlBase {
                   $output .= $this->colspan[0][array_search($index, $this->colspan[1])];
                   // if not found in col span indexes
                 } else if (!isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE === array_search($index, $colSpanAllIndexes))) {
-                  $output .= ucwords(string: $result->getColumnMeta($index)["name"]);
+                  $output .= ucwords(string: $this->pdoStatement->getColumnMeta($index)["name"]);
                 }
                 $output .= "</th>\n";
               }
@@ -131,7 +143,7 @@ class HtmlTable extends HtmlBase {
             if (! isset($this->hideColumnIndexes) || (isset($this->hideColumnIndexes) && FALSE === array_search($index, $this->hideColumnIndexes))) {
               // if found in all col span indexes
               if (! isset($colSpanAllIndexes) || (isset($colSpanAllIndexes) && FALSE !== array_search($index, $colSpanAllIndexes))) {
-                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords(string: $result->getColumnMeta($index)["name"]) . "</th>\n";
+                $output .= "       <th colspan=\"1\" rowspan=\"1\">" . ucwords(string: $this->pdoStatement->getColumnMeta($index)["name"]) . "</th>\n";
               }
             }
           }
@@ -157,7 +169,7 @@ class HtmlTable extends HtmlBase {
             $class = array();
             $temp = $row[$index];
             if (! $formattedFlag) {
-              $aryFmt = $result->getColumnMeta(column: $index);
+              $aryFmt = $this->pdoStatement->getColumnMeta(column: $index);
               if (isset($this->columnFormat)) {
                 $aryFmt2 = array();
                 for ($idx = 0; $idx < count(value: $this->columnFormat); $idx ++) {
@@ -179,15 +191,15 @@ class HtmlTable extends HtmlBase {
               foreach ($aryFmt as $fmt) {
                 switch (strtolower(string: $fmt)) {
                   case "date":
-                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $temp);
                     $temp = $dateTime->getDisplayFormat();
                     break;
                   case "datetime":
-                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $temp);
                     $temp = $dateTime->getDisplayTimeFormat();
                     break;
                   case "time":
-                    $dateTime = new DateTime(debug: $this->isDebug(), id: null, time: $temp);
+                    $dateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $temp);
                     $temp = $dateTime->getDisplayAmPmFormat();
                     array_push($class, "time");
                     break;
@@ -241,15 +253,15 @@ class HtmlTable extends HtmlBase {
             }
             $output .= ($class == "" || count($class) == 0 ? "" : " class=\"" . implode(" ", $class) . "\"");
             $output .= ">";
-            if ($result->getColumnMeta($index)["name"] == "map" && $temp != "") {
+            if ($this->pdoStatement->getColumnMeta($index)["name"] == "map" && $temp != "") {
               $output .= "<a href=\"" . $temp . "\">View</a>";
               // } elseif (isset($this->link) && in_array($index, $this->link[0])) {
-              // $link = new HtmlLink(null, null, $this->isDebug(), $this->link[1][0], null, $this->link[1][1], array($row[$this->link[1][2]], $this->link[1][3]), -1, $row[$this->link[1][4]], null);
+              // $link = new HtmlLink(NULL, NULL, $this->isDebug(), $this->link[1][0], NULL, $this->link[1][1], array($row[$this->link[1][2]], $this->link[1][3]), -1, $row[$this->link[1][4]], NULL);
             } elseif (isset($this->link) && in_array($index, $this->link[0])) {
               // echo $temp;
               // 0$href, 1$paramName, 2$paramValue, 3$text, 4$id
               // $accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title
-              // $link = new HtmlLink(null, null, $this->isDebug(), $this->link[$linkCounter + 1][0], null, $this->link[$linkCounter + 1][1][0], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], null);
+              // $link = new HtmlLink(NULL, NULL, $this->isDebug(), $this->link[$linkCounter + 1][0], NULL, $this->link[$linkCounter + 1][1][0], array($row[$this->link[$linkCounter + 1][2]], $this->link[1][3]), -1, $row[$this->link[$linkCounter + 1][4]], NULL);
               // [0][0] = 3
               // [1][0] = manageUSer.php
               // [1][1][0] = "userId"
@@ -270,12 +282,12 @@ class HtmlTable extends HtmlBase {
                 $paramValues[$counterValues] = $this->link[$linkCounter + 1][2][1];
               }
               if (sizeof($paramValues) == 0) {
-                $paramValues = null;
+                $paramValues = NULL;
               }
-              $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: $this->link[$linkCounter + 1][0],
-                id: isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] . "_" . ($linkIdCounter + 1) : null,
-                paramName: isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : null, paramValue: $paramValues, tabIndex: - 1, text: $row[$this->link[$linkCounter + 1][3]],
-                title: null);
+              $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: $this->link[$linkCounter + 1][0],
+                id: isset($this->link[$linkCounter + 1][4]) ? $this->link[$linkCounter + 1][4] . "_" . ($linkIdCounter + 1) : NULL,
+                paramName: isset($this->link[$linkCounter + 1][1]) ? $this->link[$linkCounter + 1][1] : NULL, paramValue: $paramValues, tabIndex: - 1, text: $row[$this->link[$linkCounter + 1][3]],
+                title: NULL);
               $output .= $link->getHtml();
               $linkCounter ++;
               $linkIdCounter ++;
@@ -317,19 +329,19 @@ class HtmlTable extends HtmlBase {
         }
         if (isset($this->hiddenId)) {
           $output .= "<td>\n";
-          $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hide"), cols: null, disabled: false,
-            id: $this->hiddenId . "_" . $row[0], maxLength: null, name: $this->hiddenId . "_" . $row[0], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null,
-            suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[0], wrap: null);
+          $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false,
+            id: $this->hiddenId . "_" . $row[0], maxLength: NULL, name: $this->hiddenId . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL,
+            suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[0], wrap: NULL);
           $output .= $hiddenTemp->getHtml();
           $output .= "</td>\n";
         }
         if (isset($this->hiddenAdditional)) {
           for ($index = 0; $index < count(value: $this->hiddenAdditional); $index ++) {
             $output .= "<td>\n";
-            $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array("hide"), cols: null, disabled: false,
-              id: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], maxLength: null,
-              name: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null,
-              suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[$this->hiddenAdditional[$index][1]], wrap: null);
+            $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false,
+              id: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], maxLength: NULL,
+              name: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL,
+              suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[$this->hiddenAdditional[$index][1]], wrap: NULL);
             $output .= $hiddenTemp->getHtml();
             $output .= "</td>\n";
           }
@@ -338,34 +350,37 @@ class HtmlTable extends HtmlBase {
       }
       $output .= "     </tbody>\n";
       $output .= "    </table>\n";
-      $result->closeCursor();
+      $this->pdoStatement->closeCursor();
     } else {
       $output .= "<div class=\"center\">No data found</div>\n";
     }
     return $output;
   }
-  public function getHiddenAdditional(): array|null {
+  public function getHiddenAdditional(): array|NULL {
     return $this->hiddenAdditional;
   }
-  public function getHiddenId(): string|null {
+  public function getHiddenId(): string|NULL {
     return $this->hiddenId;
   }
-  public function getHideColumnIndexes(): array|null {
+  public function getHideColumnIndexes(): array|NULL {
     return $this->hideColumnIndexes;
   }
-  public function getLink(): array|null {
+  public function getLink(): array|NULL {
     return $this->link;
+  }
+  public function getPdoStatement(): PDOStatement|NULL {
+    return $this->pdoStatement;
   }
   public function getQuery(): string {
     return $this->query;
   }
-  public function getSelectedRow(): string|null {
+  public function getSelectedRow(): string|NULL {
     return $this->selectedRow;
   }
-  public function getSuffix(): string|null {
+  public function getSuffix(): string|NULL {
     return $this->suffix;
   }
-  public function getWidth(): string|null {
+  public function getWidth(): string|NULL {
     return $this->width;
   }
   public function isHeader(): bool {
@@ -410,6 +425,9 @@ class HtmlTable extends HtmlBase {
   public function setNote(bool $note) {
     $this->note = $note;
   }
+  public function setPdoStatement(PDOStatement $pdoStatement) {
+    $this->pdoStatement = $pdoStatement;
+  }
   public function setQuery(string $query) {
     $this->query = $query;
   }
@@ -448,6 +466,8 @@ class HtmlTable extends HtmlBase {
     $output .= print_r(value: $this->link, return: true);
     $output .= ", note = ";
     $output .= var_export(value: $this->note, return: true);
+    $output .= ", pdoStatement = ";
+    $output .= var_export(value: $this->pdoStatement, return: true);
     $output .= ", query = '";
     $output .= $this->query;
     $output .= "', selectedRow = ";

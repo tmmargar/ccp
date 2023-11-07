@@ -41,10 +41,10 @@ class Smarty_Internal_Method_SetAutoloadFilters
      * @return \Smarty|\Smarty_Internal_Template
      * @throws \SmartyException
      */
-    public function setAutoloadFilters(Smarty_Internal_TemplateBase $obj, $filters, $type = null)
+    public function setAutoloadFilters(Smarty_Internal_TemplateBase $obj, $filters, $type = NULL)
     {
         $smarty = $obj->_getSmartyObj();
-        if ($type !== null) {
+        if ($type !== NULL) {
             $this->_checkFilterType($type);
             $smarty->autoload_filters[ $type ] = (array)$filters;
         } else {

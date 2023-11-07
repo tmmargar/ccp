@@ -26,8 +26,8 @@ class Smarty_Internal_Runtime_Foreach
      * @param mixed                     $from       values to loop over
      * @param string                    $item       variable name
      * @param bool                      $needTotal  flag if we need to count values
-     * @param null|string               $key        variable name
-     * @param null|string               $name       of named foreach
+     * @param NULL|string               $key        variable name
+     * @param NULL|string               $name       of named foreach
      * @param array                     $properties of named foreach
      *
      * @return mixed $from
@@ -37,13 +37,13 @@ class Smarty_Internal_Runtime_Foreach
         $from,
         $item,
         $needTotal = false,
-        $key = null,
-        $name = null,
+        $key = NULL,
+        $name = NULL,
         $properties = array()
     ) {
         $needTotal = $needTotal || isset($properties[ 'total' ]);
         $saveVars = array();
-        $total = null;
+        $total = NULL;
         if (!is_array($from)) {
             if (is_object($from)) {
                 if ($needTotal) {
@@ -62,9 +62,9 @@ class Smarty_Internal_Runtime_Foreach
                 $tpl->tpl_vars[ $item ]
             );
         }
-        $tpl->tpl_vars[ $item ] = new Smarty_Variable(null, $tpl->isRenderingCache);
+        $tpl->tpl_vars[ $item ] = new Smarty_Variable(NULL, $tpl->isRenderingCache);
         if ($total === 0) {
-            $from = null;
+            $from = NULL;
         } else {
             if ($key) {
                 if (isset($tpl->tpl_vars[ $key ])) {
@@ -73,7 +73,7 @@ class Smarty_Internal_Runtime_Foreach
                         $tpl->tpl_vars[ $key ]
                     );
                 }
-                $tpl->tpl_vars[ $key ] = new Smarty_Variable(null, $tpl->isRenderingCache);
+                $tpl->tpl_vars[ $key ] = new Smarty_Variable(NULL, $tpl->isRenderingCache);
             }
         }
         if ($needTotal) {

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Fee extends Base {
   public function __construct(protected bool $debug, protected int $seasonId, protected int $playerId, protected int $amount, protected string $status) {
-    parent::__construct(debug: $debug, id: null);
+    parent::__construct(debug: $debug, id: NULL);
   }
   public function getAmount(): int {
     return $this->amount;

@@ -14,16 +14,16 @@ class Smarty_Internal_Undefined
     /**
      * Name of undefined extension class
      *
-     * @var string|null
+     * @var string|NULL
      */
-    public $class = null;
+    public $class = NULL;
 
     /**
      * Smarty_Internal_Undefined constructor.
      *
-     * @param null|string $class name of undefined extension class
+     * @param NULL|string $class name of undefined extension class
      */
-    public function __construct($class = null)
+    public function __construct($class = NULL)
     {
         $this->class = $class;
     }

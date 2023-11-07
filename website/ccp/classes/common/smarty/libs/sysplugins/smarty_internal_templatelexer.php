@@ -30,7 +30,7 @@ class Smarty_Internal_Templatelexer
      *
      * @var int
      */
-    public $dataLength = null;
+    public $dataLength = NULL;
 
     /**
      * byte counter
@@ -86,14 +86,14 @@ class Smarty_Internal_Templatelexer
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * compiler object
      *
      * @var Smarty_Internal_TemplateCompilerBase
      */
-    public $compiler = null;
+    public $compiler = NULL;
 
     /**
      * trace file
@@ -179,49 +179,49 @@ class Smarty_Internal_Templatelexer
      *
      * @var string
      */
-    private $yy_global_pattern1 = null;
+    private $yy_global_pattern1 = NULL;
 
     /**
      * preg token pattern for state TAG
      *
      * @var string
      */
-    private $yy_global_pattern2 = null;
+    private $yy_global_pattern2 = NULL;
 
     /**
      * preg token pattern for state TAGBODY
      *
      * @var string
      */
-    private $yy_global_pattern3 = null;
+    private $yy_global_pattern3 = NULL;
 
     /**
      * preg token pattern for state LITERAL
      *
      * @var string
      */
-    private $yy_global_pattern4 = null;
+    private $yy_global_pattern4 = NULL;
 
     /**
      * preg token pattern for state DOUBLEQUOTEDSTRING
      *
-     * @var null
+     * @var NULL
      */
-    private $yy_global_pattern5 = null;
+    private $yy_global_pattern5 = NULL;
 
     /**
      * preg token pattern for text
      *
-     * @var null
+     * @var NULL
      */
-    private $yy_global_text = null;
+    private $yy_global_text = NULL;
 
     /**
      * preg token pattern for literal
      *
-     * @var null
+     * @var NULL
      */
-    private $yy_global_literal = null;
+    private $yy_global_literal = NULL;
 
     /**
      * constructor
@@ -349,7 +349,7 @@ class Smarty_Internal_Templatelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r1_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -462,7 +462,7 @@ class Smarty_Internal_Templatelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r2_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -604,7 +604,7 @@ class Smarty_Internal_Templatelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r3_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -900,7 +900,7 @@ class Smarty_Internal_Templatelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r4_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -991,7 +991,7 @@ class Smarty_Internal_Templatelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r5_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token

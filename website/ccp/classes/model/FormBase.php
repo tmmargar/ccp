@@ -2,44 +2,44 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormBase extends Base {
-  public function __construct(protected bool $debug, protected array|null $class, protected bool $disabled, protected string|int|null $id, protected string|null $name, protected string|null $suffix,
-    protected array|string|int|null $value) {
+  public function __construct(protected bool $debug, protected array|NULL $class, protected bool $disabled, protected string|int|NULL $id, protected string|NULL $name, protected string|NULL $suffix,
+    protected array|string|int|NULL $value) {
     parent::__construct(debug: $debug, id: $id);
-    $this->class = null == $class ? array() : $class;
-    $this->name = Base::build(value: $name, suffix: null);
-    $this->value = (isset($value) && $value != "") || $value == 0 ? $value : null;
+    $this->class = NULL == $class ? array() : $class;
+    $this->name = Base::build(value: $name, suffix: NULL);
+    $this->value = (isset($value) && $value != "") || $value == 0 ? $value : NULL;
   }
-  public function getClass(): array|null {
+  public function getClass(): array|NULL {
     return $this->class;
   }
   public function getClassAsString(): string {
     return implode(" ", $this->class);
   }
-  public function getName(): string|null {
+  public function getName(): string|NULL {
     return $this->name;
   }
-  public function getSuffix(): string|null {
+  public function getSuffix(): string|NULL {
     return $this->suffix;
   }
-  public function getValue(): array|string|int|null {
+  public function getValue(): array|string|int|NULL {
     return $this->value;
   }
   public function isDisabled(): bool {
     return $this->disabled;
   }
-  public function setClass(array|null $class) {
+  public function setClass(array|NULL $class) {
     $this->class = $class;
   }
   public function setDisabled(bool $disabled) {
     $this->disabled = $disabled;
   }
-  public function setName(string|null $name) {
+  public function setName(string|NULL $name) {
     $this->name = $name;
   }
-  public function setSuffix(string|null $suffix) {
+  public function setSuffix(string|NULL $suffix) {
     $this->suffix = $suffix;
   }
-  public function setValue(array|string|null $value) {
+  public function setValue(array|string|NULL $value) {
     $this->value = $value;
   }
   public function toString(): string {

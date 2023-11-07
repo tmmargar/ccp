@@ -97,7 +97,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
         if ($item === false) {
             $item = $compiler->getVariableName($_attr[ 'item' ]);
         }
-        $key = $name = null;
+        $key = $name = NULL;
         $attributes = array('item' => $item);
         if (isset($_attr[ 'key' ])) {
             $key = $compiler->getId($_attr[ 'key' ]);
@@ -112,7 +112,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
         }
         foreach ($attributes as $a => $v) {
             if ($v === false) {
-                $compiler->trigger_template_error("'{$a}' attribute/variable has illegal value", null, true);
+                $compiler->trigger_template_error("'{$a}' attribute/variable has illegal value", NULL, true);
             }
         }
         $fromName = $compiler->getVariableName($_attr[ 'from' ]);
@@ -121,7 +121,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
                 if (isset($attributes[ $a ]) && $attributes[ $a ] === $fromName) {
                     $compiler->trigger_template_error(
                         "'{$a}' and 'from' may not have same variable name '{$fromName}'",
-                        null,
+                        NULL,
                         true
                     );
                 }
@@ -144,7 +144,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
                 if (in_array($prop, $this->itemProperties)) {
                     $itemAttr[ $prop ] = true;
                 } else {
-                    $compiler->trigger_template_error("Invalid property '{$prop}'", null, true);
+                    $compiler->trigger_template_error("Invalid property '{$prop}'", NULL, true);
                 }
             }
             if ($this->isNamed) {
@@ -152,7 +152,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
                     if (in_array($prop, $this->nameProperties)) {
                         $nameAttr[ $prop ] = true;
                     } else {
-                        $compiler->trigger_template_error("Invalid property '{$prop}'", null, true);
+                        $compiler->trigger_template_error("Invalid property '{$prop}'", NULL, true);
                     }
                 }
             }
@@ -220,7 +220,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_Compile_Private_Fo
             $output .= "{$itemVar}->index = -1;\n";
         }
         $output .= "{$itemVar}->do_else = true;\n";
-        $output .= "if (\$_from !== null) foreach (\$_from as {$keyTerm}{$itemVar}->value) {\n";
+        $output .= "if (\$_from !== NULL) foreach (\$_from as {$keyTerm}{$itemVar}->value) {\n";
         $output .= "{$itemVar}->do_else = false;\n";
         if (isset($attributes[ 'key' ]) && isset($itemAttr[ 'key' ])) {
             $output .= "\$_smarty_tpl->tpl_vars['{$key}']->value = {$itemVar}->key;\n";

@@ -128,7 +128,7 @@ class Smarty_Internal_ParseTree_Template extends Smarty_Internal_ParseTree
 
     private function getChunkedSubtrees() {
         $chunks = array();
-        $currentMode = null;
+        $currentMode = NULL;
         $currentChunk = array();
         for ($key = 0, $cnt = count($this->subtrees); $key < $cnt; $key++) {
 

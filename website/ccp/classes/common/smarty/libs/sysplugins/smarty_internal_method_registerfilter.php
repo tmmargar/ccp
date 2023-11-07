@@ -35,12 +35,12 @@ class Smarty_Internal_Method_RegisterFilter
      * @param \Smarty_Internal_TemplateBase|\Smarty_Internal_Template|\Smarty $obj
      * @param string                                                          $type filter type
      * @param callback                                                        $callback
-     * @param string|null                                                     $name optional filter name
+     * @param string|NULL                                                     $name optional filter name
      *
      * @return \Smarty|\Smarty_Internal_Template
      * @throws \SmartyException
      */
-    public function registerFilter(Smarty_Internal_TemplateBase $obj, $type, $callback, $name = null)
+    public function registerFilter(Smarty_Internal_TemplateBase $obj, $type, $callback, $name = NULL)
     {
         $smarty = $obj->_getSmartyObj();
         $this->_checkFilterType($type);

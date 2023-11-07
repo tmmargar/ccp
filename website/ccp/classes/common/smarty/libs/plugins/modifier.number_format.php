@@ -12,10 +12,10 @@
  * Name:     number_format
  * Purpose:  Format a number with grouped thousands
  *
- * @param float|null  $num
+ * @param float|NULL  $num
  * @param int         $decimals
- * @param string|null $decimal_separator
- * @param string|null $thousands_separator
+ * @param string|NULL $decimal_separator
+ * @param string|NULL $thousands_separator
  *
  * @return string
  */

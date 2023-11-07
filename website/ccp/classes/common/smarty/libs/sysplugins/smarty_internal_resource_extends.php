@@ -32,7 +32,7 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource
      *
      * @throws SmartyException
      */
-    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = null)
+    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = NULL)
     {
         $uid = '';
         $sources = array();
@@ -41,7 +41,7 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource
         $exists = true;
         foreach ($components as $component) {
             /* @var \Smarty_Template_Source $_s */
-            $_s = Smarty_Template_Source::load(null, $smarty, $component);
+            $_s = Smarty_Template_Source::load(NULL, $smarty, $component);
             if ($_s->type === 'php') {
                 throw new SmartyException("Resource type {$_s->type} cannot be used with the extends resource type");
             }

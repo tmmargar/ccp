@@ -73,14 +73,14 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
         if ($_attr[ 'nocache' ] === true) {
-            $compiler->trigger_template_error('nocache option not allowed', null, true);
+            $compiler->trigger_template_error('nocache option not allowed', NULL, true);
         }
         // save possible attributes
         $conf_file = $_attr[ 'file' ];
         if (isset($_attr[ 'section' ])) {
             $section = $_attr[ 'section' ];
         } else {
-            $section = 'null';
+            $section = 'NULL';
         }
         // scope setup
         if ($_attr[ 'noscope' ]) {

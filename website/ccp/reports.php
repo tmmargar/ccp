@@ -34,18 +34,18 @@ define("REPORT_ID_FIELD_NAME", "reportId");
 define("SEASON_START_DATE_FIELD_NAME", "seasonStartDate");
 define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
 if (!isset($reportId)) {
-  $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : null;
+  $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : NULL;
 }
 $output = "<div class=\"contentReport\">\n";
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid");
 if (!isset($tournamentId)) {
-  $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : null;
+  $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : NULL;
 }
 if (!isset($seasonSelection)) {
   $seasonSelection = (isset($_POST[SEASON_SELECTION_PARAM_NAME]) ? $_POST[SEASON_SELECTION_PARAM_NAME] : isset($_GET[SEASON_SELECTION_PARAM_NAME])) ? $_GET[SEASON_SELECTION_PARAM_NAME] : "hide";
 }
 if (!isset($seasonId)) {
-  $seasonTemp = (isset($_POST[SEASON_PARAM_NAME]) ? $_POST[SEASON_PARAM_NAME] : isset($_GET[SEASON_PARAM_NAME])) ? $_GET[SEASON_PARAM_NAME] : null;
+  $seasonTemp = (isset($_POST[SEASON_PARAM_NAME]) ? $_POST[SEASON_PARAM_NAME] : isset($_GET[SEASON_PARAM_NAME])) ? $_GET[SEASON_PARAM_NAME] : NULL;
   $arySeason = isset($seasonTemp) ? explode("::", $seasonTemp) : array("");
   $seasonId = $arySeason[0];
   if (count($arySeason) > 1) {
@@ -54,17 +54,17 @@ if (!isset($seasonId)) {
     $startDate = $seasonStartDate;
     $endDate = $seasonEndDate;
   } else {
-    $seasonStartDate = null;
-    $seasonEndDate = null;
+    $seasonStartDate = NULL;
+    $seasonEndDate = NULL;
   }
 }
 if ("ALL" == $seasonId) {
-  $startDate = null;
-  $endDate = null;
+  $startDate = NULL;
+  $endDate = NULL;
   $year = $seasonId;
 } else {
-  $startDate = isset($seasonStartDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: $seasonStartDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
-  $endDate = isset($seasonEndDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: $seasonEndDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE);
+  $startDate = isset($seasonStartDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $seasonStartDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
+  $endDate = isset($seasonEndDate) ? new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $seasonEndDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE);
   $year = $startDate->getYearFormat();
   $yearEnd = $endDate->getYearFormat();
   if ($year != $yearEnd) {
@@ -74,7 +74,7 @@ if ("ALL" == $seasonId) {
     $seasonId = SessionUtility::getValue(SessionUtility::OBJECT_NAME_ID);
   }
 }
-$group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : null;
+$group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : NULL;
 $style = "";
 if ($reportId == REPORT_ID_SUMMARY) {
   $style .= "<style media=\"all\" type=\"text/css\">body {max-width: unset;}</style>\n";
@@ -128,23 +128,23 @@ if (!isset($reportId)) {
       $output = "No value provided for report id";
   }
   $smarty->assign("title", "Chip Chair and a Prayer " . $title . " Report");
-  $classNames = null;
-  $caption = null;
-  $colFormats = null;
-  $hiddenId = null;
+  $classNames = NULL;
+  $caption = NULL;
+  $colFormats = NULL;
+  $hiddenId = NULL;
   $selectedColumnVals = "";
   $delimiter = Constant::DELIMITER_DEFAULT;
-  $foreignKeys = null;
+  $foreignKeys = NULL;
   $headerRow = true;
   $html = NULL;
   $showNote = false;
-  $hiddenAdditional = null;
-  $hideColIndexes = null;
-  $colSpan = null;
-  $link = null;
+  $hiddenAdditional = NULL;
+  $hideColIndexes = NULL;
+  $colSpan = NULL;
+  $link = NULL;
   switch ($reportId) {
     case REPORT_ID_TOURNAMENT_RESULTS:
-      $prizePool = null;
+      $prizePool = NULL;
       $params = array($tournamentId, Constant::DESCRIPTION_CHAMPIONSHIP);
       $resultList = $databaseResult->getSeasonByIdAndDesc(params: $params);
       if (0 < count($resultList)) {
@@ -172,70 +172,89 @@ if (!isset($reportId)) {
         $output .= "<strong>Game details: " . $tournament->getDescription() . ", " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . $tournament->getComment() . " at " . $tournament->getLocation()->getName() . "</strong>";
       }
       $params = array($prizePool, $tournamentId);
-      $query = $databaseResult->getResultByTournamentId(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getResultByTournamentId(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(0, "number", 0), array(2, "currency,negative", 0), array(3, "currency,negative", 0), array(4, "currency", 0), array(5, "number", 0));
       $hideColIndexes = array(8); // hide 2 actives
       break;
     case REPORT_ID_TOTAL_POINTS:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedTotalPoints(params: $params);
+      $params = array($startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getResultOrderedTotalPoints(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0), array(2, "number", 2), array(3, "number", 0));
       $hideColIndexes = array(4);
       $width = "100%";
       break;
     case REPORT_ID_EARNINGS:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedEarnings(params: $params);
+      $params = array($startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getResultOrderedEarnings(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "currency", 0), array(2, "currency", 2), array(3, "currency", 0), array(4, "number", 0));
       $hideColIndexes = array(5);
       $width = "100%";
       break;
     case REPORT_ID_EARNINGS_CHAMPIONSHIP:
-      $params = array("ALL" == $seasonId ? null : $year);
-      $query = $databaseResult->getEarningsTotalForChampionship(params: $params);
+      $params = array("ALL" == $seasonId ? NULL : $year);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalForChampionship(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0);
       $width = "100%";
       break;
     case REPORT_ID_KNOCKOUTS:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedKnockouts(params: $params);
+      $params = array($startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getResultOrderedKnockouts(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0), array(5, "number", 0));
       $hideColIndexes = array(0, 6);
       $width = "100%";
       break;
     case REPORT_ID_SUMMARY:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getResultOrderedSummary(params: $params);
+      $params = array($startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getResultOrderedSummary(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "percentage", 2), array(6, "number", 2), array(7, "number", 0), array(8, "number", 0), array(9, "currency", 0), array(10, "currency", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0));
       $hideColIndexes = array(3, 13, 17);
       $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(4, 6, 9, 14), array(array(5), array(7, 8), array(10, 11, 12), array(15, 16)));
       $width = "100%";
       break;
     case REPORT_ID_WINNERS:
-      $params = array($startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: null);
+      $params = array($startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: NULL);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0), array(3, "percentage", 2), array(4, "number", 0));
       $hideColIndexes = array(0, 5);
       $width = "100%";
       break;
     case REPORT_ID_FINISHES:
-      $params = array($userId, $startDate == null ? null : $startDate->getDatabaseFormat(), $endDate == null ? null : $endDate->getDatabaseFormat());
-      $query = $databaseResult->getFinishesForUser(params: $params);
+      $params = array($userId, $startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
+      $pdoStatementAndQuery = $databaseResult->getFinishesForUser(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
       $caption = "";
       $width = "100%";
       break;
     case REPORT_ID_CHAMPIONSHIP:
-      $params = array(null, null, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
-      $query = $databaseResult->getChampionshipByYearByEarnings(params: $params);
+      $params = array(NULL, NULL, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
+      $pdoStatementAndQuery = $databaseResult->getChampionshipByYearByEarnings(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array($group ? 1 : 3, "currency", 0));
       $hideColIndexes = $group ? array(2, 3) : array(1, 4, 5);
       $width = "100%";
       break;
     case REPORT_ID_FEES:
-//       $params = array(null);
-      $query = $databaseResult->getFeeBySeason();
+      $pdoStatementAndQuery = $databaseResult->getFeeBySeason();
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(4, "currency", 0));
       $hideColIndexes = array(0);
       $width = "100%";
@@ -246,53 +265,54 @@ if (!isset($reportId)) {
   }
   if ("show" == $seasonSelection) {
     $output .= "<div class=\"center\">\n";
-    $selectSeason = new FormSelect(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SEASON, class: null, disabled: false, id: Base::build("season", null), multiple: false, name: Base::build("season", null), onClick: null, readOnly: false, size: 1, suffix: null, value: null);
+    $selectSeason = new FormSelect(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SEASON, class: NULL, disabled: false, id: Base::build("season", NULL), multiple: false, name: Base::build("season", NULL), onClick: NULL, readOnly: false, size: 1, suffix: NULL, value: NULL);
     $output .= "Season: " . $selectSeason->getHtml();
-    $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: "", suffix: null, text: "Overall", value: "ALL");
+    $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: "", suffix: NULL, text: "Overall", value: "ALL");
     $output .= $option->getHtml();
-    $params = array(null, false, true);
+    $params = array(NULL, false, true);
     $resultList = $databaseResult->getSeason(params: $params);
     if (0 < count($resultList)) {
       $ctr = 0;
       while ($ctr < count($resultList)) {
         $seasonText = $resultList[$ctr]->getDescription() . " (" . $resultList[$ctr]->getStartDate()->getDisplayFormat() . " - " . $resultList[$ctr]->getEndDate()->getDisplayFormat() . ")";
         $seasonValue = $resultList[$ctr]->getId() . "::" . $resultList[$ctr]->getStartDate()->getDatabaseFormat() . "::" . $resultList[$ctr]->getEndDate()->getDatabaseFormat();
-        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: null, disabled: false, id: null, name: null, selectedValue: $startDate == null || $endDate == null ? "" : $seasonId . "::" . $startDate->getDatabaseFormat() . "::" . $endDate->getDatabaseFormat(), suffix: null, text: $seasonText, value: $seasonValue);
+        $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: $startDate == NULL || $endDate == NULL ? "" : $seasonId . "::" . $startDate->getDatabaseFormat() . "::" . $endDate->getDatabaseFormat(), suffix: NULL, text: $seasonText, value: $seasonValue);
         $output .= $option->getHtml();
         $ctr++;
       }
     }
     $output .= "</select>\n";
-    $hiddenSeasonStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SEASON_START_DATE_FIELD_NAME, maxLength: null, name: SEASON_START_DATE_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonStartDate, wrap: null);
+    $hiddenSeasonStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_START_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_START_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonStartDate, wrap: NULL);
     $output .= $hiddenSeasonStartDate->getHtml();
-    $hiddenSeasonEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: SEASON_END_DATE_FIELD_NAME, maxLength: null, name: SEASON_END_DATE_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonEndDate, wrap: null);
+    $hiddenSeasonEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_END_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_END_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonEndDate, wrap: NULL);
     $output .= $hiddenSeasonEndDate->getHtml();
     $output .= "</div>\n";
   }
-  $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: $link, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: str_replace(" ", "", ucwords($title)), width: $width);
+  $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: NULL, link: $link, note: $showNote, pdoStatement: $pdoStatement, query: $query, selectedRow: $selectedColumnVals, suffix: str_replace(" ", "", ucwords($title)), width: $width);
   $outputTable = $htmlTable->getHtml();
   if (REPORT_ID_TOURNAMENT_RESULTS == $reportId && $outputTable == "") {
     $output .= "<br>No results because not yet entered/played";
   } else {
     $output .= $outputTable;
   }
-  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_FIELD_NAME . "2"), cols: null, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: null, name: REPORT_ID_FIELD_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
+  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array(REPORT_ID_FIELD_NAME . "2"), cols: NULL, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: NULL, name: REPORT_ID_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: NULL);
   $output .= $hiddenReportId->getHtml();
-  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: null, name: Constant::FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL);
   $output .= $hiddenMode->getHtml();
   $output .= "</div>\n";
   $outputDialog = "";
   if ($reportId == REPORT_ID_FEES) {
-    $query = $databaseResult->getFeeDetail();
-    $result = $databaseResult->getConnection()->query($query);
+    $pdoStatementAndQuery = $databaseResult->getFeeDetail();
+    $pdoStatement = $pdoStatementAndQuery[0];
+    $query = $pdoStatementAndQuery[1];
+    $pdoStatement = $databaseResult->getConnection()->prepare(query: $query);
+    $pdoStatement->execute();
     $colFormats = array(array(4, "currency", 0), array(5, "currency", 0), array(6, "currency", 0));
 //     $hiddenAdditional = array(array("seasonId", 0));
-    $hideColIndexes = null; // array(0);
-    //         $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-//     $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
-    $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "FeeDetail", width: "100%");
+    $hideColIndexes = NULL; // array(0);
+    $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: NULL, header: true, hiddenAdditional: $hiddenAdditional, hiddenId: NULL, hideColumnIndexes: $hideColIndexes, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: NULL, suffix: "FeeDetail", width: "100%");
     $outputTemp = $htmlTable->getHtml();
-    if (0 < $result->rowCount()) {
+    if (0 < $pdoStatement->rowCount()) {
       $outputDialog =
       "<script type=\"module\">\n" .
       "  import { reportsInputLocal } from \"./scripts/reports.js\";\n" .
@@ -317,7 +337,7 @@ if (!isset($reportId)) {
       " </form>\n" .
       "</dialog>\n";
     }
-    $result->closeCursor();
+    $pdoStatement->closeCursor();
   }
 }
 $smarty->assign("content", $output);

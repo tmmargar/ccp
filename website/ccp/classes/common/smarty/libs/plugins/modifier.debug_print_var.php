@@ -61,8 +61,8 @@ function smarty_modifier_debug_print_var($var, $max = 10, $length = 40, $depth =
                 $results = 'true';
             } elseif (false === $var) {
                 $results = 'false';
-            } elseif (null === $var) {
-                $results = 'null';
+            } elseif (NULL === $var) {
+                $results = 'NULL';
             } else {
                 $results = htmlspecialchars((string)$var);
             }

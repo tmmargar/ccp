@@ -38,11 +38,11 @@ class DSNConfigurator
      *
      * @return PHPMailer
      */
-    public static function mailer($dsn, $exceptions = null)
+    public static function mailer($dsn, $exceptions = NULL)
     {
-        static $configurator = null;
+        static $configurator = NULL;
 
-        if (null === $configurator) {
+        if (NULL === $configurator) {
             $configurator = new DSNConfigurator();
         }
 

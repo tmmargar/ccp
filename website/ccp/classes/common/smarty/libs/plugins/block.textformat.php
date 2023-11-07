@@ -47,14 +47,14 @@ function smarty_block_textformat($params, $content, Smarty_Internal_Template $te
             )
         );
     }
-    $style = null;
+    $style = NULL;
     $indent = 0;
     $indent_first = 0;
     $indent_char = ' ';
     $wrap = 80;
     $wrap_char = "\n";
     $wrap_cut = false;
-    $assign = null;
+    $assign = NULL;
     foreach ($params as $_key => $_val) {
         switch ($_key) {
             case 'style':

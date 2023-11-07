@@ -11,19 +11,19 @@ define("LIMIT_COUNT_PARAMETER_NAME", "limitCount");
 $smarty->assign("title", "Chip Chair and a Prayer Events");
 $smarty->assign("heading", "");
 if (! isset($limitCount)) {
-  $limitCount = (isset($_POST[LIMIT_COUNT_PARAMETER_NAME]) ? $_POST[LIMIT_COUNT_PARAMETER_NAME] : isset($_GET[LIMIT_COUNT_PARAMETER_NAME])) ? $_GET[LIMIT_COUNT_PARAMETER_NAME] : null;
+  $limitCount = (isset($_POST[LIMIT_COUNT_PARAMETER_NAME]) ? $_POST[LIMIT_COUNT_PARAMETER_NAME] : isset($_GET[LIMIT_COUNT_PARAMETER_NAME])) ? $_GET[LIMIT_COUNT_PARAMETER_NAME] : NULL;
 }
 $output = "";
-if (null != $limitCount) {
+if (NULL != $limitCount) {
   $output .= "<div class=\"title\">Upcoming Events</div>\n";
 }
-$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
 $params = array($now->getDatabaseFormat(), $now->getDatabaseTimeFormat());
 $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
 $resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: $limitCount);
 foreach ($resultList as $tournament) {
   $startTime = $tournament->getStartTime()->getDisplayAmPmFormat();
-  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationOpen()->getDisplayAmPmFormat());
+  $registrationOpenDate = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationOpen()->getDisplayAmPmFormat());
   $interval = new DateInterval(Constant::INTERVAL_DATE_REGISTRATION_OPEN);
   $registrationOpenDateTemp = $registrationOpenDate->getTime();
   $registrationOpenDateTemp->sub($interval);
@@ -48,7 +48,7 @@ foreach ($resultList as $tournament) {
   }
 //   $output .= $description[0];
   $output .= $tournament->getDescription();
-  if (null != $tournament->getSpecialType()->getDescription()) {
+  if (NULL != $tournament->getSpecialType()->getDescription()) {
     $output .= " (" . $tournament->getSpecialType()->getDescription() . ")";
   }
   if ($registrationOpen) {

@@ -30,12 +30,12 @@ class Smarty_Internal_ErrorHandler
     public $allowUndefinedArrayKeys = true;
 
     /**
-     * Allows {$foo->bar} where bar is not an object (e.g. null or false).
+     * Allows {$foo->bar} where bar is not an object (e.g. NULL or false).
      * @var bool
      */
     public $allowDereferencingNonObjects = true;
 
-    private $previousErrorHandler = null;
+    private $previousErrorHandler = NULL;
 
     /**
      * Enable error handler to intercept errors
@@ -60,7 +60,7 @@ class Smarty_Internal_ErrorHandler
      */
     public function deactivate() {
         restore_error_handler();
-        $this->previousErrorHandler = null;
+        $this->previousErrorHandler = NULL;
     }
 
     /**
@@ -80,7 +80,7 @@ class Smarty_Internal_ErrorHandler
     {
 
         if ($this->allowUndefinedVars && preg_match(
-                '/^(Attempt to read property "value" on null|Trying to get property (\'value\' )?of non-object)/',
+                '/^(Attempt to read property "value" on NULL|Trying to get property (\'value\' )?of non-object)/',
                 $errstr
             )) {
             return; // suppresses this error

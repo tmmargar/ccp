@@ -53,14 +53,14 @@ function smarty_function_html_radios($params, Smarty_Internal_Template $template
         )
     );
     $name = 'radio';
-    $values = null;
-    $options = null;
-    $selected = null;
+    $values = NULL;
+    $options = NULL;
+    $selected = NULL;
     $separator = '';
     $escape = true;
     $labels = true;
     $label_ids = false;
-    $output = null;
+    $output = NULL;
     $extra = '';
     foreach ($params as $_key => $_val) {
         switch ($_key) {

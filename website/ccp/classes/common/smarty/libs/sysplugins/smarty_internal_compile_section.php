@@ -69,7 +69,7 @@ class Smarty_Internal_Compile_Section extends Smarty_Internal_Compile_Private_Fo
      *
      * @var array
      */
-    public $itemProperties = null;
+    public $itemProperties = NULL;
 
     /**
      * {section} tag has always name attribute
@@ -97,7 +97,7 @@ class Smarty_Internal_Compile_Section extends Smarty_Internal_Compile_Private_Fo
         unset($_attr[ 'name' ]);
         foreach ($attributes as $a => $v) {
             if ($v === false) {
-                $compiler->trigger_template_error("'{$a}' attribute/variable has illegal value", null, true);
+                $compiler->trigger_template_error("'{$a}' attribute/variable has illegal value", NULL, true);
             }
         }
         $local = "\$__section_{$attributes['name']}_" . $this->counter++ . '_';
@@ -125,7 +125,7 @@ class Smarty_Internal_Compile_Section extends Smarty_Internal_Compile_Private_Fo
                 if (in_array($prop, $this->nameProperties)) {
                     $namedAttr[ $prop ] = true;
                 } else {
-                    $compiler->trigger_template_error("Invalid property '{$prop}'", null, true);
+                    $compiler->trigger_template_error("Invalid property '{$prop}'", NULL, true);
                 }
             }
         }

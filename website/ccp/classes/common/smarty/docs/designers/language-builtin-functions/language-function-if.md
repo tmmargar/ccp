@@ -71,7 +71,7 @@ separated from surrounding elements by spaces. Note that items listed in
    .....
 {/if}
 
-{* check for not null. *}
+{* check for not NULL. *}
 {if isset($foo) }
    .....
 {/if}

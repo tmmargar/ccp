@@ -239,14 +239,14 @@ class Smarty_Internal_Configfileparser
      *
      * @var Smarty_Internal_Config_File_Compiler
      */
-    public $compiler = null;
+    public $compiler = NULL;
 
     /**
      * smarty object
      *
      * @var Smarty
      */
-    public $smarty      = null;
+    public $smarty      = NULL;
 
     public $yyTraceFILE;
 
@@ -697,19 +697,19 @@ class Smarty_Internal_Configfileparser
 
     public function yy_r0()
     {
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     }
 
     public function yy_r1()
     {
         $this->add_global_vars($this->yystack[ $this->yyidx + 0 ]->minor);
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     }
 
     public function yy_r4()
     {
         $this->add_section_vars($this->yystack[ $this->yyidx + -3 ]->minor, $this->yystack[ $this->yyidx + 0 ]->minor);
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     }
 
     // line 245 "../smarty/lexer/smarty_internal_configfileparser.y"
@@ -721,7 +721,7 @@ class Smarty_Internal_Configfileparser
                 $this->yystack[ $this->yyidx + 0 ]->minor
             );
         }
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     }
 
     // line 250 "../smarty/lexer/smarty_internal_configfileparser.y"
@@ -814,10 +814,10 @@ class Smarty_Internal_Configfileparser
                 self::$yyRuleName[ $yyruleno ]
             );
         }
-        $this->_retvalue = $yy_lefthand_side = null;
+        $this->_retvalue = $yy_lefthand_side = NULL;
         if (isset(self::$yyReduceMap[ $yyruleno ])) {
             // call the action
-            $this->_retvalue = null;
+            $this->_retvalue = NULL;
             $this->{'yy_r' . self::$yyReduceMap[ $yyruleno ]}();
             $yy_lefthand_side = $this->_retvalue;
         }
@@ -882,7 +882,7 @@ class Smarty_Internal_Configfileparser
     public function doParse($yymajor, $yytokenvalue)
     {
         $yyerrorhit = 0;   /* True if yymajor has invoked an error */
-        if ($this->yyidx === null || $this->yyidx < 0) {
+        if ($this->yyidx === NULL || $this->yyidx < 0) {
             $this->yyidx = 0;
             $this->yyerrcnt = -1;
             $x = new TPC_yyStackEntry;

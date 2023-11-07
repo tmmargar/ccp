@@ -41,7 +41,7 @@ class Smarty_Internal_Method_RegisterPlugin
         $name,
         $callback,
         $cacheable = true,
-        $cache_attr = null
+        $cache_attr = NULL
     ) {
         $smarty = $obj->_getSmartyObj();
         if (isset($smarty->registered_plugins[ $type ][ $name ])) {

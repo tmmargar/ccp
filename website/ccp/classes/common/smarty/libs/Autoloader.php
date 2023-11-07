@@ -30,14 +30,14 @@ class Smarty_Autoloader
      *
      * @var string
      */
-    public static $SMARTY_DIR = null;
+    public static $SMARTY_DIR = NULL;
 
     /**
      * Filepath to Smarty internal plugins
      *
      * @var string
      */
-    public static $SMARTY_SYSPLUGINS_DIR = null;
+    public static $SMARTY_SYSPLUGINS_DIR = NULL;
 
     /**
      * Array with Smarty core classes and their filename

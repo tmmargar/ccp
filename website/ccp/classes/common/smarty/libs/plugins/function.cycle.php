@@ -39,7 +39,7 @@
  * @param array                    $params   parameters
  * @param Smarty_Internal_Template $template template object
  *
- * @return string|null
+ * @return string|NULL
  */
 function smarty_function_cycle($params, $template)
 {
@@ -79,7 +79,7 @@ function smarty_function_cycle($params, $template)
     if ($print) {
         $retval = $cycle_array[ $cycle_vars[ $name ][ 'index' ] ];
     } else {
-        $retval = null;
+        $retval = NULL;
     }
     if ($advance) {
         if ($cycle_vars[ $name ][ 'index' ] >= count($cycle_array) - 1) {

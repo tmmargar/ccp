@@ -36,7 +36,7 @@ class Smarty_Data extends Smarty_Internal_Data
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * create Smarty data object
@@ -47,7 +47,7 @@ class Smarty_Data extends Smarty_Internal_Data
      *
      * @throws SmartyException
      */
-    public function __construct($_parent = null, $smarty = null, $name = null)
+    public function __construct($_parent = NULL, $smarty = NULL, $name = NULL)
     {
         parent::__construct();
         self::$count++;
@@ -61,7 +61,7 @@ class Smarty_Data extends Smarty_Internal_Data
             foreach ($_parent as $_key => $_val) {
                 $this->tpl_vars[ $_key ] = new Smarty_Variable($_val);
             }
-        } elseif ($_parent !== null) {
+        } elseif ($_parent !== NULL) {
             throw new SmartyException('Wrong type for template variables');
         }
     }

@@ -58,7 +58,7 @@ function smarty_function_html_table($params)
     $hdir = 'right';
     $inner = 'cols';
     $caption = '';
-    $loop = null;
+    $loop = NULL;
     if (!isset($params[ 'loop' ])) {
         trigger_error("html_table: missing 'loop' parameter", E_USER_WARNING);
         return;

@@ -42,8 +42,8 @@ abstract class Smarty_Resource_Recompiled extends Smarty_Resource
         $compiled = &$_smarty_tpl->compiled;
         $compiled->file_dependency = array();
         $compiled->includes = array();
-        $compiled->nocache_hash = null;
-        $compiled->unifunc = null;
+        $compiled->nocache_hash = NULL;
+        $compiled->unifunc = NULL;
         $level = ob_get_level();
         ob_start();
         $_smarty_tpl->loadCompiler();

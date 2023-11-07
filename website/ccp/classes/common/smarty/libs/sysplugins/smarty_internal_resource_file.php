@@ -25,7 +25,7 @@ class Smarty_Internal_Resource_File extends Smarty_Resource
      *
      * @throws \SmartyException
      */
-    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = null)
+    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = NULL)
     {
         $source->filepath = $this->buildFilepath($source, $_template);
         if ($source->filepath !== false) {
@@ -98,7 +98,7 @@ class Smarty_Internal_Resource_File extends Smarty_Resource
      * @return string fully qualified filepath
      * @throws SmartyException
      */
-    protected function buildFilepath(Smarty_Template_Source $source, Smarty_Internal_Template $_template = null)
+    protected function buildFilepath(Smarty_Template_Source $source, Smarty_Internal_Template $_template = NULL)
     {
         $file = $source->name;
         // absolute file ?
@@ -125,7 +125,7 @@ class Smarty_Internal_Resource_File extends Smarty_Resource
         if (strpos($file, DIRECTORY_SEPARATOR === '/' ? '\\' : '/') !== false) {
             $file = str_replace(DIRECTORY_SEPARATOR === '/' ? '\\' : '/', DIRECTORY_SEPARATOR, $file);
         }
-        $_directories = $source->smarty->getTemplateDir(null, $source->isConfig);
+        $_directories = $source->smarty->getTemplateDir(NULL, $source->isConfig);
         // template_dir index?
         if ($file[ 0 ] === '[' && preg_match('#^\[([^\]]+)\](.+)$#', $file, $fileMatch)) {
             $file = $fileMatch[ 2 ];

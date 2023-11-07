@@ -2,14 +2,14 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class Base extends Root {
-  public function __construct(protected bool $debug, private string|int|null $id) {
-    $this->id = Base::build(value: $id, suffix: null);
+  public function __construct(protected bool $debug, private string|int|NULL $id) {
+    $this->id = Base::build(value: $id, suffix: NULL);
   }
   public function getId(): string {
     return $this->id;
   }
   public function setId(int $id) {
-    $this->id = $this->build(value: $id, suffix: null);
+    $this->id = $this->build(value: $id, suffix: NULL);
   }
   public function __toString(): string {
     $output = parent::__toString();
@@ -17,7 +17,7 @@ abstract class Base extends Root {
     $output .= $this->id;
     return $output;
   }
-  public static function build(string|int|null $value, string|null $suffix): string {
+  public static function build(string|int|NULL $value, string|NULL $suffix): string {
     $idTemp = "";
     if (isset($value)) {
       $temp = explode(separator: " ", string: (string) $value);

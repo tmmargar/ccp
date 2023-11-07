@@ -82,8 +82,8 @@ on the functions you are supposed to provide.
                 $source = $row['source'];
                 $mtime = strtotime($row['modified']);
             } else {
-                $source = null;
-                $mtime = null;
+                $source = NULL;
+                $mtime = NULL;
             }
         }
         

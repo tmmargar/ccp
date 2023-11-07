@@ -31,7 +31,7 @@ class Smarty_Internal_Method_ClearAllCache
      * @return int number of cache files deleted
      * @throws \SmartyException
      */
-    public function clearAllCache(Smarty $smarty, $exp_time = null, $type = null)
+    public function clearAllCache(Smarty $smarty, $exp_time = NULL, $type = NULL)
     {
         $smarty->_clearTemplateCache();
         // load cache resource and call clearAll

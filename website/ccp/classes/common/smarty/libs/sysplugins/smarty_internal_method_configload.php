@@ -27,14 +27,14 @@ class Smarty_Internal_Method_ConfigLoad
      * @param \Smarty_Internal_Data|\Smarty_Internal_Template|\Smarty $data
      * @param string                                                  $config_file filename
      * @param mixed                                                   $sections    array of section names, single
-     *                                                                             section or null
+     *                                                                             section or NULL
      *
      * @return \Smarty|\Smarty_Internal_Data|\Smarty_Internal_Template
      * @throws \Exception
      */
-    public function configLoad(Smarty_Internal_Data $data, $config_file, $sections = null)
+    public function configLoad(Smarty_Internal_Data $data, $config_file, $sections = NULL)
     {
-        $this->_loadConfigFile($data, $config_file, $sections, null);
+        $this->_loadConfigFile($data, $config_file, $sections, NULL);
         return $data;
     }
 
@@ -47,18 +47,18 @@ class Smarty_Internal_Method_ConfigLoad
      * @param \Smarty|\Smarty_Internal_Data|\Smarty_Internal_Template $data
      * @param string                                                  $config_file filename
      * @param mixed                                                   $sections    array of section names, single
-     *                                                                             section or null
+     *                                                                             section or NULL
      * @param int                                                     $scope       scope into which config variables
      *                                                                             shall be loaded
      *
      * @throws \Exception
      */
-    public function _loadConfigFile(Smarty_Internal_Data $data, $config_file, $sections = null, $scope = 0)
+    public function _loadConfigFile(Smarty_Internal_Data $data, $config_file, $sections = NULL, $scope = 0)
     {
         /* @var \Smarty $smarty */
         $smarty = $data->_getSmartyObj();
         /* @var \Smarty_Internal_Template $confObj */
-        $confObj = new Smarty_Internal_Template($config_file, $smarty, $data, null, null, null, null, true);
+        $confObj = new Smarty_Internal_Template($config_file, $smarty, $data, NULL, NULL, NULL, NULL, true);
         $confObj->caching = Smarty::CACHING_OFF;
         $confObj->source->config_sections = $sections;
         $confObj->source->scope = $scope;
@@ -160,12 +160,12 @@ class Smarty_Internal_Method_ConfigLoad
      * @param string                                                  $varName the name of the config variable
      * @param bool                                                    $errorEnable
      *
-     * @return null|string  the value of the config variable
+     * @return NULL|string  the value of the config variable
      */
     public function _getConfigVariable(Smarty_Internal_Data $data, $varName, $errorEnable = true)
     {
         $_ptr = $data;
-        while ($_ptr !== null) {
+        while ($_ptr !== NULL) {
             if (isset($_ptr->config_vars[ $varName ])) {
                 // found it, return it
                 return $_ptr->config_vars[ $varName ];
@@ -177,6 +177,6 @@ class Smarty_Internal_Method_ConfigLoad
             // force a notice
             $x = $$varName;
         }
-        return null;
+        return NULL;
     }
 }

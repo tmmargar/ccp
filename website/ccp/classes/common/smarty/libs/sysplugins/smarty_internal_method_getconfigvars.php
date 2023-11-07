@@ -25,16 +25,16 @@ class Smarty_Internal_Method_GetConfigVars
      * @link https://www.smarty.net/docs/en/api.get.config.vars.tpl
      *
      * @param \Smarty_Internal_Data|\Smarty_Internal_Template|\Smarty $data
-     * @param string                                                  $varname        variable name or null
+     * @param string                                                  $varname        variable name or NULL
      * @param bool                                                    $search_parents include parent templates?
      *
      * @return mixed variable value or or array of variables
      */
-    public function getConfigVars(Smarty_Internal_Data $data, $varname = null, $search_parents = true)
+    public function getConfigVars(Smarty_Internal_Data $data, $varname = NULL, $search_parents = true)
     {
         $_ptr = $data;
         $var_array = array();
-        while ($_ptr !== null) {
+        while ($_ptr !== NULL) {
             if (isset($varname)) {
                 if (isset($_ptr->config_vars[ $varname ])) {
                     return $_ptr->config_vars[ $varname ];
@@ -46,7 +46,7 @@ class Smarty_Internal_Method_GetConfigVars
             if ($search_parents) {
                 $_ptr = $_ptr->parent;
             } else {
-                $_ptr = null;
+                $_ptr = NULL;
             }
         }
         if (isset($varname)) {

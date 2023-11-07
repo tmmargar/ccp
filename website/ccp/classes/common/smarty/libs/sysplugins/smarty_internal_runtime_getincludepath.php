@@ -62,7 +62,7 @@ class Smarty_Internal_Runtime_GetIncludePath
      *
      * @var bool
      */
-    public $_has_stream_include = null;
+    public $_has_stream_include = NULL;
 
     /**
      * Number for array index

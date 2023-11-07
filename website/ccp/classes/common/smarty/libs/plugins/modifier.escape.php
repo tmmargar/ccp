@@ -21,7 +21,7 @@
  *
  * @return string escaped input string
  */
-function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
+function smarty_modifier_escape($string, $esc_type = 'html', $char_set = NULL, $double_encode = true)
 {
     static $is_loaded_1 = false;
     static $is_loaded_2 = false;

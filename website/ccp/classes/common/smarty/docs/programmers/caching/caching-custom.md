@@ -105,8 +105,8 @@ to invoke your custom CacheResource implementation.
                 $content = $row['content'];
                 $mtime = strtotime($row['modified']);
             } else {
-                $content = null;
-                $mtime = null;
+                $content = NULL;
+                $mtime = NULL;
             }
         }
         
@@ -135,7 +135,7 @@ to invoke your custom CacheResource implementation.
          * @param string $name template name
          * @param string $cache_id cache id
          * @param string $compile_id compile id
-         * @param integer|null $exp_time seconds till expiration time in seconds or null
+         * @param integer|NULL $exp_time seconds till expiration time in seconds or NULL
          * @param string $content content to cache
          * @return boolean success
          */
@@ -157,13 +157,13 @@ to invoke your custom CacheResource implementation.
          * @param string $name template name
          * @param string $cache_id cache id
          * @param string $compile_id compile id
-         * @param integer|null $exp_time seconds till expiration or null
+         * @param integer|NULL $exp_time seconds till expiration or NULL
          * @return integer number of deleted caches
          */
         protected function delete($name, $cache_id, $compile_id, $exp_time)
         {
             // delete the whole cache
-            if ($name === null && $cache_id === null && $compile_id === null && $exp_time === null) {
+            if ($name === NULL && $cache_id === NULL && $compile_id === NULL && $exp_time === NULL) {
                 // returning the number of deleted caches would require a second query to count them
                 $query = $this->db->query('TRUNCATE TABLE output_cache');
                 return -1;
@@ -171,19 +171,19 @@ to invoke your custom CacheResource implementation.
             // build the filter
             $where = array();
             // equal test name
-            if ($name !== null) {
+            if ($name !== NULL) {
                 $where[] = 'name = ' . $this->db->quote($name);
             }
             // equal test compile_id
-            if ($compile_id !== null) {
+            if ($compile_id !== NULL) {
                 $where[] = 'compile_id = ' . $this->db->quote($compile_id);
             }
             // range test expiration time
-            if ($exp_time !== null) {
+            if ($exp_time !== NULL) {
                 $where[] = 'modified < DATE_SUB(NOW(), INTERVAL ' . intval($exp_time) . ' SECOND)';
             }
             // equal test cache_id and match sub-groups
-            if ($cache_id !== null) {
+            if ($cache_id !== NULL) {
                 $where[] = '(cache_id = '. $this->db->quote($cache_id)
                     . ' OR cache_id LIKE '. $this->db->quote($cache_id .'|%') .')';
             }
@@ -219,7 +219,7 @@ to invoke your custom CacheResource implementation.
          * memcache instance
          * @var Memcache
          */
-        protected $memcache = null;
+        protected $memcache = NULL;
         
         public function __construct()
         {
@@ -257,7 +257,7 @@ to invoke your custom CacheResource implementation.
          * @param int $expire expiration time
          * @return boolean true on success, false on failure
          */
-        protected function write(array $keys, $expire=null)
+        protected function write(array $keys, $expire=NULL)
         {
             foreach ($keys as $k => $v) {
                 $k = sha1($k);

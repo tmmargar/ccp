@@ -107,7 +107,7 @@ Where a template could be as follows. Note the use of the
 
 ```smarty
 <select name="type_id">
-    <option value='null'>-- none --</option>
+    <option value='NULL'>-- none --</option>
     {html_options options=$contact_types|truncate:20 selected=$contact.type_id}
 </select>
 ```

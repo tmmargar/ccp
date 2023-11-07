@@ -18,11 +18,11 @@
 class Smarty_Template_Config extends Smarty_Template_Source
 {
     /**
-     * array of section names, single section or null
+     * array of section names, single section or NULL
      *
-     * @var null|string|array
+     * @var NULL|string|array
      */
-    public $config_sections = null;
+    public $config_sections = NULL;
 
     /**
      * scope into which the config variables shall be loaded
@@ -71,9 +71,9 @@ class Smarty_Template_Config extends Smarty_Template_Source
      * @throws SmartyException
      */
     public static function load(
-        Smarty_Internal_Template $_template = null,
-        Smarty $smarty = null,
-        $template_resource = null
+        Smarty_Internal_Template $_template = NULL,
+        Smarty $smarty = NULL,
+        $template_resource = NULL
     ) {
         static $_incompatible_resources = array('extends' => true, 'php' => true);
         if ($_template) {

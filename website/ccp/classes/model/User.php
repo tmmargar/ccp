@@ -5,10 +5,10 @@ class User extends Base {
   private string $firstName;
   private string $lastName;
   private int $idPrevious;
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $name, protected string|null $username, protected string|null $password,
-    protected string|null $email, protected Phone|null $phone, protected int $administrator, protected string|null $registrationDate, protected string|null $approvalDate,
-    protected int|null $approvalUserid, protected string|null $approvalName, protected string|null $rejectionDate, protected int|null $rejectionUserid, protected string|null $rejectionName,
-    protected int $active, protected Address|null $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken,
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected string|NULL $username, protected string|NULL $password,
+    protected string|NULL $email, protected Phone|NULL $phone, protected int $administrator, protected string|NULL $registrationDate, protected string|NULL $approvalDate,
+    protected int|NULL $approvalUserid, protected string|NULL $approvalName, protected string|NULL $rejectionDate, protected int|NULL $rejectionUserid, protected string|NULL $rejectionName,
+    protected int $active, protected Address|NULL $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken,
     protected $rememberExpires) {
     parent::__construct(debug: $debug, id: $id);
     $nameFull = explode(separator: " ", string: $name);
@@ -22,40 +22,40 @@ class User extends Base {
   public function getLastName(): string {
     return $this->lastName;
   }
-  public function getEmail(): string|null {
+  public function getEmail(): string|NULL {
     return $this->email;
   }
-  public function getPhone(): Phone|null {
+  public function getPhone(): Phone|NULL {
     return $this->phone;
   }
-  public function getUsername(): string|null {
+  public function getUsername(): string|NULL {
     return $this->username;
   }
-  public function getPassword(): string|null {
+  public function getPassword(): string|NULL {
     return $this->password;
   }
   public function getAdministrator(): int {
     return $this->administrator;
   }
-  public function getRegistrationDate(): string|null {
+  public function getRegistrationDate(): string|NULL {
     return $this->registrationDate;
   }
-  public function getApprovalDate(): string|null {
+  public function getApprovalDate(): string|NULL {
     return $this->approvalDate;
   }
-  public function getApprovalUserid(): int|null {
+  public function getApprovalUserid(): int|NULL {
     return $this->approvalUserid;
   }
-  public function getApprovalName(): string|null {
+  public function getApprovalName(): string|NULL {
     return $this->approvalName;
   }
-  public function getRejectionDate(): string|null {
+  public function getRejectionDate(): string|NULL {
     return $this->rejectionDate;
   }
-  public function getRejectionUserid(): int|null {
+  public function getRejectionUserid(): int|NULL {
     return $this->rejectionUserid;
   }
-  public function getRejectionName(): string|null {
+  public function getRejectionName(): string|NULL {
     return $this->rejectionName;
   }
   public function getActive(): int {
@@ -79,7 +79,7 @@ class User extends Base {
   public function getRememberExpires() {
     return $this->rememberExpires;
   }
-  public function getAddress(): Address|null {
+  public function getAddress(): Address|NULL {
     return $this->address;
   }
   public function getName(): string {
@@ -97,7 +97,7 @@ class User extends Base {
   public function setEmail(string $email) {
     $this->email = $email;
   }
-  public function setPhone(Phone|null $phone) {
+  public function setPhone(Phone|NULL $phone) {
     $this->phone = $phone;
   }
   public function setUsername(string $username) {
@@ -165,8 +165,8 @@ class User extends Base {
     }
   }
   public function getLink(): string {
-    $link = new HtmlLink(accessKey: null, class: null, debugP: $this->isDebug(), href: "manageUser.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
-      tabIndex: - 1, text: $this->getName(), title: null);
+    $link = new HtmlLink(accessKey: NULL, class: NULL, debugP: $this->isDebug(), href: "manageUser.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getName(), title: NULL);
     return $link->getHtml();
   }
   public function __toString(): string {
@@ -178,7 +178,7 @@ class User extends Base {
     $output .= "', email = '";
     $output .= $this->email;
     $output .= "', phone = [";
-    $output .= null !== $this->phone ? $this->phone->__toString() : "";
+    $output .= NULL !== $this->phone ? $this->phone->__toString() : "";
     $output .= "], username = '";
     $output .= $this->username;
     $output .= "', password = '";
@@ -202,7 +202,7 @@ class User extends Base {
     $output .= "', active = '";
     $output .= $this->active;
     $output .= "', address = [";
-    $output .= null !== $this->address ? $this->address->__toString() : "";
+    $output .= NULL !== $this->address ? $this->address->__toString() : "";
     $output .= "], idPrevious = ";
     $output .= $this->idPrevious;
     $output .= ", resetSelector = '";

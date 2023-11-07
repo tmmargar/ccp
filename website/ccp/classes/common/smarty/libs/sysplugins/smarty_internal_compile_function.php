@@ -54,13 +54,13 @@ class Smarty_Internal_Compile_Function extends Smarty_Internal_CompileBase
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
         if ($_attr[ 'nocache' ] === true) {
-            $compiler->trigger_template_error('nocache option not allowed', null, true);
+            $compiler->trigger_template_error('nocache option not allowed', NULL, true);
         }
         unset($_attr[ 'nocache' ]);
         $_name = trim($_attr[ 'name' ], '\'"');
 
         if (!preg_match('/^[a-zA-Z0-9_\x80-\xff]+$/', $_name)) {
-	        $compiler->trigger_template_error("Function name contains invalid characters: {$_name}", null, true);
+	        $compiler->trigger_template_error("Function name contains invalid characters: {$_name}", NULL, true);
         }
 
         $compiler->parent_compiler->tpl_function[ $_name ] = array();
@@ -90,7 +90,7 @@ class Smarty_Internal_Compile_Functionclose extends Smarty_Internal_CompileBase
      *
      * @var object
      */
-    private $compiler = null;
+    private $compiler = NULL;
 
     /**
      * Compiles code for the {/function} tag

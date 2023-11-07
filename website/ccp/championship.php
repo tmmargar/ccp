@@ -11,7 +11,7 @@ $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("heading", "Championship");
 $smarty->assign("style", "");
 $output = "";
-$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
 $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
 $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
 $params = array($startDate,$endDate);
@@ -19,7 +19,7 @@ $resultList = $databaseResult->getPrizePoolForSeason(params: $params, returnQuer
 if (0 < count($resultList)) {
   $prizePool = $resultList[0];
 }
-$resultList = $databaseResult->getWinnersForSeason(params: $params, returnQuery: false, limitCount: null);
+$resultList = $databaseResult->getWinnersForSeason(params: $params, returnQuery: false, limitCount: NULL);
 if (0 < count($resultList)) {
   $ctr = 0;
   while ($ctr < count($resultList)) {

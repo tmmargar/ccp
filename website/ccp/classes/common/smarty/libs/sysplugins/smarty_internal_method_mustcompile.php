@@ -38,7 +38,7 @@ class Smarty_Internal_Method_MustCompile
             }
             throw new SmartyException("Unable to load template {$_template->source->type} '{$_template->source->name}'{$parent_resource}");
         }
-        if ($_template->mustCompile === null) {
+        if ($_template->mustCompile === NULL) {
             $_template->mustCompile = (!$_template->source->handler->uncompiled &&
                                        ($_template->smarty->force_compile || $_template->source->handler->recompiled ||
                                         !$_template->compiled->exists || ($_template->compile_check &&

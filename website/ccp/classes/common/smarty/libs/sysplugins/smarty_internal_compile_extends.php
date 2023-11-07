@@ -93,12 +93,12 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_Compile_Shared_Inh
      * Add code for inheritance endChild() method to end of template
      *
      * @param \Smarty_Internal_TemplateCompilerBase $compiler
-     * @param null|string                           $template optional inheritance parent template
+     * @param NULL|string                           $template optional inheritance parent template
      *
      * @throws \SmartyCompilerException
      * @throws \SmartyException
      */
-    private function compileEndChild(Smarty_Internal_TemplateCompilerBase $compiler, $template = null)
+    private function compileEndChild(Smarty_Internal_TemplateCompilerBase $compiler, $template = NULL)
     {
         $inlineUids = '';
         if (isset($template) && $compiler->smarty->merge_compiled_includes) {

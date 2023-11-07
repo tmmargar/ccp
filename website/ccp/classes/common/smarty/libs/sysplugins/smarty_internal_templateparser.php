@@ -99,21 +99,21 @@ class Smarty_Internal_Templateparser
      *
      * @var Smarty_Internal_TemplateCompilerBase
      */
-    public $compiler = null;
+    public $compiler = NULL;
 
     /**
      * smarty object
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * template object
      *
      * @var Smarty_Internal_Template
      */
-    public $template = null;
+    public $template = NULL;
 
     /**
      * block nesting level
@@ -127,7 +127,7 @@ class Smarty_Internal_Templateparser
      *
      * @var Smarty_Security
      */
-    public $security = null;
+    public $security = NULL;
 
     /**
      * template prefix array
@@ -2034,7 +2034,7 @@ public static $yy_action = array(
          $text = $this->yystack[ $this->yyidx + 0 ]->minor;
 
          if ((string)$text == '') {
-            $this->current_buffer->append_subtree($this, null);
+            $this->current_buffer->append_subtree($this, NULL);
          }
 
          $this->current_buffer->append_subtree($this, new Smarty_Internal_ParseTree_Text($text, $this->strip));
@@ -2090,7 +2090,7 @@ public static $yy_action = array(
     $tag = trim(substr($this->yystack[$this->yyidx + 0]->minor, $this->compiler->getLdelLength(), -$this->compiler->getRdelLength()));
     if ($tag == 'strip') {
         $this->strip = true;
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     } else {
         if (defined($tag)) {
             if ($this->security) {
@@ -2246,7 +2246,7 @@ public static $yy_action = array(
     $tag = trim(substr($this->yystack[$this->yyidx + 0]->minor, $this->compiler->getLdelLength(), -$this->compiler->getRdelLength()), ' /');
     if ($tag === 'strip') {
         $this->strip = false;
-        $this->_retvalue = null;
+        $this->_retvalue = NULL;
     } else {
        $this->_retvalue = $this->compiler->compileTag($tag.'close',array());
     }
@@ -2461,7 +2461,7 @@ public static $yy_action = array(
     }
 // line 840 "../smarty/lexer/smarty_internal_templateparser.y"
     public function yy_r107(){
-    $this->_retvalue = '(is_array($tmp = ' . $this->compiler->compileConfigVariable('\'' . $this->yystack[$this->yyidx + -2]->minor . '\'') . ') ? $tmp'.$this->yystack[$this->yyidx + 0]->minor.' :null)';
+    $this->_retvalue = '(is_array($tmp = ' . $this->compiler->compileConfigVariable('\'' . $this->yystack[$this->yyidx + -2]->minor . '\'') . ') ? $tmp'.$this->yystack[$this->yyidx + 0]->minor.' :NULL)';
     }
 // line 844 "../smarty/lexer/smarty_internal_templateparser.y"
     public function yy_r108(){
@@ -2469,7 +2469,7 @@ public static $yy_action = array(
     }
 // line 848 "../smarty/lexer/smarty_internal_templateparser.y"
     public function yy_r109(){
-    $this->_retvalue = '(is_array($tmp = ' . $this->compiler->compileConfigVariable($this->yystack[$this->yyidx + -2]->minor) . ') ? $tmp'.$this->yystack[$this->yyidx + 0]->minor.' : null)';
+    $this->_retvalue = '(is_array($tmp = ' . $this->compiler->compileConfigVariable($this->yystack[$this->yyidx + -2]->minor) . ') ? $tmp'.$this->yystack[$this->yyidx + 0]->minor.' : NULL)';
     }
 // line 852 "../smarty/lexer/smarty_internal_templateparser.y"
     public function yy_r110(){
@@ -2770,10 +2770,10 @@ public static $yy_action = array(
                 self::$yyRuleName[$yyruleno]);
         }
 
-        $this->_retvalue = $yy_lefthand_side = null;
+        $this->_retvalue = $yy_lefthand_side = NULL;
         if (isset(self::$yyReduceMap[$yyruleno])) {
             // call the action
-            $this->_retvalue = null;
+            $this->_retvalue = NULL;
             $this->{'yy_r' . self::$yyReduceMap[$yyruleno]}();
             $yy_lefthand_side = $this->_retvalue;
         }
@@ -2837,7 +2837,7 @@ public static $yy_action = array(
     {
         $yyerrorhit = 0;   /* True if yymajor has invoked an error */
 
-        if ($this->yyidx === null || $this->yyidx < 0) {
+        if ($this->yyidx === NULL || $this->yyidx < 0) {
             $this->yyidx = 0;
             $this->yyerrcnt = -1;
             $x = new TP_yyStackEntry;

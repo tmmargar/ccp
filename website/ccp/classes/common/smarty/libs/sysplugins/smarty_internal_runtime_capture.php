@@ -143,14 +143,14 @@ class Smarty_Internal_Runtime_Capture
      * Return content of named capture buffer by key or as array
      *
      * @param \Smarty_Internal_Template $_template
-     * @param string|null               $name
+     * @param string|NULL               $name
      *
-     * @return string|string[]|null
+     * @return string|string[]|NULL
      */
-    public function getBuffer(Smarty_Internal_Template $_template, $name = null)
+    public function getBuffer(Smarty_Internal_Template $_template, $name = NULL)
     {
         if (isset($name)) {
-            return isset($this->namedBuffer[ $name ]) ? $this->namedBuffer[ $name ] : null;
+            return isset($this->namedBuffer[ $name ]) ? $this->namedBuffer[ $name ] : NULL;
         } else {
             return $this->namedBuffer;
         }

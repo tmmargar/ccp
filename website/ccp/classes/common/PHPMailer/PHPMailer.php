@@ -63,10 +63,10 @@ class PHPMailer
 
     /**
      * Email priority.
-     * Options: null (default), 1 = High, 3 = Normal, 5 = low.
-     * When null, the header is not set at all.
+     * Options: NULL (default), 1 = High, 3 = Normal, 5 = low.
+     * When NULL, the header is not set at all.
      *
-     * @var int|null
+     * @var int|NULL
      */
     public $Priority;
 
@@ -564,9 +564,9 @@ class PHPMailer
 
     /**
      * What to put in the X-Mailer header.
-     * Options: An empty string for PHPMailer default, whitespace/null for none, or a string to use.
+     * Options: An empty string for PHPMailer default, whitespace/NULL for none, or a string to use.
      *
-     * @var string|null
+     * @var string|NULL
      */
     public $XMailer = '';
 
@@ -824,9 +824,9 @@ class PHPMailer
      *
      * @param bool $exceptions Should we throw external exceptions?
      */
-    public function __construct($exceptions = null)
+    public function __construct($exceptions = NULL)
     {
-        if (null !== $exceptions) {
+        if (NULL !== $exceptions) {
             $this->exceptions = (bool) $exceptions;
         }
         //Pick an appropriate debug output format automatically
@@ -852,7 +852,7 @@ class PHPMailer
      * @param string      $subject Subject
      * @param string      $body    Message Body
      * @param string      $header  Additional Header(s)
-     * @param string|null $params  Params
+     * @param string|NULL $params  Params
      *
      * @return bool
      */
@@ -864,14 +864,14 @@ class PHPMailer
         } else {
             $subject = $this->encodeHeader($this->secureHeader($subject));
         }
-        //Calling mail() with null params breaks
+        //Calling mail() with NULL params breaks
         $this->edebug('Sending with mail()');
         $this->edebug('Sendmail path: ' . ini_get('sendmail_path'));
         $this->edebug("Envelope sender: {$this->Sender}");
         $this->edebug("To: {$to}");
         $this->edebug("Subject: {$subject}");
         $this->edebug("Headers: {$header}");
-        if (!$this->UseSendmailOptions || null === $params) {
+        if (!$this->UseSendmailOptions || NULL === $params) {
             $result = @mail($to, $subject, $body, $header);
         } else {
             $this->edebug("Additional params: {$params}");
@@ -1077,7 +1077,7 @@ class PHPMailer
     protected function addOrEnqueueAnAddress($kind, $address, $name)
     {
         $pos = false;
-        if ($address !== null) {
+        if ($address !== NULL) {
             $address = trim($address);
             $pos = strrpos($address, '@');
         }
@@ -1097,7 +1097,7 @@ class PHPMailer
 
             return false;
         }
-        if ($name !== null && is_string($name)) {
+        if ($name !== NULL && is_string($name)) {
             $name = trim(preg_replace('/[\r\n]+/', '', $name)); //Strip breaks and trim
         } else {
             $name = '';
@@ -1373,9 +1373,9 @@ class PHPMailer
      *
      * @return bool
      */
-    public static function validateAddress($address, $patternselect = null)
+    public static function validateAddress($address, $patternselect = NULL)
     {
-        if (null === $patternselect) {
+        if (NULL === $patternselect) {
             $patternselect = static::$validator;
         }
         //Don't allow strings as callables, see SECURITY.md and CVE-2021-3603
@@ -1917,7 +1917,7 @@ class PHPMailer
             $to = 'undisclosed-recipients:;';
         }
 
-        $params = null;
+        $params = NULL;
         //This sets the SMTP envelope sender which gets turned into a return-path header by the receiver
         //A space after `-f` is optional, but there is a long history of its presence
         //causing problems, so we don't use one
@@ -2098,14 +2098,14 @@ class PHPMailer
      *
      * @return bool
      */
-    public function smtpConnect($options = null)
+    public function smtpConnect($options = NULL)
     {
-        if (null === $this->smtp) {
+        if (NULL === $this->smtp) {
             $this->smtp = $this->getSMTPInstance();
         }
 
         //If no options are provided, use whatever is set in the instance
-        if (null === $options) {
+        if (NULL === $options) {
             $options = $this->SMTPOptions;
         }
 
@@ -2118,11 +2118,11 @@ class PHPMailer
         $this->smtp->setDebugLevel($this->SMTPDebug);
         $this->smtp->setDebugOutput($this->Debugoutput);
         $this->smtp->setVerp($this->do_verp);
-        if ($this->Host === null) {
+        if ($this->Host === NULL) {
             $this->Host = 'localhost';
         }
         $hosts = explode(';', $this->Host);
-        $lastexception = null;
+        $lastexception = NULL;
 
         foreach ($hosts as $hostentry) {
             $hostinfo = [];
@@ -2225,7 +2225,7 @@ class PHPMailer
         //If we get here, all connection attempts have failed, so close connection hard
         $this->smtp->close();
         //As we've caught all exceptions, just report whatever the last one was
-        if ($this->exceptions && null !== $lastexception) {
+        if ($this->exceptions && NULL !== $lastexception) {
             throw $lastexception;
         }
         if ($this->exceptions) {
@@ -2242,7 +2242,7 @@ class PHPMailer
      */
     public function smtpClose()
     {
-        if ((null !== $this->smtp) && $this->smtp->connected()) {
+        if ((NULL !== $this->smtp) && $this->smtp->connected()) {
             $this->smtp->quit();
             $this->smtp->close();
         }
@@ -2674,7 +2674,7 @@ class PHPMailer
             $this->lastMessageID = sprintf('<%s@%s>', $this->uniqueid, $this->serverHostname());
         }
         $result .= $this->headerLine('Message-ID', $this->lastMessageID);
-        if (null !== $this->Priority) {
+        if (NULL !== $this->Priority) {
             $result .= $this->headerLine('X-Priority', $this->Priority);
         }
         if ('' === $this->XMailer) {
@@ -3589,12 +3589,12 @@ class PHPMailer
      *
      * @return string
      */
-    public function base64EncodeWrapMB($str, $linebreak = null)
+    public function base64EncodeWrapMB($str, $linebreak = NULL)
     {
         $start = '=?' . $this->CharSet . '?B?';
         $end = '?=';
         $encoded = '';
-        if (null === $linebreak) {
+        if (NULL === $linebreak) {
             $linebreak = static::$LE;
         }
 
@@ -4056,7 +4056,7 @@ class PHPMailer
     protected function setError($msg)
     {
         ++$this->error_count;
-        if ('smtp' === $this->Mailer && null !== $this->smtp) {
+        if ('smtp' === $this->Mailer && NULL !== $this->smtp) {
             $lasterror = $this->smtp->getError();
             if (!empty($lasterror['error'])) {
                 $msg .= $this->lang('smtp_error') . $lasterror['error'];
@@ -4210,19 +4210,19 @@ class PHPMailer
      * both header name and value (name:value).
      *
      * @param string      $name  Custom header name
-     * @param string|null $value Header value
+     * @param string|NULL $value Header value
      *
      * @return bool True if a header was set successfully
      * @throws Exception
      */
-    public function addCustomHeader($name, $value = null)
+    public function addCustomHeader($name, $value = NULL)
     {
-        if (null === $value && strpos($name, ':') !== false) {
+        if (NULL === $value && strpos($name, ':') !== false) {
             //Value passed in as name:value
             list($name, $value) = explode(':', $name, 2);
         }
         $name = trim($name);
-        $value = (null === $value) ? '' : trim($value);
+        $value = (NULL === $value) ? '' : trim($value);
         //Ensure name is not empty, and that neither name nor value contain line breaks
         if (empty($name) || strpbrk($name . $value, "\r\n") !== false) {
             if ($this->exceptions) {
@@ -4562,7 +4562,7 @@ class PHPMailer
      *
      * @return string|array
      */
-    public static function mb_pathinfo($path, $options = null)
+    public static function mb_pathinfo($path, $options = NULL)
     {
         $ret = ['dirname' => '', 'basename' => '', 'extension' => '', 'filename' => ''];
         $pathinfo = [];
@@ -4646,9 +4646,9 @@ class PHPMailer
      *
      * @return string
      */
-    public static function normalizeBreaks($text, $breaktype = null)
+    public static function normalizeBreaks($text, $breaktype = NULL)
     {
-        if (null === $breaktype) {
+        if (NULL === $breaktype) {
             $breaktype = static::$LE;
         }
         //Normalise to \n

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Phone extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $value) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $value) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getValue(): string {

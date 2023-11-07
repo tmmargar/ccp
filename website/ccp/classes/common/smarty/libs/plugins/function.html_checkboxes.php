@@ -53,14 +53,14 @@ function smarty_function_html_checkboxes($params, Smarty_Internal_Template $temp
         )
     );
     $name = 'checkbox';
-    $values = null;
-    $options = null;
+    $values = NULL;
+    $options = NULL;
     $selected = array();
     $separator = '';
     $escape = true;
     $labels = true;
     $label_ids = false;
-    $output = null;
+    $output = NULL;
     $extra = '';
     foreach ($params as $_key => $_val) {
         switch ($_key) {

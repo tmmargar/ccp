@@ -22,15 +22,15 @@ class Smarty_Internal_Nocache_Insert
      * @param string                   $_function insert function name
      * @param array                    $_attr     array with parameter
      * @param Smarty_Internal_Template $_template template object
-     * @param string                   $_script   script name to load or 'null'
+     * @param string                   $_script   script name to load or 'NULL'
      * @param string                   $_assign   optional variable name
      *
      * @return string                   compiled code
      */
-    public static function compile($_function, $_attr, $_template, $_script, $_assign = null)
+    public static function compile($_function, $_attr, $_template, $_script, $_assign = NULL)
     {
         $_output = '<?php ';
-        if ($_script !== 'null') {
+        if ($_script !== 'NULL') {
             // script which must be included
             // code for script file loading
             $_output .= "require_once '{$_script}';";

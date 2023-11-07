@@ -44,13 +44,13 @@ function smarty_function_html_options($params, Smarty_Internal_Template $templat
             )
         )
     );
-    $name = null;
-    $values = null;
-    $options = null;
-    $selected = null;
-    $output = null;
-    $id = null;
-    $class = null;
+    $name = NULL;
+    $values = NULL;
+    $options = NULL;
+    $selected = NULL;
+    $output = NULL;
+    $id = NULL;
+    $class = NULL;
     $extra = '';
     foreach ($params as $_key => $_val) {
         switch ($_key) {
@@ -200,7 +200,7 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
                 $key,
                 $value,
                 $selected,
-                !empty($id) ? ($id . '-' . $idx) : null,
+                !empty($id) ? ($id . '-' . $idx) : NULL,
                 $class,
                 $_idx
             );

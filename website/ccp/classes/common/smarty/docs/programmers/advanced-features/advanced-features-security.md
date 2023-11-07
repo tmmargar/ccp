@@ -51,24 +51,24 @@ instance of the Smarty\_Security class. These are the possible settings:
 -   `$static_classes` is an array of classes that are considered
     trusted. The default is an empty array which allows access to all
     static classes. To disable access to all static classes set
-    \$static\_classes = null.
+    \$static\_classes = NULL.
 
 -   `$php_functions` is an array of PHP functions that are considered
     trusted and can be used from within template. To disable access to
-    all PHP functions set \$php\_functions = null. An empty array (
+    all PHP functions set \$php\_functions = NULL. An empty array (
     \$php\_functions = array() ) will allow all PHP functions. The
     default is array(\'isset\', \'empty\', \'count\', \'sizeof\',
     \'in\_array\', \'is\_array\',\'time\',\'nl2br\').
 
 -   `$php_modifiers` is an array of PHP functions that are considered
     trusted and can be used from within template as modifier. To disable
-    access to all PHP modifier set \$php\_modifier = null. An empty
+    access to all PHP modifier set \$php\_modifier = NULL. An empty
     array ( \$php\_modifier = array() ) will allow all PHP functions.
     The default is array(\'escape\',\'count\').
 
 -   `$streams` is an array of streams that are considered trusted and
     can be used from within template. To disable access to all streams
-    set \$streams = null. An empty array ( \$streams = array() ) will
+    set \$streams = NULL. An empty array ( \$streams = array() ) will
     allow all streams. The default is array(\'file\').
 
 -   `$allowed_modifiers` is an array of (registered / autoloaded)
@@ -107,7 +107,7 @@ Smarty\_Security class or create an instance of it.
 
     class My_Security_Policy extends Smarty_Security {
       // disable all PHP functions
-      public $php_functions = null;
+      public $php_functions = NULL;
       // allow everthing as modifier
       public $php_modifiers = array();
     }
@@ -122,7 +122,7 @@ Smarty\_Security class or create an instance of it.
     $smarty = new Smarty();
     $my_security_policy = new Smarty_Security($smarty);
     // disable all PHP functions
-    $my_security_policy->php_functions = null;
+    $my_security_policy->php_functions = NULL;
     // allow everthing as modifier
     $my_security_policy->php_modifiers = array();
     // enable security

@@ -76,7 +76,7 @@ the first parameter to [`clearCache()`](#api.clear.cache).
     $smarty->setCaching(Smarty::CACHING_LIFETIME_CURRENT);
 
     // clear all caches with "sports" as the $cache_id
-    $smarty->clearCache(null,'sports');
+    $smarty->clearCache(NULL,'sports');
 
     $smarty->display('index.tpl','sports');
     ?>

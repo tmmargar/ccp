@@ -3,8 +3,8 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class HtmlMenu extends HtmlBase {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected array|null $items, protected string|null $text) {
-    parent::__construct(accessKey: null, class: null, debug: $debug, id: $id, tabIndex: 0, title: null);
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected array|NULL $items, protected string|NULL $text) {
+    parent::__construct(accessKey: NULL, class: NULL, debug: $debug, id: $id, tabIndex: 0, title: NULL);
   }
   public function getHtmlRoot(): string {
     $output = str_repeat(string: " ", times: 1) . "<nav id=\"main-nav\">\n";
@@ -75,10 +75,10 @@ class HtmlMenu extends HtmlBase {
     }
     return $output;
   }
-  public function getItems(): array|null {
+  public function getItems(): array|NULL {
     return $this->items;
   }
-  public function getText(): string|null {
+  public function getText(): string|NULL {
     return $this->text;
   }
   public function setItems(array $items) {

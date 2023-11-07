@@ -44,7 +44,7 @@ class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase
     public static function compileSpecialVariable(
         $args,
         Smarty_Internal_TemplateCompilerBase $compiler,
-        $parameter = null
+        $parameter = NULL
     ) {
         return '$_smarty_tpl->smarty->ext->_capture->getBuffer($_smarty_tpl' .
                (isset($parameter[ 1 ]) ? ", {$parameter[ 1 ]})" : ')');
@@ -55,17 +55,17 @@ class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase
      *
      * @param array                                 $args     array with attributes from parser
      * @param \Smarty_Internal_TemplateCompilerBase $compiler compiler object
-     * @param null                                  $parameter
+     * @param NULL                                  $parameter
      *
      * @return string compiled code
      */
-    public function compile($args, Smarty_Internal_TemplateCompilerBase $compiler, $parameter = null)
+    public function compile($args, Smarty_Internal_TemplateCompilerBase $compiler, $parameter = NULL)
     {
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args, $parameter, 'capture');
         $buffer = isset($_attr[ 'name' ]) ? $_attr[ 'name' ] : "'default'";
-        $assign = isset($_attr[ 'assign' ]) ? $_attr[ 'assign' ] : 'null';
-        $append = isset($_attr[ 'append' ]) ? $_attr[ 'append' ] : 'null';
+        $assign = isset($_attr[ 'assign' ]) ? $_attr[ 'assign' ] : 'NULL';
+        $append = isset($_attr[ 'append' ]) ? $_attr[ 'append' ] : 'NULL';
         $compiler->_cache[ 'capture_stack' ][] = array($compiler->nocache);
         // maybe nocache because of nocache variables
         $compiler->nocache = $compiler->nocache | $compiler->tag_nocache;
@@ -87,7 +87,7 @@ class Smarty_Internal_Compile_CaptureClose extends Smarty_Internal_CompileBase
      *
      * @param array                                 $args     array with attributes from parser
      * @param \Smarty_Internal_TemplateCompilerBase $compiler compiler object
-     * @param null                                  $parameter
+     * @param NULL                                  $parameter
      *
      * @return string compiled code
      */

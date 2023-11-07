@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class GroupPayout extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected Group $group, protected array $payouts) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Group $group, protected array $payouts) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getGroup(): Group {

@@ -77,7 +77,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
      */
     public function compile($args, Smarty_Internal_SmartyTemplateCompiler $compiler)
     {
-        $uid = $t_hash = null;
+        $uid = $t_hash = NULL;
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
         $fullResourceName = $source_resource = $_attr[ 'file' ];
@@ -320,7 +320,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
             $compiled_code = "<?php\n\n";
             $compiled_code .= $compiler->cStyleComment(" Start inline template \"{$sourceInfo}\" =============================") . "\n";
             $compiled_code .= "function {$tpl->compiled->unifunc} (Smarty_Internal_Template \$_smarty_tpl) {\n";
-            $compiled_code .= "?>\n" . $tpl->compiler->compileTemplateSource($tpl, null, $compiler->parent_compiler);
+            $compiled_code .= "?>\n" . $tpl->compiler->compileTemplateSource($tpl, NULL, $compiler->parent_compiler);
             $compiled_code .= "<?php\n";
             $compiled_code .= "}\n?>\n";
             $compiled_code .= $tpl->compiler->postFilter($tpl->compiler->blockOrFunctionCode);

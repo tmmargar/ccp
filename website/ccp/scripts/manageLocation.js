@@ -3,7 +3,7 @@ import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
   buildName : function({id} = {}) {
     const objPlayer = document.querySelector("#playerId_" + id);
-    document.querySelector("#locationName_" + id).value = objPlayer.options[objPlayer.selectedIndex].innerText + " - " + document.querySelector("#city_" + id).value;
+    document.querySelector("#locationName_" + id).value = document.querySelector("#city_" + id).value + " - " + objPlayer.options[objPlayer.selectedIndex].innerText.split(" ")[1];
     input.validateLength({obj: document.querySelector("#locationName_" + id), length: 1, focus: false});
   },
   initializeDataTable : function() {

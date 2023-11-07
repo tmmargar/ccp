@@ -203,7 +203,7 @@ class SMTP
      * The last transaction ID issued in response to a DATA command,
      * if one was detected.
      *
-     * @var string|bool|null
+     * @var string|bool|NULL
      */
     protected $last_smtp_transaction_id;
 
@@ -228,9 +228,9 @@ class SMTP
 
     /**
      * The reply the server sent to us for HELO.
-     * If null, no HELO string has yet been received.
+     * If NULL, no HELO string has yet been received.
      *
-     * @var string|null
+     * @var string|NULL
      */
     protected $helo_rply;
 
@@ -240,9 +240,9 @@ class SMTP
      * Value at index 'HELO' or 'EHLO' (according to command that was sent)
      * represents the server name. In case of HELO it is the only element of the array.
      * Other values can be boolean TRUE or an array containing extension options.
-     * If null, no HELO/EHLO string has yet been received.
+     * If NULL, no HELO/EHLO string has yet been received.
      *
-     * @var array|null
+     * @var array|NULL
      */
     protected $server_caps;
 
@@ -321,7 +321,7 @@ class SMTP
      *
      * @return bool
      */
-    public function connect($host, $port = null, $timeout = 30, $options = [])
+    public function connect($host, $port = NULL, $timeout = 30, $options = [])
     {
         //Clear errors to avoid confusion
         $this->setError('');
@@ -380,12 +380,12 @@ class SMTP
      *
      * @return false|resource
      */
-    protected function getSMTPConnection($host, $port = null, $timeout = 30, $options = [])
+    protected function getSMTPConnection($host, $port = NULL, $timeout = 30, $options = [])
     {
         static $streamok;
         //This is enabled by default since 5.0.0 but some providers disable it
         //Check this once and cache the result
-        if (null === $streamok) {
+        if (NULL === $streamok) {
             $streamok = function_exists('stream_socket_client');
         }
 
@@ -499,8 +499,8 @@ class SMTP
     public function authenticate(
         $username,
         $password,
-        $authtype = null,
-        $OAuth = null
+        $authtype = NULL,
+        $OAuth = NULL
     ) {
         if (!$this->server_caps) {
             $this->setError('Authentication is not allowed before HELO/EHLO');
@@ -525,9 +525,9 @@ class SMTP
             );
 
             //If we have requested a specific auth type, check the server supports it before trying others
-            if (null !== $authtype && !in_array($authtype, $this->server_caps['AUTH'], true)) {
+            if (NULL !== $authtype && !in_array($authtype, $this->server_caps['AUTH'], true)) {
                 $this->edebug('Requested auth method not available: ' . $authtype, self::DEBUG_LOWLEVEL);
-                $authtype = null;
+                $authtype = NULL;
             }
 
             if (empty($authtype)) {
@@ -564,7 +564,7 @@ class SMTP
                 //Send encoded username and password
                 if (
                     //Format from https://tools.ietf.org/html/rfc4616#section-2
-                    //We skip the first field (it's forgery), so the string starts with a null byte
+                    //We skip the first field (it's forgery), so the string starts with a NULL byte
                     !$this->sendCommand(
                         'User & Password',
                         base64_encode("\0" . $username . "\0" . $password),
@@ -601,7 +601,7 @@ class SMTP
                 return $this->sendCommand('Username', base64_encode($response), 235);
             case 'XOAUTH2':
                 //The OAuth instance must be set up prior to requesting auth.
-                if (null === $OAuth) {
+                if (NULL === $OAuth) {
                     return false;
                 }
                 $oauth = $OAuth->getOauth64();
@@ -691,12 +691,12 @@ class SMTP
      */
     public function close()
     {
-        $this->server_caps = null;
-        $this->helo_rply = null;
+        $this->server_caps = NULL;
+        $this->helo_rply = NULL;
         if (is_resource($this->smtp_conn)) {
             //Close the connection and cleanup
             fclose($this->smtp_conn);
-            $this->smtp_conn = null; //Makes for cleaner serialization
+            $this->smtp_conn = NULL; //Makes for cleaner serialization
             $this->edebug('Connection: closed', self::DEBUG_CONNECTION);
         }
     }
@@ -840,7 +840,7 @@ class SMTP
         if ($noerror) {
             $this->parseHelloFields($hello);
         } else {
-            $this->server_caps = null;
+            $this->server_caps = NULL;
         }
 
         return $noerror;
@@ -1013,7 +1013,7 @@ class SMTP
         $matches = [];
         if (preg_match('/^([\d]{3})[ -](?:([\d]\\.[\d]\\.[\d]{1,2}) )?/', $this->last_reply, $matches)) {
             $code = (int) $matches[1];
-            $code_ex = (count($matches) > 2 ? $matches[2] : null);
+            $code_ex = (count($matches) > 2 ? $matches[2] : NULL);
             //Cut off error code from each response line
             $detail = preg_replace(
                 "/{$code}[ -]" .
@@ -1024,7 +1024,7 @@ class SMTP
         } else {
             //Fall back to simple parsing if regex fails
             $code = (int) substr($this->last_reply, 0, 3);
-            $code_ex = null;
+            $code_ex = NULL;
             $detail = substr($this->last_reply, 4);
         }
 
@@ -1152,7 +1152,7 @@ class SMTP
     /**
      * Get SMTP extensions available on the server.
      *
-     * @return array|null
+     * @return array|NULL
      */
     public function getServerExtList()
     {
@@ -1162,11 +1162,11 @@ class SMTP
     /**
      * Get metadata about the SMTP server from its HELO/EHLO response.
      * The method works in three ways, dependent on argument value and current state:
-     *   1. HELO/EHLO has not been sent - returns null and populates $this->error.
+     *   1. HELO/EHLO has not been sent - returns NULL and populates $this->error.
      *   2. HELO has been sent -
      *     $name == 'HELO': returns server name
      *     $name == 'EHLO': returns boolean false
-     *     $name == any other string: returns null and populates $this->error
+     *     $name == any other string: returns NULL and populates $this->error
      *   3. EHLO has been sent -
      *     $name == 'HELO'|'EHLO': returns the server name
      *     $name == any other string: if extension $name exists, returns True
@@ -1174,14 +1174,14 @@ class SMTP
      *
      * @param string $name Name of SMTP extension or 'HELO'|'EHLO'
      *
-     * @return string|bool|null
+     * @return string|bool|NULL
      */
     public function getServerExt($name)
     {
         if (!$this->server_caps) {
             $this->setError('No HELO/EHLO was sent');
 
-            return null;
+            return NULL;
         }
 
         if (!array_key_exists($name, $this->server_caps)) {
@@ -1193,7 +1193,7 @@ class SMTP
             }
             $this->setError('HELO handshake was used; No information about server extensions available');
 
-            return null;
+            return NULL;
         }
 
         return $this->server_caps[$name];
@@ -1231,7 +1231,7 @@ class SMTP
             $endtime = time() + $this->Timelimit;
         }
         $selR = [$this->smtp_conn];
-        $selW = null;
+        $selW = NULL;
         while (is_resource($this->smtp_conn) && !feof($this->smtp_conn)) {
             //Must pass vars in here as params are by reference
             //solution for signals inspired by https://github.com/symfony/symfony/pull/6540
@@ -1426,17 +1426,17 @@ class SMTP
      * Extract and return the ID of the last SMTP transaction based on
      * a list of patterns provided in SMTP::$smtp_transaction_id_patterns.
      * Relies on the host providing the ID in response to a DATA command.
-     * If no reply has been received yet, it will return null.
+     * If no reply has been received yet, it will return NULL.
      * If no pattern was matched, it will return false.
      *
-     * @return bool|string|null
+     * @return bool|string|NULL
      */
     protected function recordLastTransactionID()
     {
         $reply = $this->getLastReply();
 
         if (empty($reply)) {
-            $this->last_smtp_transaction_id = null;
+            $this->last_smtp_transaction_id = NULL;
         } else {
             $this->last_smtp_transaction_id = false;
             foreach ($this->smtp_transaction_id_patterns as $smtp_transaction_id_pattern) {
@@ -1453,10 +1453,10 @@ class SMTP
 
     /**
      * Get the queue/transaction ID of the last SMTP transaction
-     * If no reply has been received yet, it will return null.
+     * If no reply has been received yet, it will return NULL.
      * If no pattern was matched, it will return false.
      *
-     * @return bool|string|null
+     * @return bool|string|NULL
      *
      * @see recordLastTransactionID()
      */

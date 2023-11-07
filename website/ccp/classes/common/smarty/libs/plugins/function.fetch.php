@@ -19,7 +19,7 @@
  * @param Smarty_Internal_Template $template template object
  *
  * @throws SmartyException
- * @return string|null if the assign parameter is passed, Smarty assigns the result to a template variable
+ * @return string|NULL if the assign parameter is passed, Smarty assigns the result to a template variable
  */
 function smarty_function_fetch($params, $template)
 {

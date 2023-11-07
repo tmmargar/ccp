@@ -3,18 +3,17 @@ declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Address;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\DateTime;
 use ccp\classes\model\Email;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
-$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
+$now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
 $output .=
   "<script type=\"module\">\n" .
   "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
   "  let aryMessages = [];\n";
 $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->getDisplayLongTimeFormat() . "###\");\n" : "\r";
-$dateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, time: "now");
+$dateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
 $params = array($dateTime->getDatabaseFormat(), $dateTime->getDatabaseFormat());
 $resultList = $databaseResult->getAutoRegisterHost(params: $params);
 if (count($resultList) == 0) {
@@ -22,17 +21,17 @@ if (count($resultList) == 0) {
 } else {
   foreach ($resultList as $tournament) {
     $user = $tournament->getLocation()->getUser();
-    $params = array($tournament->getId(), $user->getId(), null);
+    $params = array($tournament->getId(), $user->getId(), "N/A");
     $rowCount = $databaseResult->insertRegistration(params: $params);
     if (1 == $rowCount) {
       $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $user->getName() . " for tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . "\");\n" : "\r";
     }
     $tournamentAddress = $user->getAddress();
-    $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
-    $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
+    $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($user->getName()), toEmail: array($user->getEmail()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+    $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
     $output .= (isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $tournament, feeStatus: "Paid", waitList: 0) . "\");\n" : "\r");
-    $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: null, ccEmail: null, bccName: null, bccEmail: null, subject: null, body: null);
-    $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: null, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
+    $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+    $emailAddress = new Address(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, address: $tournamentAddress->getAddress(), city: $tournamentAddress->getCity(), state: $tournamentAddress->getState(), zip: $tournamentAddress->getZip());
     $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(address: $emailAddress, tournament: $tournament, feeStatus: "Paid", waitList: 0, autoRegister: $user->getName()) . "\");\n" : "\r";
   }
 }

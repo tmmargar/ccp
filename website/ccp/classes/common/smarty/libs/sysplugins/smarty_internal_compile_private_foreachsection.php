@@ -35,7 +35,7 @@ class Smarty_Internal_Compile_Private_ForeachSection extends Smarty_Internal_Com
      *
      * @var array
      */
-    public $itemProperties = null;
+    public $itemProperties = NULL;
 
     /**
      * {section} tag has always name attribute
@@ -216,13 +216,13 @@ class Smarty_Internal_Compile_Private_ForeachSection extends Smarty_Internal_Com
         $tag = smarty_strtolower_ascii(trim($parameter[ 0 ], '"\''));
         $name = isset($parameter[ 1 ]) ? $compiler->getId($parameter[ 1 ]) : false;
         if (!$name) {
-            $compiler->trigger_template_error("missing or illegal \$smarty.{$tag} name attribute", null, true);
+            $compiler->trigger_template_error("missing or illegal \$smarty.{$tag} name attribute", NULL, true);
         }
         $property = isset($parameter[ 2 ]) ? smarty_strtolower_ascii($compiler->getId($parameter[ 2 ])) : false;
         if (!$property || !in_array($property, $this->nameProperties)) {
-            $compiler->trigger_template_error("missing or illegal \$smarty.{$tag} property attribute", null, true);
+            $compiler->trigger_template_error("missing or illegal \$smarty.{$tag} property attribute", NULL, true);
         }
         $tagVar = "'__smarty_{$tag}_{$name}'";
-        return "(isset(\$_smarty_tpl->tpl_vars[{$tagVar}]->value['{$property}']) ? \$_smarty_tpl->tpl_vars[{$tagVar}]->value['{$property}'] : null)";
+        return "(isset(\$_smarty_tpl->tpl_vars[{$tagVar}]->value['{$property}']) ? \$_smarty_tpl->tpl_vars[{$tagVar}]->value['{$property}'] : NULL)";
     }
 }

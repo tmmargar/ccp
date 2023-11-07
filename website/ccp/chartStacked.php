@@ -14,7 +14,7 @@ $output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\
 try {
   $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
   $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
-  $params = array($startDate, $endDate, null, false);
+  $params = array($startDate, $endDate, NULL, false);
   $resultList = $databaseResult->getCountTournamentForDates(params: $params);
   if (0 < count(value: $resultList)) {
     $tournamentsTotal = $resultList[0];
@@ -30,7 +30,7 @@ try {
     $tournamentsPlayed = $resultList[0];
   }
   // $startDate = "2019-10-01";
-  $params = array($startDate, $endDate, null, false);
+  $params = array($startDate, $endDate, NULL, false);
   $resultList = $databaseResult->getCountTournamentForDates(params: $params);
   if (0 < count(value: $resultList)) {
     $tournamentsLeft = $resultList[0];

@@ -31,7 +31,7 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
         $_index = preg_split("/\]\[/", substr($parameter, 1, strlen($parameter) - 2));
         $variable = smarty_strtolower_ascii($compiler->getId($_index[ 0 ]));
         if ($variable === false) {
-            $compiler->trigger_template_error("special \$Smarty variable name index can not be variable", null, true);
+            $compiler->trigger_template_error("special \$Smarty variable name index can not be variable", NULL, true);
         }
         if (!isset($compiler->smarty->security_policy)
             || $compiler->smarty->security_policy->isTrustedSpecialSmartyVar($variable, $compiler)
@@ -98,14 +98,14 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
                         break;
                     }
                     if (strpos($_index[ 1 ], '$') === false && strpos($_index[ 1 ], '\'') === false) {
-                        return "(defined('{$_index[1]}') ? constant('{$_index[1]}') : null)";
+                        return "(defined('{$_index[1]}') ? constant('{$_index[1]}') : NULL)";
                     } else {
-                        return "(defined({$_index[1]}) ? constant({$_index[1]}) : null)";
+                        return "(defined({$_index[1]}) ? constant({$_index[1]}) : NULL)";
                     }
                 // no break
                 case 'config':
                     if (isset($_index[ 2 ])) {
-                        return "(is_array(\$tmp = \$_smarty_tpl->smarty->ext->configload->_getConfigVariable(\$_smarty_tpl, $_index[1])) ? \$tmp[$_index[2]] : null)";
+                        return "(is_array(\$tmp = \$_smarty_tpl->smarty->ext->configload->_getConfigVariable(\$_smarty_tpl, $_index[1])) ? \$tmp[$_index[2]] : NULL)";
                     } else {
                         return "\$_smarty_tpl->smarty->ext->configload->_getConfigVariable(\$_smarty_tpl, $_index[1])";
                     }

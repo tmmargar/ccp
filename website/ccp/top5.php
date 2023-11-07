@@ -120,7 +120,7 @@ if (!isset($parentObjectId)) {
 }
 $userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID);
 if (!isset($navigation)) {
-  $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : null;
+  $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : NULL;
 }
 if (isset($navigation)) {
   $smarty->assign("style", "");
@@ -231,8 +231,8 @@ if (!isset($reportId) || "" == $reportId) {
   $startDate = SessionUtility::getValue(SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
   $endDate = SessionUtility::getValue(SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
   $width = "100%";
-  $colFormats = null;
-  $hideColIndexes = null;
+  $colFormats = NULL;
+  $hideColIndexes = NULL;
   switch ($reportId) {
     case PRIZE_POOL_FOR_SEASON:
       $params = array($startDate, $endDate);
@@ -242,7 +242,9 @@ if (!isset($reportId) || "" == $reportId) {
     case POINTS_TOTAL_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(1);
-      $query = $databaseResult->getPointsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getPointsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -251,7 +253,9 @@ if (!isset($reportId) || "" == $reportId) {
     case POINTS_AVERAGE_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(2);
-      $query = $databaseResult->getPointsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getPointsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(3, "number", 2));
       $hideColIndexes = array(0, 2, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -260,7 +264,9 @@ if (!isset($reportId) || "" == $reportId) {
     case EARNINGS_TOTAL_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(1);
-      $query = $databaseResult->getEarningsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0, 3, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -269,7 +275,9 @@ if (!isset($reportId) || "" == $reportId) {
     case EARNINGS_AVERAGE_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(2);
-      $query = $databaseResult->getEarningsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getEarningsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
       $hideColIndexes = array(0, 2, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -278,7 +286,9 @@ if (!isset($reportId) || "" == $reportId) {
     case KNOCKOUTS_TOTAL_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(1);
-      $query = $databaseResult->getKnockoutsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -287,7 +297,9 @@ if (!isset($reportId) || "" == $reportId) {
     case KNOCKOUTS_AVERAGE_FOR_SEASON:
       $params = array($startDate, $endDate);
       $orderBy = array(2);
-      $query = $databaseResult->getKnockoutsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsAverageForSeason(params: $params, orderBy: $orderBy, limitCount: 5);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0), array(3, "number", 2), array(4, "number", 0));
       $hideColIndexes = array(0, 2, 4, 5);
       // $width = isset($navigation) ? "20%" : "100%";
@@ -295,10 +307,11 @@ if (!isset($reportId) || "" == $reportId) {
       break;
     case WINNERS_FOR_SEASON:
       $params = array($startDate, $endDate);
-      $query = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: null);
+      $pdoStatementAndQuery = $databaseResult->getWinnersForSeason(params: $params, returnQuery: true, limitCount: NULL);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "number", 0));
       $hideColIndexes = array(0, 3, 4, 5);
-      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Season Winners";
       break;
     case POINTS_TOTAL_FOR_SEASON_FOR_USER:
@@ -313,10 +326,11 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getPointsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
-      // $width = isset($navigation) ? "20%" : "100%";
+      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Points", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
     case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
@@ -330,9 +344,11 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getKnockoutsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case EARNINGS_TOTAL_FOR_SEASON_FOR_USER:
     case EARNINGS_AVERAGE_FOR_SEASON_FOR_USER:
@@ -346,11 +362,13 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getEarningsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $hideColIndexes = array(0, 1, 2, 3, 5);
       // $width = isset($navigation) ? "20%" : "100%";
       $value = array(array("currency", "center"), array(4, "currency", $formatPlaces), "Earnings", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       $hideColIndexes = array(0, 2);
       break;
     case WINS_TOTAL_FOR_SEASON_FOR_USER:
@@ -365,10 +383,12 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getWinsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getWinsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $hideColIndexes = array(0, 1, 2, 3, 5);
       $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Wins", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case POINTS_AVERAGE_FOR_USER:
     case POINTS_TOTAL_FOR_USER:
@@ -382,9 +402,11 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getPointsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Points", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case KNOCKOUTS_AVERAGE_FOR_USER:
     case KNOCKOUTS_TOTAL_FOR_USER:
@@ -398,9 +420,11 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getKnockoutsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case EARNINGS_AVERAGE_FOR_USER:
     case EARNINGS_TOTAL_FOR_USER:
@@ -414,48 +438,60 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $query = $databaseResult->getEarningsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("currency", "center"), array(3, "currency", $formatPlaces), "Earnings", $valueIndex);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case WINS_FOR_USER:
       $params = array($startDate, $endDate, $userId);
       $orderBy = array(1);
-      $query = $databaseResult->getWinsForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getWinsForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", 0), "Wins", 3);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case NEMESIS_FOR_USER:
       $params = array($userId);
-      $query = $databaseResult->getNemesisForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getNemesisForUser(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0));
       $hideColIndexes = array(1);
-      // $width = isset($navigation) ? "20%" : "100%";
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case BULLY_FOR_USER:
       $params = array($userId);
-      $query = $databaseResult->getBullyForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getBullyForUser(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0));
       $hideColIndexes = array(1);
-      // $width = isset($navigation) ? "20%" : "100%";
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case FINISHES_FOR_USER:
       $params = array($userId);
-      $query = $databaseResult->getFinishesForUser(params: $params);
-      // $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
+      $pdoStatementAndQuery = $databaseResult->getFinishesForUser(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "percentage", 2));
-      // $width = isset($navigation) ? "20%" : "100%";
       $titleText = "Place of Finish";
       break;
     case TOURNAMENTS_PLAYED_FOR_USER:
       $params = array($userId);
-      $query = $databaseResult->getTournamentsPlayed(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getTournamentsPlayed(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(4, "number", 0), "Tourneys", 3);
-      $rank = array(array("center"), null, "Rank", 0);
+      $rank = array(array("center"), NULL, "Rank", 0);
       break;
     case TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER:
       $params = array($userId);
-      $query = $databaseResult->getTournamentsPlayedByTypeByPlayerId(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getTournamentsPlayedByTypeByPlayerId(params: $params);
+      $pdoStatement = $pdoStatementAndQuery[0];
+      $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(4, "number", 0));
       $hideColIndexes = array(0, 2);
       // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
@@ -472,15 +508,15 @@ if (!isset($reportId) || "" == $reportId) {
   } else {
     $mode = "";
     $caption = "";
-    $hiddenId = null;
-    $selectedColumnVals = null;
+    $hiddenId = NULL;
+    $selectedColumnVals = NULL;
     $delimiter = Constant::DELIMITER_DEFAULT;
-    $foreignKeys = null;
+    $foreignKeys = NULL;
     $html = NULL;
     $showNote = false;
-    $hiddenAdditional = null;
-    $colSpan = null;
-    $tableIdSuffix = null;
+    $hiddenAdditional = NULL;
+    $colSpan = NULL;
+    $tableIdSuffix = NULL;
     $rankClasses = "";
     switch ($reportId) {
       case POINTS_TOTAL_FOR_SEASON_FOR_USER:
@@ -585,13 +621,18 @@ if (!isset($reportId) || "" == $reportId) {
         // adjust index to add 1 for rownum used for ranking
         $value[3] += 1;
         $rank[3] += 1;
-        $result = $databaseResult->getConnection()->query($query);
 //         $caption, $class, $colspan, $columnFormat, $debug, $delimiter, $foreignKeys, $header, $hiddenAdditional, $hiddenId, $hideColumnIndexes, $html, $id, $link, $note, $query, $selectedRow, $suffix, $width
-        $htmlTable = new HtmlTable(caption: null, class: null, colspan: null, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: null, header: true, hiddenAdditional: null, hiddenId: null, hideColumnIndexes: $hideColIndexes, html: null, id: null, link: null, note: true, query: $query, selectedRow: null, suffix: "Rank" . $suffix, width: "100%");
+        $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: NULL, hideColumnIndexes: $hideColIndexes, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: NULL, suffix: "Rank" . $suffix, width: "100%");
         $outputTemp = $htmlTable->getHtml();
-        if (0 < $result->rowCount()) {
+        if ($pdoStatement instanceof \PDOStatement) {
+          $pdoStatement->execute();
+        } else {
+          $pdoStatement = $databaseResult->getConnection()->prepare(query: $query);
+          $pdoStatement->execute();
+        }
+        if (0 < $pdoStatement->rowCount()) {
           // unable to get ranking to use where clause so loop through and find matching user
-          while ($row = $result->fetch(PDO::FETCH_BOTH)) {
+          while ($row = $pdoStatement->fetch(PDO::FETCH_BOTH)) {
             // find user and exit
             if ($row[2] == $userId) {
               $rowUser = $row;
@@ -620,7 +661,7 @@ if (!isset($reportId) || "" == $reportId) {
             " </form>\n" .
             "</dialog>\n";
         }
-        $result->closeCursor();
+        $pdoStatement->closeCursor();
         if (isset($navigation)) {
           $output .= "</div>\n";
         }
@@ -669,9 +710,9 @@ if (!isset($reportId) || "" == $reportId) {
           $tableIdSuffix = ucfirst($reportId);
         }
         $output .= "<div class=\"center title\" id=\"title" . $tableIdSuffix . "\">" . $titleText . "</div>\n";
-        $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: $tableIdSuffix, width: $width);
+        $htmlTable = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: NULL, link: NULL, note: $showNote, pdoStatement: $pdoStatement, query: $query, selectedRow: $selectedColumnVals, suffix: $tableIdSuffix, width: $width);
         $output .= $htmlTable->getHtml();
-        $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: null, link: null, note: $showNote, query: $query, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
+        $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: NULL, link: NULL, note: $showNote, pdoStatement: $pdoStatement, query: $query, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
         $outputTemp = $htmlTable2->getHtml();
         if (NEMESIS_FOR_USER == $reportId || BULLY_FOR_USER == $reportId) {
           if (NEMESIS_FOR_USER == $reportId) {
@@ -683,6 +724,7 @@ if (!isset($reportId) || "" == $reportId) {
             $tableIdSuffix = "Bullies";
             $titleText = "Bullies";
           }
+          $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: "");
           $output .=
             "<script type=\"module\">\n" .
             "  import { inputLocal } from \"./scripts/top5.js\";\n" .
@@ -705,9 +747,9 @@ if (!isset($reportId) || "" == $reportId) {
         break;
     }
   }
-  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: array(REPORT_ID_PARAM_NAME), cols: null, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: null, name: REPORT_ID_PARAM_NAME, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: null);
+  $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array(REPORT_ID_PARAM_NAME), cols: NULL, disabled: false, id: REPORT_ID_PARAM_NAME, maxLength: NULL, name: REPORT_ID_PARAM_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: NULL);
   $output .= $hiddenReportId->getHtml();
-  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: null, autoComplete: null, autoFocus: false, checked: null, class: null, cols: null, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: null, name: Constant::FIELD_NAME_MODE, onClick: null, placeholder: null, readOnly: false, required: null, rows: null, size: null, suffix: null, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: null);
+  $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL);
   $output .= $hiddenMode->getHtml();
   if (!isset($parentObjectId)) {
     $output .= "</div>\n";

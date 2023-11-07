@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Structure extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected int $place, protected float $percentage) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected int $place, protected float $percentage) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getPlace(): int {

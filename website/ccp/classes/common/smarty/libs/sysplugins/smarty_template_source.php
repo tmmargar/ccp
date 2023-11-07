@@ -15,42 +15,42 @@ class Smarty_Template_Source
      *
      * @var string
      */
-    public $uid = null;
+    public $uid = NULL;
 
     /**
      * Template Resource (Smarty_Internal_Template::$template_resource)
      *
      * @var string
      */
-    public $resource = null;
+    public $resource = NULL;
 
     /**
      * Resource Type
      *
      * @var string
      */
-    public $type = null;
+    public $type = NULL;
 
     /**
      * Resource Name
      *
      * @var string
      */
-    public $name = null;
+    public $name = NULL;
 
     /**
      * Source Filepath
      *
      * @var string
      */
-    public $filepath = null;
+    public $filepath = NULL;
 
     /**
      * Source Timestamp
      *
      * @var integer
      */
-    public $timestamp = null;
+    public $timestamp = NULL;
 
     /**
      * Source Existence
@@ -64,28 +64,28 @@ class Smarty_Template_Source
      *
      * @var string
      */
-    public $basename = null;
+    public $basename = NULL;
 
     /**
      * The Components an extended template is made of
      *
      * @var \Smarty_Template_Source[]
      */
-    public $components = null;
+    public $components = NULL;
 
     /**
      * Resource Handler
      *
      * @var \Smarty_Resource
      */
-    public $handler = null;
+    public $handler = NULL;
 
     /**
      * Smarty instance
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * Resource is source
@@ -99,7 +99,7 @@ class Smarty_Template_Source
      *
      * @var string
      */
-    public $content = null;
+    public $content = NULL;
 
     /**
      * Name of the Class to compile this resource's contents with
@@ -156,9 +156,9 @@ class Smarty_Template_Source
      * @throws SmartyException
      */
     public static function load(
-        Smarty_Internal_Template $_template = null,
-        Smarty $smarty = null,
-        $template_resource = null
+        Smarty_Internal_Template $_template = NULL,
+        Smarty $smarty = NULL,
+        $template_resource = NULL
     ) {
         if ($_template) {
             $smarty = $_template->smarty;

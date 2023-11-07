@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Login extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected string $username, protected string $password) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $username, protected string $password) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getPassword(): string {

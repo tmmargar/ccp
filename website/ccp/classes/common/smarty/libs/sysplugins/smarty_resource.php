@@ -173,9 +173,9 @@ abstract class Smarty_Resource
      * @throws \SmartyException
      */
     public static function source(
-        Smarty_Internal_Template $_template = null,
-        Smarty $smarty = null,
-        $template_resource = null
+        Smarty_Internal_Template $_template = NULL,
+        Smarty $smarty = NULL,
+        $template_resource = NULL
     ) {
         return Smarty_Template_Source::load($_template, $smarty, $template_resource);
     }
@@ -196,7 +196,7 @@ abstract class Smarty_Resource
      * @param Smarty_Template_Source   $source    source object
      * @param Smarty_Internal_Template $_template template object
      */
-    abstract public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = null);
+    abstract public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = NULL);
 
     /**
      * populate Source Object with timestamp and exists from Resource
@@ -221,7 +221,7 @@ abstract class Smarty_Resource
     {
         if ($isConfig) {
             if (!isset($smarty->_joined_config_dir)) {
-                $smarty->getTemplateDir(null, true);
+                $smarty->getTemplateDir(NULL, true);
             }
             return get_class($this) . '#' . $smarty->_joined_config_dir . '#' . $resource_name;
         } else {

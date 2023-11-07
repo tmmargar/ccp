@@ -113,7 +113,7 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
         } else {
-            $mbEncoding = null;
+            $mbEncoding = NULL;
         }
         if ($this->smarty->_parserdebug) {
             $this->parser->PrintTrace();
@@ -160,7 +160,7 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
      * @param string   $key       optional key for callback
      * @param bool     $replace   if true replace existing keyed callback
      */
-    public function registerPostCompileCallback($callback, $parameter = array(), $key = null, $replace = false)
+    public function registerPostCompileCallback($callback, $parameter = array(), $key = NULL, $replace = false)
     {
         array_unshift($parameter, $callback);
         if (isset($key)) {

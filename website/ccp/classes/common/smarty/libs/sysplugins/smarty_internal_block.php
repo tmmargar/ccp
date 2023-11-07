@@ -47,16 +47,16 @@ class Smarty_Internal_Block
     /**
      * Inheritance child block
      *
-     * @var Smarty_Internal_Block|null
+     * @var Smarty_Internal_Block|NULL
      */
-    public $child = null;
+    public $child = NULL;
 
     /**
      * Inheritance calling parent block
      *
-     * @var Smarty_Internal_Block|null
+     * @var Smarty_Internal_Block|NULL
      */
-    public $parent = null;
+    public $parent = NULL;
 
     /**
      * Inheritance Template index
@@ -71,7 +71,7 @@ class Smarty_Internal_Block
      * - otherwise process inheritance and render
      *
      * @param string   $name     block name
-     * @param int|null $tplIndex index of outer level {block} if nested
+     * @param int|NULL $tplIndex index of outer level {block} if nested
      */
     public function __construct($name, $tplIndex)
     {

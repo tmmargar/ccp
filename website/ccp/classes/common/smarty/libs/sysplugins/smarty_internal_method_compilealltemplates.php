@@ -36,7 +36,7 @@ class Smarty_Internal_Method_CompileAllTemplates
         $extension = '.tpl',
         $force_compile = false,
         $time_limit = 0,
-        $max_errors = null
+        $max_errors = NULL
     ) {
         return $this->compileAll($smarty, $extension, $force_compile, $time_limit, $max_errors);
     }
@@ -118,7 +118,7 @@ class Smarty_Internal_Method_CompileAllTemplates
                 // free memory
                 unset($_tpl);
                 $_smarty->_clearTemplateCache();
-                if ($max_errors !== null && $_error_count === $max_errors) {
+                if ($max_errors !== NULL && $_error_count === $max_errors) {
                     echo "\n<br><br>too many errors\n";
                     exit(1);
                 }

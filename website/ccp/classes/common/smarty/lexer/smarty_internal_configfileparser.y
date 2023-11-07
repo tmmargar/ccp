@@ -56,13 +56,13 @@ class Smarty_Internal_Configfileparser
      *
      * @var Smarty_Internal_Config_File_Compiler
      */
-    public $compiler = null;
+    public $compiler = NULL;
     /**
      * smarty object
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
     /**
      * copy of config_overwrite property
      *
@@ -243,34 +243,34 @@ class Smarty_Internal_Configfileparser
 
 // Complete config file
 start(res) ::= global_vars sections. {
-    res = null;
+    res = NULL;
 }
 
 // Global vars
 global_vars(res) ::= var_list(vl). {
     $this->add_global_vars(vl);
-    res = null;
+    res = NULL;
 }
 
 // Sections
 sections(res) ::= sections section. {
-    res = null;
+    res = NULL;
 }
 
 sections(res) ::= . {
-    res = null;
+    res = NULL;
 }
 
 section(res) ::= OPENB SECTION(i) CLOSEB newline var_list(vars). {
     $this->add_section_vars(i, vars);
-    res = null;
+    res = NULL;
 }
 
 section(res) ::= OPENB DOT SECTION(i) CLOSEB newline var_list(vars). {
     if ($this->configReadHidden) {
         $this->add_section_vars(i, vars);
     }
-    res = null;
+    res = NULL;
 }
 
 // Var list
@@ -334,13 +334,13 @@ value(res) ::= OTHER(i). {
 
 // Newline and comments
 newline(res) ::= NEWLINE. {
-    res = null;
+    res = NULL;
 }
 
 newline(res) ::= COMMENTSTART NEWLINE. {
-    res = null;
+    res = NULL;
 }
 
 newline(res) ::= COMMENTSTART NAKED_STRING NEWLINE. {
-    res = null;
+    res = NULL;
 }

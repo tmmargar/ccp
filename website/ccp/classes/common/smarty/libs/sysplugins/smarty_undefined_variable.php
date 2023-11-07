@@ -10,15 +10,15 @@
 class Smarty_Undefined_Variable extends Smarty_Variable
 {
     /**
-     * Returns null for not existing properties
+     * Returns NULL for not existing properties
      *
      * @param string $name
      *
-     * @return null
+     * @return NULL
      */
     public function __get($name)
     {
-        return null;
+        return NULL;
     }
 
     /**

@@ -96,21 +96,21 @@ class Smarty_Internal_Templateparser
      *
      * @var Smarty_Internal_TemplateCompilerBase
      */
-    public $compiler = null;
+    public $compiler = NULL;
 
     /**
      * smarty object
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * template object
      *
      * @var Smarty_Internal_Template
      */
-    public $template = null;
+    public $template = NULL;
 
     /**
      * block nesting level
@@ -124,7 +124,7 @@ class Smarty_Internal_Templateparser
      *
      * @var Smarty_Security
      */
-    public $security = null;
+    public $security = NULL;
 
     /**
      * template prefix array
@@ -241,7 +241,7 @@ template       ::= template  TEXT(B). {
          $text = $this->yystack[ $this->yyidx + 0 ]->minor;
 
          if ((string)$text == '') {
-            $this->current_buffer->append_subtree($this, null);
+            $this->current_buffer->append_subtree($this, NULL);
          }
 
          $this->current_buffer->append_subtree($this, new Smarty_Internal_ParseTree_Text($text, $this->strip));
@@ -303,7 +303,7 @@ smartytag(A)::= SIMPLETAG(B). {
     $tag = trim(substr(B, $this->compiler->getLdelLength(), -$this->compiler->getRdelLength()));
     if ($tag == 'strip') {
         $this->strip = true;
-        A = null;
+        A = NULL;
     } else {
         if (defined($tag)) {
             if ($this->security) {
@@ -493,7 +493,7 @@ smartytag(res)::= CLOSETAG(t). {
     $tag = trim(substr(t, $this->compiler->getLdelLength(), -$this->compiler->getRdelLength()), ' /');
     if ($tag === 'strip') {
         $this->strip = false;
-        res = null;
+        res = NULL;
     } else {
        res = $this->compiler->compileTag($tag.'close',array());
     }
@@ -706,7 +706,7 @@ value(res)       ::= DOT INTEGER(n1). {
     res = '.'.n1;
 }
 
-                 // ID, true, false, null
+                 // ID, true, false, NULL
 value(res)       ::= ID(id). {
     if (defined(id)) {
         if ($this->security) {
@@ -841,7 +841,7 @@ variable(res)    ::= HATCH ID(i) HATCH. {
 }
 
 variable(res)    ::= HATCH ID(i) HATCH arrayindex(a). {
-    res = '(is_array($tmp = ' . $this->compiler->compileConfigVariable('\'' . i . '\'') . ') ? $tmp'.a.' :null)';
+    res = '(is_array($tmp = ' . $this->compiler->compileConfigVariable('\'' . i . '\'') . ') ? $tmp'.a.' :NULL)';
 }
 
 variable(res)    ::= HATCH variable(v) HATCH. {
@@ -849,7 +849,7 @@ variable(res)    ::= HATCH variable(v) HATCH. {
 }
 
 variable(res)    ::= HATCH variable(v) HATCH arrayindex(a). {
-    res = '(is_array($tmp = ' . $this->compiler->compileConfigVariable(v) . ') ? $tmp'.a.' : null)';
+    res = '(is_array($tmp = ' . $this->compiler->compileConfigVariable(v) . ') ? $tmp'.a.' : NULL)';
 }
 
 varindexed(res)  ::= DOLLARID(i) arrayindex(a). {

@@ -16,7 +16,7 @@
  * @throws SmartyException if parameter is not a literal (but an expression, variable, …)
  * @author Rodney Rehm
  */
-function smarty_literal_compiler_param($params, $index, $default = null)
+function smarty_literal_compiler_param($params, $index, $default = NULL)
 {
     // not set, go default
     if (!isset($params[ $index ])) {
@@ -29,7 +29,7 @@ function smarty_literal_compiler_param($params, $index, $default = null)
             '] is not a literal and is thus not evaluatable at compile time'
         );
     }
-    $t = null;
+    $t = NULL;
     eval("\$t = " . $params[ $index ] . ";");
     return $t;
 }

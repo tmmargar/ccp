@@ -25,7 +25,7 @@ class Smarty_Internal_Method_GetTemplateVars
      * @link https://www.smarty.net/docs/en/api.get.template.vars.tpl
      *
      * @param \Smarty_Internal_Data|\Smarty_Internal_Template|\Smarty $data
-     * @param string                                                  $varName       variable name or null
+     * @param string                                                  $varName       variable name or NULL
      * @param \Smarty_Internal_Data|\Smarty_Internal_Template|\Smarty $_ptr          optional pointer to data object
      * @param bool                                                    $searchParents include parent templates?
      *
@@ -33,8 +33,8 @@ class Smarty_Internal_Method_GetTemplateVars
      */
     public function getTemplateVars(
         Smarty_Internal_Data $data,
-        $varName = null,
-        Smarty_Internal_Data $_ptr = null,
+        $varName = NULL,
+        Smarty_Internal_Data $_ptr = NULL,
         $searchParents = true
     ) {
         if (isset($varName)) {
@@ -42,14 +42,14 @@ class Smarty_Internal_Method_GetTemplateVars
             if (is_object($_var)) {
                 return $_var->value;
             } else {
-                return null;
+                return NULL;
             }
         } else {
             $_result = array();
-            if ($_ptr === null) {
+            if ($_ptr === NULL) {
                 $_ptr = $data;
             }
-            while ($_ptr !== null) {
+            while ($_ptr !== NULL) {
                 foreach ($_ptr->tpl_vars as $key => $var) {
                     if (!array_key_exists($key, $_result)) {
                         $_result[ $key ] = $var->value;
@@ -59,7 +59,7 @@ class Smarty_Internal_Method_GetTemplateVars
                 if ($searchParents && isset($_ptr->parent)) {
                     $_ptr = $_ptr->parent;
                 } else {
-                    $_ptr = null;
+                    $_ptr = NULL;
                 }
             }
             if ($searchParents && isset(Smarty::$global_tpl_vars)) {
@@ -87,14 +87,14 @@ class Smarty_Internal_Method_GetTemplateVars
     public function _getVariable(
         Smarty_Internal_Data $data,
         $varName,
-        Smarty_Internal_Data $_ptr = null,
+        Smarty_Internal_Data $_ptr = NULL,
         $searchParents = true,
         $errorEnable = true
     ) {
-        if ($_ptr === null) {
+        if ($_ptr === NULL) {
             $_ptr = $data;
         }
-        while ($_ptr !== null) {
+        while ($_ptr !== NULL) {
             if (isset($_ptr->tpl_vars[ $varName ])) {
                 // found it, return it
                 return $_ptr->tpl_vars[ $varName ];
@@ -103,7 +103,7 @@ class Smarty_Internal_Method_GetTemplateVars
             if ($searchParents && isset($_ptr->parent)) {
                 $_ptr = $_ptr->parent;
             } else {
-                $_ptr = null;
+                $_ptr = NULL;
             }
         }
         if (isset(Smarty::$global_tpl_vars[ $varName ])) {

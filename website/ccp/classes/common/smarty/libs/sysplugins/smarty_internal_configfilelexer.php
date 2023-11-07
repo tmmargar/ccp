@@ -40,7 +40,7 @@ class Smarty_Internal_Configfilelexer
      *
      * @var int
      */
-    public $dataLength = null;
+    public $dataLength = NULL;
 
     /**
      * byte counter
@@ -82,7 +82,7 @@ class Smarty_Internal_Configfilelexer
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * trace file
@@ -120,7 +120,7 @@ class Smarty_Internal_Configfilelexer
      *
      * @var Smarty_Internal_Config_File_Compiler
      */
-    private $compiler = null;
+    private $compiler = NULL;
 
     /**
      * copy of config_booleanize
@@ -134,17 +134,17 @@ class Smarty_Internal_Configfilelexer
      *
      * @var string
      */
-    private $yy_global_pattern1 = null;
+    private $yy_global_pattern1 = NULL;
 
-    private $yy_global_pattern2 = null;
+    private $yy_global_pattern2 = NULL;
 
-    private $yy_global_pattern3 = null;
+    private $yy_global_pattern3 = NULL;
 
-    private $yy_global_pattern4 = null;
+    private $yy_global_pattern4 = NULL;
 
-    private $yy_global_pattern5 = null;
+    private $yy_global_pattern5 = NULL;
 
-    private $yy_global_pattern6 = null;
+    private $yy_global_pattern6 = NULL;
 
     private $_yy_state          = 1;
 
@@ -273,7 +273,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r1_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -373,7 +373,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r2_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -490,7 +490,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r3_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -552,7 +552,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r4_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -624,7 +624,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r5_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token
@@ -691,7 +691,7 @@ class Smarty_Internal_Configfilelexer
                 $this->token = key($yymatches); // token number
                 $this->value = current($yymatches); // token value
                 $r = $this->{'yy_r6_' . $this->token}();
-                if ($r === null) {
+                if ($r === NULL) {
                     $this->counter += strlen($this->value);
                     $this->line += substr_count($this->value, "\n");
                     // accept this token

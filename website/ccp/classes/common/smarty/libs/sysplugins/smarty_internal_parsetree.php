@@ -44,7 +44,7 @@ abstract class Smarty_Internal_ParseTree
      */
     public function __destruct()
     {
-        $this->data = null;
-        $this->subtrees = null;
+        $this->data = NULL;
+        $this->subtrees = NULL;
     }
 }

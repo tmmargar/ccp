@@ -13,7 +13,7 @@ class Smarty_Internal_Runtime_UpdateScope
      * Update new assigned template or config variable in other effected scopes
      *
      * @param Smarty_Internal_Template $tpl      data object
-     * @param string|null              $varName  variable name
+     * @param string|NULL              $varName  variable name
      * @param int                      $tagScope tag scope to which bubble up variable value
      */
     public function _updateScope(Smarty_Internal_Template $tpl, $varName, $tagScope = 0)
@@ -102,7 +102,7 @@ class Smarty_Internal_Runtime_UpdateScope
      * Update variable in template local variable stack
      *
      * @param \Smarty_Internal_Template $tpl
-     * @param string|null               $varName variable name or null for config variables
+     * @param string|NULL               $varName variable name or NULL for config variables
      */
     public function _updateVarStack(Smarty_Internal_Template $tpl, $varName)
     {

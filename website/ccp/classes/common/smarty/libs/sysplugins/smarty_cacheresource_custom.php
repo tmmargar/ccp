@@ -53,7 +53,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      * @param string       $name       template name
      * @param string       $cache_id   cache id
      * @param string       $compile_id compile id
-     * @param integer|null $exp_time   seconds till expiration or null
+     * @param integer|NULL $exp_time   seconds till expiration or NULL
      * @param string       $content    content to cache
      *
      * @return boolean      success
@@ -63,10 +63,10 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
     /**
      * Delete content from cache
      *
-     * @param string|null  $name       template name
-     * @param string|null  $cache_id   cache id
-     * @param string|null  $compile_id compile id
-     * @param integer|null $exp_time   seconds till expiration time in seconds or null
+     * @param string|NULL  $name       template name
+     * @param string|NULL  $cache_id   cache id
+     * @param string|NULL  $compile_id compile id
+     * @param integer|NULL $exp_time   seconds till expiration time in seconds or NULL
      *
      * @return integer      number of deleted caches
      */
@@ -82,8 +82,8 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      */
     public function populate(Smarty_Template_Cached $cached, Smarty_Internal_Template $_template)
     {
-        $_cache_id = isset($cached->cache_id) ? preg_replace('![^\w\|]+!', '_', $cached->cache_id) : null;
-        $_compile_id = isset($cached->compile_id) ? preg_replace('![^\w]+!', '_', $cached->compile_id) : null;
+        $_cache_id = isset($cached->cache_id) ? preg_replace('![^\w\|]+!', '_', $cached->cache_id) : NULL;
+        $_compile_id = isset($cached->compile_id) ? preg_replace('![^\w]+!', '_', $cached->compile_id) : NULL;
         $path = $cached->source->uid . $_cache_id . $_compile_id;
         $cached->filepath = sha1($path);
         if ($_template->smarty->cache_locking) {
@@ -103,12 +103,12 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
     {
         $mtime =
             $this->fetchTimestamp($cached->filepath, $cached->source->name, $cached->cache_id, $cached->compile_id);
-        if ($mtime !== null) {
+        if ($mtime !== NULL) {
             $cached->timestamp = $mtime;
             $cached->exists = !!$cached->timestamp;
             return;
         }
-        $timestamp = null;
+        $timestamp = NULL;
         $this->fetch(
             $cached->filepath,
             $cached->source->name,
@@ -132,15 +132,15 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      */
     public function process(
         Smarty_Internal_Template $_smarty_tpl,
-        Smarty_Template_Cached $cached = null,
+        Smarty_Template_Cached $cached = NULL,
         $update = false
     ) {
         if (!$cached) {
             $cached = $_smarty_tpl->cached;
         }
-        $content = $cached->content ? $cached->content : null;
-        $timestamp = $cached->timestamp ? $cached->timestamp : null;
-        if ($content === null || !$timestamp) {
+        $content = $cached->content ? $cached->content : NULL;
+        $timestamp = $cached->timestamp ? $cached->timestamp : NULL;
+        if ($content === NULL || !$timestamp) {
             $this->fetch(
                 $_smarty_tpl->cached->filepath,
                 $_smarty_tpl->source->name,
@@ -152,7 +152,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
         }
         if (isset($content)) {
             eval('?>' . $content);
-            $cached->content = null;
+            $cached->content = NULL;
             return true;
         }
         return false;
@@ -187,10 +187,10 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      */
     public function readCachedContent(Smarty_Internal_Template $_template)
     {
-        $content = $_template->cached->content ? $_template->cached->content : null;
-        $timestamp = null;
-        if ($content === null) {
-            $timestamp = null;
+        $content = $_template->cached->content ? $_template->cached->content : NULL;
+        $timestamp = NULL;
+        if ($content === NULL) {
+            $timestamp = NULL;
             $this->fetch(
                 $_template->cached->filepath,
                 $_template->source->name,
@@ -214,9 +214,9 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      *
      * @return integer number of cache files deleted
      */
-    public function clearAll(Smarty $smarty, $exp_time = null)
+    public function clearAll(Smarty $smarty, $exp_time = NULL)
     {
-        return $this->delete(null, null, null, $exp_time);
+        return $this->delete(NULL, NULL, NULL, $exp_time);
     }
 
     /**
@@ -233,9 +233,9 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      */
     public function clear(Smarty $smarty, $resource_name, $cache_id, $compile_id, $exp_time)
     {
-        $cache_name = null;
+        $cache_name = NULL;
         if (isset($resource_name)) {
-            $source = Smarty_Template_Source::load(null, $smarty, $resource_name);
+            $source = Smarty_Template_Source::load(NULL, $smarty, $resource_name);
             if ($source->exists) {
                 $cache_name = $source->name;
             } else {
@@ -258,7 +258,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
         $id = $cached->lock_id;
         $name = $cached->source->name . '.lock';
         $mtime = $this->fetchTimestamp($id, $name, $cached->cache_id, $cached->compile_id);
-        if ($mtime === null) {
+        if ($mtime === NULL) {
             $this->fetch($id, $name, $cached->cache_id, $cached->compile_id, $content, $mtime);
         }
         return $mtime && ($t = time()) - $mtime < $smarty->locking_timeout;
@@ -292,6 +292,6 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
     {
         $cached->is_locked = false;
         $name = $cached->source->name . '.lock';
-        $this->delete($name, $cached->cache_id, $cached->compile_id, null);
+        $this->delete($name, $cached->cache_id, $cached->compile_id, NULL);
     }
 }

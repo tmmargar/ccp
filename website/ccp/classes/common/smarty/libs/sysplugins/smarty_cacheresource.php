@@ -52,7 +52,7 @@ abstract class Smarty_CacheResource
      */
     abstract public function process(
         Smarty_Internal_Template $_template,
-        Smarty_Template_Cached $cached = null,
+        Smarty_Template_Cached $cached = NULL,
         $update = false
     );
 
@@ -80,7 +80,7 @@ abstract class Smarty_CacheResource
      *
      * @param Smarty_Internal_Template $_template template object
      *
-     * @return null|string
+     * @return NULL|string
      */
     public function getCachedContent(Smarty_Internal_Template $_template)
     {
@@ -90,7 +90,7 @@ abstract class Smarty_CacheResource
             $unifunc($_template);
             return ob_get_clean();
         }
-        return null;
+        return NULL;
     }
 
     /**
@@ -101,7 +101,7 @@ abstract class Smarty_CacheResource
      *
      * @return integer number of cache files deleted
      */
-    abstract public function clearAll(Smarty $smarty, $exp_time = null);
+    abstract public function clearAll(Smarty $smarty, $exp_time = NULL);
 
     /**
      * Empty cache for a specific template
@@ -120,13 +120,13 @@ abstract class Smarty_CacheResource
      * @param Smarty                 $smarty
      * @param Smarty_Template_Cached $cached
      *
-     * @return bool|null
+     * @return bool|NULL
      */
     public function locked(Smarty $smarty, Smarty_Template_Cached $cached)
     {
         // theoretically locking_timeout should be checked against time_limit (max_execution_time)
         $start = microtime(true);
-        $hadLock = null;
+        $hadLock = NULL;
         while ($this->hasLock($smarty, $cached)) {
             $hadLock = true;
             if (microtime(true) - $start > $smarty->locking_timeout) {
@@ -189,7 +189,7 @@ abstract class Smarty_CacheResource
      * @throws SmartyException
      * @return Smarty_CacheResource Cache Resource Handler
      */
-    public static function load(Smarty $smarty, $type = null)
+    public static function load(Smarty $smarty, $type = NULL)
     {
         if (!isset($type)) {
             $type = $smarty->caching_type;

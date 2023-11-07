@@ -22,7 +22,7 @@ class Smarty_Internal_Compile_Private_Registered_Block extends Smarty_Internal_C
      * @param \Smarty_Internal_TemplateCompilerBase $compiler
      * @param array                                 $_attr attributes
      * @param string                                $tag
-     * @param null                                  $function
+     * @param NULL                                  $function
      *
      * @return array
      */
@@ -52,7 +52,7 @@ class Smarty_Internal_Compile_Private_Registered_Block extends Smarty_Internal_C
                 $callable = "array('{$callback[0]}', '{$callback[1]}')";
                 $callback = "{$callback[1]}::{$callback[1]}";
             } else {
-                $callable = null;
+                $callable = NULL;
             }
         }
         $compiler->tag_nocache = !$tag_info[ 1 ] | $compiler->tag_nocache;

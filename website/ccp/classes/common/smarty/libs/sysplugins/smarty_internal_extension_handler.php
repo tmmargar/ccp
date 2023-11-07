@@ -39,7 +39,7 @@
 #[\AllowDynamicProperties]
 class Smarty_Internal_Extension_Handler
 {
-    public $objType = null;
+    public $objType = NULL;
 
     /**
      * Cache for property information from generic getter/setter

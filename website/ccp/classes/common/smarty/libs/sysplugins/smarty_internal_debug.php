@@ -48,14 +48,14 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data
      * Start logging template
      *
      * @param \Smarty_Internal_Template $template template
-     * @param null                      $mode     true: display   false: fetch  null: subtemplate
+     * @param NULL                      $mode     true: display   false: fetch  NULL: subtemplate
      */
-    public function start_template(Smarty_Internal_Template $template, $mode = null)
+    public function start_template(Smarty_Internal_Template $template, $mode = NULL)
     {
         if (isset($mode) && !$template->_isSubTpl()) {
             $this->index++;
             $this->offset++;
-            $this->template_data[ $this->index ] = null;
+            $this->template_data[ $this->index ] = NULL;
         }
         $key = $this->get_key($template);
         $this->template_data[ $this->index ][ $key ][ 'start_template_time' ] = microtime(true);
@@ -216,7 +216,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data
         $debObj->compile_check = Smarty::COMPILECHECK_ON;
         $debObj->left_delimiter = '{';
         $debObj->right_delimiter = '}';
-        $debObj->security_policy = null;
+        $debObj->security_policy = NULL;
         $debObj->debugging = false;
         $debObj->debugging_ctrl = 'NONE';
         $debObj->error_reporting = E_ALL & ~E_NOTICE;
@@ -229,8 +229,8 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data
         $debObj->default_modifiers = array();
         $debObj->escape_html = true;
         $debObj->caching = Smarty::CACHING_OFF;
-        $debObj->compile_id = null;
-        $debObj->cache_id = null;
+        $debObj->compile_id = NULL;
+        $debObj->cache_id = NULL;
         // prepare information of assigned variables
         $ptr = $this->get_debug_vars($obj);
         $_assigned_vars = $ptr->tpl_vars;
@@ -248,7 +248,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data
         if ($obj->_objType === 1 || $full) {
             $_template->assign('template_data', $this->template_data[ $this->index ]);
         } else {
-            $_template->assign('template_data', null);
+            $_template->assign('template_data', NULL);
         }
         $_template->assign('assigned_vars', $_assigned_vars);
         $_template->assign('config_vars', $_config_vars);

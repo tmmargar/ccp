@@ -33,7 +33,7 @@ class Smarty_Internal_Method_Append
      *
      * @return \Smarty_Internal_Data|\Smarty_Internal_Template|\Smarty
      */
-    public function append(Smarty_Internal_Data $data, $tpl_var, $value = null, $merge = false, $nocache = false)
+    public function append(Smarty_Internal_Data $data, $tpl_var, $value = NULL, $merge = false, $nocache = false)
     {
         if (is_array($tpl_var)) {
             // $tpl_var is an array, ignore $value
@@ -45,9 +45,9 @@ class Smarty_Internal_Method_Append
         } else {
             if ($tpl_var !== '' && isset($value)) {
                 if (!isset($data->tpl_vars[ $tpl_var ])) {
-                    $tpl_var_inst = $data->ext->getTemplateVars->_getVariable($data, $tpl_var, null, true, false);
+                    $tpl_var_inst = $data->ext->getTemplateVars->_getVariable($data, $tpl_var, NULL, true, false);
                     if ($tpl_var_inst instanceof Smarty_Undefined_Variable) {
-                        $data->tpl_vars[ $tpl_var ] = new Smarty_Variable(null, $nocache);
+                        $data->tpl_vars[ $tpl_var ] = new Smarty_Variable(NULL, $nocache);
                     } else {
                         $data->tpl_vars[ $tpl_var ] = clone $tpl_var_inst;
                     }

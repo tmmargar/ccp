@@ -35,10 +35,10 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
         )
     );
     $prefix = 'Time_';
-    $field_array = null;
+    $field_array = NULL;
     $field_separator = "\n";
     $option_separator = "\n";
-    $time = null;
+    $time = NULL;
     $display_hours = true;
     $display_minutes = true;
     $display_seconds = true;
@@ -49,33 +49,33 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
     $minute_value_format = '%02d';
     $second_format = '%02d';
     $second_value_format = '%02d';
-    $hour_size = null;
-    $minute_size = null;
-    $second_size = null;
-    $meridian_size = null;
-    $all_empty = null;
-    $hour_empty = null;
-    $minute_empty = null;
-    $second_empty = null;
-    $meridian_empty = null;
-    $all_id = null;
-    $hour_id = null;
-    $minute_id = null;
-    $second_id = null;
-    $meridian_id = null;
+    $hour_size = NULL;
+    $minute_size = NULL;
+    $second_size = NULL;
+    $meridian_size = NULL;
+    $all_empty = NULL;
+    $hour_empty = NULL;
+    $minute_empty = NULL;
+    $second_empty = NULL;
+    $meridian_empty = NULL;
+    $all_id = NULL;
+    $hour_id = NULL;
+    $minute_id = NULL;
+    $second_id = NULL;
+    $meridian_id = NULL;
     $use_24_hours = true;
     $minute_interval = 1;
     $second_interval = 1;
     $extra_attrs = '';
-    $all_extra = null;
-    $hour_extra = null;
-    $minute_extra = null;
-    $second_extra = null;
-    $meridian_extra = null;
+    $all_extra = NULL;
+    $hour_extra = NULL;
+    $minute_extra = NULL;
+    $second_extra = NULL;
+    $meridian_extra = NULL;
     foreach ($params as $_key => $_value) {
         switch ($_key) {
             case 'time':
-                if (!is_array($_value) && $_value !== null) {
+                if (!is_array($_value) && $_value !== NULL) {
                     $template->_checkPlugins(
                         array(
                             array(
@@ -175,9 +175,9 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             // no date found, use NOW
             list($_year, $_month, $_day) = $time = explode('-', date('Y-m-d'));
         }
-    } elseif ($time === null) {
+    } elseif ($time === NULL) {
         if (array_key_exists('time', $params)) {
-            $_hour = $_minute = $_second = $time = null;
+            $_hour = $_minute = $_second = $time = NULL;
         } else {
             list($_hour, $_minute, $_second) = $time = explode('-', date('H-i-s'));
         }
@@ -196,10 +196,10 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_extra .= ' ' . $hour_extra;
         }
         $_html_hours = '<select name="' . $_name . '"';
-        if ($hour_id !== null || $all_id !== null) {
+        if ($hour_id !== NULL || $all_id !== NULL) {
             $_html_hours .= ' id="' .
                             smarty_function_escape_special_chars(
-                                $hour_id !== null ? ($hour_id ? $hour_id : $_name) :
+                                $hour_id !== NULL ? ($hour_id ? $hour_id : $_name) :
                                     ($all_id ? ($all_id . $_name) : $_name)
                             ) . '"';
         }
@@ -220,7 +220,7 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             if (!$use_24_hours) {
                 $_hour12 = $_hour == 0 ? 12 : ($_hour <= 12 ? $_hour : $_hour - 12);
             }
-            $selected = $_hour !== null ? ($use_24_hours ? $_hour == $_val : $_hour12 == $_val) : null;
+            $selected = $_hour !== NULL ? ($use_24_hours ? $_hour == $_val : $_hour12 == $_val) : NULL;
             $_html_hours .= '<option value="' . $_value . '"' . ($selected ? ' selected="selected"' : '') . '>' .
                             $_text . '</option>' . $option_separator;
         }
@@ -238,9 +238,9 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_extra .= ' ' . $minute_extra;
         }
         $_html_minutes = '<select name="' . $_name . '"';
-        if ($minute_id !== null || $all_id !== null) {
+        if ($minute_id !== NULL || $all_id !== NULL) {
             $_html_minutes .= ' id="' . smarty_function_escape_special_chars(
-                    $minute_id !== null ?
+                    $minute_id !== NULL ?
                         ($minute_id ? $minute_id : $_name) :
                         ($all_id ? ($all_id . $_name) :
                             $_name)
@@ -254,7 +254,7 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_html_minutes .= '<option value="">' . (isset($minute_empty) ? $minute_empty : $all_empty) . '</option>' .
                               $option_separator;
         }
-        $selected = $_minute !== null ? ($_minute - $_minute % $minute_interval) : null;
+        $selected = $_minute !== NULL ? ($_minute - $_minute % $minute_interval) : NULL;
         for ($i = 0; $i <= 59; $i += $minute_interval) {
             $_val = sprintf('%02d', $i);
             $_text = $minute_format === '%02d' ? $_val : sprintf($minute_format, $i);
@@ -276,9 +276,9 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_extra .= ' ' . $second_extra;
         }
         $_html_seconds = '<select name="' . $_name . '"';
-        if ($second_id !== null || $all_id !== null) {
+        if ($second_id !== NULL || $all_id !== NULL) {
             $_html_seconds .= ' id="' . smarty_function_escape_special_chars(
-                    $second_id !== null ?
+                    $second_id !== NULL ?
                         ($second_id ? $second_id : $_name) :
                         ($all_id ? ($all_id . $_name) :
                             $_name)
@@ -292,7 +292,7 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_html_seconds .= '<option value="">' . (isset($second_empty) ? $second_empty : $all_empty) . '</option>' .
                               $option_separator;
         }
-        $selected = $_second !== null ? ($_second - $_second % $second_interval) : null;
+        $selected = $_second !== NULL ? ($_second - $_second % $second_interval) : NULL;
         for ($i = 0; $i <= 59; $i += $second_interval) {
             $_val = sprintf('%02d', $i);
             $_text = $second_format === '%02d' ? $_val : sprintf($second_format, $i);
@@ -314,9 +314,9 @@ function smarty_function_html_select_time($params, Smarty_Internal_Template $tem
             $_extra .= ' ' . $meridian_extra;
         }
         $_html_meridian = '<select name="' . $_name . '"';
-        if ($meridian_id !== null || $all_id !== null) {
+        if ($meridian_id !== NULL || $all_id !== NULL) {
             $_html_meridian .= ' id="' . smarty_function_escape_special_chars(
-                    $meridian_id !== null ?
+                    $meridian_id !== NULL ?
                         ($meridian_id ? $meridian_id :
                             $_name) :
                         ($all_id ? ($all_id . $_name) :

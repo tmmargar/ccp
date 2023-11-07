@@ -19,7 +19,7 @@
  * @param array                    $params   parameters
  * @param Smarty_Internal_Template $template template object
  *
- * @return string|null
+ * @return string|NULL
  */
 function smarty_function_math($params, $template)
 {
@@ -123,7 +123,7 @@ function smarty_function_math($params, $template)
             $equation = preg_replace("/\b$key\b/", " \$params['$key'] ", $equation);
         }
     }
-    $smarty_math_result = null;
+    $smarty_math_result = NULL;
     eval("\$smarty_math_result = " . $equation . ";");
 
     if (empty($params[ 'format' ])) {

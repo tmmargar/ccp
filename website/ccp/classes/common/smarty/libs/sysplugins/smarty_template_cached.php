@@ -21,21 +21,21 @@ class Smarty_Template_Cached extends Smarty_Template_Resource_Base
      *
      * @var boolean
      */
-    public $valid = null;
+    public $valid = NULL;
 
     /**
      * CacheResource Handler
      *
      * @var Smarty_CacheResource
      */
-    public $handler = null;
+    public $handler = NULL;
 
     /**
      * Template Cache Id (Smarty_Internal_Template::$cache_id)
      *
      * @var string
      */
-    public $cache_id = null;
+    public $cache_id = NULL;
 
     /**
      * saved cache lifetime in seconds
@@ -49,7 +49,7 @@ class Smarty_Template_Cached extends Smarty_Template_Resource_Base
      *
      * @var string
      */
-    public $lock_id = null;
+    public $lock_id = NULL;
 
     /**
      * flag that cache is locked by this instance
@@ -63,7 +63,7 @@ class Smarty_Template_Cached extends Smarty_Template_Resource_Base
      *
      * @var Smarty_Template_Source
      */
-    public $source = null;
+    public $source = NULL;
 
     /**
      * Nocache hash codes of processed compiled templates
@@ -153,7 +153,7 @@ class Smarty_Template_Cached extends Smarty_Template_Resource_Base
      */
     public function isCached(Smarty_Internal_Template $_template)
     {
-        if ($this->valid !== null) {
+        if ($this->valid !== NULL) {
             return $this->valid;
         }
         while (true) {
@@ -184,7 +184,7 @@ class Smarty_Template_Cached extends Smarty_Template_Resource_Base
                 $this->handler->populate($this, $_template);
             }
             if ($this->valid) {
-                if (!$_template->smarty->cache_locking || $this->handler->locked($_template->smarty, $this) === null) {
+                if (!$_template->smarty->cache_locking || $this->handler->locked($_template->smarty, $this) === NULL) {
                     // load cache file for the following checks
                     if ($_template->smarty->debugging) {
                         $_template->smarty->_debug->start_cache($_template);

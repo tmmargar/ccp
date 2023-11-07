@@ -96,15 +96,15 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     public function process(
         Smarty_Internal_Template $_smarty_tpl,
-        Smarty_Template_Cached $cached = null,
+        Smarty_Template_Cached $cached = NULL,
         $update = false
     ) {
         if (!$cached) {
             $cached = $_smarty_tpl->cached;
         }
-        $content = $cached->content ? $cached->content : null;
-        $timestamp = $cached->timestamp ? $cached->timestamp : null;
-        if ($content === null || !$timestamp) {
+        $content = $cached->content ? $cached->content : NULL;
+        $timestamp = $cached->timestamp ? $cached->timestamp : NULL;
+        if ($content === NULL || !$timestamp) {
             if (!$this->fetch(
                 $_smarty_tpl->cached->filepath,
                 $_smarty_tpl->source->name,
@@ -148,9 +148,9 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     public function readCachedContent(Smarty_Internal_Template $_template)
     {
-        $content = $_template->cached->content ? $_template->cached->content : null;
-        $timestamp = null;
-        if ($content === null) {
+        $content = $_template->cached->content ? $_template->cached->content : NULL;
+        $timestamp = NULL;
+        if ($content === NULL) {
             if (!$this->fetch(
                 $_template->cached->filepath,
                 $_template->source->name,
@@ -181,10 +181,10 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      * @uses   purge() to clear the whole store
      * @uses   invalidate() to mark everything outdated if purge() is inapplicable
      */
-    public function clearAll(Smarty $smarty, $exp_time = null)
+    public function clearAll(Smarty $smarty, $exp_time = NULL)
     {
         if (!$this->purge()) {
-            $this->invalidate(null);
+            $this->invalidate(NULL);
         }
         return -1;
     }
@@ -227,7 +227,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
     protected function getTemplateUid(Smarty $smarty, $resource_name)
     {
         if (isset($resource_name)) {
-            $source = Smarty_Template_Source::load(null, $smarty, $resource_name);
+            $source = Smarty_Template_Source::load(NULL, $smarty, $resource_name);
             if ($source->exists) {
                 return $source->uid;
             }
@@ -266,22 +266,22 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     protected function fetch(
         $cid,
-        $resource_name = null,
-        $cache_id = null,
-        $compile_id = null,
-        &$content = null,
-        &$timestamp = null,
-        $resource_uid = null
+        $resource_name = NULL,
+        $cache_id = NULL,
+        $compile_id = NULL,
+        &$content = NULL,
+        &$timestamp = NULL,
+        $resource_uid = NULL
     ) {
         $t = $this->read(array($cid));
-        $content = !empty($t[ $cid ]) ? $t[ $cid ] : null;
-        $timestamp = null;
+        $content = !empty($t[ $cid ]) ? $t[ $cid ] : NULL;
+        $timestamp = NULL;
         if ($content && ($timestamp = $this->getMetaTimestamp($content))) {
             $invalidated =
                 $this->getLatestInvalidationTimestamp($cid, $resource_name, $cache_id, $compile_id, $resource_uid);
             if ($invalidated > $timestamp) {
-                $timestamp = null;
-                $content = null;
+                $timestamp = NULL;
+                $content = NULL;
             }
         }
         return !!$content;
@@ -329,14 +329,14 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      * @return void
      */
     protected function invalidate(
-        $cid = null,
-        $resource_name = null,
-        $cache_id = null,
-        $compile_id = null,
-        $resource_uid = null
+        $cid = NULL,
+        $resource_name = NULL,
+        $cache_id = NULL,
+        $compile_id = NULL,
+        $resource_uid = NULL
     ) {
         $now = microtime(true);
-        $key = null;
+        $key = NULL;
         // invalidate everything
         if (!$resource_name && !$cache_id && !$compile_id) {
             $key = 'IVK#ALL';
@@ -375,10 +375,10 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     protected function getLatestInvalidationTimestamp(
         $cid,
-        $resource_name = null,
-        $cache_id = null,
-        $compile_id = null,
-        $resource_uid = null
+        $resource_name = NULL,
+        $cache_id = NULL,
+        $compile_id = NULL,
+        $resource_uid = NULL
     ) {
         // abort if there is no CacheID
         if (false && !$cid) {
@@ -412,10 +412,10 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     protected function listInvalidationKeys(
         $cid,
-        $resource_name = null,
-        $cache_id = null,
-        $compile_id = null,
-        $resource_uid = null
+        $resource_name = NULL,
+        $cache_id = NULL,
+        $compile_id = NULL,
+        $resource_uid = NULL
     ) {
         $t = array('IVK#ALL');
         $_name = $_compile = '#';
@@ -515,7 +515,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      *
      * @return boolean true on success, false on failure
      */
-    abstract protected function write(array $keys, $expire = null);
+    abstract protected function write(array $keys, $expire = NULL);
 
     /**
      * Remove values from cache

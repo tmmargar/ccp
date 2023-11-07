@@ -45,7 +45,7 @@ class Smarty_Internal_Method_Literals
      * @return \Smarty|\Smarty_Internal_Template
      * @throws \SmartyException
      */
-    public function addLiterals(Smarty_Internal_TemplateBase $obj, $literals = null)
+    public function addLiterals(Smarty_Internal_TemplateBase $obj, $literals = NULL)
     {
         if (isset($literals)) {
             $this->set($obj->_getSmartyObj(), (array)$literals);
@@ -65,7 +65,7 @@ class Smarty_Internal_Method_Literals
      * @return \Smarty|\Smarty_Internal_Template
      * @throws \SmartyException
      */
-    public function setLiterals(Smarty_Internal_TemplateBase $obj, $literals = null)
+    public function setLiterals(Smarty_Internal_TemplateBase $obj, $literals = NULL)
     {
         $smarty = $obj->_getSmartyObj();
         $smarty->literals = array();

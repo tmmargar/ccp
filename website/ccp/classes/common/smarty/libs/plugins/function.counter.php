@@ -18,7 +18,7 @@
  * @param array                    $params   parameters
  * @param Smarty_Internal_Template $template template object
  *
- * @return string|null
+ * @return string|NULL
  */
 function smarty_function_counter($params, $template)
 {
@@ -45,7 +45,7 @@ function smarty_function_counter($params, $template)
     if ($print) {
         $retval = $counter[ 'count' ];
     } else {
-        $retval = null;
+        $retval = NULL;
     }
     if (isset($params[ 'skip' ])) {
         $counter[ 'skip' ] = $params[ 'skip' ];

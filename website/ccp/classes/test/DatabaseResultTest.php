@@ -58,7 +58,7 @@ class DatabaseResultTest extends BaseTest {
   }
   public static function testGetTournament() {
     $databaseResult = new DatabaseResult();
-    $params = array(null, false);
+    $params = array(NULL, false);
     $tournamentList = $databaseResult->getTournament($params);
     echo "<br>testGetTournament " . ((count($tournamentList) >= 100) ? self::getPassOutput() : self::getFailOutput());
   }

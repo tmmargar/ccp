@@ -4,7 +4,7 @@ namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class Security extends Base {
   private Season $season;
-  public function __construct(protected bool $debug, protected string|int|null $id, protected Login $login, protected User $user) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Login $login, protected User $user) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getLogin(): Login {

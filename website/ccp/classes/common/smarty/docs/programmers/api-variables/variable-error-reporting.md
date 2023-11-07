@@ -1,7 +1,7 @@
 \$error\_reporting {#variable.error.reporting}
 ==================
 
-When this value is set to a non-null-value it\'s value is used as php\'s
+When this value is set to a non-NULL-value it\'s value is used as php\'s
 [`error_reporting`](https://www.php.net/error_reporting) level inside of
 [`display()`](#api.display) and [`fetch()`](#api.fetch).
 

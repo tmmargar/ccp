@@ -15,7 +15,7 @@ class Smarty_Variable
      *
      * @var mixed
      */
-    public $value = null;
+    public $value = NULL;
 
     /**
      * if true any output of this variable will be not cached
@@ -30,7 +30,7 @@ class Smarty_Variable
      * @param mixed   $value   the value to assign
      * @param boolean $nocache if true any output of this variable will be not cached
      */
-    public function __construct($value = null, $nocache = false)
+    public function __construct($value = NULL, $nocache = false)
     {
         $this->value = $value;
         $this->nocache = $nocache;

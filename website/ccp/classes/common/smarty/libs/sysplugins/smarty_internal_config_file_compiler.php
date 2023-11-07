@@ -136,7 +136,7 @@ class Smarty_Internal_Config_File_Compiler
             $mbEncoding = mb_internal_encoding();
             mb_internal_encoding('ASCII');
         } else {
-            $mbEncoding = null;
+            $mbEncoding = NULL;
         }
         if ($this->smarty->_parserdebug) {
             $this->parser->PrintTrace();
@@ -174,11 +174,11 @@ class Smarty_Internal_Config_File_Compiler
      * In this case the parser is called to obtain information about expected tokens.
      * If parameter $args contains a string this is used as error message
      *
-     * @param string $args individual error message or null
+     * @param string $args individual error message or NULL
      *
      * @throws SmartyCompilerException
      */
-    public function trigger_config_file_error($args = null)
+    public function trigger_config_file_error($args = NULL)
     {
         // get config source line which has error
         $line = $this->lex->line;

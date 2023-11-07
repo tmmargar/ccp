@@ -8,9 +8,9 @@ $resultList = $databaseResult->getSeasonByActive(params: $params);
 $season = $resultList[0];
 $params = array($_POST["tournamentDate"],$_POST["tournamentDate"]);
 $paramsNested = array($season->getStartDate()->getDatabaseFormat(),$season->getEndDate()->getDatabaseFormat(),$season->getChampionshipQualify());
-$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: null);
+$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: NULL);
 $tournament = $resultList[$_POST["first"]];
-$params = array(null,null,null,Constant::CODE_STATUS_PAID,0,"null",$tournament->getId()); // , $maxPlace);
+$params = array(NULL,NULL,NULL,Constant::CODE_STATUS_PAID,0,NULL,$tournament->getId()); // , $maxPlace);
 $rowCount = $databaseResult->updateResultByTournamentIdAndPlace(params: $params);
 echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to paid";
 $index = - 1;
@@ -36,13 +36,13 @@ foreach ($_POST["firstName"] as $firstName) {
   if (0 < count($resultList)) {
     $userKO = $resultList[0];
   } else {
-    $userKO = null;
+    $userKO = NULL;
   }
   $params = array($tournament->getId(),$user->getId());
   $resultList = $databaseResult->getResultByTournamentIdAndPlayerId(params: $params);
   $userResult = $resultList[0];
   // rebuycount, rebuypaid, addonpaid, statuscode, place, kobyid, playerid
-  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],null == $userKO ? "null" : $userKO->getId(),$tournament->getId(),$user->getId());
+  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],NULL == $userKO ? NULL : $userKO->getId(),$tournament->getId(),$user->getId());
   $rowCount = $databaseResult->updateResult(params: $params);
   echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $tournament->getId() . " and user id " . $user->getId();
 }

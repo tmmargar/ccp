@@ -32,7 +32,7 @@ class Smarty_Internal_Method_ClearCompiledTemplate
      * @return int number of template files deleted
      * @throws \SmartyException
      */
-    public function clearCompiledTemplate(Smarty $smarty, $resource_name = null, $compile_id = null, $exp_time = null)
+    public function clearCompiledTemplate(Smarty $smarty, $resource_name = NULL, $compile_id = NULL, $exp_time = NULL)
     {
         // clear template objects cache
         $smarty->_clearTemplateCache();
@@ -40,7 +40,7 @@ class Smarty_Internal_Method_ClearCompiledTemplate
         if ($_compile_dir === '/') { //We should never want to delete this!
             return 0;
         }
-        $_compile_id = isset($compile_id) ? preg_replace('![^\w]+!', '_', $compile_id) : null;
+        $_compile_id = isset($compile_id) ? preg_replace('![^\w]+!', '_', $compile_id) : NULL;
         $_dir_sep = $smarty->use_sub_dirs ? DIRECTORY_SEPARATOR : '^';
         if (isset($resource_name)) {
             $_save_stat = $smarty->caching;

@@ -10,12 +10,12 @@ like.
     instance, a cache group of `'a|b|c'` could be thought of as the
     directory structure `'/a/b/c/'`.
 
--   `clearCache(null,'a|b|c')` would be like removing the files
-    `'/a/b/c/*'`. `clearCache(null,'a|b')` would be like removing the
+-   `clearCache(NULL,'a|b|c')` would be like removing the files
+    `'/a/b/c/*'`. `clearCache(NULL,'a|b')` would be like removing the
     files `'/a/b/*'`.
 
 -   If you specify a [`$compile_id`](#variable.compile.id) such as
-    `clearCache(null,'a|b','foo')` it is treated as an appended cache
+    `clearCache(NULL,'a|b','foo')` it is treated as an appended cache
     group `'/a/b/c/foo/'`.
 
 -   If you specify a template name such as
@@ -34,7 +34,7 @@ structured. So for example, if you have a template structure like
 files for the "blue" theme, you will need to create a cache group
 structure that mimics your template file structure, such as
 `display('themes/blue/index.tpl','themes|blue')`, then clear them with
-`clearCache(null,'themes|blue')`.
+`clearCache(NULL,'themes|blue')`.
 
 
     <?php
@@ -44,11 +44,11 @@ structure that mimics your template file structure, such as
     $smarty->setCaching(Smarty::CACHING_LIFETIME_CURRENT);
 
     // clear all caches with 'sports|basketball' as the first two cache_id groups
-    $smarty->clearCache(null,'sports|basketball');
+    $smarty->clearCache(NULL,'sports|basketball');
 
     // clear all caches with "sports" as the first cache_id group. This would
     // include "sports|basketball", or "sports|(anything)|(anything)|(anything)|..."
-    $smarty->clearCache(null,'sports');
+    $smarty->clearCache(NULL,'sports');
 
     // clear the foo.tpl cache file with "sports|basketball" as the cache_id
     $smarty->clearCache('foo.tpl','sports|basketball');

@@ -273,10 +273,10 @@ class ResultTest extends BaseTest {
     $tournament->setBuyinsPaid(5);
     $tournament->setChipCount(2500);
     $tournament->setComment("comment");
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), NULL, NULL);
     $tournament->setDate($dateTime->getTime());
     $tournament->setDescription("desc");
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), NULL, NULL);
     $tournament->setEndTime($dateTime->getTime());
     $gameType = new GameType();
     $gameType->setId(1);
@@ -341,7 +341,7 @@ class ResultTest extends BaseTest {
     $tournament->setRake(.2);
     $tournament->setRebuyAmount(25);
     $tournament->setRebuysPaid(0);
-    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), null, null);
+    $dateTime = new DateTime(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), NULL, NULL);
     $tournament->setStartTime($dateTime->getTime());
     $result->setTournament($tournament);
     $address = new Address();

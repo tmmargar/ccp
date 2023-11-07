@@ -62,42 +62,42 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
 
     /**
      * Source instance
      *
      * @var Smarty_Template_Source|Smarty_Template_Config
      */
-    public $source = null;
+    public $source = NULL;
 
     /**
      * Inheritance runtime extension
      *
      * @var Smarty_Internal_Runtime_Inheritance
      */
-    public $inheritance = null;
+    public $inheritance = NULL;
 
     /**
      * Template resource
      *
      * @var string
      */
-    public $template_resource = null;
+    public $template_resource = NULL;
 
     /**
      * flag if compiled template is invalid and must be (re)compiled
      *
      * @var bool
      */
-    public $mustCompile = null;
+    public $mustCompile = NULL;
 
     /**
      * Template Id
      *
-     * @var null|string
+     * @var NULL|string
      */
-    public $templateId = null;
+    public $templateId = NULL;
 
     /**
      * Scope in which variables shall be assigned
@@ -134,13 +134,13 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
      *
      * @param string                                                       $template_resource template resource string
      * @param Smarty                                                       $smarty            Smarty instance
-     * @param null|\Smarty_Internal_Template|\Smarty|\Smarty_Internal_Data $_parent           back pointer to parent
+     * @param NULL|\Smarty_Internal_Template|\Smarty|\Smarty_Internal_Data $_parent           back pointer to parent
      *                                                                                        object with variables or
-     *                                                                                        null
-     * @param mixed                                                        $_cache_id         cache   id or null
-     * @param mixed                                                        $_compile_id       compile id or null
-     * @param bool|int|null                                                $_caching          use caching?
-     * @param int|null                                                     $_cache_lifetime   cache life-time in
+     *                                                                                        NULL
+     * @param mixed                                                        $_cache_id         cache   id or NULL
+     * @param mixed                                                        $_compile_id       compile id or NULL
+     * @param bool|int|NULL                                                $_caching          use caching?
+     * @param int|NULL                                                     $_cache_lifetime   cache life-time in
      *                                                                                        seconds
      * @param bool                                                         $_isConfig
      *
@@ -149,19 +149,19 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
     public function __construct(
         $template_resource,
         Smarty $smarty,
-        Smarty_Internal_Data $_parent = null,
-        $_cache_id = null,
-        $_compile_id = null,
-        $_caching = null,
-        $_cache_lifetime = null,
+        Smarty_Internal_Data $_parent = NULL,
+        $_cache_id = NULL,
+        $_compile_id = NULL,
+        $_caching = NULL,
+        $_cache_lifetime = NULL,
         $_isConfig = false
     ) {
         $this->smarty = $smarty;
         // Smarty parameter
-        $this->cache_id = $_cache_id === null ? $this->smarty->cache_id : $_cache_id;
-        $this->compile_id = $_compile_id === null ? $this->smarty->compile_id : $_compile_id;
-        $this->caching = (int)($_caching === null ? $this->smarty->caching : $_caching);
-        $this->cache_lifetime = $_cache_lifetime === null ? $this->smarty->cache_lifetime : $_cache_lifetime;
+        $this->cache_id = $_cache_id === NULL ? $this->smarty->cache_id : $_cache_id;
+        $this->compile_id = $_compile_id === NULL ? $this->smarty->compile_id : $_compile_id;
+        $this->caching = (int)($_caching === NULL ? $this->smarty->caching : $_caching);
+        $this->cache_lifetime = $_cache_lifetime === NULL ? $this->smarty->cache_lifetime : $_cache_lifetime;
         $this->compile_check = (int)$smarty->compile_check;
         $this->parent = $_parent;
         // Template resource
@@ -177,13 +177,13 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
      * render template
      *
      * @param bool      $no_output_filter if true do not run output filter
-     * @param null|bool $display          true: display, false: fetch null: sub-template
+     * @param NULL|bool $display          true: display, false: fetch NULL: sub-template
      *
      * @return string
      * @throws \Exception
      * @throws \SmartyException
      */
-    public function render($no_output_filter = true, $display = null)
+    public function render($no_output_filter = true, $display = NULL)
     {
         if ($this->smarty->debugging) {
             if (!isset($this->smarty->_debug)) {
@@ -255,7 +255,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
                 return $this->smarty->ext->_filterHandler->runFilter('output', ob_get_clean(), $this);
             }
             // return cache content
-            return null;
+            return NULL;
         }
     }
 
@@ -285,8 +285,8 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
         $data,
         $scope,
         $forceTplCache,
-        $uid = null,
-        $content_func = null
+        $uid = NULL,
+        $content_func = NULL
     ) {
         $tpl = clone $this;
         $tpl->parent = $this;
@@ -635,7 +635,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase
     {
         $this->startRenderCallbacks = array();
         $this->endRenderCallbacks = array();
-        $this->inheritance = null;
+        $this->inheritance = NULL;
     }
 
     /**

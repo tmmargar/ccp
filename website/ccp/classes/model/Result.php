@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Result extends Base {
-  public function __construct(protected bool $debug, protected string|int|null $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder,
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder,
     protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy,
-    protected string|null $food, protected string|null $feeStatus) {
+    protected string|NULL $food, protected string|NULL $feeStatus) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getTournament(): Tournament {
@@ -86,8 +86,8 @@ class Result extends Base {
     $this->feeStatus = $feeStatus;
   }
   public function getLink(): string {
-    $link = new HtmlLink(accessKey: null, class: null, debug: $this->isDebug(), href: "manageResult.php", id: null, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
-      tabIndex: - 1, text: $this->getTournament()->getDescription(), title: null);
+    $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageResult.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+      tabIndex: - 1, text: $this->getTournament()->getDescription(), title: NULL);
     return $link->getHtml();
   }
   public function __toString(): string {

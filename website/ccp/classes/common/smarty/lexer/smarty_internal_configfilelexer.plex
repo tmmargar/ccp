@@ -30,7 +30,7 @@ class Smarty_Internal_Configfilelexer
       *
       * @var int
       */
-     public $dataLength = null;
+     public $dataLength = NULL;
    /**
      * byte counter
      *
@@ -66,13 +66,13 @@ class Smarty_Internal_Configfilelexer
      *
      * @var Smarty
      */
-    public $smarty = null;
+    public $smarty = NULL;
     /**
      * compiler object
      *
      * @var Smarty_Internal_Config_File_Compiler
      */
-    private $compiler = null;
+    private $compiler = NULL;
     /**
      * copy of config_booleanize
      *
@@ -103,12 +103,12 @@ class Smarty_Internal_Configfilelexer
      *
      * @var string
      */
-    private $yy_global_pattern1 = null;
-    private $yy_global_pattern2 = null;
-    private $yy_global_pattern3 = null;
-    private $yy_global_pattern4 = null;
-    private $yy_global_pattern5 = null;
-    private $yy_global_pattern6 = null;
+    private $yy_global_pattern1 = NULL;
+    private $yy_global_pattern2 = NULL;
+    private $yy_global_pattern3 = NULL;
+    private $yy_global_pattern4 = NULL;
+    private $yy_global_pattern5 = NULL;
+    private $yy_global_pattern6 = NULL;
 
     /**
      * token names
