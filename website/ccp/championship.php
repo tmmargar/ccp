@@ -25,7 +25,7 @@ if (0 < count($resultList)) {
   while ($ctr < count($resultList)) {
     $aryResult = $resultList[$ctr];
     $ctr ++;
-    $aryWinners[$ctr] = $aryResult[1];
+    $aryWinners[$ctr] = $aryResult[2];
   }
   // $caption = "<strong>There are " . $ctr . " winners</strong>";
   // $hideColIndexes = array(0,2);
@@ -53,7 +53,7 @@ $aryPosition[6] = 4;
 $aryPosition[7] = 3;
 $aryPosition[8] = 2;
 $params = array($startDate,$endDate,SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
-$resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params);
+$resultList = $databaseResult->getChampionshipQualifiedPlayers(params: $params, returnQuery: false);
 $count = count(value: $resultList) - count(value: $aryAbsentIds);
 if (0 < $count) {
   // $numPlayers = $count;
@@ -64,11 +64,11 @@ if (0 < $count) {
   $additionalPlayers = 36 - $countWinners;
   while ($ctr < count(value: $resultList)) {
     $aryResult = $resultList[$ctr];
-    // echo "<br>".$ctr."-->".$index."->".$aryResult[0];
-    if (in_array($aryResult[0], $aryAbsentNames)) {
+    // echo "<br>".$ctr."-->".$index."->".$aryResult[1];
+    if (in_array($aryResult[1], $aryAbsentNames)) {
       foreach ($aryAbsentNames as $aryAbsentName) {
-        // echo "<Br>" . $aryResult[0] . " == " . $aryAbsentName;
-        if ($aryResult[0] == $aryAbsentName) {
+        // echo "<Br>" . $aryResult[1] . " == " . $aryAbsentName;
+        if ($aryResult[1] == $aryAbsentName) {
           // $aryAbsentSeeds[$absentCtr] = $ctr + 1;
           $aryAbsentSeeds[$aryAbsentName] = $ctr + 1;
           $absentCtr ++;
@@ -79,16 +79,16 @@ if (0 < $count) {
       // echo "<br>".$allowCtr . " <= " . $additionalPlayers;
       if ($allowCtr <= $additionalPlayers) {
         // if winner add * else increment additional players
-        if (in_array($aryResult[0], $aryWinners)) {
-          $aryResult[0] = "*" . $aryResult[0];
+        if (in_array($aryResult[1], $aryWinners)) {
+          $aryResult[1] = "*" . $aryResult[1];
         } else {
           $allowCtr ++;
         }
       }
-      // echo "<br>setting aryNames[" . $index . "] = " . $aryResult[0];
-      $aryNames[$index] = $aryResult[0];
-      // echo "<br>setting aryAvgPts[" . $index . "] = " . $aryResult[1];
-      $aryPts[$index] = $aryResult[1];
+      // echo "<br>setting aryNames[" . $index . "] = " . $aryResult[1];
+      $aryNames[$index] = $aryResult[1];
+      // echo "<br>setting aryAvgPts[" . $index . "] = " . $aryResult[2];
+      $aryPts[$index] = $aryResult[2];
     }
     $ctr ++;
   }
@@ -234,7 +234,7 @@ if (0 < $count) {
   foreach ($aryAbsentNames as $absentName) {
     $output .= "    <div class=\"column\">" . $absentName . "</div>\n";
     $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
-    $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[$aryAbsentSeeds[$absentName] / $numTables];
+    $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[floor($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[floor($aryAbsentSeeds[$absentName] / $numTables)];
     // echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
     $output .= "    <div class=\"column2\">Table " . $tableNum . " Position " . $positionNum . "</div>\n";
     $output .= "    <div class=\"clear\"></div>\n";

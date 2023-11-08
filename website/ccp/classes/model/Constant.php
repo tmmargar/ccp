@@ -8,6 +8,7 @@ abstract class Constant {
   public const ACCESSKEY_ADDRESS = "a";
   public const ACCESSKEY_ADD_ROW = "o";
   public const ACCESSKEY_APPROVE = "a";
+  public const ACCESSKEY_ATTEND = "a";
   public const ACCESSKEY_BODY = "b";
   public const ACCESSKEY_BONUS_POINTS = "b";
   public const ACCESSKEY_BUYIN_AMOUNT = "b";
@@ -115,6 +116,8 @@ abstract class Constant {
   public const TEXT_ADDON = "Addon";
   public const TEXT_ADD_ROW = "Add row";
   public const TEXT_APPROVE = "Approve";
+  public const TEXT_ATTEND = "Attend";
+  public const TEXT_ATTEND_UNATTEND = "Attend / un-attend";
   public const TEXT_BUYIN = "Buyin";
   public const TEXT_CANCEL = "Cancel";
   public const TEXT_CONFIRM_DELETE = "Confirm delete";

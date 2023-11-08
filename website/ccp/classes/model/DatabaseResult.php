@@ -45,8 +45,8 @@ class DatabaseResult extends Root {
   public function getChampionshipByPlayerByEarnings(array $params): array|string {
     return $this->getData(dataName: "championship", params: $params, orderBy: NULL, returnQuery: true, limitCount: NULL, rank: false);
   }
-  public function getChampionshipQualifiedPlayers(array $params): array|string {
-    return $this->getData(dataName: "championshipQualifiedPlayers", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
+  public function getChampionshipQualifiedPlayers(array $params, bool $returnQuery): array|string {
+    return $this->getData(dataName: "championshipQualifiedPlayers", params: $params, orderBy: NULL, returnQuery: $returnQuery, limitCount: NULL, rank: false);
   }
   public function getCountTournamentForDates(array $params): array|string {
     return $this->getData(dataName: "countTournamentForDates", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
@@ -314,6 +314,9 @@ class DatabaseResult extends Root {
   public function getTournamentForRegistrationStatus(array $params): array|string {
     return $this->getData(dataName: "tournamentSelectAllRegistrationStatus", params: $params, orderBy: NULL, returnQuery: true, limitCount: NULL, rank: false);
   }
+  public function getTournamentForChampionship(array $params, array $paramsNested): array|string {
+    return $this->getData(dataName: "tournamentSelectAllForChampionship", params: $params, paramsNested: $paramsNested, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
+  }
   public function getTournamentsPlayedByPlayerIdAndDateRange(array $params): array|string {
     return $this->getData(dataName: "tournamentsPlayedByPlayerIdAndDateRange", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
@@ -410,14 +413,17 @@ class DatabaseResult extends Root {
   public function deleteSeason(array $params): int|array {
     return $this->deleteData(dataName: "seasonDelete", params: $params);
   }
+  public function deleteSpecialType(array $params): int|array {
+    return $this->deleteData(dataName: "specialTypeDelete", params: $params);
+  }
   public function deleteStructure(array $params): int|array {
     return $this->deleteData(dataName: "structureDelete", params: $params);
   }
   public function deleteTournament(array $params): int|array {
     return $this->deleteData(dataName: "tournamentDelete", params: $params);
   }
-  public function deleteSpecialType(array $params): int|array {
-    return $this->deleteData(dataName: "specialTypeDelete", params: $params);
+  public function deleteTournamentAbsence(array $params): int|array {
+    return $this->deleteData(dataName: "tournamentAbsenceDelete", params: $params);
   }
   public function insertFee(array $params): int|array {
     return $this->insertData(dataName: "feeInsert", params: $params);
@@ -446,14 +452,17 @@ class DatabaseResult extends Root {
   public function insertSeason(array $params): int|array {
     return $this->insertData(dataName: "seasonInsert", params: $params);
   }
+  public function insertSpecialType(array $params): int|array {
+    return $this->insertData(dataName: "specialTypeInsert", params: $params);
+  }
   public function insertStructure(array $params): int|array {
     return $this->insertData(dataName: "structureInsert", params: $params);
   }
   public function insertTournament(array $params): int|array {
     return $this->insertData(dataName: "tournamentInsert", params: $params);
   }
-  public function insertSpecialType(array $params): int|array {
-    return $this->insertData(dataName: "specialTypeInsert", params: $params);
+  public function insertTournamentAbsence(array $params): int|array {
+    return $this->insertData(dataName: "tournamentAbsenceInsert", params: $params);
   }
   public function insertUser(array $params): int|array {
     return $this->insertData(dataName: "userInsert", params: $params);
@@ -619,7 +628,7 @@ class DatabaseResult extends Root {
         break;
       case "championshipQualifiedPlayers":
         $query =
-          "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, " .
+          "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, " .
           "       SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
           "             CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
           "               CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
@@ -633,7 +642,8 @@ class DatabaseResult extends Root {
           "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
           "           ELSE " .
           "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "           END) / nt.numTourneys AS 'average points' " .
+          "           END) / nt.numTourneys AS 'average points', " .
+          "       ta.playerId AS playerIdAbsence, IF(ta.playerId IS NULL, 'Attending', 'Not attending') AS 'absence status' " .
           "FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerid AND " . $this->buildUserActive(alias: "u") .
           " INNER JOIN poker_tournament t on r.tournamentid = t.tournamentid AND t.tournamentDate BETWEEN :startDate1 AND :endDate1 " .
           "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
@@ -647,6 +657,10 @@ class DatabaseResult extends Root {
           "            FROM poker_result " .
           "            WHERE place > 0 " .
           "            GROUP BY tournamentid) np ON r.tournamentid = np.tournamentid " .
+          "INNER JOIN poker_season se ON t.tournamentDate BETWEEN se.seasonStartDate AND se.seasonEndDate " .
+          "LEFT JOIN (SELECT t.tournamentId, t.tournamentDate FROM poker_tournament t INNER JOIN poker_special_type st ON t.specialTypeId = st.typeId WHERE st.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "') tc ON tc.tournamentDate BETWEEN se.seasonStartDate AND se.seasonEndDate " .
+          "LEFT JOIN poker_tournament_absence ta ON tc.tournamentId = ta.tournamentId AND u.id = ta.playerId " .
+          "LEFT JOIN poker_result ra ON ta.tournamentId = ra.tournamentId AND ta.playerId = ra.playerId " .
           "WHERE nt.numTourneys >= :numTourneys " .
           "GROUP BY r.playerid " .
           "ORDER BY points DESC";
@@ -2278,6 +2292,7 @@ class DatabaseResult extends Root {
       case "tournamentSelectOneById":
       case "tournamentSelectAllForRegistration":
       case "tournamentSelectAllForBuyins":
+      case "tournamentSelectAllForChampionship":
       case "tournamentSelectAllOrdered":
       case "tournamentsSelectForEmailNotifications":
         $query =
@@ -2291,8 +2306,13 @@ class DatabaseResult extends Root {
           "       CASE WHEN ec.enteredCount IS NULL THEN 0 ELSE ec.enteredCount END AS enteredCount, " .
           "       t.specialTypeId, st.typeDescription AS std " .
           "FROM poker_tournament t INNER JOIN poker_game_type gt ON t.gameTypeId = gt.gameTypeId " .
-          "INNER JOIN poker_limit_type lt ON t.limitTypeId = lt.limitTypeId " .
-          "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
+          "INNER JOIN poker_limit_type lt ON t.limitTypeId = lt.limitTypeId ";
+        if ("tournamentSelectAllForChampionship" == $dataName) {
+          $query .= "INNER JOIN poker_special_type st ON t.specialTypeId = st.typeId AND st.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' ";
+        } else {
+          $query .= "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId ";
+        }
+        $query .=
           "INNER JOIN poker_location l ON t.locationId = l.locationId " .
           "INNER JOIN poker_user u ON l.playerId = u.id " .
           "INNER JOIN poker_group g on t.groupId = g.groupId " .
@@ -2308,7 +2328,7 @@ class DatabaseResult extends Root {
             " ORDER BY t.tournamentDate, t.startTime";
         } else if ("tournamentSelectOneById" == $dataName) {
           $query .= " WHERE t.tournamentId = :tournamentId";
-        } else if ("tournamentSelectAllForRegistration" == $dataName || "tournamentSelectAllForBuyins" == $dataName) {
+        } else if ("tournamentSelectAllForRegistration" == $dataName || "tournamentSelectAllForBuyins" == $dataName || "tournamentSelectAllForChampionship" == $dataName) {
           $query .=
             " WHERE (" . $params[0] . " >= t.tournamentDate OR CURRENT_DATE <= " . $params[1] . ")" .
             " AND enteredCount IS NULL" .
@@ -2760,11 +2780,14 @@ class DatabaseResult extends Root {
                 break;
               case "championshipQualifiedPlayers":
                 $object = array();
+                array_push($object, (int) $row["id"]);
                 array_push($object, $row["name"]);
                 array_push($object, (int) $row["points"]);
                 array_push($object, (int) $row["bonus points"]);
                 array_push($object, (int) $row["tourneys"]);
                 array_push($object, (int) $row["average points"]);
+                array_push($object, (int) $row["playerIdAbsence"]);
+                array_push($object, $row["absence status"]);
                 array_push($resultList, $object);
                 break;
               case "countTournamentForDates":
@@ -3089,6 +3112,7 @@ class DatabaseResult extends Root {
               case "tournamentSelectOneById":
               case "tournamentSelectAllForRegistration":
               case "tournamentSelectAllForBuyins":
+              case "tournamentSelectAllForChampionship":
               case "tournamentSelectAllOrdered":
               case "tournamentsWonByPlayerId":
               case "tournamentsSelectForEmailNotifications":
@@ -3111,7 +3135,7 @@ class DatabaseResult extends Root {
                   $maxPlayers = (int) $row["max players"];
                 } else {
                   $databaseResult = new DatabaseResult(debug: $this->isDebug());
-                  $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers(params: $paramsNested));
+                  $maxPlayers = (int) count($databaseResult->getChampionshipQualifiedPlayers(params: $paramsNested, returnQuery: false));
                 }
                 if ("tournamentsWonByPlayerId" != $dataName) {
                   $group = new Group($this->isDebug(), $row["groupId"], $row["name"]);
@@ -3440,6 +3464,15 @@ class DatabaseResult extends Root {
           $pdoStatement = $this->getConnection()->prepare(query: $query);
           $pdoStatement->bindParam(':specialTypeId', $params[0], PDO::PARAM_INT);
           break;
+        case "tournamentAbsenceDelete":
+          $query =
+          "DELETE FROM poker_tournament_absence " .
+          "WHERE tournamentId IN (:tournamentId) " .
+          "AND playerId = :playerId";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindParam(':tournamentId', $params[0], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':playerId', $params[1], PDO::PARAM_INT);
+          break;
       }
       $pdoStatement->execute();
       if ($this->isDebug()) {
@@ -3589,6 +3622,14 @@ class DatabaseResult extends Root {
           "SELECT IFNULL(MAX(typeId), 0) + 1, :typeDescription FROM poker_special_type";
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':typeDescription', $params[0], PDO::PARAM_STR);
+        break;
+      case "tournamentAbsenceInsert":
+        $query =
+        "INSERT INTO poker_tournament_absence(tournamentId, playerId) " .
+        "VALUES(:tournamentId, :playerId)";
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        $pdoStatement->bindParam(':tournamentId', $params[0], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':playerId', $params[1], PDO::PARAM_INT);
         break;
       case "userInsert":
         $query =
