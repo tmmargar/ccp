@@ -2,6 +2,8 @@
   font-size: .8rem;
 }
 table.dataTable thead th {
+  border-bottom: unset;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   text-align: center !important;
 }
 table.dataTable tbody th,

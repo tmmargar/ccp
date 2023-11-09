@@ -220,8 +220,8 @@ if (!isset($reportId)) {
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "percentage", 2), array(6, "number", 2), array(7, "number", 0), array(8, "number", 0), array(9, "currency", 0), array(10, "currency", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0));
-      $hideColIndexes = array(3, 13, 17);
-      $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(4, 6, 9, 14), array(array(5), array(7, 8), array(10, 11, 12), array(15, 16)));
+      $hideColIndexes = array(3, 17);
+      $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(4, 6, 9, 14), array(array(5), array(7, 8), array(10, 11, 12), array(13, 15, 16)));
       $width = "100%";
       break;
     case REPORT_ID_WINNERS:
