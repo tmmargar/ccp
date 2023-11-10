@@ -16,7 +16,6 @@ define("PLACE_FIELD_LABEL", "Place");
 define("PERCENTAGE_FIELD_LABEL", "Percentage");
 define("PAYOUT_ID_FIELD_NAME", "payoutId");
 define("PAYOUT_NAME_FIELD_NAME", "payoutName");
-define("BONUS_POINTS_FIELD_NAME", "bonusPoints");
 define("MIN_PLAYERS_FIELD_NAME", "minPlayers");
 define("MAX_PLAYERS_FIELD_NAME", "maxPlayers");
 define("PLACE_FIELD_NAME", "place");
@@ -52,9 +51,6 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
       // ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
       $textPayoutName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_NAME, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: PAYOUT_NAME_FIELD_NAME . "_" . $id, maxLength: 30, name: PAYOUT_NAME_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 30, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getName() : ""), wrap: NULL);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textPayoutName->getHtml() . "</div>\n";
-      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . BONUS_POINTS_FIELD_NAME . "_" . $id . "\">" . BONUS_POINTS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $textBonusPoints = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_BONUS_POINTS, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: BONUS_POINTS_FIELD_NAME . "_" . $id, maxLength: 2, name: BONUS_POINTS_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 2, suffix: NULL, type: FormControl::TYPE_INPUT_NUMBER, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getBonusPoints() : 3), wrap: NULL);
-      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBonusPoints->getHtml() . "</div>\n";
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . MIN_PLAYERS_FIELD_NAME . "_" . $id . "\">" . MIN_PLAYERS_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
       $textMinPlayers = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_MIN_PLAYERS, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: MIN_PLAYERS_FIELD_NAME . "_" . $id, maxLength: 2, name: MIN_PLAYERS_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 2, suffix: NULL, type: FormControl::TYPE_INPUT_NUMBER, value: (string) ((count($resultList) > 0) ? $resultList[$ctr]->getMinPlayers() : 0), wrap: NULL);
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textMinPlayers->getHtml() . "</div>\n";
@@ -67,7 +63,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
       $output .= "  <tbody>\n";
       if (count($resultList) == 0) {
         $structure = new Structure(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, place: 1, percentage : 1);
-        $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, name: "", bonusPoints: 0, minPlayers: 0, maxPlayers: 0, structures: array($structure));
+        $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, name: "", minPlayers: 0, maxPlayers: 0, structures: array($structure));
         $resultList[0] = $payout;
       }
       foreach ($resultList[$ctr]->getStructures() as $structure) {
@@ -127,11 +123,10 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   foreach ($ary as $id) {
     if (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
       $payoutName = (isset($_POST[PAYOUT_NAME_FIELD_NAME . "_" . $id])) ? $_POST[PAYOUT_NAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $bonusPoints = isset($_POST[BONUS_POINTS_FIELD_NAME . "_" . $id]) ? $_POST[BONUS_POINTS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $minPlayers = isset($_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       $maxPlayers = isset($_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       if (Constant::MODE_SAVE_CREATE == $mode) {
-        $params = array($payoutName, $bonusPoints, $minPlayers, $maxPlayers);
+        $params = array($payoutName, $minPlayers, $maxPlayers);
         $databaseResult->insertPayout(params: $params);
         $resultList = $databaseResult->getPayoutMaxId();
         $tempPayoutId = $resultList[0];
@@ -139,7 +134,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         $tempPayoutId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
       }
       if (Constant::MODE_SAVE_MODIFY == $mode) {
-        $params = array($payoutName, $bonusPoints, $minPlayers, $maxPlayers, $tempPayoutId);
+        $params = array($payoutName, $minPlayers, $maxPlayers, $tempPayoutId);
         $databaseResult->updatePayout(params: $params);
         $params = array($tempPayoutId);
         $databaseResult->deleteStructure(params: $params);
@@ -192,14 +187,11 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(true);
+  $params = array(true, "" == $ids ? NULL : $ids);
   $pdoStatementAndQuery = $databaseResult->getPayoutsAll($params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
-  if (Constant::MODE_DELETE == $mode) {
-    $query .= " WHERE p.payoutId IN (" . $ids . ")";
-  }
-  $colFormats = array(array(6, "percentage", 0));
+  $colFormats = array(array(5, "percentage", 0));
   // $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
   $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: NULL, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: $ids, suffix: NULL, width: "100%");
   $output .= $htmlTable->getHtml();

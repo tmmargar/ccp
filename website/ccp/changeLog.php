@@ -7,6 +7,14 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
+  "<section class=\"version\" id=\"1.2.6\">" .
+  " <h3>Version 1.2.6</h3>\n" .
+  " <b><time datetime=\"2023-11-11\">Nov 11, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Fix delete on manage screens</li>\n" .
+  "  <li>Change bonus points to be associated with season</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.2.5\">" .
   " <h3>Version 1.2.5</h3>\n" .
   " <b><time datetime=\"2023-11-08\">Nov 8, 2023</time></b>\n" .

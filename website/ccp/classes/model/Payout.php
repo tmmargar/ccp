@@ -2,15 +2,12 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Payout extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected int $bonusPoints, protected int $minPlayers, protected int $maxPlayers,
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected int $minPlayers, protected int $maxPlayers,
     protected array|NULL $structures) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getName(): string {
     return $this->name;
-  }
-  public function getBonusPoints(): int {
-    return $this->bonusPoints;
   }
   public function getMinPlayers(): int {
     return $this->minPlayers;
@@ -23,9 +20,6 @@ class Payout extends Base {
   }
   public function setName(string $name) {
     $this->name = $name;
-  }
-  public function setBonusPoints(int $bonusPoints) {
-    $this->bonusPoints = $bonusPoints;
   }
   public function setMinPlayers(int $minPlayers) {
     $this->minPlayers = $minPlayers;
@@ -40,8 +34,6 @@ class Payout extends Base {
     $output = parent::__toString();
     $output .= ", name = '";
     $output .= $this->name;
-    $output .= "', bonusPoints = ";
-    $output .= $this->bonusPoints;
     $output .= "', minPlayers = ";
     $output .= $this->minPlayers;
     $output .= ", maxPlayers = ";

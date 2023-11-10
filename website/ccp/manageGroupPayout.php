@@ -125,6 +125,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
       $params = array($aryGroupPayoutIds[0], $aryGroupPayoutIds[1]);
       $databaseResult->deleteGroupPayout(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
+      $aryGroupPayoutIds = array(DEFAULT_VALUE_BLANK);
     }
     $mode = Constant::MODE_VIEW;
   }
@@ -148,15 +149,10 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-//   $params = array(NULL);
-  $pdoStatementAndQuery = $databaseResult->getGroupPayout();
+  $params = array("" == $aryGroupPayoutIds[0] ? NULL : $aryGroupPayoutIds[0], "" == $aryGroupPayoutIds[0] ? NULL : $aryGroupPayoutIds[1]);
+  $pdoStatementAndQuery = $databaseResult->getGroupPayout($params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
-  if (Constant::MODE_DELETE == $mode) {
-    $query .=
-      " WHERE gp.groupId IN (" . $aryGroupPayoutIds[0] . ")" .
-      " AND gp.payoutId IN (" . $aryGroupPayoutIds[1] . ")";
-  }
   //0$href, 1$paramName, 2/3$paramValue, 4$text
 //   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
   //$link = array(array(1, 3), array("manageGroup.php", array("groupId", "mode"), 0, "modify", 1), array("managePayout.php", array("payoutId", "mode"), 2, "modify", 3));

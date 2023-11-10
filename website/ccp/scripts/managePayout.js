@@ -53,24 +53,22 @@ export const inputLocal = {
     const aryRowGroup = {
       startRender: null,
       endRender: function ( rows, group, level ) {
-        const bonusPoints = undefined == rows.data().pluck(2)[0] ? 0 : rows.data().pluck(2)[0];
-        const minPlayers = undefined == rows.data().pluck(3)[0] ? 0 : rows.data().pluck(3)[0];
-        const maxPlayers = undefined == rows.data().pluck(4)[0] ? 0 : rows.data().pluck(4)[0];
+        const minPlayers = undefined == rows.data().pluck(2)[0] ? 0 : rows.data().pluck(2)[0];
+        const maxPlayers = undefined == rows.data().pluck(3)[0] ? 0 : rows.data().pluck(3)[0];
         const objRow = document.createElement("tr");
         const objColumn = document.createElement("td");
         objColumn.colSpan = 4;
-        objColumn.innerHTML = "Payout for " + group + " has bonus points " + bonusPoints + ", min players " + minPlayers + " and max players " + maxPlayers;
+        objColumn.innerHTML = "Payout for " + group + " has min players " + minPlayers + " and max players " + maxPlayers;
         objRow.appendChild(objColumn);
         return objRow;
       },
       dataSrc: 1
     };
-    dataTable.initialize({tableId: "dataTbl", aryColumns: [{"orderSequence": [ "desc", "asc" ], "width" : "9%" }, { "width" : "26%" }, { "width" : "14%", "visible": false }, { "width" : "14%", "visible": false }, { "width" : "14%", "visible": false }, { "width" : "11%" }, { "type" : "percentage", "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[1, "asc"], [5, "asc"]], aryRowGroup: aryRowGroup, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{"orderSequence": [ "desc", "asc" ], "width" : "9%" }, { "width" : "26%" }, { "width" : "14%", "visible": false }, { "width" : "14%", "visible": false }, { "width" : "11%" }, { "type" : "percentage", "width" : "12%" }, { "searchable": false, "visible": false }], aryOrder: [[1, "asc"], [4, "asc"]], aryRowGroup: aryRowGroup, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: true });
   },
   postProcessing : function() {
     if ("create" == document.querySelector("#mode").value || "modify" == document.querySelector("#mode").value) {
       document.querySelector("[id^='payoutName_']").dataset.previousValueValidation = document.querySelector("[id^='payoutName_']").value;
-      document.querySelector("[id^='bonusPoints_']").dataset.previousValueValidation = document.querySelector("[id^='bonusPoints_']").value;
       document.querySelector("[id^='minPlayers_']").dataset.previousValueValidation = document.querySelector("[id^='minPlayers_']").value;
       document.querySelector("[id^='maxPlayers_']").dataset.previousValueValidation = document.querySelector("[id^='maxPlayers_']").value;
       document.querySelectorAll("#inputs tbody tr").forEach(obj => {
@@ -110,9 +108,6 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   setMinMax : function() {
-    if (document.querySelector("[id^='bonusPoints_']")) {
-      document.querySelector("[id^='bonusPoints_']").min = 1;
-    }
     if (document.querySelector("[id^='minPlayers_']")) {
       document.querySelector("[id^='minPlayers_']").min = 1;
       if (document.querySelector("[id^='maxPlayers_']:valid")) {
@@ -128,6 +123,12 @@ export const inputLocal = {
       } else {
         document.querySelector("[id^='maxPlayers_']").removeAttribute("min");
       }
+    }
+    if (document.querySelector("[id^='percentage_']")) {
+      document.querySelectorAll("[id^='percentage_']").forEach(obj => {
+        obj.min = 1;
+        obj.max = 100;
+      });
     }
   },
   setWidth : function() {
@@ -146,19 +147,17 @@ export const inputLocal = {
   },
   validate : function() {
     const name = document.querySelectorAll("[id^='payoutName_']");
-    const bonusPoints = document.querySelectorAll("[id^='bonusPoints_']");
     const minPlayers = document.querySelectorAll("[id^='minPlayers_']");
     const maxPlayers = document.querySelectorAll("[id^='maxPlayers_']");
     if (name.length > 0) {
       name[0].setCustomValidity(name[0].validity.valueMissing ? "You must enter a name" : "");
-      bonusPoints[0].setCustomValidity(bonusPoints[0].validity.valueMissing ? "You must enter a #" : bonusPoints[0].validity.rangeUnderflow ? "You must enter a # > 0" : "");
       minPlayers[0].setCustomValidity(minPlayers[0].validity.valueMissing ? "You must enter a #" : minPlayers[0].validity.rangeUnderflow ? "You must enter a # >= " + minPlayers[0].min : minPlayers[0].validity.rangeOverflow ? "You must enter a # <= " + minPlayers[0].max : "");
       maxPlayers[0].setCustomValidity(maxPlayers[0].validity.valueMissing ? "You must enter a #" : maxPlayers[0].validity.rangeUnderflow ? "You must enter a # >= " + maxPlayers[0].min : maxPlayers[0].validity.rangeOverflow ? "You must enter a # <= " + maxPlayers[0].max : "");
     }
   },
   validateTotal : function(event) {
     if (document.querySelector("#mode").value.startsWith("save")) {
-      if (document.querySelector("#percentageTotal").value < 100) {
+      if (document.querySelector("#percentageTotal").value != 100) {
         display.showErrors({errors: ["You must enter percentages that add up to 100"]});
         event.preventDefault();
         event.stopPropagation();
@@ -178,7 +177,7 @@ let documentReadyCallback = () => {
   inputLocal.validate();
   inputLocal.postProcessing();
   inputLocal.setWidth();
-  input.storePreviousValue({selectors: ["[id^='payoutName_'], [id^='bonusPoints_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
+  input.storePreviousValue({selectors: ["[id^='payoutName_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
   documentReadyCallback();
@@ -207,7 +206,7 @@ document.addEventListener("click", (event) => {
     inputLocal.save();
   } else if (event.target && event.target.id.includes("reset")) {
     inputLocal.reset();
-    input.restorePreviousValue({selectors: ["[id^='payoutName_'], [id^='bonusPoints_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
+    input.restorePreviousValue({selectors: ["[id^='payoutName_'], [id^='minPlayers_'], [id^='maxPlayers_']"]});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
   }
@@ -218,6 +217,6 @@ document.addEventListener("input", (event) => {
   if (event.target && (event.target.id.includes("minPlayers") || event.target.id.includes("maxPlayers"))) {
     inputLocal.setMinMax();
   } else if (event.target && event.target.id.includes("percentage")) {
-    inputLocal.calculateTotal();
+    inputLocal.calculateTotal(event.target.id);
   }
 });

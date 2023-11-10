@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 class Season extends Base {
   public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate,
-    protected int $championshipQualify, protected int $fee, protected int $active) {
+    protected int $championshipQualify, protected int $finalTablePlayers, protected int $finalTableBonusPoints, protected int $fee, protected int $active) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getActive(): int {
@@ -17,6 +17,12 @@ class Season extends Base {
   }
   public function getFee(): int {
     return $this->fee;
+  }
+  public function getFinalTableBonusPoints(): int {
+    return $this->finalTableBonusPoints;
+  }
+  public function getFinalTablePlayers(): int {
+    return $this->finalTablePlayers;
   }
   public function getStartDate(): DateTime {
     return $this->startDate;
@@ -36,6 +42,12 @@ class Season extends Base {
   public function setFee(int $fee) {
     $this->fee = $fee;
   }
+  public function setFinalTableBonusPoints(int $finalTableBonusPoints) {
+    $this->finalTableBonusPoints = $finalTableBonusPoints;
+  }
+  public function setFinalTablePlayers(int $finalTablePlayers) {
+    $this->finalTablePlayers = $finalTablePlayers;
+  }
   public function setStartDate(string $startDate) {
     $this->startDate = $startDate;
   }
@@ -52,6 +64,10 @@ class Season extends Base {
     $output .= $this->endDate->getDisplayFormat();
     $output .= "', championshipQualify = ";
     $output .= $this->championshipQualify;
+    $output .= "', finalTableBonusPoints = ";
+    $output .= $this->finalTableBonusPoints;
+    $output .= "', finalTablePlayers = ";
+    $output .= $this->finalTablePlayers;
     $output .= ", fee = ";
     $output .= $this->fee;
     $output .= ", active = ";

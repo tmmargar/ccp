@@ -147,13 +147,10 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(true, false, false);
+  $params = array(true, false, false, "" == $ids ? NULL : $ids);
   $pdoStatementAndQuery = $databaseResult->getLocation(params: $params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
-  if (Constant::MODE_DELETE == $mode) {
-    $query .= " WHERE locationId IN (" . $ids . ")";
-  }
   $colFormats = array(array(0, "right", 0), array(7, "right", 0));
   $hideColIndexes = array(2);
   //$link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));

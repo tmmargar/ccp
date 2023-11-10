@@ -85,7 +85,8 @@ class DatabaseResult extends Root {
     return $this->getData(dataName: "gameTypeSelectAll", params: NULL, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getGroupsAll(array $params): array|string {
-    return $this->getData(dataName: "groupSelectAll", params: NULL, orderBy: NULL, returnQuery: $params[0], limitCount: NULL, rank: false);
+    $paramsLocal = isset($params[1]) ? array($params[1]) : NULL;
+    return $this->getData(dataName: "groupSelectAll", params: $paramsLocal, orderBy: NULL, returnQuery: $params[0], limitCount: NULL, rank: false);
   }
   public function getGroupById(array $params): array|string {
     return $this->getData(dataName: "groupSelectAllById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
@@ -93,8 +94,8 @@ class DatabaseResult extends Root {
   public function getGroupNameList(): array|string {
     return $this->getData(dataName: "groupSelectNameList", params: NULL, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
-  public function getGroupPayout(): array|string {
-    return $this->getData(dataName: "groupPayoutSelectAll", params: NULL, orderBy: NULL, returnQuery: true, limitCount: NULL, rank: false);
+  public function getGroupPayout(array $params): array|string {
+    return $this->getData(dataName: "groupPayoutSelectAll", params: $params, orderBy: NULL, returnQuery: true, limitCount: NULL, rank: false);
   }
   public function getGroupPayoutById(array $params): array|string {
     return $this->getData(dataName: "groupPayoutSelectAllById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
@@ -133,7 +134,8 @@ class DatabaseResult extends Root {
     return $this->getData(dataName: "notificationSelectOneById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getPayoutsAll(array $params): array|string {
-    return $this->getData(dataName: "payoutSelectAll", params: NULL, orderBy: NULL, returnQuery: $params[0], limitCount: NULL, rank: false);
+    $paramsLocal = isset($params[1]) ? array($params[1]) : NULL;
+    return $this->getData(dataName: "payoutSelectAll", params: $paramsLocal, orderBy: NULL, returnQuery: $params[0], limitCount: NULL, rank: false);
   }
   public function getPayoutById(array $params): array|string {
     return $this->getData(dataName: "payoutSelectAllById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
@@ -279,7 +281,8 @@ class DatabaseResult extends Root {
     return $this->getData(dataName: "structurePayout", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getTournament(array $params, array $paramsNested): array|string {
-    return $this->getData(dataName: "tournamentSelectAll", params: NULL, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: NULL, rank: false);
+    $paramsLocal = isset($params[2]) ? array($params[2]) : NULL;
+    return $this->getData(dataName: "tournamentSelectAll", params: $paramsLocal, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: NULL, rank: false);
   }
   public function getTournamentAll(array $params): array|string {
     return $this->getData(dataName: "tournamentAll", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
@@ -629,20 +632,14 @@ class DatabaseResult extends Root {
       case "championshipQualifiedPlayers":
         $query =
           "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, " .
-          "       SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-          "             CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "               CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "             ELSE " .
-          "               CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "             END " .
-          "           END) AS points, " .
-          "       SUM(CASE WHEN r.place BETWEEN 1 AND 8 THEN 3 ELSE 0 END) AS 'bonus points', " .
+          "       SUM(IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', " .
+          "               (np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) * 2, " .
+          "                np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0))) AS points, " .
+          "       SUM(IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) AS 'bonus points', " .
           "       nt.numTourneys AS tourneys, " .
-          "       SUM(CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "           ELSE " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "           END) / nt.numTourneys AS 'average points', " .
+          "       SUM(IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', " .
+          "               (np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) * 2, " .
+          "                np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0))) / nt.numTourneys AS 'average points', " .
           "       ta.playerId AS playerIdAbsence, IF(ta.playerId IS NULL, 'Attending', 'Not attending') AS 'absence status' " .
           "FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerid AND " . $this->buildUserActive(alias: "u") .
           " INNER JOIN poker_tournament t on r.tournamentid = t.tournamentid AND t.tournamentDate BETWEEN :startDate1 AND :endDate1 " .
@@ -727,8 +724,8 @@ class DatabaseResult extends Root {
             "           FROM (SELECT id, first_name, last_name, SUM(earnings) AS totalEarnings, MAX(earnings) AS maxEarnings, numTourneys " .
             "                 FROM (SELECT p.id, p.first_name, p.last_name, " .
             "                              ((np.numPlayers * (t.buyinAmount - (t.buyinAmount * t.rake))) + " .
-            "                               (CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END * (t.rebuyAmount - (t.rebuyAmount * t.rake))) + " .
-            "                               (CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END * (t.addonAmount - (t.addonAmount * t.rake)))) * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS Earnings, " .
+            "                               (IF(nr.numRebuys IS NULL, 0, nr.numRebuys) * (t.rebuyAmount - (t.rebuyAmount * t.rake))) + " .
+            "                               (IF(na.numAddons IS NULL, 0, na.numAddons) * (t.addonAmount - (t.addonAmount * t.rake)))) * IF(s.percentage IS NULL, 0, s.percentage) AS Earnings, " .
             "                              nt.NumTourneys " .
             "            FROM poker_user p " .
             "            INNER JOIN poker_result r ON p.id = r.playerId " .
@@ -786,7 +783,7 @@ class DatabaseResult extends Root {
           $query .= " numTourneys, ";
         }
         $query .=
-          "                        qq.total * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS Earnings " .
+          "                        qq.total * IF(s.percentage IS NULL, 0, s.percentage) AS Earnings " .
           "                 FROM poker_user p " .
           "                 INNER JOIN poker_result r ON p.id = r.playerId " .
           "                 INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId";
@@ -797,15 +794,14 @@ class DatabaseResult extends Root {
           $query .= "                               AND YEAR(t.tournamentDate) IN (:tournamentDate1) ";
         }
         $query .=
-          "                  INNER JOIN (SELECT Yr, SUM(total) - CASE WHEN Yr = 2008 THEN 150 ELSE " . // adjust to match Dave W stats
-          "                                                       CASE WHEN Yr = 2007 THEN -291 ELSE " . // adjust to match Dave W stats
-          "                                                        CASE WHEN Yr = 2006 THEN -824 ELSE 0 END " . // adjust to match Dave W stats
-          "                                                       END " .
-          "                                         END AS total " .
-          "                         FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.tournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE b.Play END, " .
+          "                  INNER JOIN (SELECT Yr, SUM(total) - IF(Yr = 2008, 150, " . // adjust to match Dave W stats
+          "                                                       IF(Yr = 2007, -291, " . // adjust to match Dave W stats
+          "                                                        IF(Yr = 2006, -824, 0))) " . // adjust to match Dave W stats
+          "                                         AS total " .
+          "                         FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.tournamentId AS Id, IF(b.Play IS NULL, 0, b.Play) AS Play, " .
           "                                      ((t2.BuyinAmount * t2.rake) * Play) + " .
-          "                                      ((t2.rebuyAmount * t2.rake) * CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END) + " .
-          "                                      ((t2.addonAmount * t2.rake) * CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END) AS Total " .
+          "                                      ((t2.rebuyAmount * t2.rake) * IF(nr.numRebuys IS NULL, 0, nr.numRebuys)) + " .
+          "                                      ((t2.addonAmount * t2.rake) * IF(na.numAddons IS NULL, 0, na.numAddons)) AS Total " .
           "                               FROM poker_tournament t2 LEFT JOIN (SELECT tournamentId, COUNT(*) AS Play " .
           "                                                                   FROM poker_result " .
           "                                                                   WHERE buyinPaid = '" . Constant::FLAG_YES . "' " . "                                                                   AND place > 0 " .
@@ -948,7 +944,7 @@ class DatabaseResult extends Root {
         break;
       case "finishesSelectAllByPlayerId":
         $query =
-          "SELECT a.place, CASE WHEN b.finishes IS NULL THEN 0 ELSE b.finishes END AS finishes, CASE WHEN b.pct IS NULL THEN 0 ELSE b.pct END AS pct " .
+          "SELECT a.place, IF(b.finishes IS NULL, 0, b.finishes) AS finishes, IF(b.pct IS NULL, 0, b.pct) AS pct " .
           "FROM (SELECT DISTINCT place " .
           "      FROM poker_result " .
           "      WHERE place > 0 " .
@@ -975,10 +971,10 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         if (isset($params[1]) && isset($params[2])) {
           $pdoStatement->bindParam(':playerId', $params[0], PDO::PARAM_INT);
-          $pdoStatement->bindParam(':startDate1', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':endDate1', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':startDate2', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':endDate2', $params[0], PDO::PARAM_STR);
+          $pdoStatement->bindParam(':startDate1', $params[1], PDO::PARAM_STR);
+          $pdoStatement->bindParam(':endDate1', $params[2], PDO::PARAM_STR);
+          $pdoStatement->bindParam(':startDate2', $params[1], PDO::PARAM_STR);
+          $pdoStatement->bindParam(':endDate2', $params[2], PDO::PARAM_STR);
         } else {
           $pdoStatement->bindParam(':playerId', $params[0], PDO::PARAM_INT);
         }
@@ -1013,6 +1009,10 @@ class DatabaseResult extends Root {
           "FROM poker_group";
         if ("groupSelectAllById" == $dataName) {
           $query .= " WHERE groupId = :groupId";
+        } else if ("groupSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $query .= " WHERE groupId IN (:groupId)";
+          }
         }
         if (isset($limitCount)) {
           $query .= " LIMIT :limitCount";
@@ -1020,6 +1020,10 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         if ("groupSelectAllById" == $dataName) {
           $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
+        } else if ("groupSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -1033,6 +1037,12 @@ class DatabaseResult extends Root {
           "INNER JOIN poker_payout p ON gp.payoutId = p.payoutId";
         if ("groupPayoutSelectAllById" == $dataName) {
           $query .= " WHERE gp.groupId = :groupId AND gp.payoutId = :payoutId";
+        } else if ("groupPayoutSelectAll" == $dataName) {
+          if (isset($params[0]) && isset($params[1])) {
+            $query .=
+            " WHERE gp.groupId IN (:groupId)" .
+            " AND gp.payoutId IN (:payoutId)";
+          }
         }
         if (isset($limitCount)) {
           $query .= " LIMIT :limitCount";
@@ -1041,6 +1051,11 @@ class DatabaseResult extends Root {
         if ("groupPayoutSelectAllById" == $dataName) {
           $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
           $pdoStatement->bindParam(':payoutId', $params[1], PDO::PARAM_INT);
+        } else if ("groupPayoutSelectAll" == $dataName) {
+          if (isset($params[0]) && isset($params[1])) {
+            $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
+            $pdoStatement->bindParam(':payoutId', $params[1], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -1131,8 +1146,15 @@ class DatabaseResult extends Root {
         if ($params[1]) {
           $query .= " AND " . $this->buildUserActive(alias: "u");
         }
+        if (isset($params[3])) {
+          $query .= " WHERE locationId IN (:locationId)";
+        }
         if ($params[2]) {
           $query .= " ORDER BY l.locationName";
+        }
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        if (isset($params[3])) {
+          $pdoStatement->bindParam(':locationId', $params[3], PDO::PARAM_INT);
         }
         break;
       case "locationSelectById":
@@ -1191,6 +1213,9 @@ class DatabaseResult extends Root {
           if (isset($params[0])) {
             $query .= " WHERE :tournamentDate BETWEEN startDate AND endDate ";
           }
+          if (isset($params[1])) {
+            $query .= isset($params[0]) ? " AND" : " WHERE" . " id IN (:notificationId)";
+          }
           if (isset($orderBy)) {
             $query .= $orderBy;
           }
@@ -1203,6 +1228,10 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':playerId', $params[0], PDO::PARAM_INT);
         } else if ("notificationSelectAll" == $dataName && isset($params[0])) {
           $pdoStatement->bindParam(':tournamentDate', $params[0], PDO::PARAM_STR);
+        } else if ("notificationSelectAll" == $dataName) {
+          if (isset($params[1])) {
+            $pdoStatement->bindParam(':notificationId', $params[1], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -1211,10 +1240,14 @@ class DatabaseResult extends Root {
       case "payoutSelectAll":
       case "payoutSelectAllById":
         $query =
-          "SELECT p.payoutId AS id, p.payoutName AS name, p.bonusPoints AS 'bonus pts', p.minPlayers AS 'min players', p.maxPlayers AS 'max players', s.place, s.percentage " .
+          "SELECT p.payoutId AS id, p.payoutName AS name, p.minPlayers AS 'min players', p.maxPlayers AS 'max players', s.place, s.percentage " .
           "FROM poker_payout p INNER JOIN poker_structure s ON p.payoutId = s.payoutId";
         if ("payoutSelectAllById" == $dataName) {
           $query .= " WHERE p.payoutId = :payoutId";
+        } else if ("payoutSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $query .= " WHERE p.payoutId IN (:payoutId)";
+          }
         }
         if (isset($limitCount)) {
           $query .= " LIMIT :limitCount";
@@ -1222,6 +1255,10 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         if ("payoutSelectAllById" == $dataName) {
           $pdoStatement->bindParam(':payoutId', $params[0], PDO::PARAM_INT);
+        } else if ("payoutSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $pdoStatement->bindParam(':payoutId', $params[0], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -1248,13 +1285,12 @@ class DatabaseResult extends Root {
         }
         $query =
           "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, IFNULL(a.points, 0) AS pts, IFNULL(ROUND(a.points / a.trnys, 2), 0) AS avg, IFNULL(a.trnys, 0) AS trnys, u.active " .
-          "FROM poker_user u LEFT JOIN (SELECT u.id, SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-          "                                               CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "                                                CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "                                               ELSE " .
-          "                                                CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "                                               END " .
-          "                                              END) AS points, nt.trnys " .
+          "FROM poker_user u LEFT JOIN (SELECT u.id, SUM(IF(st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', " .
+          "                                               IF(r.place BETWEEN 1 AND 8, " .
+          "                                                IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 4) * 2, np.numPlayers - r.place + 4) " .
+          "                                               , " .
+          "                                                IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 1) * 2, np.numPlayers - r.place + 1) " .
+          "                                               ), 0)) AS points, nt.trnys " .
           "                            FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId " .
           "                            INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId ";
         if ("pointsTotalAndAverageForUser" != $dataName) {
@@ -1320,8 +1356,8 @@ class DatabaseResult extends Root {
           "SELECT SUM(total) AS total " .
           "FROM (SELECT t.tournamentId AS Id, np.play, " .
           "             ((t.buyinAmount * t.rake) * np.play) + " .
-          "             ((t.rebuyAmount * t.rake) * CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END) + " .
-          "             ((t.addonAmount * t.rake) * CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END) AS total " .
+          "             ((t.rebuyAmount * t.rake) * IF(nr.numRebuys IS NULL, 0, nr.numRebuys)) + " .
+          "             ((t.addonAmount * t.rake) * IF(na.numAddons IS NULL, 0, na.numAddons)) AS total " .
           "      FROM poker_tournament t " .
           "      LEFT JOIN (SELECT TournamentId, COUNT(*) AS play " .
           "                 FROM poker_result " .
@@ -1488,20 +1524,20 @@ class DatabaseResult extends Root {
         } else {
           $temp =
             "((np.NumPlayers * (t.BuyinAmount-(t.BuyinAmount * t.Rake))) + " .
-            " (CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END * (t.RebuyAmount - (t.RebuyAmount * t.Rake))) + " .
-            " (CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END * (t.AddonAmount - (t.AddonAmount * t.Rake))))";
+            " (IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys) * (t.RebuyAmount - (t.RebuyAmount * t.Rake))) + " .
+            " (IF(na.NumAddons IS NULL, 0, na.NumAddons) * (t.AddonAmount - (t.AddonAmount * t.Rake))))";
         }
         $query =
           "SELECT r.place, CONCAT(p.first_name, ' ', p.last_name) AS name, r.rebuyCount * t.rebuyAmount AS rebuy, " .
-          "       CASE WHEN r.AddonPaid = '" . Constant::FLAG_YES . "' THEN t.AddonAmount ELSE 0 END AS addon, " .
-          "       " . $temp . " * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS earnings, " .
-          "       CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN 0 ELSE " .
-          "        CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "         CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "        ELSE " .
-          "         CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "        END " .
-          "       END AS 'pts', ko.knockedOutBy AS 'knocked out by', p.active, ko.active AS knockOutActive " .
+          "       IF(r.AddonPaid = '" . Constant::FLAG_YES . "', t.AddonAmount, 0) AS addon, " .
+          "       " . $temp . " * IF(s.Percentage IS NULL, 0, s.Percentage) AS earnings, " .
+          "       IF(st.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', 0, " .
+          "        IF(r.place BETWEEN 1 AND 8, " .
+          "         IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 4) * 2, np.numPlayers - r.place + 4) " .
+          "        , " .
+          "         IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 1) * 2, np.numPlayers - r.place + 1) " .
+          "        ) " .
+          "       ) AS 'pts', ko.knockedOutBy AS 'knocked out by', p.active, ko.active AS knockOutActive " .
           "FROM poker_result r INNER JOIN poker_user p ON r.playerId = p.id " .
           "INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId " .
           "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
@@ -1546,21 +1582,20 @@ class DatabaseResult extends Root {
       case "resultAllOrderedPoints":
         $query =
           "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, " .
-          "       SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-          "            CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "            ELSE " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 " .
-          "             ELSE np.numPlayers - r.place + 1 END " .
-          "            END " .
-          "           END) AS pts, " .
-          "       SUM(CASE WHEN st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-          "            CASE WHEN r.place BETWEEN 1 AND 8 THEN " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 4) * 2 ELSE np.numPlayers - r.place + 4 END " .
-          "            ELSE " .
-          "             CASE WHEN st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (np.numPlayers - r.place + 1) * 2 ELSE np.numPlayers - r.place + 1 END " .
-          "            END " .
-          "           END) / nt.numTourneys AS avg, nt.numTourneys AS tourneys, u.active " .
+          "       SUM(IF(st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', " .
+          "            IF(r.place BETWEEN 1 AND 8, " .
+          "             IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 4) * 2, np.numPlayers - r.place + 4) " .
+          "            , " .
+          "             IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 1) * 2, np.numPlayers - r.place + 1) " .
+          "            ), 0 " .
+          "           )) AS pts, " .
+          "       SUM(IF(st.typeDescription IS NULL OR st.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', " .
+          "            IF(r.place BETWEEN 1 AND 8, " .
+          "             IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 4) * 2, np.numPlayers - r.place + 4) " .
+          "            , " .
+          "             IF(st.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (np.numPlayers - r.place + 1) * 2, np.numPlayers - r.place + 1) " .
+          "            ), 0 " .
+          "           )) / nt.numTourneys AS avg, nt.numTourneys AS tourneys, u.active " .
           "FROM poker_user u " . "INNER JOIN poker_result r ON u.id = r.playerId " .
           "INNER JOIN poker_tournament t on r.tournamentId = t.tournamentId ";
         if (isset($params[0]) && isset($params[1])) {
@@ -1601,8 +1636,8 @@ class DatabaseResult extends Root {
           "FROM (SELECT id, name, SUM(earnings) AS totalEarnings, MAX(earnings) AS maxEarnings, numTourneys, active " .
           "      FROM (SELECT p.id, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
           "                   ((np.numPlayers * (t.buyinAmount - (t.buyinAmount * t.rake))) + " .
-          "                    (CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END * (t.rebuyAmount - (t.rebuyAmount * t.rake))) + " .
-          "                    (CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END * (t.addonAmount - (t.addonAmount * t.rake)))) * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS earnings, nt.numTourneys, p.active " .
+          "                    (IF(nr.numRebuys IS NULL, 0, nr.numRebuys) * (t.rebuyAmount - (t.rebuyAmount * t.rake))) + " .
+          "                    (IF(na.numAddons IS NULL, 0, na.numAddons) * (t.addonAmount - (t.addonAmount * t.rake)))) * IF(s.percentage IS NULL, 0, s.percentage) AS earnings, nt.numTourneys, p.active " .
           "            FROM poker_result r INNER JOIN poker_user p ON r.playerId = p.id " .
           "            INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId ";
         if (isset($params[0]) && isset($params[1])) {
@@ -1645,9 +1680,9 @@ class DatabaseResult extends Root {
           "            UNION " .
           "            SELECT xx.id, xx.name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0, xx.active " .
           "            FROM (SELECT YEAR(t.tournamentDate) AS yr, p.id, CONCAT(p.first_name, ' ', p.last_name) AS name, p.active, " .
-          "                         (SELECT SUM(total) - CASE WHEN Yr = 2008 THEN 150 ELSE CASE WHEN Yr = 2007 THEN -291 ELSE CASE WHEN Yr = 2006 THEN -824 ELSE 0 END END END AS 'total pool' " .
-          "                          FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.tournamentId AS id, CASE WHEN b.play IS NULL THEN 0 ELSE CONCAT(b.play, '+', CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END, 'r', '+', CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END, 'a') END AS play, " .
-          "                                       ((t2.buyinAmount * t2.rake) * play) + ((t2.rebuyAmount * t2.rake) * CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END) + ((t2.addonAmount * t2.rake) * CASE WHEN na.numaddons IS NULL THEN 0 ELSE na.numaddons END) AS total " .
+          "                         (SELECT SUM(total) - IF(Yr = 2008, 150, IF(Yr = 2007, -291, IF(Yr = 2006, -824, 0))) AS 'total pool' " .
+          "                          FROM (SELECT YEAR(t2.tournamentDate) AS Yr, t2.tournamentId AS id, IF(b.play IS NULL, 0, CONCAT(b.play, '+', IF(nr.numRebuys IS NULL, 0, nr.numRebuys), 'r', '+', IF(na.numAddons IS NULL, 0, na.numAddons), 'a')) AS play, " .
+          "                                       ((t2.buyinAmount * t2.rake) * play) + ((t2.rebuyAmount * t2.rake) * IF(nr.numRebuys IS NULL, 0, nr.numRebuys)) + ((t2.addonAmount * t2.rake) * IF(na.numaddons IS NULL, 0, na.numaddons)) AS total " .
           "                                FROM poker_tournament t2 " .
           "                                LEFT JOIN (SELECT tournamentId, COUNT(*) AS play " .
           "                                           FROM poker_result " .
@@ -1668,7 +1703,7 @@ class DatabaseResult extends Root {
           "                                          WHERE r.addonPaid = '" . Constant::FLAG_YES . "' " .
           "                                          GROUP BY r.tournamentId) na ON t2.tournamentId = na.tournamentId) zz " .
           "                         WHERE zz.yr = YEAR(t.tournamentDate) " .
-          "                         GROUP BY zz.yr) * CASE WHEN s.percentage IS NULL THEN 0 ELSE s.percentage END AS earnings " .
+          "                         GROUP BY zz.yr) * IF(s.percentage IS NULl, 0, s.percentage) AS earnings " .
           "                 FROM poker_result r " .
           "                 INNER JOIN poker_user p ON r.playerId = p.id " .
           "                 INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId";
@@ -1799,20 +1834,20 @@ class DatabaseResult extends Root {
           $query .= "id, ";
         }
         $query .=
-          "name, d.tourneys AS '#', CASE WHEN d.Points IS NULL THEN 0 ELSE d.Points END AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
-          "-(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END) AS buyins, -(CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END) AS rebuys, " .
-          "-(CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END) AS addons, -(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END) + -(CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END) + -(CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END) AS 'total', " .
+          "name, d.tourneys AS '#', IF(d.Points IS NULL, 0, d.Points) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
+          "-(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) AS buyins, -(IF(d.rebuys IS NULL, 0, d.rebuys)) AS rebuys, " .
+          "-(IF(d.addons IS NULL, 0, d.addons)) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) + -(IF(d.rebuys IS NULL, 0, d.rebuys)) + -(IF(d.addons IS NULL, 0, d.addons)) AS 'total', " .
           "d.earnings,  " .
-          "d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END - CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END - CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END AS 'net(+/-)', " .
+          "d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount) - IF(d.rebuys IS NULL, 0, d.rebuys) - IF(d.addons IS NULL, 0 , d.addons) AS 'net(+/-)', " .
           "d.earnings / d.numTourneys AS '$ / trny', " .
-          "(d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END - CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END - CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END) / d.numTourneys AS 'Net / Trny', " .
+          "(d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount) - IF(d.rebuys IS NULL, 0, d.rebuys) - IF(d.addons IS NULL, 0, d.addons)) / d.numTourneys AS 'Net / Trny', " .
           "active " .
-          "FROM (SELECT a.Id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, CASE WHEN b.Earnings IS NULL THEN 0 ELSE b.Earnings END AS Earnings, a.NumTourneys, " .
+          "FROM (SELECT a.Id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IF(b.Earnings IS NULL, 0, b.Earnings) AS Earnings, a.NumTourneys, " .
           "             e.PlayerId, e.Place, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.BuyinAmount" .
-          "      FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE nt.NumTourneys END AS Tourneys, CASE WHEN nft.NumFinalTables IS NULL THEN 0 ELSE nft.NumFinalTables END AS FTs, " .
-          "                   CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE CASE WHEN nft.NumFinalTables IS NULL THEN 0 ELSE nft.NumFinalTables END / nt.NumTourneys END AS PctFTs, " .
-          "                   CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE CASE WHEN nt.TotalPlaces IS NULL THEN 0 ELSE nt.TotalPlaces END / nt.NumTourneys END AS AvgPlace, " .
-          "                   CASE WHEN nt.MaxPlace IS NULL THEN 0 ELSE nt.MaxPlace END AS Low, CASE WHEN nt.MinPlace IS NULL THEN 0 ELSE nt.MinPlace END AS High, nt.NumTourneys, p.active " .
+          "      FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, IF(nt.NumTourneys IS NULL, 0, nt.NumTourneys) AS Tourneys, IF(nft.NumFinalTables IS NULL, 0, nft.NumFinalTables) AS FTs, " .
+          "                   IF(nt.NumTourneys IS NULL, 0, IF(nft.NumFinalTables IS NULL, 0, nft.NumFinalTables) / nt.NumTourneys) AS PctFTs, " .
+          "                   IF(nt.NumTourneys IS NULL, 0, IF(nt.TotalPlaces IS NULL, 0,  nt.TotalPlaces) / nt.NumTourneys) AS AvgPlace, " .
+          "                   IF(nt.MaxPlace IS NULL, 0, nt.MaxPlace) AS Low, IF(nt.MinPlace IS NULL, 0, nt.MinPlace) AS High, nt.NumTourneys, p.active " .
           "            FROM poker_user p " .
           "            LEFT JOIN (SELECT r1.PlayerId, COUNT(*) AS NumTourneys, SUM(r1.Place) AS TotalPlaces, MAX(r1.Place) AS MaxPlace, MIN(r1.Place) AS MinPlace " .
           "                       FROM poker_result r1 " .
@@ -1836,8 +1871,8 @@ class DatabaseResult extends Root {
           "                       FROM (SELECT Id, name, SUM(Earnings) AS TotalEarnings, MAX(Earnings) AS MaxEarnings, NumTourneys " .
           "                             FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
           "                                         ((np.NumPlayers * (t.BuyinAmount - (t.BuyinAmount * t.rake))) + " .
-          "                                          (CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END * (t.RebuyAmount - (t.RebuyAmount * t.rake))) + " .
-          "                                          (CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END * (t.AddonAmount - (t.AddonAmount * t.Rake)))) * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings, nt.NumTourneys " .
+          "                                          (IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys) * (t.RebuyAmount - (t.RebuyAmount * t.rake))) + " .
+          "                                          (IF(na.NumAddons IS NULL, 0, na.NumAddons) * (t.AddonAmount - (t.AddonAmount * t.rake)))) * IF(s.Percentage IS NULL, 0, s.Percentage) AS Earnings, nt.NumTourneys " .
           "                                   FROM poker_result r INNER JOIN poker_user p ON r.PlayerId = p.Id " .
           "                                   INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId";
         if (isset($params[0]) && isset($params[1])) {
@@ -1883,15 +1918,15 @@ class DatabaseResult extends Root {
           "                                   GROUP BY id, yr) xx " .
           "                             GROUP BY xx.id, xx.name) cc " .
           "                       GROUP BY id, name) b ON a.Id = b.Id " .
-          "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN " .
-          "                                                      CASE WHEN c.place BETWEEN 1 AND 8 THEN " .
-          "                                                       CASE WHEN c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (c.numPlayers - c.place + 4) * 2 ELSE c.numPlayers - c.place + 4 END " .
-          "                                                      ELSE " .
-          "                                                       CASE WHEN c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (c.numPlayers - c.place + 1) * 2 ELSE c.numPlayers - c.place + 1 END " .
-          "                                                      END " .
-          "                                                     END) END AS Points, " .
-          "                                                     SUM(CASE WHEN c.NumRebuys IS NULL THEN 0 ELSE c.NumRebuys END * c.RebuyAmount) AS Rebuys, " .
-          "                                                     SUM(CASE WHEN c.NumAddons IS NULL THEN 0 ELSE c.NumAddons END * c.AddonAmount) AS Addons, " .
+          "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, IF(c.Place IS NULL, 0, SUM(IF(c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', " .
+          "                                                      IF(c.place BETWEEN 1 AND 8, " .
+          "                                                       IF(c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (c.numPlayers - c.place + 4) * 2, c.numPlayers - c.place + 4) " .
+          "                                                      , " .
+          "                                                       IF(c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (c.numPlayers - c.place + 1) * 2, c.numPlayers - c.place + 1) " .
+          "                                                      ) " .
+          "                                                     , 0))) AS Points, " .
+          "                                                     SUM(IF(c.NumRebuys IS NULL, 0, c.NumRebuys) * c.RebuyAmount) AS Rebuys, " .
+          "                                                     SUM(IF(c.NumAddons IS NULL, 0, c.NumAddons) * c.AddonAmount) AS Addons, " .
           "                                                     c.NumRebuys, c.BuyinAmount " .
           "           FROM (SELECT a.TournamentId, a.tournamentDesc, a.PlayerId, a.Place, a.NumPlayers, a.NumRebuys, a.BuyinAmount, a.RebuyAmount, a.AddonAmount, a.NumAddons, a.typeDescription " .
           "                 FROM (SELECT r.TournamentId, t.tournamentDesc, r.PlayerId, r.Place, np.NumPlayers, nr.NumRebuys, t.BuyinAmount, t.RebuyAmount, t.AddonAmount, na.NumAddons, st.typeDescription " .
@@ -2004,10 +2039,10 @@ class DatabaseResult extends Root {
         break;
       case "seasonStats":
         $query =
-          "SELECT SUBSTRING_INDEX(NAME, ' ', 1) AS first_name, SUBSTRING_INDEX(NAME, ' ', -1) AS last_name, d.tourneys AS '#', CASE WHEN d.Points IS NULL THEN 0 ELSE d.Points END AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', -(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END) AS buyins, -(CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END) AS rebuys, -(CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END) AS addons, -(CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END) + -(CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END) + -(CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END) AS 'total', d.earnings, d.earnings - CASE WHEN d.numTourneys IS NULL THEN 0 ELSE d.numTourneys * d.buyinAmount END - CASE WHEN d.rebuys IS NULL THEN 0 ELSE d.rebuys END - CASE WHEN d.addons IS NULL THEN 0 ELSE d.addons END AS 'net(+/-)', d.kos AS 'KOs', d.kos / d.numTourneys AS 'Avg KO', d.koMax AS 'Most KO', d.wins, d.wins / d.numTourneys AS AvgWins " .
-          "FROM (SELECT a.Id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, CASE WHEN b.earnings IS NULL THEN 0 ELSE b.earnings END AS earnings, a.NumTourneys, " .
+          "SELECT SUBSTRING_INDEX(NAME, ' ', 1) AS first_name, SUBSTRING_INDEX(NAME, ' ', -1) AS last_name, d.tourneys AS '#', IF(d.Points IS NULL, 0, d.Points) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) AS buyins, -(IF(d.rebuys IS NULL, 0, d.rebuys)) AS rebuys, -(d.addons IS NULL, 0, d.addons)) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) + -(IF(d.rebuys IS NULL, 0, d.rebuys)) + -(IF(d.addons IS NULL, 0, d.addons)) AS 'total', d.earnings, d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount) - IF(d.rebuys IS NULL, 0, d.rebuys) - IF(d.addons IS NULL, 0, d.addons) AS 'net(+/-)', d.kos AS 'KOs', d.kos / d.numTourneys AS 'Avg KO', d.koMax AS 'Most KO', d.wins, d.wins / d.numTourneys AS AvgWins " .
+          "FROM (SELECT a.Id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IF(b.earnings IS NULL, 0, b.) AS earnings, a.NumTourneys, " .
           "             e.PlayerId, e.Place, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.BuyinAmount, km.kos, km.koMax, w.wins " .
-          "      FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE nt.NumTourneys END AS Tourneys, CASE WHEN nft.NumFinalTables IS NULL THEN 0 ELSE nft.NumFinalTables END AS FTs, CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE CASE WHEN nft.NumFinalTables IS NULL THEN 0 ELSE nft.NumFinalTables END / nt.NumTourneys END AS PctFTs, CASE WHEN nt.NumTourneys IS NULL THEN 0 ELSE CASE WHEN nt.TotalPlaces IS NULL THEN 0 ELSE nt.TotalPlaces END / nt.NumTourneys END AS AvgPlace, CASE WHEN nt.MaxPlace IS NULL THEN 0 ELSE nt.MaxPlace END AS Low, CASE WHEN nt.MinPlace IS NULL THEN 0 ELSE nt.MinPlace END AS High, nt.NumTourneys, p.active " .
+          "      FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, IF(nt.NumTourneys IS NULL, 0, nt.NumTourneys) AS Tourneys, IF(nft.NumFinalTables IS NULL, 0, nft.NumFinalTables) AS FTs, IF(nt.NumTourneys IS NULL, 0, IF(nft.NumFinalTables IS NULL, 0, nft.NumFinalTables) / nt.NumTourneys) AS PctFTs, IF(nt.NumTourneys IS NULL, 0, IF(nt.TotalPlaces IS NULL, 0, nt.TotalPlaces) / nt.NumTourneys) AS AvgPlace, IF(nt.MaxPlace IS NULL, 0, nt.MaxPlace) AS Low, IF(nt.MinPlace IS NULL, 0, nt.MinPlace) AS High, nt.NumTourneys, p.active " .
           "            FROM poker_user p LEFT JOIN (SELECT r1.PlayerId, COUNT(*) AS NumTourneys, SUM(r1.Place) AS TotalPlaces, MAX(r1.Place) AS MaxPlace, MIN(r1.Place) AS MinPlace " .
           "                                         FROM poker_result r1 INNER JOIN poker_tournament t1 ON r1.TournamentId = t1.TournamentId " .
           "                                         AND t1.tournamentDate BETWEEN :startDate1 AND :endDate1 " .
@@ -2018,7 +2053,7 @@ class DatabaseResult extends Root {
           "                       WHERE r2.Place BETWEEN 1 AND 8 GROUP BY r2.PlayerId) nft ON p.Id = nft.PlayerId) a " .
           "      LEFT JOIN (SELECT id, name, SUM(TotalEarnings) AS Earnings, MAX(MaxEarnings) AS MaxEarnings, numTourneys " .
           "                 FROM (SELECT Id, name, SUM(Earnings) AS TotalEarnings, MAX(Earnings) AS MaxEarnings, NumTourneys " .
-          "                       FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, ((np.NumPlayers * (t.BuyinAmount - (t.BuyinAmount * t.rake))) + (CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END * (t.RebuyAmount - (t.RebuyAmount * t.rake))) + (CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END * (t.AddonAmount - (t.AddonAmount * t.Rake)))) * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings, nt.NumTourneys " .
+          "                       FROM (SELECT p.Id, CONCAT(p.first_name, ' ', p.last_name) AS name, ((np.NumPlayers * (t.BuyinAmount - (t.BuyinAmount * t.rake))) + (IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys) * (t.RebuyAmount - (t.RebuyAmount * t.rake))) + (IF(na.NumAddons IS NULL, 0, na.NumAddons) * (t.AddonAmount - (t.AddonAmount * t.Rake)))) * IF(s.Percentage IS NULL, 0, s.Percentage) AS Earnings, nt.NumTourneys " .
           "                             FROM poker_result r INNER JOIN poker_user p ON r.PlayerId = p.Id " .
           "                             INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId " .
           "                             AND t.tournamentDate BETWEEN :startDate3 AND :endDate3 " .
@@ -2039,13 +2074,13 @@ class DatabaseResult extends Root {
           "                       GROUP BY id " .
           "                       UNION ALL " .
           "                       SELECT xx.id, xx.name, SUM(xx.earnings) AS TotalEarnings, MAX(xx.earnings) AS MaxEarnings, 0 " .
-          "                       FROM (SELECT se.seasonStartDate, YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, qq.total * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings, numTourneys AS trnys " .
+          "                       FROM (SELECT se.seasonStartDate, YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, qq.total * IF(s.Percentage IS NULL, 0, s.Percentage) AS Earnings, numTourneys AS trnys " .
           "                             FROM poker_result r INNER JOIN poker_user p ON r.PlayerId = p.Id " .
           "                             INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId " .
           "                             AND t.tournamentDate BETWEEN :startDate5 AND :endDate5 " .
           "                             INNER JOIN poker_season se ON t.tournamentDate BETWEEN se.seasonStartDate AND se.seasonEndDate " .
-          "                             INNER JOIN (SELECT seasonStartDate, seasonEndDate, SUM(total) - CASE WHEN YEAR(seasonEndDate) = 2008 THEN 150 ELSE CASE WHEN YEAR(seasonEndDate) = 2007 THEN -291 ELSE CASE WHEN YEAR(seasonEndDate) = 2006 THEN -824 ELSE 0 END END END AS total " .
-          "                                         FROM (SELECT se2.seasonStartDate, se2.seasonEndDate, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END) + ((t2.AddonAmount * t2.Rake) * CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END) AS Total " .
+          "                             INNER JOIN (SELECT seasonStartDate, seasonEndDate, SUM(total) - IF(YEAR(seasonEndDate) = 2008, 150, IF(YEAR(seasonEndDate) = 2007, -291, IF(YEAR(seasonEndDate) = 2006, -824, 0))) AS total " .
+          "                                         FROM (SELECT se2.seasonStartDate, se2.seasonEndDate, t2.TournamentId AS Id, IF(b.Play IS NULL, 0, CONCAT(b.Play, '+', IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys), 'r', '+', IF(na.NumAddons IS NULL, 0, na.NumAddons), 'a')) AS Play, ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys)) + ((t2.AddonAmount * t2.Rake) * IF(na.NumAddons IS NULL, 0, na.NumAddons) ) AS Total " .
           "                                               FROM poker_tournament t2 INNER JOIN poker_season se2 ON t2.tournamentDate BETWEEN se2.seasonStartDate AND se2.seasonEndDate " .
           "                                               LEFT JOIN (SELECT TournamentId, COUNT(*) AS Play FROM poker_result WHERE buyinPaid = '" . Constant::FLAG_YES . "' AND Place > 0 GROUP BY TournamentId) b ON t2.TournamentId = b.TournamentId " .
           "                                               LEFT JOIN (SELECT r.TournamentId, SUM(r.rebuyCount) AS NumRebuys FROM poker_result r WHERE r.rebuyPaid = '" . Constant::FLAG_YES . "' AND r.RebuyCount > 0 GROUP BY r.TournamentId) nr ON t2.TournamentId = nr.TournamentId " .
@@ -2066,7 +2101,7 @@ class DatabaseResult extends Root {
           "                             GROUP BY id, yr) xx " .
           "                       GROUP BY xx.id, xx.name) cc " .
           "                 GROUP BY id, name) b ON a.Id = b.Id " .
-          "      LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, CASE WHEN c.Place IS NULL THEN 0 ELSE SUM(CASE WHEN c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' THEN CASE WHEN c.place BETWEEN 1 AND 8 THEN CASE WHEN c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (c.numPlayers - c.place + 4) * 2 ELSE c.numPlayers - c.place + 4 END ELSE CASE WHEN c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "' THEN (c.numPlayers - c.place + 1) * 2 ELSE c.numPlayers - c.place + 1 END END END) END AS Points, SUM(CASE WHEN c.NumRebuys IS NULL THEN 0 ELSE c.NumRebuys END * c.RebuyAmount) AS Rebuys, SUM(CASE WHEN c.NumAddons IS NULL THEN 0 ELSE c.NumAddons END * c.AddonAmount) AS Addons, c.NumRebuys, c.BuyinAmount " .
+          "      LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, IF(c.Place IS NULL, 0, SUM(IF(c.typeDescription IS NULL OR c.typeDescription <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "', IF(c.place BETWEEN 1 AND 8, IF(c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (c.numPlayers - c.place + 4) * 2, c.numPlayers - c.place + 4), IF(c.typeDescription = '" . Constant::DESCRIPTION_MAIN_EVENT . "', (c.numPlayers - c.place + 1) * 2, c.numPlayers - c.place + 1))))) AS Points, SUM(IF(c.NumRebuys IS NULL, 0, c.NumRebuys) * c.RebuyAmount) AS Rebuys, SUM(IF(c.NumAddons IS NULL, 0, c.NumAddons) * c.AddonAmount) AS Addons, c.NumRebuys, c.BuyinAmount " .
           "                 FROM (SELECT a.TournamentId, a.tournamentDesc, a.PlayerId, a.Place, a.NumPlayers, a.NumRebuys, a.BuyinAmount, a.RebuyAmount, a.AddonAmount, a.NumAddons, a.typeDescription " .
           "                       FROM (SELECT r.TournamentId, t.tournamentDesc, r.PlayerId, r.Place, np.NumPlayers, nr.NumRebuys, t.BuyinAmount, t.RebuyAmount, t.AddonAmount, na.NumAddons, st.typeDescription " .
           "                             FROM poker_result r INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId " .
@@ -2131,7 +2166,7 @@ class DatabaseResult extends Root {
       case "seasonSelectOneByIdAndDesc":
       case "seasonSelectOneByActive":
         $query =
-          "SELECT seasonId AS id, seasonDescription AS description, seasonStartDate AS 'start date', seasonEndDate AS 'end date', seasonChampionshipQualify AS '# to qualify', seasonFee AS fee, seasonActive AS 'active' " .
+          "SELECT seasonId AS id, seasonDescription AS description, seasonStartDate AS 'start date', seasonEndDate AS 'end date', seasonChampionshipQualify AS '# to qualify', seasonFinalTablePlayers AS 'final table players', seasonFinalTableBonusPoints AS 'final table bonus points', seasonFee AS fee, seasonActive AS 'active' " .
           "FROM poker_season s ";
         if ("seasonSelectOneById" == $dataName) {
           $query .= " WHERE seasonid = :seasonId";
@@ -2142,6 +2177,8 @@ class DatabaseResult extends Root {
             " WHERE t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate AND t.tournamentId = :tournamentId AND st.typeDescription = :typeDescription";
         } else if ("seasonSelectOneByActive" == $dataName) {
           $query .= " WHERE seasonActive = :seasonActive";
+        } else if ("seasonSelectAll" == $dataName && isset($params[3])) {
+          $query .= " WHERE seasonId IN (:seasonId)";
         }
         if (isset($params[2]) && $params[2]) {
           $query .= " ORDER BY seasonStartDate DESC";
@@ -2157,6 +2194,8 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':typeDescription', $params[1], PDO::PARAM_STR);
         } else if ("seasonSelectOneByActive" == $dataName) {
           $pdoStatement->bindParam(':seasonActive', $params[0], PDO::PARAM_INT);
+        } else if ("seasonSelectAll" == $dataName && isset($params[3])) {
+          $pdoStatement->bindParam(':seasonId', $params[3], PDO::PARAM_INT);
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -2177,7 +2216,7 @@ class DatabaseResult extends Root {
         break;
       case "seasonSelectAllChampionship":
         $query =
-          "SELECT seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFee, seasonActive " .
+          "SELECT seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFinalTablePlayers, seasonFinalTableBonusPoints, seasonFee, seasonActive " .
           "FROM poker_season " .
           "ORDER BY seasonEndDate DESC, seasonStartDate";
         break;
@@ -2193,6 +2232,10 @@ class DatabaseResult extends Root {
         "FROM poker_special_type";
         if ("specialTypeSelectOneById" == $dataName) {
           $query .= " WHERE typeId = :typeId";
+        } else if ("specialTypeSelectAll" == $dataName) {
+          if ($params[1]) {
+            $query .= " WHERE typeId IN (:typeId)";
+          }
         }
         if (isset($params[0]) && $params[0]) {
           $query .= " ORDER BY typeDescription";
@@ -2203,6 +2246,10 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         if ("specialTypeSelectOneById" == $dataName) {
           $pdoStatement->bindParam(':typeId', $params[0], PDO::PARAM_INT);
+        } else if ("specialTypeSelectAll" == $dataName) {
+          if ($params[1]) {
+            $pdoStatement->bindParam(':typeId', $params[1], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -2211,7 +2258,7 @@ class DatabaseResult extends Root {
       case "statusSelectPaid":
         $query =
           "SELECT p.id, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
-          "       CASE WHEN s.seasonFee - f.amount = 0 THEN 'Paid' ELSE 'Not paid' END AS 'fee status logic', " .
+          "       IF(s.seasonFee - f.amount = 0, 'Paid', 'Not paid') AS 'fee status logic', " .
           "       IF(s.seasonFee IS NULL OR f.amount IS NULL, '', IF(s.seasonFee - f.amount = 0, 'Paid', CONCAT('Owes ', (s.seasonFee - f.amount)))) AS 'fee status', " .
           "       IF(f.amount IS NULL, 0, f.amount) AS amount, " .
           "       IF(f.amount = s.seasonFee, f.amount, IF(f2.amount IS NULL, 0, f2.amount)) AS amount2, " .
@@ -2298,12 +2345,12 @@ class DatabaseResult extends Root {
         $query =
           "SELECT t.tournamentId AS id, t.tournamentDesc AS description, t.comment, t.locationId, l.locationName AS location, t.limitTypeId, lt.limitTypeName AS 'limit', t.gameTypeId, gt.gameTypeName AS 'type', " .
           "       l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS playerName, l.address, l.city, l.state, l.zipCode, u.phone, l.map AS mapHide, l.mapLink AS map, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.maxPlayers AS 'max players', t.chipCount AS 'chips', -t.buyinAmount AS 'buyin', t.maxRebuys AS 'max', -t.rebuyAmount AS 'amt', -t.addonAmount AS 'amt ', " .
-          "       t.addonChipCount AS 'chips ', t.groupId, g.groupName AS name, t.rake, CASE WHEN nr.registeredCount IS NULL THEN 0 ELSE nr.registeredCount END AS registeredCount, " .
-          "       CASE WHEN bp.buyinsPaid IS NULL THEN 0 ELSE bp.buyinsPaid END AS buyinsPaid, " .
-          "       CASE WHEN rp.rebuysPaid IS NULL THEN 0 ELSE rp.rebuysPaid END AS rebuysPaid, " .
-          "       CASE WHEN rc.rebuysCount IS NULL THEN 0 ELSE rc.rebuysCount END AS rebuysCount, " .
-          "       CASE WHEN ap.addonsPaid IS NULL THEN 0 ELSE ap.addonsPaid END AS addonsPaid, " .
-          "       CASE WHEN ec.enteredCount IS NULL THEN 0 ELSE ec.enteredCount END AS enteredCount, " .
+          "       t.addonChipCount AS 'chips ', t.groupId, g.groupName AS name, t.rake, IF(nr.registeredCount IS NULL, 0, nr.registeredCount) AS registeredCount, " .
+          "       IF(bp.buyinsPaid IS NULL, 0, bp.buyinsPaid) AS buyinsPaid, " .
+          "       IF(rp.rebuysPaid IS NULL, 0, rp.rebuysPaid) AS rebuysPaid, " .
+          "       IF(rc.rebuysCount IS NULL, 0, rc.rebuysCount) AS rebuysCount, " .
+          "       IF(ap.addonsPaid IS NULL, 0, ap.addonsPaid) AS addonsPaid, " .
+          "       IF(ec.enteredCount IS NULL, 0, ec.enteredCount) AS enteredCount, " .
           "       t.specialTypeId, st.typeDescription AS std " .
           "FROM poker_tournament t INNER JOIN poker_game_type gt ON t.gameTypeId = gt.gameTypeId " .
           "INNER JOIN poker_limit_type lt ON t.limitTypeId = lt.limitTypeId ";
@@ -2336,6 +2383,9 @@ class DatabaseResult extends Root {
         } else if ("tournamentSelectAllOrdered" == $dataName) {
           $query .= " ORDER BY t.tournamentDate DESC, t.startTime DESC";
         } else if ("tournamentSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $query .= " WHERE t.tournamentId IN (:tournamentId)";
+          }
           if (isset($orderBy)) {
             $query .= $orderBy;
           }
@@ -2356,6 +2406,10 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':tournamentId', $params[0], PDO::PARAM_INT);
         } else if ("tournamentsSelectForEmailNotifications" == $dataName) {
           $pdoStatement->bindParam(':interval', $params[0], PDO::PARAM_INT);
+        } else if ("tournamentSelectAll" == $dataName) {
+          if (isset($params[0])) {
+            $pdoStatement->bindParam(':tournamentId', $params[0], PDO::PARAM_INT);
+          }
         }
         if (isset($limitCount)) {
           $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
@@ -2383,7 +2437,7 @@ class DatabaseResult extends Root {
         break;
       case "tournamentSelectAllDuring":
         $query =
-          "SELECT t.tournamentId, t.tournamentDate, t.startTime, l.locationName, CASE WHEN bp.buyinsPaid IS NULL THEN 0 ELSE bp.buyinsPaid END AS buyinsPaid " .
+          "SELECT t.tournamentId, t.tournamentDate, t.startTime, l.locationName, IF(bp.buyinsPaid IS NULL, 0, bp.buyinsPaid) AS buyinsPaid " .
           "FROM poker_tournament t " .
           "INNER JOIN poker_location l ON t.locationId = l.locationId " .
           "LEFT JOIN (SELECT tournamentId, COUNT(*) AS buyinsPaid " .
@@ -2431,8 +2485,8 @@ class DatabaseResult extends Root {
         $query =
           "SELECT t.tournamentId AS id, t.tournamentDesc AS description, t.comment as comment, t.locationId, l.locationName AS location, t.limitTypeId, lt.limitTypeName AS 'limit', t.gameTypeId, gt.gameTypeName AS 'type', t.chipCount AS 'chips', " .
           "l.playerId, CONCAT(u.first_name, ' ', u.last_name) AS name, l.address, l.city, l.state, l.zipCode, u.phone, t.tournamentDate AS date, t.startTime AS 'start', t.endTime AS 'end', t.buyinAmount AS 'buyin', t.maxPlayers AS 'max players', t.maxRebuys AS 'max', t.rebuyAmount AS 'amt', t.addonAmount AS 'amt ', " .
-          "t.addonChipCount AS 'chips ', t.rake, l.map AS mapHide, l.mapLink AS map, CASE WHEN ec.enteredCount IS NULL THEN 0 ELSE ec.enteredCount END AS enteredCount, u.active, t.specialTypeId, st.typeDescription AS std, " .
-          "(((t.buyinAmount * ec.enteredCount) + (CASE WHEN nr.numRebuys IS NULL THEN 0 ELSE nr.numRebuys END * t.rebuyAmount) + (CASE WHEN na.numAddons IS NULL THEN 0 ELSE na.numAddons END * t.addonAmount)) * .8)* s.percentage AS earnings " .
+          "t.addonChipCount AS 'chips ', t.rake, l.map AS mapHide, l.mapLink AS map, IF(ec.enteredCount IS NULL, 0, ec.enteredCount) AS enteredCount, u.active, t.specialTypeId, st.typeDescription AS std, " .
+          "(((t.buyinAmount * ec.enteredCount) + (IF(nr.numRebuys IS NULL, 0, nr.numRebuys) * t.rebuyAmount) + (IF(na.numAddons IS NULL, 0, na.numAddons) * t.addonAmount)) * .8)* s.percentage AS earnings " .
           "FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId AND u.id = :playerId" .
           " INNER JOIN poker_tournament t ON t.tournamentId = r.tournamentId AND r.place = 1 " .
           "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
@@ -2485,7 +2539,7 @@ class DatabaseResult extends Root {
         break;
       case "tournamentsPlayedByType":
         $query =
-          "SELECT lt.limitTypeId, lt.limitTypeName AS 'limit type', gt.gameTypeId, gt.gameTypeName AS 'game type', t.maxRebuys AS rebuys, CASE WHEN t.addonAmount > 0 THEN '" . Constant::FLAG_YES . "' ELSE '" . Constant::FLAG_NO . "' END AS addon, COUNT(*) AS count " .
+          "SELECT lt.limitTypeId, lt.limitTypeName AS 'limit type', gt.gameTypeId, gt.gameTypeName AS 'game type', t.maxRebuys AS rebuys, IF(t.addonAmount > 0, '" . Constant::FLAG_YES . "', '" . Constant::FLAG_NO . "') AS addon, COUNT(*) AS count " .
           "FROM poker_tournament t " .
           "INNER JOIN poker_limit_type lt ON lt.limitTypeId = t.limitTypeId " .
           "INNER JOIN poker_game_type gt ON gt.gameTypeId = t.gameTypeId " .
@@ -2830,15 +2884,15 @@ class DatabaseResult extends Root {
                 array_push($resultList, $fee);
                 break;
               case "finishesSelectAllByPlayerId":
-                array_push($resultList, $row["place"]);
-                array_push($resultList, $row["finishes"]);
-                array_push($resultList, $row["avg"]);
+                array_push($resultList, (int) $row["place"]);
+                array_push($resultList, (int) $row["finishes"]);
+                array_push($resultList, (float) $row["avg"]);
                 break;
               case "foodByTournamentIdAndPlayerId":
                 array_push($resultList, $row["name"]);
                 array_push($resultList, $row["email"]);
                 array_push($resultList, $row["food"]);
-                array_push($resultList, $row["active"]);
+                array_push($resultList, (int) $row["active"]);
                 break;
               case "gameTypeSelectAll":
                 $gameType = new GameType(debug: $this->isDebug(), id: $row["gameTypeId"], name: $row["gameTypeName"]);
@@ -3071,7 +3125,13 @@ class DatabaseResult extends Root {
               case "seasonSelectOneByActive":
                 $startDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["start date"]);
                 $endDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["end date"]);
-                $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["description"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], fee: (int) $row["fee"], active: (int) $row["active"]);
+                $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["description"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], finalTablePlayers: (int) $row["final table players"], finalTableBonusPoints: (int) $row["final table bonus points"], fee: (int) $row["fee"], active: (int) $row["active"]);
+                array_push($resultList, $season);
+                break;
+              case "seasonSelectAllChampionship":
+                $startDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["seasonStartDate"]);
+                $endDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["seasonEndDate"]);
+                $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["seasonDescription"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], finalTablePlayers: (int) $row["finalTablePlayers"], finalTableBonusPoints: (int) $row["finalTableBonusPoints"], active: $row["seasonActive"]);
                 array_push($resultList, $season);
                 break;
               case "seasonSelectOneByTournamentId":
@@ -3080,9 +3140,13 @@ class DatabaseResult extends Root {
               case "seasonSelectMaxId":
                 array_push($resultList, (int) $row["id"]);
                 break;
+              case "specialTypeSelectAll":
+              case "specialTypeSelectOneById":
+                $specialType = new SpecialType(debug: $this->isDebug(), id: $row["id"], description: $row["description"]);
+                array_push($resultList, $specialType);
+                break;
               case "statusSelectPaid":
-                $values = array($row["id"],$row["name"],$row["fee status logic"],$row["fee status"],$row["amount"],$row["amount2"],$row["buyin status"],$row["rebuy status"],$row["rebuyCount"],
-                  $row["addon status"]);
+                $values = array($row["id"],$row["name"],$row["fee status logic"],$row["fee status"],$row["amount"],$row["amount2"],$row["buyin status"],$row["rebuy status"],$row["rebuyCount"],$row["addon status"]);
                 array_push($resultList, $values);
                 break;
               case "statusSelectAll":
@@ -3178,17 +3242,6 @@ class DatabaseResult extends Root {
                 array_push($resultList, $dateTime);
                 array_push($resultList, $row["locationName"]);
                 array_push($resultList, (int) $row["buyinsPaid"]);
-                break;
-              case "seasonSelectAllChampionship":
-                $startDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["seasonStartDate"]);
-                $endDateTime = new DateTime(debug: $this->isDebug(), id: NULL, time: $row["seasonEndDate"]);
-                $season = new Season(debug: $this->isDebug(), id: $row["id"], description: $row["seasonDescription"], startDate: $startDateTime, endDate: $endDateTime, championshipQualify: (int) $row["# to qualify"], active: $row["seasonActive"]);
-                array_push($resultList, $season);
-                break;
-              case "specialTypeSelectAll":
-              case "specialTypeSelectOneById":
-                $specialType = new SpecialType(debug: $this->isDebug(), id: $row["id"], description: $row["description"]);
-                array_push($resultList, $specialType);
                 break;
               case "tournamentSelectAllYearsPlayed":
                 array_push($resultList, (int) $row["year"]);
@@ -3289,7 +3342,7 @@ class DatabaseResult extends Root {
   private function getPayouts(int|NULL $groupId, int|NULL $payoutId, bool $structureFlag): array {
     $payouts = array();
     $queryNested =
-      "SELECT p.payoutId AS id, p.payoutName AS name, p.bonusPoints AS 'bonus pts', p.minPlayers AS 'min players', p.maxPlayers AS 'max players' " .
+      "SELECT p.payoutId AS id, p.payoutName AS name, p.minPlayers AS 'min players', p.maxPlayers AS 'max players' " .
       "FROM poker_payout p ";
     if (isset($groupId)) {
       $queryNested .=
@@ -3352,7 +3405,7 @@ class DatabaseResult extends Root {
             }
             $pdoStatementNested2->closeCursor();
           }
-          $payout = new Payout(debug: $this->isDebug(), id: (int) $rowNested["id"], name: $rowNested["name"], bonusPoints: (int) $rowNested["bonus pts"], minPlayers: (int) $rowNested["min players"], maxPlayers: (int) $rowNested["max players"], structures: $structures);
+          $payout = new Payout(debug: $this->isDebug(), id: (int) $rowNested["id"], name: $rowNested["name"], minPlayers: (int) $rowNested["min players"], maxPlayers: (int) $rowNested["max players"], structures: $structures);
           $payouts[$ctr2] = $payout;
           $ctr2++;
         }
@@ -3550,18 +3603,17 @@ class DatabaseResult extends Root {
         break;
       case "payoutInsert":
         $query =
-          "INSERT INTO poker_payout(payoutId, payoutName, bonusPoints, minPlayers, maxPlayers) " .
-          "SELECT IFNULL(MAX(payoutId), 0) + 1, :payoutName, :bonusPoints, :minPlayers, :maxPlayers FROM poker_payout";
+          "INSERT INTO poker_payout(payoutId, payoutName, minPlayers, maxPlayers) " .
+          "SELECT IFNULL(MAX(payoutId), 0) + 1, :payoutName, :minPlayers, :maxPlayers FROM poker_payout";
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':payoutName', $params[0], PDO::PARAM_STR);
-        $pdoStatement->bindParam(':bonusPoints', $params[1], PDO::PARAM_INT);
-        $pdoStatement->bindParam(':minPlayers', $params[2], PDO::PARAM_INT);
-        $pdoStatement->bindParam(':maxPlayers', $params[3], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':minPlayers', $params[1], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':maxPlayers', $params[2], PDO::PARAM_INT);
         break;
       case "registrationInsert":
         $query =
           "INSERT INTO poker_result(tournamentId, playerId, rebuyCount, statusCode, registerOrder, addonFlag, place, knockedOutBy, food) " .
-          "SELECT :tournamentId1, :playerId, 0, :statusCode, CASE WHEN MAX(registerOrder) IS NULL THEN 1 ELSE MAX(registerOrder) + 1 END, :addonFlag, 0, NULL, :food FROM poker_result WHERE tournamentId = :tournamentId2";
+          "SELECT :tournamentId1, :playerId, 0, :statusCode, IF(MAX(registerOrder) IS NULL, 1, MAX(registerOrder) + 1), :addonFlag, 0, NULL, :food FROM poker_result WHERE tournamentId = :tournamentId2";
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':tournamentId1', $params[0], PDO::PARAM_INT);
         $pdoStatement->bindParam(':playerId', $params[1], PDO::PARAM_INT);
@@ -3572,15 +3624,17 @@ class DatabaseResult extends Root {
         break;
       case "seasonInsert":
         $query =
-          "INSERT INTO poker_season(seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFee, seasonActive) " .
-          "SELECT IFNULL(MAX(seasonId), 0) + 1, :seasonDescription, :seasonStartDate, :seasonEndDate, :seasonChampionshipQualify, :seasonFee, :seasonActive FROM poker_season";
+          "INSERT INTO poker_season(seasonId, seasonDescription, seasonStartDate, seasonEndDate, seasonChampionshipQualify, seasonFinalTablePlayers, seasonFinalTableBonusPoints, seasonFee, seasonActive) " .
+          "SELECT IFNULL(MAX(seasonId), 0) + 1, :seasonDescription, :seasonStartDate, :seasonEndDate, :seasonChampionshipQualify, :seasonFinalTablePlayers, :seasonFinalTableBonusPoints, :seasonFee, :seasonActive FROM poker_season";
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':seasonDescription', $params[0], PDO::PARAM_STR);
         $pdoStatement->bindParam(':seasonStartDate', $params[1], PDO::PARAM_STR);
         $pdoStatement->bindParam(':seasonEndDate', $params[2], PDO::PARAM_STR);
         $pdoStatement->bindParam(':seasonChampionshipQualify', $params[3], PDO::PARAM_INT);
-        $pdoStatement->bindParam(':seasonFee', $params[4], PDO::PARAM_STR);
-        $pdoStatement->bindParam(':seasonActive', $params[5], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':seasonFinalTablePlayers', $params[4], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':seasonFinalTableBonusPoints', $params[5], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':seasonFee', $params[6], PDO::PARAM_STR);
+        $pdoStatement->bindParam(':seasonActive', $params[7], PDO::PARAM_INT);
         break;
       case "structureInsert":
         $query =
@@ -3589,7 +3643,7 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':payoutId', $params[0], PDO::PARAM_INT);
         $pdoStatement->bindParam(':place', $params[1], PDO::PARAM_INT);
-        $pdoStatement->bindParam(':percentage', $params[2], PDO::PARAM_INT);
+        $pdoStatement->bindParam(':percentage', $params[2], PDO::PARAM_STR); // for non integer use string
         break;
       case "tournamentInsert":
         $query =
@@ -3760,15 +3814,13 @@ class DatabaseResult extends Root {
           $query =
             "UPDATE poker_payout " .
             "SET payoutName = :payoutName, " .
-            "    bonusPoints = :bonusPoints, " .
             "    minPlayers = :minPlayers, " .
             "    maxPlayers = :maxPlayers " .
             "WHERE payoutId = :payoutId";
           $pdoStatement = $this->getConnection()->prepare(query: $query);
           $pdoStatement->bindParam(':payoutName', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':bonusPoints', $params[1], PDO::PARAM_INT);
-          $pdoStatement->bindParam(':minPlayers', $params[2], PDO::PARAM_INT);
-          $pdoStatement->bindParam(':maxPlayers', $params[3], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':minPlayers', $params[1], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':maxPlayers', $params[2], PDO::PARAM_INT);
           $pdoStatement->bindParam(':payoutId', $params[3], PDO::PARAM_INT);
           break;
         case "registrationUpdate":
@@ -3886,6 +3938,8 @@ class DatabaseResult extends Root {
             "    seasonStartDate = :seasonStartDate, " .
             "    seasonEndDate = :seasonEndDate, " .
             "    seasonChampionshipQualify = :seasonChampionshipQualify, " .
+            "    seasonFinalTablePlayers = :seasonFinalTablePlayers, " .
+            "    seasonFinalTableBonusPoints = :seasonFinalTableBonusPoints, " .
             "    seasonFee = :seasonFee, " .
             "    seasonActive = :seasonActive " .
             "WHERE seasonId = :seasonId";
@@ -3894,8 +3948,10 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':seasonStartDate', $params[2], PDO::PARAM_STR);
           $pdoStatement->bindParam(':seasonEndDate', $params[3], PDO::PARAM_STR);
           $pdoStatement->bindParam(':seasonChampionshipQualify', $params[4], PDO::PARAM_INT);
-          $pdoStatement->bindParam(':seasonFee', $params[5], PDO::PARAM_INT);
-          $pdoStatement->bindParam(':seasonActive', $params[6], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':seasonFinalTablePlayers', $params[5], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':seasonFinalTableBonusPoints', $params[6], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':seasonFee', $params[7], PDO::PARAM_INT);
+          $pdoStatement->bindParam(':seasonActive', $params[8], PDO::PARAM_INT);
           $pdoStatement->bindParam(':seasonId', $params[0], PDO::PARAM_INT);
           break;
         case "tournamentUpdate":
@@ -4150,7 +4206,9 @@ class DatabaseResult extends Root {
     $bindParams = NULL;
     $query =
       "SELECT se.seasonStartDate, YEAR(t.tournamentDate) AS Yr, p.Id, p.first_name, p.last_name, CONCAT(p.first_name, ' ', p.last_name) AS name, " .
-      "       qq.total * CASE WHEN s.Percentage IS NULL THEN 0 ELSE s.Percentage END AS Earnings, numTourneys AS trnys " . "FROM poker_result r " . "INNER JOIN poker_user p ON r.PlayerId = p.Id " .
+      "       qq.total * IF(s.Percentage IS NULL, 0, s.Percentage) AS Earnings, numTourneys AS trnys " .
+      "FROM poker_result r " .
+      "INNER JOIN poker_user p ON r.PlayerId = p.Id " .
       "INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId ";
     if (isset($params[0]) && isset($params[1])) {
       $query .= "            AND t.tournamentDate BETWEEN :tournamentStartDate91 AND :tournamentEndDate91 ";
@@ -4159,9 +4217,10 @@ class DatabaseResult extends Root {
     }
     $query .=
       "INNER JOIN poker_season se ON t.tournamentDate BETWEEN se.seasonStartDate AND se.seasonEndDate " .
-      "INNER JOIN (SELECT seasonStartDate, seasonEndDate, SUM(total) - CASE WHEN YEAR(seasonEndDate) = 2008 THEN 150 ELSE CASE WHEN YEAR(seasonEndDate) = 2007 THEN -291 ELSE CASE WHEN YEAR(seasonEndDate) = 2006 THEN -824 ELSE 0 END END END AS total " .
-      "            FROM (SELECT se2.seasonStartDate, se2.seasonEndDate, t2.TournamentId AS Id, CASE WHEN b.Play IS NULL THEN 0 ELSE CONCAT(b.Play, '+', CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END, 'r', '+', CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END, 'a') END AS Play, ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * CASE WHEN nr.NumRebuys IS NULL THEN 0 ELSE nr.NumRebuys END) + ((t2.AddonAmount * t2.Rake) * CASE WHEN na.NumAddons IS NULL THEN 0 ELSE na.NumAddons END) AS Total " .
-      "                  FROM poker_tournament t2 " . "                  INNER JOIN poker_season se2 ON t2.tournamentDate BETWEEN se2.seasonStartDate AND se2.seasonEndDate " .
+      "INNER JOIN (SELECT seasonStartDate, seasonEndDate, SUM(total) - IF(YEAR(seasonEndDate) = 2008, 150, IF(YEAR(seasonEndDate) = 2007, -291, IF(YEAR(seasonEndDate) = 2006, -824, 0))) AS total " .
+      "            FROM (SELECT se2.seasonStartDate, se2.seasonEndDate, t2.TournamentId AS Id, IF(b.Play IS NULL, 0, CONCAT(b.Play, '+', IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys) , 'r', '+', IF(na.NumAddons IS NULL, 0, na.NumAddons) , 'a')) AS Play, ((t2.BuyinAmount * t2.Rake) * Play) + ((t2.RebuyAmount * t2.Rake) * IF(nr.NumRebuys IS NULL, 0, nr.NumRebuys) ) + ((t2.AddonAmount * t2.Rake) * IF(na.NumAddons IS NULL, 0, na.NumAddons) ) AS Total " .
+      "                  FROM poker_tournament t2 " .
+      "                  INNER JOIN poker_season se2 ON t2.tournamentDate BETWEEN se2.seasonStartDate AND se2.seasonEndDate " .
       "                  LEFT JOIN (SELECT TournamentId, COUNT(*) AS Play FROM poker_result WHERE buyinPaid = '" . Constant::FLAG_YES .
       "' AND Place > 0 GROUP BY TournamentId) b ON t2.TournamentId = b.TournamentId " .
       "                  LEFT JOIN (SELECT r.TournamentId, SUM(r.rebuyCount) AS NumRebuys FROM poker_result r WHERE r.rebuyPaid = '" . Constant::FLAG_YES .
@@ -4170,8 +4229,10 @@ class DatabaseResult extends Root {
       "' GROUP BY r.TournamentId) na ON t2.TournamentId = na.TournamentId) zz " .
       "            GROUP BY seasonStartDate, seasonEndDate) qq ON qq.seasonStartDate = se.seasonStartDate AND qq.seasonEndDate = se.seasonEndDate " .
       "LEFT JOIN poker_special_type st ON t.specialTypeId = st.typeId " .
-      "INNER JOIN (SELECT r1.playerId, COUNT(*) AS NumTourneys FROM poker_result r1 INNER JOIN poker_tournament t1 ON r1.tournamentId = t1.tournamentId AND r1.place > 0 INNER JOIN poker_special_type st1 ON t1.specialTypeId = st1.typeId AND st1.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' GROUP BY r1.playerId) nt ON r.playerId = nt.playerId " . "LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
-      "          FROM (SELECT np.tournamentId, p.payoutId " . "                FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers FROM poker_result r WHERE r.place > 0 AND r.statusCode IN ('" . Constant::CODE_STATUS_REGISTERED . "','" . Constant::CODE_STATUS_FINISHED . "') GROUP BY r.tournamentId) np " .
+      "INNER JOIN (SELECT r1.playerId, COUNT(*) AS NumTourneys FROM poker_result r1 INNER JOIN poker_tournament t1 ON r1.tournamentId = t1.tournamentId AND r1.place > 0 INNER JOIN poker_special_type st1 ON t1.specialTypeId = st1.typeId AND st1.typeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' GROUP BY r1.playerId) nt ON r.playerId = nt.playerId " .
+      "LEFT JOIN (SELECT a.tournamentId, s1.payoutId, s1.place, s1.percentage " .
+      "          FROM (SELECT np.tournamentId, p.payoutId " .
+      "                FROM (SELECT r.tournamentId, COUNT(*) AS numPlayers FROM poker_result r WHERE r.place > 0 AND r.statusCode IN ('" . Constant::CODE_STATUS_REGISTERED . "','" . Constant::CODE_STATUS_FINISHED . "') GROUP BY r.tournamentId) np " .
       "                INNER JOIN poker_tournament t on np.tournamentId = t.tournamentId ";
     if (isset($params[0]) && isset($params[1])) {
       $query .= "            AND t.tournamentDate BETWEEN :tournamentStartDate92 AND :tournamentEndDate92 ";
