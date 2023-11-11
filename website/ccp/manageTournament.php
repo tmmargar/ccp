@@ -304,7 +304,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
   $colFormats = array(array(19, "time", NULL), array(21, "number", NULL), array(22, "number", 0), array(23, "currency", 0), array(24, "number", 0), array(25, "currency", 0), array(26, "currency", 0), array(27, "number", 0), array(30, "percentage", 0));
-  $hideColIndexes = array(3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 20, 28, 31, 32, 33, 34, 35, 36, 37);
+  $hideColIndexes = array(3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 20, 28, 31, 32, 33, 34, 35, 36, 37, 39);
   $colSpan = array(array("Game", "Rebuy", "Addon", "Group"), array(6, 24, 26, 29), array(array(8), array(25), array(27), array(30)));
   $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: $ids, suffix: NULL, width: "100%");
   $output .= $htmlTable->getHtml();

@@ -7,8 +7,10 @@ use ccp\classes\model\HtmlTable;
 use ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("SPECIAL_TYPE_DESCRIPTION_FIELD_LABEL", "Description");
+define("SPECIAL_TYPE_MULTIPLIER_FIELD_LABEL", "Multiplier");
 define("SPECIAL_TYPE_ID_FIELD_NAME", "specialTypeId");
 define("SPECIAL_TYPE_DESCRIPTION_FIELD_NAME", "specialTypeDescription");
+define("SPECIAL_TYPE_MULTIPLIER_FIELD_NAME", "specialTypeMultiplier");
 define("DEFAULT_VALUE_SPECIAL_TYPE_ID", "-1");
 $smarty->assign("title", "Manage Special Type");
 $smarty->assign("heading", "Manage Special Type");
@@ -30,8 +32,11 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
     foreach ($ary as $id) {
       $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id . "\">" . SPECIAL_TYPE_DESCRIPTION_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-      $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_DESCRIPTION, autoComplete: NULL, autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id, maxLength: 200, name: SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 50, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getDescription() : ""), wrap: NULL);
-      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>\n";
+      $textBoxDescription = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_DESCRIPTION, autoComplete: NULL, autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id, maxLength: 200, name: SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 50, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: ((count($resultList) > 0) ? $resultList[$ctr]->getDescription() : ""), wrap: NULL);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxDescription->getHtml() . "</div>\n";
+      $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id . "\">" . SPECIAL_TYPE_MULTIPLIER_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
+      $textBoxMultiplier = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_MULTIPLIER, autoComplete: NULL, autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id, maxLength: 1, name: SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 2, suffix: NULL, type: FormControl::TYPE_INPUT_NUMBER, value: (int) ((count($resultList) > 0) ? $resultList[$ctr]->getMultiplier() : 1), wrap: NULL);
+      $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxMultiplier->getHtml() . "</div>\n";
       $hiddenRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: NULL, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: ((count($resultList) > 0) ? $resultList[$ctr]->getId() : ""), wrap: NULL);
       $output .= $hiddenRow->getHtml();
       $ctr++;
@@ -55,11 +60,12 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   foreach ($ary as $id) {
     $specialTypeId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SPECIAL_TYPE_ID;
     $specialTypeDescription = (isset($_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $specialTypeMultiplier = (isset($_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id] : 1;
     if (Constant::MODE_SAVE_CREATE == $mode) {
-      $params = array(addslashes($specialTypeDescription));
+      $params = array(addslashes($specialTypeDescription), $specialTypeMultiplier);
       $rowCount = $databaseResult->insertSpecialType(params: $params);
     } elseif (Constant::MODE_SAVE_MODIFY == $mode) {
-      $params = array($specialTypeId, $specialTypeDescription);
+      $params = array($specialTypeId, $specialTypeDescription, $specialTypeMultiplier);
       $rowCount = $databaseResult->updateSpecialType(params: $params);
     }
     if (!is_numeric($rowCount)) {

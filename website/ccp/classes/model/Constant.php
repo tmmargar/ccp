@@ -38,6 +38,7 @@ abstract class Constant {
   public const ACCESSKEY_MAX_REBUYS = "u";
   public const ACCESSKEY_MIN_PLAYERS = "x";
   public const ACCESSKEY_MODIFY = "m";
+  public const ACCESSKEY_MULTIPLIER = "m";
   public const ACCESSKEY_NAME = "n";
   public const ACCESSKEY_PASSWORD = "p";
   public const ACCESSKEY_PAYOUT = "o";
