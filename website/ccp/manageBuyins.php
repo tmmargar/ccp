@@ -201,7 +201,7 @@ if ($mode == Constant::MODE_VIEW) {
       type: FormControl::TYPE_INPUT_CHECKBOX, value: "?1", wrap: NULL);
     $textBoxRebuyCount = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_REBUY_COUNT, autoComplete: NULL, autoFocus: false,
       checked: NULL, class: NULL, cols: NULL, disabled: (0 == $maxRebuys ? true : false), id: Constant::TEXT_REBUY_COUNT . "_?2", maxLength: 2, name: Constant::TEXT_REBUY_COUNT . "_?2",
-      import: $import, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 2, suffix: "_?2", type: FormControl::TYPE_INPUT_TEXTBOX, value: "?4", wrap: NULL);
+      import: $import, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 2, suffix: "_?2", type: FormControl::TYPE_INPUT_NUMBER, value: "?4", wrap: NULL);
     $checkboxRebuyButton = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL,
       cols: NULL, disabled: (0 == $maxRebuys ? true : false), id: Constant::TEXT_REBUY . "_?2", maxLength: NULL, name: Constant::TEXT_REBUY . "_?2", import: $import,
       onClick: "document.querySelector('#" . HIDDEN_ROW_REBUY_PAID_FIELD_NAME . "').value = '?3';", placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: "_?2",

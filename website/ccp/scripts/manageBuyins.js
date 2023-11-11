@@ -138,6 +138,14 @@ export const inputLocal = {
     ids = ids.substring(0, ids.length - 2);
     document.querySelector("#ids").value = ids;
   },
+  setMinMax : function() {
+    if (document.querySelector("[id^='rebuyCount_']")) {
+      document.querySelectorAll("[id^='rebuyCount_']")?.forEach(obj => {
+        obj.min = 0;
+        obj.max = document.querySelector("#rebuyFlag").value;
+      });
+    }
+  },
   tableRowClick : function({obj} = {}) {
     obj.classList.remove("selected");
   },
@@ -175,6 +183,7 @@ export const inputLocal = {
 };
 let documentReadyCallback = () => {
   inputLocal.initializeDataTable();
+  inputLocal.setMinMax();
   inputLocal.setDefaults();
   inputLocal.postProcessing();
 };
