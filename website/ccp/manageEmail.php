@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace ccp;
 use ccp\classes\model\Constant;
-use ccp\classes\model\DatabaseResult;
 use ccp\classes\model\Email;
 use ccp\classes\model\FormControl;
 use ccp\classes\model\FormOption;
@@ -38,8 +37,15 @@ $resultList = $databaseResult->getUsersActive(params: $params);
 if (count($resultList) == 0) {
   echo "No active users";
 }
-$smarty->assign("script", "<script src=\"https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js\"></script>\n<script src=\"scripts/manageEmail.js\" type=\"module\"></script>\n");
-$smarty->assign("style", "<link href=\"https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css\" rel=\"stylesheet\">\n<link href=\"css/manageEmail.css\" rel=\"stylesheet\">");
+$script =
+  "<script src=\"https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js\"></script>\n" .
+  "<script src=\"scripts/manageEmail.js\" type=\"module\"></script>\n" .
+  "<script src=\"https://cdn.tiny.cloud/1/gb0quk0idsdusszgqyocrwkff5r6uupkzb3j30niuvzxqiyt/tinymce/6/tinymce.min.js\" referrerpolicy=\"origin\"></script>\n";
+$smarty->assign("script", $script);
+$style =
+  "<link href=\"https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css\" rel=\"stylesheet\">\n" .
+  "<link href=\"css/manageEmail.css\" rel=\"stylesheet\">\n";
+$smarty->assign("style", $style);
 $smarty->assign("mode", $mode);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 $smarty->assign("formName", "frmEmail");
@@ -67,7 +73,7 @@ $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell-
 $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SUBJECT, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SUBJECT_FIELD_NAME, maxLength: 100, name: SUBJECT_FIELD_NAME, onClick: NULL, placeholder:NULL, readOnly: false, required: true, rows: NULL, size: 41, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: NULL, wrap: NULL);
 $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxEmail->getHtml() . "</div>\n";
 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . BODY_FIELD_NAME . "\">Body:</div>\n";
-$textAreaBody = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_BODY, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: 43, disabled: false, id: BODY_FIELD_NAME, maxLength: NULL, name: BODY_FIELD_NAME, onClick: NULL, placeholder:NULL, readOnly: false, required: true, rows: 10, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTAREA, value: NULL, wrap: "hard");
+$textAreaBody = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_BODY, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: 43, disabled: false, id: BODY_FIELD_NAME, maxLength: NULL, name: BODY_FIELD_NAME, onClick: NULL, placeholder:NULL, readOnly: false, required: false, rows: 10, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTAREA, value: NULL, wrap: "hard");
 $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textAreaBody->getHtml() . "</div>\n";
 $output .= "</div>\n";
 $output .= "<div class=\"buttons center\">\n";

@@ -68,14 +68,16 @@ input:invalid,
 textarea:invalid,
 select:invalid,
 input:out-of-range,
-.ts-control > input:invalid {
+.ts-control > input:invalid,
+.tox-edit-area__iframe.invalid {
   border: 2px dashed red !important;
   color: red !important;
 }
 input:invalid:required,
 textarea:invalid:required,
 select:invalid,
-.ts-control > input:invalid {
+.ts-control > input:invalid,
+.tox-edit-area__iframe.invalid {
   background-image: linear-gradient(to right, pink, lightgreen) !important;
 }
 input:invalid:out-of-range {

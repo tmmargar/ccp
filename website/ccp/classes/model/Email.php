@@ -135,6 +135,7 @@ class Email extends Base {
     $mail->isSMTP();
     $mail->Timeout = 60;
     $mail->Host = Constant::SERVER_EMAIL();
+    $mail->CharSet = "UTF-8";
     $mail->isHTML(true);
     for ($idx = 0; $idx < count($this->fromName); $idx ++) {
       $mail->SetFrom(address: $this->getFromEmail()[$idx], name: $this->getFromName()[$idx]);

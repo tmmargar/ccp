@@ -35,26 +35,66 @@ export const inputLocal = {
           inputLocal.validate();
         }
       };
-      const tomSelect = new TomSelect(el, settings);
+      new TomSelect(el, settings);
+    });
+  },
+  initalizeEditor : function() {
+    tinymce.init({
+      /*advlist_bullet_styles: 'square',
+      advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman',*/
+      link_assume_external_targets: true,
+      link_default_protocol: 'http',
+      link_default_target: '_blank',
+      menubar: '',
+      placeholder: 'Body content here...',
+      /*plugins: 'a11ychecker advcode advtable advtemplate anchor autocorrect casechange checklist codesample editimage export footnotes formatpainter  inlinecss media mediaembed mentions pageembed permanentpen powerpaste tableofcontents tinymcespellchecker typography visualblocks',*/
+      plugins: 'accordion advlist autolink autoresize charmap emoticons image insertdatetime link lists nonbreaking preview quickbars searchreplace table visualchars wordcount ',
+      selector: 'textarea#body',
+      setup: (editor) => {
+        editor.on('init', (e) => {
+          document.querySelector('button.tox-statusbar__wordcount').click();
+          if (tinymce.activeEditor.getContent() == "") {
+            document.querySelector(".tox-edit-area__iframe")?.classList.add("invalid");
+          } else {
+            document.querySelector(".tox-edit-area__iframe")?.classList.remove("invalid");
+          }
+        });
+        editor.on('selectionChange', (e) => {
+          if (tinymce.activeEditor.getContent() == "") {
+            document.querySelector(".tox-edit-area__iframe")?.classList.add("invalid");
+          } else {
+            document.querySelector(".tox-edit-area__iframe")?.classList.remove("invalid");
+          }
+          inputLocal.validate();
+        });
+      },
+      toolbar: 'undo redo bold italic underline strikethrough checklist numlist bullist indent outdent align lineheight emoticons link image table'
     });
   },
   reset : function() {
     document.querySelector("#to").tomselect.clear();
+    tinymce.get("body").setContent("");
+    document.querySelector(".tox-edit-area__iframe")?.classList.add("invalid");
   },
-  validate : function() {
+  validate : function(event) {
     let result = true;
     const users = document.querySelectorAll(".ts-control");
     const user = document.querySelector("#to-ts-control");
     const subject = document.querySelector("#subject");
-    const body = document.querySelector("#body");
     if (users) {
       user.setCustomValidity(users[0].children[0].textContent == "" ? "You must select a user" : "");
       if (users[0].children[0].textContent == "") {
         document.querySelector(".ts-control").classList.add("errors");
       }
       subject.setCustomValidity(subject.validity.valueMissing ? "You must enter a subject" : "");
-      body.setCustomValidity(body.validity.valueMissing ? "You must enter a body" : "");
-      if (users[0].children[0].textContent == "" || subject.validity.valueMissing || body.validity.valueMissing) {
+      const bodyInvalid = document.querySelector(".tox-edit-area__iframe")?.classList.contains("invalid");
+      if (users[0].children[0].textContent == "" || subject.validity.valueMissing || bodyInvalid) {
+        if (users[0].children[0].textContent != "" && !subject.validity.valueMissing && bodyInvalid) {
+          if (event) {
+            event.preventDefault();
+          }
+          tinymce.get("body").getBody().setAttribute('data-mce-placeholder', 'You must enter something for the body...');
+        }
         result = false;
       }
     }
@@ -63,6 +103,7 @@ export const inputLocal = {
 };
 let documentReadyCallback = () => {
   inputLocal.initializeTomSelect({placeholder: "Select user(s)..."});
+  inputLocal.initalizeEditor();
   inputLocal.validate();
   input.storePreviousValue({selectors: ["[id^='to']", "[id^='subject']", "[id^='body']"]});
 };
@@ -72,7 +113,7 @@ if (document.readyState === "complete" || (document.readyState !== "loading" && 
   document.addEventListener("DOMContentLoaded", documentReadyCallback);
 }
 document.addEventListener("click", (event) => {
-  const result = inputLocal.validate();
+  const result = inputLocal.validate(event);
   if (event.target && event.target.id == "selectAll") {
     return input.selectAllTomSelect({objId: "to", event: event});
   } else if (event.target && event.target.id.includes("deselectAll")) {
@@ -80,7 +121,6 @@ document.addEventListener("click", (event) => {
   } else if (event.target && event.target.id.includes("email")) {
     if (result) {
       document.querySelector("#mode").value = event.target.value.toLowerCase();
-      document.querySelector("#body").value = "<pre>" + document.querySelector("#body").value + "</pre>";
     }
   } else if (event.target && event.target.id.includes("reset")) {
     inputLocal.reset();
@@ -88,5 +128,5 @@ document.addEventListener("click", (event) => {
    }
 });
 document.addEventListener("input", (event) => {
-  inputLocal.validate();
+  inputLocal.validate(event);
 });
