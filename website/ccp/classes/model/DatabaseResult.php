@@ -30,6 +30,9 @@ class DatabaseResult extends Root {
   public function setDatabase(Database $database) {
     $this->database = $database;
   }
+  public function getBlobTest(): array {
+    return $this->getData(dataName: "blobTest", params: NULL, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
+  }
   public function getAutoRegisterHost(array $params): array|string {
     return $this->getData(dataName: "autoRegisterHost", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
@@ -428,6 +431,9 @@ class DatabaseResult extends Root {
   public function deleteTournamentAbsence(array $params): int|array {
     return $this->deleteData(dataName: "tournamentAbsenceDelete", params: $params);
   }
+  public function insertBlob(array $params) {
+    return $this->insertData(dataName: "blobInsert", params: $params);
+  }
   public function insertFee(array $params): int|array {
     return $this->insertData(dataName: "feeInsert", params: $params);
   }
@@ -549,7 +555,7 @@ class DatabaseResult extends Root {
   private function initializeConnection(): PDO {
     try {
       $connection = new PDO(dsn: $this->getDatabase()->getDsn(), username: $this->getDatabase()->getUserid(), password: $this->getDatabase()->getPassword(),
-        options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => true));
+        options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false));
     } catch (PDOException $e) {
       echo 'Connection failed: ' . $e->getMessage() . "\r\n" . $this->getDatabase();
     }
@@ -566,6 +572,9 @@ class DatabaseResult extends Root {
     $resultList = array();
     $pdoStatement = NULL;
     switch ($dataName) {
+      case "blobTest":
+        $query = "SELECT name, contentType, blobcontents FROM blobtest";
+        break;
       case "autoRegisterHost":
         $query =
           "SELECT t.tournamentId, t.tournamentDate, t.startTime, l.playerId, l.address, l.city, l.state, l.zipCode, CONCAT(u.first_name, ' ', u.last_name) AS name, u.email " .
@@ -1281,7 +1290,7 @@ class DatabaseResult extends Root {
         }
         $query =
           "SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, IFNULL(a.points, 0) AS pts, IFNULL(ROUND(a.points / a.trnys, 2), 0) AS avg, IFNULL(a.trnys, 0) AS trnys, u.active " .
-          "FROM poker_user u LEFT JOIN (SELECT u.id, SUM((np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) * IFNULL(st.typeMultiplier, 1)) AS points, nt.trnys " .
+          "FROM poker_user u LEFT JOIN (SELECT u.id, SUM((np.numPlayers - r.place + 1) * IFNULL(st.typeMultiplier, 1)) + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0) AS points, nt.trnys " .
           "                            FROM poker_user u INNER JOIN poker_result r ON u.id = r.playerId " .
           "                            INNER JOIN poker_tournament t ON r.tournamentId = t.tournamentId ";
         if ("pointsTotalAndAverageForUser" != $dataName) {
@@ -1570,8 +1579,8 @@ class DatabaseResult extends Root {
       case "resultAllOrderedPoints":
         $query =
           "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, " .
-          "       SUM((np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) * IFNULL(st.typeMultiplier, 1)) AS pts, " .
-          "       SUM((np.numPlayers - r.place + 1 + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) * IFNULL(st.typeMultiplier, 1)) / nt.numTourneys AS avg, " .
+          "       SUM((np.numPlayers - r.place + 1) * IFNULL(st.typeMultiplier, 1)) + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0) AS pts, " .
+          "       (SUM((np.numPlayers - r.place + 1) * IFNULL(st.typeMultiplier, 1)) + IF(r.place BETWEEN 1 AND se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints, 0)) / nt.numTourneys AS avg, " .
           "       nt.numTourneys AS tourneys, u.active " .
           "FROM poker_user u " . "INNER JOIN poker_result r ON u.id = r.playerId " .
           "INNER JOIN poker_tournament t on r.tournamentId = t.tournamentId ";
@@ -1897,7 +1906,7 @@ class DatabaseResult extends Root {
           "                                   GROUP BY id, yr) xx " .
           "                             GROUP BY xx.id, xx.name) cc " .
           "                       GROUP BY id, name) b ON a.Id = b.Id " .
-          "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, SUM((c.numPlayers - c.place + 1 + IF(c.place BETWEEN 1 AND c.seasonFinalTablePlayers, c.seasonFinalTableBonusPoints, 0)) * IFNULL(c.typeMultiplier, 1)) AS Points, " .
+          "LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, SUM((c.numPlayers - c.place + 1) * IFNULL(c.typeMultiplier, 1)) + IF(c.place BETWEEN 1 AND c.seasonFinalTablePlayers, c.seasonFinalTableBonusPoints, 0) AS Points, " .
           "                                                     SUM(IFNULL(c.NumRebuys, 0) * c.RebuyAmount) AS Rebuys, " .
           "                                                     SUM(IFNULL(c.NumAddons, 0) * c.AddonAmount) AS Addons, " .
           "                                                     c.NumRebuys, c.BuyinAmount " .
@@ -2075,7 +2084,7 @@ class DatabaseResult extends Root {
           "                             GROUP BY id, yr) xx " .
           "                       GROUP BY xx.id, xx.name) cc " .
           "                 GROUP BY id, name) b ON a.Id = b.Id " .
-          "      LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, IF(c.Place IS NULL, 0, SUM((c.numPlayers - c.place + 1 + IF(c.place BETWEEN 1 AND c.seasonFinalTablePlayers, c.seasonFinalTableBonusPoints, 0)) * IFNULL(c.typeMultiplier, 1))) AS Points, SUM(IFNULL(c.NumRebuys, 0) * c.RebuyAmount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.AddonAmount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys, c.BuyinAmount " .
+          "      LEFT JOIN (SELECT c.PlayerId, c.Place, c.NumPlayers, IF(c.Place IS NULL, 0, SUM((c.numPlayers - c.place + 1) * IFNULL(c.typeMultiplier, 1))) + IF(c.place BETWEEN 1 AND c.seasonFinalTablePlayers, c.seasonFinalTableBonusPoints, 0) AS Points, SUM(IFNULL(c.NumRebuys, 0) * c.RebuyAmount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.AddonAmount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys, c.BuyinAmount " .
           "                 FROM (SELECT a.TournamentId, a.tournamentDesc, a.PlayerId, a.Place, a.NumPlayers, a.NumRebuys, a.BuyinAmount, a.RebuyAmount, a.AddonAmount, a.NumAddons, a.typeDescription, a.typeMultiplier, a.seasonFinalTablePlayers, a.seasonFinalTableBonusPoints " .
           "                       FROM (SELECT r.TournamentId, t.tournamentDesc, r.PlayerId, r.Place, np.NumPlayers, nr.NumRebuys, t.BuyinAmount, t.RebuyAmount, t.AddonAmount, na.NumAddons, st.typeDescription, st.typeMultiplier, se.seasonFinalTablePlayers, se.seasonFinalTableBonusPoints " .
           "                             FROM poker_result r INNER JOIN poker_tournament t ON r.TournamentId = t.TournamentId AND t.tournamentDate BETWEEN :startDate7 AND :endDate7 " .
@@ -2784,6 +2793,11 @@ class DatabaseResult extends Root {
           foreach($queryResult as $row) {
             $resultListForPerson = array();
             switch ($dataName) {
+              case "blobTest":
+                array_push($resultList, $row["name"]);
+                array_push($resultList, $row["contentType"]);
+                array_push($resultList, $row["blobcontents"]);
+                break;
               case "autoRegisterHost":
                 $address = new Address(debug: $this->isDebug(), id: NULL, address: $row["address"], city: $row["city"], state: $row["state"], zip: (int) $row["zipCode"]);
                 $user = new User(debug: $this->isDebug(), id: (int) $row["playerId"], name: $row["name"], username: NULL, password: NULL, email: $row["email"], phone: NULL, administrator: 0, registrationDate: NULL, approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: 0, address: $address, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
@@ -3520,6 +3534,13 @@ class DatabaseResult extends Root {
     $numRecords = 0;
     // try {
     switch ($dataName) {
+      case "blobInsert":
+        $query = "INSERT INTO blobtest(name, contentType, blobcontents) VALUES(:name, :contentType, :blobcontents)";
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        $pdoStatement->bindParam(':name', $params[0], PDO::PARAM_STR);
+        $pdoStatement->bindParam(':contentTypexbo', $params[1], PDO::PARAM_STR);
+        $pdoStatement->bindParam(':blobcontents', $params[2], PDO::PARAM_LOB);
+        break;
       case "feeInsert":
         $query =
           "INSERT INTO poker_fee(seasonId, playerId, tournamentId, amount) " .

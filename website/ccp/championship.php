@@ -75,14 +75,14 @@ if (0 < $count) {
         }
       }
     } else {
-      $index ++;
+      $index++;
       // echo "<br>".$allowCtr . " <= " . $additionalPlayers;
       if ($allowCtr <= $additionalPlayers) {
         // if winner add * else increment additional players
         if (in_array($aryResult[1], $aryWinners)) {
           $aryResult[1] = "*" . $aryResult[1];
         } else {
-          $allowCtr ++;
+          $allowCtr++;
         }
       }
       // echo "<br>setting aryNames[" . $index . "] = " . $aryResult[1];
@@ -90,11 +90,11 @@ if (0 < $count) {
       // echo "<br>setting aryAvgPts[" . $index . "] = " . $aryResult[2];
       $aryPts[$index] = $aryResult[2];
     }
-    $ctr ++;
+    $ctr++;
   }
   // sort makes array index start at 0 so adjust counter
   // $ctr--;
-  $index --;
+  $index--;
   array_multisort($aryPts, SORT_DESC, $aryNames, SORT_ASC);
   // echo "<BR>names -> " . print_r($aryNames, true);
   // echo "<BR>pts -> " . print_r($aryPts, true);
@@ -108,20 +108,19 @@ if (0 < $count) {
   // }
   $playerCount = $totalPlayers;
   $maxIndex = $numTables;
-  while ($index < ($totalPlayers - 1)) { // adjust for zero based
-    $index ++;
-    $playerCount --;
+  while ($index < ($totalPlayers)) {
+    $index++;
+    $playerCount--;
     // echo "<br>setting aryNames[".$index."] = EMPTY";
     $aryNames[$index] = "EMPTY";
-    // echo "<br>setting aryMaxPlayers[".$maxIndex."] = " . ($playerCount / $numTables) . " -> " . floor($playerCount / $numTables);
+//     echo "<br>setting aryMaxPlayers[".$maxIndex."] = " . ($playerCount / $numTables) . " -> " . floor($playerCount / $numTables);
     $aryMaxPlayers[$maxIndex] = floor($playerCount / $numTables);
     if ($maxIndex == 1) {
       $maxIndex = $numTables;
     } else {
-      $maxIndex --;
+      $maxIndex--;
     }
   }
-  // echo "<br>maxPlayers -> " . print_r($aryMaxPlayers, true);
   $topThird = ceil(num: $playerCount / 3);
   $topThirdChipCount = 11000;
   $middleThird = floor(num: $playerCount / 3);
@@ -139,7 +138,7 @@ if (0 < $count) {
         $aryNames[$ctr] .= " (" . $bottomThirdChipCount . " chips)";
       }
     }
-    $ctr ++;
+    $ctr++;
   }
   $maxPlayers = round(num: count(value: $aryNames) / $numTables); // ceil(count($aryNames) / $numTables);
                                                                   // $numEmpty = $totalPlayers - count($aryNames);
@@ -153,9 +152,9 @@ if (0 < $count) {
     $table[$tableNumber][$index][0] = $aryNames[$ctr];
     if ($tableNumber == $numTables) {
       $tableNumber = 0;
-      $index ++;
+      $index++;
     }
-    $ctr ++;
+    $ctr++;
   }
   // echo print_r($table) . "<br>";
   // skip first entry
@@ -187,11 +186,11 @@ if (0 < $count) {
       } else if ($checkCtr == ($aryMaxPlayers[$ctr])) {
         $table[$ctr][$ctr2][1] .= " (Big Blind)";
       }
-      $position --;
-      $ctr2 ++;
-      $checkCtr ++;
+      $position--;
+      $ctr2++;
+      $checkCtr++;
     }
-    $ctr ++;
+    $ctr++;
   }
   $output .= "    <h3>Total payout of $" . number_format(num: (float) $prizePool, decimals: 0) . "</h3>\n";
   $output .= "    <h4>Exact amounts below subject to change</h4>\n";
@@ -219,7 +218,7 @@ if (0 < $count) {
         $output .= "    <div class=\"column\">$" . round(num: $prizePool * $structure->getPercentage(), precision: 0, mode: PHP_ROUND_HALF_UP) . "</div>\n";
         $output .= "    <div class=\"clear\"></div>\n";
       }
-      $ctr ++;
+      $ctr++;
     }
   }
   $output .= "    <br />\n";
