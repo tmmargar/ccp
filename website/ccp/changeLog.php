@@ -7,6 +7,13 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
+  "<section class=\"version\" id=\"1.2.8\">" .
+  " <h3>Version 1.2.8</h3>\n" .
+  " <b><time datetime=\"2023-11-23\">Nov 23, 2023</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Add game type and limit type administration</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.2.7\">" .
   " <h3>Version 1.2.7</h3>\n" .
   " <b><time datetime=\"2023-11-14\">Nov 14, 2023</time></b>\n" .
