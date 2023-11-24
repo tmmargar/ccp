@@ -84,8 +84,11 @@ class DatabaseResult extends Root {
   public function getFoodByTournamentIdAndPlayerId(array $params): array|string {
     return $this->getData(dataName: "foodByTournamentIdAndPlayerId", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
-  public function getGameType(): array|string {
-    return $this->getData(dataName: "gameTypeSelectAll", params: NULL, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
+  public function getGameType(array $params): array|string {
+    return $this->getData(dataName: "gameTypeSelectAll", params: $params[2], orderBy: $params[0], returnQuery: $params[1], limitCount: NULL, rank: false);
+  }
+  public function getGameTypeById(array $params): array|string {
+    return $this->getData(dataName: "gameTypeSelectOneById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getGroupsAll(array $params): array|string {
     $paramsLocal = isset($params[1]) ? array($params[1]) : NULL;
@@ -115,8 +118,11 @@ class DatabaseResult extends Root {
   public function getKnockoutsTotalAndAverageForUser($params, $orderBy, $rank): array|string {
     return $this->getData(dataName: "knockoutsTotalAndAverageForUser", params: $params, orderBy: $orderBy, returnQuery: true, limitCount: NULL, rank: $rank);
   }
-  public function getLimitType(): array|string {
-    return $this->getData(dataName: "limitTypeSelectAll", params: NULL, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
+  public function getLimitType(array $params): array|string {
+    return $this->getData(dataName: "limitTypeSelectAll", params: $params[2], orderBy: $params[0], returnQuery: $params[1], limitCount: NULL, rank: false);
+  }
+  public function getLimitTypeById(array $params): array|string {
+    return $this->getData(dataName: "limitTypeSelectOneById", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getLocation(array $params): array|string {
     return $this->getData(dataName: "locationSelectAll", params: $params, orderBy: NULL, returnQuery: $params[0], limitCount: NULL, rank: false);
@@ -398,11 +404,17 @@ class DatabaseResult extends Root {
   public function deleteLocation(array $params): int|array {
     return $this->deleteData(dataName: "locationDelete", params: $params);
   }
+  public function deleteGameType(array $params): int|array {
+    return $this->deleteData(dataName: "gameTypeDelete", params: $params);
+  }
   public function deleteGroup(array $params): int|array {
     return $this->deleteData(dataName: "groupDelete", params: $params);
   }
   public function deleteGroupPayout(array $params): int|array {
     return $this->deleteData(dataName: "groupPayoutDelete", params: $params);
+  }
+  public function deleteLimitType(array $params): int|array {
+    return $this->deleteData(dataName: "limitTypeDelete", params: $params);
   }
   public function deleteNotification(array $params): int|array {
     return $this->deleteData(dataName: "notificationDelete", params: $params);
@@ -440,11 +452,17 @@ class DatabaseResult extends Root {
   public function insertFeeUsersForYear(array $params): int|array {
     return $this->insertData(dataName: "feeUsersForYearInsert", params: $params);
   }
+  public function insertGameType(array $params): int|array {
+    return $this->insertData(dataName: "gameTypeInsert", params: $params);
+  }
   public function insertGroup(array $params): int|array {
     return $this->insertData(dataName: "groupInsert", params: $params);
   }
   public function insertGroupPayout(array $params): int|array {
     return $this->insertData(dataName: "groupPayoutInsert", params: $params);
+  }
+  public function insertLimitType(array $params): int|array {
+    return $this->insertData(dataName: "limitTypeInsert", params: $params);
   }
   public function insertLocation(array $params): int|array {
     return $this->insertData(dataName: "locationInsert", params: $params);
@@ -482,11 +500,17 @@ class DatabaseResult extends Root {
   public function updateFees(array $params): int|array {
     return $this->updateData(dataName: "feesUpdate", params: $params);
   }
+  public function updateGameType(array $params): int|array {
+    return $this->updateData(dataName: "gameTypeUpdate", params: $params);
+  }
   public function updateGroup(array $params): int|array {
     return $this->updateData(dataName: "groupUpdate", params: $params);
   }
   public function updateGroupPayout(array $params): int|array {
     return $this->updateData(dataName: "groupPayoutUpdate", params: $params);
+  }
+  public function updateLimitType(array $params): int|array {
+    return $this->updateData(dataName: "limitTypeUpdate", params: $params);
   }
   public function updateLocation(array $params): int|array {
     return $this->updateData(dataName: "locationUpdate", params: $params);
@@ -1003,9 +1027,31 @@ class DatabaseResult extends Root {
         }
         break;
       case "gameTypeSelectAll":
+      case "gameTypeSelectOneById":
         $query =
-          "SELECT gameTypeId, gameTypeName " .
+          "SELECT gameTypeId AS id, gameTypeName AS name " .
           "FROM poker_game_type";
+        if ("gameTypeSelectOneById" == $dataName) {
+          $query .= " WHERE gameTypeId = :typeId";
+//         } else if ("gameTypeSelectAll" == $dataName) {
+//           if ($params[1]) {
+//             $query .= " WHERE gameTypeId IN (:typeId)";
+//           }
+        }
+        if (isset($limitCount)) {
+          $query .= " LIMIT :limitCount";
+        }
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        if ("gameTypeSelectOneById" == $dataName) {
+          $pdoStatement->bindParam(':typeId', $params[0], PDO::PARAM_INT);
+//         } else if ("gameTypeSelectAll" == $dataName) {
+//           if ($params[1]) {
+//             $pdoStatement->bindParam(':typeId', $params[1], PDO::PARAM_INT);
+//           }
+        }
+        if (isset($limitCount)) {
+          $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
+        }
         break;
       case "groupSelectAll":
       case "groupSelectAllById":
@@ -1140,9 +1186,31 @@ class DatabaseResult extends Root {
         }
         break;
       case "limitTypeSelectAll":
+      case "limitTypeSelectOneById":
         $query =
-          "SELECT limitTypeId, limitTypeName " .
+          "SELECT limitTypeId AS id, limitTypeName AS name " .
           "FROM poker_limit_type";
+        if ("limitTypeSelectOneById" == $dataName) {
+          $query .= " WHERE limitTypeId = :typeId";
+          //         } else if ("limitTypeSelectAll" == $dataName) {
+          //           if ($params[1]) {
+          //             $query .= " WHERE limitTypeId IN (:typeId)";
+          //           }
+        }
+        if (isset($limitCount)) {
+          $query .= " LIMIT :limitCount";
+        }
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        if ("limitTypeSelectOneById" == $dataName) {
+          $pdoStatement->bindParam(':typeId', $params[0], PDO::PARAM_INT);
+          //         } else if ("limitTypeSelectAll" == $dataName) {
+          //           if ($params[1]) {
+          //             $pdoStatement->bindParam(':typeId', $params[1], PDO::PARAM_INT);
+          //           }
+        }
+        if (isset($limitCount)) {
+          $pdoStatement->bindParam(':limitCount', $limitCount, PDO::PARAM_INT);
+        }
         break;
       case "locationSelectAll":
         $query =
@@ -2883,7 +2951,8 @@ class DatabaseResult extends Root {
                 array_push($resultList, (int) $row["active"]);
                 break;
               case "gameTypeSelectAll":
-                $gameType = new GameType(debug: $this->isDebug(), id: $row["gameTypeId"], name: $row["gameTypeName"]);
+              case "gameTypeSelectOneById":
+                $gameType = new GameType(debug: $this->isDebug(), id: $row["id"], name: $row["name"]);
                 array_push($resultList, $gameType);
                 break;
               case "groupSelectAll":
@@ -2913,7 +2982,8 @@ class DatabaseResult extends Root {
                 array_push($resultList, $row["active"]);
                 break;
               case "limitTypeSelectAll":
-                $limitType = new LimitType(debug: $this->isDebug(), id: $row["limitTypeId"], name: $row["limitTypeName"]);
+              case "limitTypeSelectOneById":
+                $limitType = new LimitType(debug: $this->isDebug(), id: $row["id"], name: $row["name"]);
                 array_push($resultList, $limitType);
                 break;
               case "locationSelectAll":
@@ -3424,6 +3494,13 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':seasonId', $params[0], PDO::PARAM_INT);
           $pdoStatement->bindParam(':playerId', $params[1], PDO::PARAM_INT);
           break;
+        case "gameTypeDelete":
+          $query =
+            "DELETE FROM poker_game_type " .
+            "WHERE gameTypeId IN (:gameTypeId)";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindParam(':gameTypeId', $params[0], PDO::PARAM_INT);
+          break;
         case "groupDelete":
           $query =
             "DELETE FROM poker_group " .
@@ -3439,6 +3516,13 @@ class DatabaseResult extends Root {
           $pdoStatement = $this->getConnection()->prepare(query: $query);
           $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
           $pdoStatement->bindParam(':payoutId', $params[1], PDO::PARAM_INT);
+          break;
+        case "limitTypeDelete":
+          $query =
+            "DELETE FROM poker_limit_type " .
+            "WHERE limitTypeId IN (:limitTypeId)";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindParam(':limitTypeId', $params[0], PDO::PARAM_INT);
           break;
         case "locationDelete":
           $query =
@@ -3483,6 +3567,13 @@ class DatabaseResult extends Root {
           $pdoStatement = $this->getConnection()->prepare(query: $query);
           $pdoStatement->bindParam(':seasonId', $params[0], PDO::PARAM_INT);
           break;
+        case "specialTypeDelete":
+          $query =
+          "DELETE FROM poker_special_type " .
+          "WHERE typeId IN (:specialTypeId)";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindParam(':specialTypeId', $params[0], PDO::PARAM_INT);
+          break;
         case "structureDelete":
           $query =
             "DELETE FROM poker_structure " .
@@ -3496,13 +3587,6 @@ class DatabaseResult extends Root {
             "WHERE tournamentId IN (:tournamentId)";
           $pdoStatement = $this->getConnection()->prepare(query: $query);
           $pdoStatement->bindParam(':tournamentId', $params[0], PDO::PARAM_INT);
-          break;
-        case "specialTypeDelete":
-          $query =
-            "DELETE FROM poker_special_type " .
-            "WHERE typeId IN (:specialTypeId)";
-          $pdoStatement = $this->getConnection()->prepare(query: $query);
-          $pdoStatement->bindParam(':specialTypeId', $params[0], PDO::PARAM_INT);
           break;
         case "tournamentAbsenceDelete":
           $query =
@@ -3559,6 +3643,13 @@ class DatabaseResult extends Root {
         $pdoStatement->bindParam(':seasonId', $params[0], PDO::PARAM_INT);
         $pdoStatement->bindParam(':tournamentId', $params[1], PDO::PARAM_INT);
         break;
+      case "gameTypeInsert":
+        $query =
+          "INSERT INTO poker_game_type(gameTypeId, gameTypeName) " .
+          "SELECT IFNULL(MAX(gameTypeId), 0) + 1, :gameTypeName FROM poker_game_type";
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        $pdoStatement->bindParam(':gameTypeName', $params[0], PDO::PARAM_STR);
+        break;
       case "groupInsert":
         $query =
           "INSERT INTO poker_group(groupId, groupName) " .
@@ -3573,6 +3664,13 @@ class DatabaseResult extends Root {
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':groupId', $params[0], PDO::PARAM_INT);
         $pdoStatement->bindParam(':payoutId', $params[1], PDO::PARAM_INT);
+        break;
+      case "limitTypeInsert":
+        $query =
+        "INSERT INTO poker_limit_type(limitTypeId, limitTypeName) " .
+        "SELECT IFNULL(MAX(limitTypeId), 0) + 1, :limitTypeName FROM poker_limit_type";
+        $pdoStatement = $this->getConnection()->prepare(query: $query);
+        $pdoStatement->bindParam(':limitTypeName', $params[0], PDO::PARAM_STR);
         break;
       case "locationInsert":
         $query =
@@ -3751,6 +3849,15 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':playerId', $params[2], PDO::PARAM_INT);
           $pdoStatement->bindParam(':tournamentId', $params[3], PDO::PARAM_INT);
           break;
+        case "gameTypeUpdate":
+          $query =
+            "UPDATE poker_game_type " .
+            "SET gameTypeName = :gameTypeName " .
+            "WHERE gameTypeId = :gameTypeId";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindValue(':gameTypeName', trim($params[1]), PDO::PARAM_STR);
+          $pdoStatement->bindParam(':gameTypeId', $params[0], PDO::PARAM_INT);
+          break;
         case "groupUpdate":
           $query =
             "UPDATE poker_group " .
@@ -3772,6 +3879,15 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':payoutId1', $params[1], PDO::PARAM_INT);
           $pdoStatement->bindParam(':groupId2', $params[2], PDO::PARAM_INT);
           $pdoStatement->bindParam(':payoutId2', $params[3], PDO::PARAM_INT);
+          break;
+        case "limitTypeUpdate":
+          $query =
+            "UPDATE poker_limit_type " .
+            "SET limitTypeName = :limitTypeName " .
+            "WHERE limitTypeId = :limitTypeId";
+          $pdoStatement = $this->getConnection()->prepare(query: $query);
+          $pdoStatement->bindValue(':limitTypeName', trim($params[1]), PDO::PARAM_STR);
+          $pdoStatement->bindParam(':limitTypeId', $params[0], PDO::PARAM_INT);
           break;
         case "locationUpdate":
           $query =
