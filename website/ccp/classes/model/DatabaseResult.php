@@ -2731,10 +2731,10 @@ class DatabaseResult extends Root {
         break;
       case "playersSelectForApproval":
         $query =
-          "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, p.player_username, p.player_rejection_date AS 'Rejection Date', CONCAT(p2.player_first_name, ' ', p2.player_last_name) AS 'Rejection Name' " .
-          "FROM poker_players p " .
-          "LEFT JOIN p2 ON p.rejection_userid = p2.player_id " .
-          "WHERE p.player_approval_date IS NULL AND p.player_rejection_date IS NULL";
+        "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, p.player_username, p.player_rejection_date AS 'Rejection Date', CONCAT(p2.player_first_name, ' ', p2.player_last_name) AS 'Rejection Name' " .
+        "FROM poker_players p " .
+        "LEFT JOIN poker_players p2 ON p.player_rejection_player_id = p2.player_id " .
+        "WHERE p.player_approval_date IS NULL AND p.player_rejection_date IS NULL";
         break;
       case "waitListedPlayerByTournamentId":
         $query =
