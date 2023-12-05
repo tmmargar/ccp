@@ -797,8 +797,11 @@ class DatabaseResult extends Root {
             "                             INNER JOIN poker_group_payouts gp ON t.group_id = gp.group_id " .
             "                             INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id AND np.numPlayers BETWEEN p.payout_min_players AND p.payout_max_players) a " .
             "                       INNER JOIN poker_structures s1 ON a.payout_id = s1.payout_id) s ON r.tournament_id = s.tournament_id AND r.result_place_finished = s.structure_place WHERE r.result_place_finished > 0) y " .
-            "            GROUP BY player_id " .
-            "            UNION ";
+            "            GROUP BY player_id ";
+          // start remove for season
+          if ("earningsTotalForSeason" != $dataName) {
+            $query .= "            UNION ";
+          }
         } else {
           $query .= "             SELECT player_id, CONCAT(player_first_name, ' ', player_last_name) AS name, IFNULL(totalEarnings, 0) AS earns";
           if ("earningsTotalForChampionship" == $dataName) {
@@ -806,91 +809,96 @@ class DatabaseResult extends Root {
           }
           $query .= "             FROM (";
         }
-        $query .= "            SELECT xx.player_id, xx.player_last_name, xx.player_first_name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0";
-        if ("earningsTotalForChampionship" == $dataName) {
-          $query .= ", numTourneys AS trnys ";
-        }
-        $query .= "            FROM (SELECT Yr, p.player_id, p.player_first_name, p.player_last_name, ";
-        if ("earningsTotalForChampionship" == $dataName) {
-          $query .= " numTourneys, ";
-        }
-        $query .=
-          "                        qq.total * IFNULL(s.structure_percentage, 0) AS Earnings " .
-          "                 FROM poker_players p " .
-          "                 INNER JOIN poker_results r ON p.player_id = r.player_id " .
-          "                 INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
-        if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
-          $query .= "        AND t.tournament_date BETWEEN :startDate3 AND :endDate3 ";
-        }
-        if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-          $query .= "                               AND YEAR(t.tournament_date) IN (:tournamentDate1) ";
-        }
-        $query .=
-          "                  INNER JOIN (SELECT Yr, SUM(total) - IF(Yr = 2008, 150, " . // adjust to match Dave W stats
-          "                                                       IF(Yr = 2007, -291, " . // adjust to match Dave W stats
-          "                                                        IF(Yr = 2006, -824, 0))) " . // adjust to match Dave W stats
-          "                                         AS total " .
-          "                         FROM (SELECT YEAR(t2.tournament_date) AS Yr, t2.tournament_id AS Id, IFNULL(b.Play, 0) AS Play, " .
-          "                                      ((t2.tournament_buyin_amount * t2.tournament_rake) * Play) + " .
-          "                                      ((t2.tournament_rebuy_amount * t2.tournament_rake) * IFNULL(nr.numRebuys, 0)) + " .
-          "                                      ((t2.tournament_addon_amount * t2.tournament_rake) * IFNULL(na.numAddons, 0)) AS Total " .
-          "                               FROM poker_tournaments t2 LEFT JOIN (SELECT tournament_id, COUNT(*) AS Play " .
-          "                                                                   FROM poker_results " .
-          "                                                                   WHERE result_paid_buyin_flag = '" . Constant::FLAG_YES . "' " .
-          "                                                                   AND result_place_finished > 0 " .
-          "                                                                   GROUP BY tournament_id) b ON t2.tournament_id = b.tournament_id";
-        if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
-          $query .= "                               AND t2.tournament_date BETWEEN :startDate4 AND :endDate4 ";
-        }
-        if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-          $query .= "                               AND YEAR(t2.tournament_date) IN (:tournamentDate2) ";
-        }
-        $query .=
-          "                              LEFT JOIN (SELECT r.tournament_id, SUM(r.result_rebuy_count) AS numRebuys " .
-          "                                         FROM poker_results r " .
-          "                                         WHERE r.result_paid_rebuy_flag = '" . Constant::FLAG_YES . "' " .
-          "                                         AND r.result_rebuy_count > 0 " .
-          "                                         GROUP BY r.tournament_id) nr ON t2.tournament_id = nr.tournament_id " .
-          "                              LEFT JOIN (SELECT r.tournament_id, COUNT(*) AS numAddons " .
-          "                                         FROM poker_results r " .
-          "                                         WHERE r.result_paid_addon_flag = '" . Constant::FLAG_YES . "' " .
-          "                                         GROUP BY r.tournament_id) na ON t2.tournament_id = na.tournament_id) zz " .
-          "                        GROUP BY zz.yr) qq";
-        $query .= " ON qq.yr = YEAR(t.tournament_date) ";
-        $query .= "                  LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id";
-        if ("earningsTotalForChampionship" == $dataName) {
+        if ("earningsTotalForSeason" != $dataName) {
+          $query .= "            SELECT xx.player_id, xx.player_last_name, xx.player_first_name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0";
+          if ("earningsTotalForChampionship" == $dataName) {
+            $query .= ", numTourneys AS trnys ";
+          }
+          $query .= "            FROM (SELECT Yr, p.player_id, p.player_first_name, p.player_last_name, ";
+          if ("earningsTotalForChampionship" == $dataName) {
+            $query .= " numTourneys, ";
+          }
           $query .=
-            "                  INNER JOIN (SELECT r1.player_id, COUNT(*) AS NumTourneys FROM poker_results r1 INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0 INNER JOIN poker_special_types st1 ON t1.special_type_id = st1.special_type_id AND st1.special_type_description = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' GROUP BY r1.player_id) nt ON r.player_id = nt.player_id ";
+            "                        qq.total * IFNULL(s.structure_percentage, 0) AS Earnings " .
+            "                 FROM poker_players p " .
+            "                 INNER JOIN poker_results r ON p.player_id = r.player_id " .
+            "                 INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
+          if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
+            $query .= "        AND t.tournament_date BETWEEN :startDate3 AND :endDate3 ";
+          }
+          if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
+            $query .= "                               AND YEAR(t.tournament_date) IN (:tournamentDate1) ";
+          }
+          $query .=
+            "                  INNER JOIN (SELECT Yr, SUM(total) - IF(Yr = 2008, 150, " . // adjust to match Dave W stats
+            "                                                       IF(Yr = 2007, -291, " . // adjust to match Dave W stats
+            "                                                        IF(Yr = 2006, -824, 0))) " . // adjust to match Dave W stats
+            "                                         AS total " .
+            "                         FROM (SELECT YEAR(t2.tournament_date) AS Yr, t2.tournament_id AS Id, IFNULL(b.Play, 0) AS Play, " .
+            "                                      ((t2.tournament_buyin_amount * t2.tournament_rake) * Play) + " .
+            "                                      ((t2.tournament_rebuy_amount * t2.tournament_rake) * IFNULL(nr.numRebuys, 0)) + " .
+            "                                      ((t2.tournament_addon_amount * t2.tournament_rake) * IFNULL(na.numAddons, 0)) AS Total " .
+            "                               FROM poker_tournaments t2 LEFT JOIN (SELECT tournament_id, COUNT(*) AS Play " .
+            "                                                                   FROM poker_results " .
+            "                                                                   WHERE result_paid_buyin_flag = '" . Constant::FLAG_YES . "' " .
+            "                                                                   AND result_place_finished > 0 " .
+            "                                                                   GROUP BY tournament_id) b ON t2.tournament_id = b.tournament_id";
+          if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
+            $query .= "                               AND t2.tournament_date BETWEEN :startDate4 AND :endDate4 ";
+          }
+          if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
+            $query .= "                               AND YEAR(t2.tournament_date) IN (:tournamentDate2) ";
+          }
+          $query .=
+            "                              LEFT JOIN (SELECT r.tournament_id, SUM(r.result_rebuy_count) AS numRebuys " .
+            "                                         FROM poker_results r " .
+            "                                         WHERE r.result_paid_rebuy_flag = '" . Constant::FLAG_YES . "' " .
+            "                                         AND r.result_rebuy_count > 0 " .
+            "                                         GROUP BY r.tournament_id) nr ON t2.tournament_id = nr.tournament_id " .
+            "                              LEFT JOIN (SELECT r.tournament_id, COUNT(*) AS numAddons " .
+            "                                         FROM poker_results r " .
+            "                                         WHERE r.result_paid_addon_flag = '" . Constant::FLAG_YES . "' " .
+            "                                         GROUP BY r.tournament_id) na ON t2.tournament_id = na.tournament_id) zz " .
+            "                        GROUP BY zz.yr) qq";
+          // end remove for season
+          $query .= " ON qq.yr = YEAR(t.tournament_date) ";
+          $query .= "                  LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id";
+          if ("earningsTotalForChampionship" == $dataName) {
+            $query .=
+              "                  INNER JOIN (SELECT r1.player_id, COUNT(*) AS NumTourneys FROM poker_results r1 INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0 INNER JOIN poker_special_types st1 ON t1.special_type_id = st1.special_type_id AND st1.special_type_description = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' GROUP BY r1.player_id) nt ON r.player_id = nt.player_id ";
+          }
+          $query .=
+            "                  LEFT JOIN (SELECT a.tournament_id, s1.payout_id, s1.structure_place, s1.structure_percentage " .
+            "                             FROM (SELECT np.tournament_id, p.payout_id " .
+            "                                   FROM (SELECT r.tournament_id, COUNT(*) AS numPlayers " .
+            "                                         FROM poker_results r " .
+            "                                         WHERE r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "','" . Constant::CODE_STATUS_FINISHED . "') " .
+            "                                         GROUP BY r.tournament_id) np " .
+          "                                   INNER JOIN poker_tournaments t on np.tournament_id = t.tournament_id";
+          if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
+            $query .= "                                    AND t.tournament_date BETWEEN :startDate5 AND :endDate5 ";
+          }
+          if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
+            $query .= "                               AND YEAR(t.tournament_date) IN (:tournamentDate3) ";
+          }
+          $query .=
+            "                                   INNER JOIN poker_group_payouts gp ON t.group_id = gp.group_id " .
+            "                                   INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id AND np.numPlayers BETWEEN p.payout_min_players AND p.payout_max_players) a " .
+            "                             INNER JOIN poker_structures s1 ON a.payout_id = s1.payout_id) s ON r.tournament_id = s.tournament_id AND r.result_place_finished = s.structure_place " .
+            "                  WHERE r.result_place_finished > 0 " .
+            "                  AND st.special_type_description = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "'" .
+            "                  GROUP BY player_id, yr) xx ";
         }
-        $query .=
-          "                  LEFT JOIN (SELECT a.tournament_id, s1.payout_id, s1.structure_place, s1.structure_percentage " .
-          "                             FROM (SELECT np.tournament_id, p.payout_id " .
-          "                                   FROM (SELECT r.tournament_id, COUNT(*) AS numPlayers " .
-          "                                         FROM poker_results r " .
-          "                                         WHERE r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "','" . Constant::CODE_STATUS_FINISHED . "') " .
-          "                                         GROUP BY r.tournament_id) np " .
-        "                                   INNER JOIN poker_tournaments t on np.tournament_id = t.tournament_id";
-        if ("earningsTotalAndAverageForPlayer" != $dataName && "earningsTotalForChampionship" != $dataName) {
-          $query .= "                                    AND t.tournament_date BETWEEN :startDate5 AND :endDate5 ";
-        }
-        if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
-          $query .= "                               AND YEAR(t.tournament_date) IN (:tournamentDate3) ";
-        }
-        $query .=
-          "                                   INNER JOIN poker_group_payouts gp ON t.group_id = gp.group_id " .
-          "                                   INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id AND np.numPlayers BETWEEN p.payout_min_players AND p.payout_max_players) a " .
-          "                             INNER JOIN poker_structures s1 ON a.payout_id = s1.payout_id) s ON r.tournament_id = s.tournament_id AND r.result_place_finished = s.structure_place " .
-          "                  WHERE r.result_place_finished > 0 " .
-          "                  AND st.special_type_description = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "'" .
-          "                  GROUP BY player_id, yr) xx ";
         if ("earningsTotalForChampionship" == $dataName) {
           $query .=
             "        GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name " .
             "        ORDER BY totalearnings desc, xx.player_last_name, xx.player_first_name) a";
         } else {
-          $query .=
-            "      GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name) cc " .
-            "GROUP BY player_id) z ON p.player_id = z.player_id ";
+          $query .= ") cc ";
+          if ("earningsTotalForSeason" != $dataName) {
+            $query .= "      GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name ";
+          }
+          $query .= "GROUP BY player_id) z ON p.player_id = z.player_id ";
           if ("earningsTotalForSeason" != $dataName && "earningsAverageForSeason" != $dataName && "earningsTotalForChampionship" != $dataName) {
             $whereClause = "WHERE p.player_id = " . $userId;
             $query .= " WHERE p.player_id = " . $userId;
@@ -930,12 +938,14 @@ class DatabaseResult extends Root {
           $pdoStatement->bindParam(':endDate1', $params[1], PDO::PARAM_STR);
           $pdoStatement->bindParam(':startDate2', $params[0], PDO::PARAM_STR);
           $pdoStatement->bindParam(':endDate2', $params[1], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':startDate3', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':endDate3', $params[1], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':startDate4', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':endDate4', $params[1], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':startDate5', $params[0], PDO::PARAM_STR);
-          $pdoStatement->bindParam(':endDate5', $params[1], PDO::PARAM_STR);
+          if ("earningsTotalForSeason" != $dataName) {
+            $pdoStatement->bindParam(':startDate3', $params[0], PDO::PARAM_STR);
+            $pdoStatement->bindParam(':endDate3', $params[1], PDO::PARAM_STR);
+            $pdoStatement->bindParam(':startDate4', $params[0], PDO::PARAM_STR);
+            $pdoStatement->bindParam(':endDate4', $params[1], PDO::PARAM_STR);
+            $pdoStatement->bindParam(':startDate5', $params[0], PDO::PARAM_STR);
+            $pdoStatement->bindParam(':endDate5', $params[1], PDO::PARAM_STR);
+          }
         } else if ("earningsTotalForChampionship" == $dataName && isset($params[0])) {
           $pdoStatement->bindParam(':tournamentDate1', $params[0], PDO::PARAM_STR);
           $pdoStatement->bindParam(':tournamentDate2', $params[0], PDO::PARAM_STR);
@@ -1375,7 +1385,7 @@ class DatabaseResult extends Root {
         }
         $query .=
           "                            INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
-          "                            LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id" .
+          "                            LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id " .
           "                            INNER JOIN (SELECT r1.player_id, COUNT(*) AS trnys " .
           "                                        FROM poker_results r1 " .
           "                                        INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0 ";
@@ -1387,8 +1397,11 @@ class DatabaseResult extends Root {
           "                            INNER JOIN (SELECT tournament_id, COUNT(*) AS numPlayers " .
           "                                        FROM poker_results " .
           "                                        WHERE result_place_finished > 0 " .
-          "                                        GROUP BY tournament_id) np ON r.tournament_id = np.tournament_id " .
-          "                            GROUP BY r.player_id) a ON p.player_id = a.player_id";
+          "                                        GROUP BY tournament_id) np ON r.tournament_id = np.tournament_id ";
+        if ("pointsTotalForSeason" == $dataName) {
+          $query .= " WHERE st.special_type_description IS NULL OR st.special_type_description <> '" . Constant::DESCRIPTION_CHAMPIONSHIP ."'";
+        }
+        $query .= "                            GROUP BY r.player_id) a ON p.player_id = a.player_id";
         if ("pointsTotalForSeason" != $dataName && "pointsAverageForSeason" != $dataName) {
           $whereClause = "WHERE p.player_id = " . $userId;
           $query .= " WHERE p.player_id = " . $userId;
