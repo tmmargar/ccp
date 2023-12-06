@@ -10,7 +10,7 @@ class DatabaseResult extends Root {
   private const USER_NAME_LOCAL = "root";
   private const PASSWORD_LOCAL = "toor";
   private const PORT = 3306;
-  private const DATABASE_NAME  = "chipch5_stats_new_rename";
+  private const DATABASE_NAME  = "chipch5_stats";
   private const HOST_NAME = "localhost";
   private Database $database;
   private PDO $connection;
