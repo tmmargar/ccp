@@ -14,9 +14,9 @@ function CcpAutoload($class_name) {
   $dirs = array($rootDir,$rootDir . "classes/",$rootDir . "classes/test/",$rootDir . "classes/common/PHPMailer/",$rootDir . "classes/common/Psr/",$rootDir . "classes/common/smarty/",$rootDir . "classes/common/smarty/libs/",$rootDir . "classes/utility/",$rootDir . "classes/utility/test/");
   foreach ($dirs as $dir) {
     // added ../ to support rest subfolder
-    // echo "<br>namespace CCP ../ --> " . $class_name . " -> " . $dir . str_replace("ccp/", "../", $class_name) . ".php";
+//     echo "<br>namespace CCP ../ --> " . $class_name . " -> " . $dir . str_replace("ccp/", "../", $class_name) . ".php";
     if (file_exists(filename: $dir . str_replace("ccp/", "../", $class_name) . ".php")) {
-      // echo "<br> found it CCP namespace";
+//       echo "<br> found it CCP namespace";
       require_once ($dir . str_replace("ccp/", "", $class_name) . ".php");
       return true;
     }

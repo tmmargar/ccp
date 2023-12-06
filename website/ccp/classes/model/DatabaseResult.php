@@ -894,9 +894,10 @@ class DatabaseResult extends Root {
             "        GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name " .
             "        ORDER BY totalearnings desc, xx.player_last_name, xx.player_first_name) a";
         } else {
-          $query .= ") cc ";
-          if ("earningsTotalForSeason" != $dataName) {
-            $query .= "      GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name ";
+          if ("earningsTotalForSeason" == $dataName) {
+            $query .= ") cc ";
+          } else {
+            $query .= "      GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name) cc ";
           }
           $query .= "GROUP BY player_id) z ON p.player_id = z.player_id ";
           if ("earningsTotalForSeason" != $dataName && "earningsAverageForSeason" != $dataName && "earningsTotalForChampionship" != $dataName) {
