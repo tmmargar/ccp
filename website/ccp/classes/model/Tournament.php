@@ -2,17 +2,17 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Tournament extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string|NULL $description, protected string|NULL $comment, protected LimitType|NULL $limitType,
+  public function __construct(protected bool $debug, protected string|int $id, protected ?string $description, protected ?string $comment, protected LimitType|NULL $limitType,
     protected GameType|NULL $gameType, protected SpecialType|NULL $specialType, protected int $chipCount, protected Location|NULL $location, protected DateTime|NULL $date,
     protected DateTime|NULL $startTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
     protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|NULL $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid,
     protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getDescription(): string|NULL {
+  public function getDescription(): ?string {
     return $this->description;
   }
-  public function getComment(): string|NULL {
+  public function getComment(): ?string {
     return $this->comment;
   }
   public function getLimitType(): LimitType|NULL {

@@ -2,13 +2,13 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class HtmlBase extends Base {
-  public function __construct(protected string|NULL $accessKey, protected array|NULL $class, protected bool $debug, protected string|int|NULL $id, protected int $tabIndex, protected string|NULL $title) {
+  public function __construct(protected ?string $accessKey, protected ?array $class, protected bool $debug, protected string|int $id, protected int $tabIndex, protected ?string $title) {
     parent::__construct(debug: $debug, id: $id);
   }
-  public function getAccessKey(): string|NULL {
+  public function getAccessKey(): ?string {
     return $this->accessKey;
   }
-  public function getClass(): array|NULL {
+  public function getClass(): ?array {
     return $this->class;
   }
   public function getClassAsString(): string {
@@ -17,7 +17,7 @@ abstract class HtmlBase extends Base {
   public function getTabIndex(): int {
     return $this->tabIndex;
   }
-  public function getTitle(): string|NULL {
+  public function getTitle(): ?string {
     return $this->title;
   }
   public function setAccessKey(string $acccessKey) {

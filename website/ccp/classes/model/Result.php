@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Result extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Tournament $tournament, protected Player $player, protected Status $status, protected int $registerOrder,
+  public function __construct(protected bool $debug, protected string|int $id, protected Tournament $tournament, protected Player $player, protected Status $status, protected int $registerOrder,
     protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected Player $knockedOutBy,
-    protected string|NULL $food, protected string|NULL $feeStatus) {
+    protected ?string $food, protected ?string $feeStatus) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getTournament(): Tournament {

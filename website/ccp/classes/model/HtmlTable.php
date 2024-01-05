@@ -26,43 +26,43 @@ class HtmlTable extends HtmlBase {
    * $suffix is suffix of table id (default is NULL)
    * $width is width of table (default is 100%)
    */
-  // private string|NULL $caption; // additional info about table
-  // private array|NULL $class; // array of class names
-  // private array|NULL $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
-  // private array|NULL $columnFormat; // array of column formats
+  // private ?string $caption; // additional info about table
+  // private ?array $class; // array of class names
+  // private ?array $colspan; // array of arrays (array of names, array of columns to colspan, array of array of columns to ignore)
+  // private ?array $columnFormat; // array of column formats
   // private string $delimiter; // delimiter (default is ", ")
-  // private array|NULL $foreignKeys; // array of foreign key queries
+  // private ?array $foreignKeys; // array of foreign key queries
   // private bool $header; // boolean to display header row or not
-  // private array|NULL $hiddenAdditional; // array of name and index of value to store
-  // private string|NULL $hiddenId; // name prefix of field to store row identifier
-  // private array|NULL $hideColumnIndexes; // array of column indexes to hide that are returned from query
-  // private array|NULL $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
-  // private array|NULL $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
+  // private ?array $hiddenAdditional; // array of name and index of value to store
+  // private ?string $hiddenId; // name prefix of field to store row identifier
+  // private ?array $hideColumnIndexes; // array of column indexes to hide that are returned from query
+  // private ?array $html; // array of arrays (array of html to insert, array of column header values, array of result indexes, array of array of status name/button text value, array of result indexes)
+  // private ?array $link; // array of arrays (array of index, array of values to build link either string literal or query index (page, mode, id, name)
   // private bool $note; // boolean true to display sorting note, false to hide
   // private PDOStatement $pdoStatement; // PDOStatement object
   // private string $query; // query
-  // private string|NULL $selectedRow; // array of selected rows
-  // private string|NULL $suffix; // suffix of table id
+  // private ?string $selectedRow; // array of selected rows
+  // private ?string $suffix; // suffix of table id
   // private string $width; // width of table
-  public function __construct(protected string|NULL $caption, protected array|NULL $class, protected array|NULL $colspan, protected array|NULL $columnFormat, protected bool $debug,
-    protected string $delimiter, protected array|NULL $foreignKeys, protected bool $header, protected array|NULL $hiddenAdditional, protected string|NULL $hiddenId,
-    protected array|NULL $hideColumnIndexes, protected array|NULL $html, protected string|int|NULL $id, protected array|NULL $link, protected bool $note, protected PDOStatement|NULL $pdoStatement,
-    protected string $query, protected string|NULL $selectedRow, protected string|NULL $suffix, protected string $width) {
+  public function __construct(protected ?string $caption, protected ?array $class, protected ?array $colspan, protected ?array $columnFormat, protected bool $debug,
+    protected string $delimiter, protected ?array $foreignKeys, protected bool $header, protected ?array $hiddenAdditional, protected ?string $hiddenId,
+    protected ?array $hideColumnIndexes, protected ?array $html, protected string|int $id, protected ?array $link, protected bool $note, protected PDOStatement|NULL $pdoStatement,
+    protected string $query, protected ?string $selectedRow, protected ?string $suffix, protected string $width) {
     parent::__construct(accessKey: NULL, class: $class, debug: $debug, id: $id, tabIndex: - 1, title: NULL);
   }
-  public function getCaption(): string|NULL {
+  public function getCaption(): ?string {
     return $this->caption;
   }
-  public function getColspan(): array|NULL {
+  public function getColspan(): ?array {
     return $this->colspan;
   }
-  public function getColumnFormat(): array|NULL {
+  public function getColumnFormat(): ?array {
     return $this->columnFormat;
   }
   public function getDelimiter(): string {
     return $this->delimiter;
   }
-  public function getForeignKeys(): array|NULL {
+  public function getForeignKeys(): ?array {
     return $this->foreignKeys;
   }
   public function getHtml(): string {
@@ -356,16 +356,16 @@ class HtmlTable extends HtmlBase {
     }
     return $output;
   }
-  public function getHiddenAdditional(): array|NULL {
+  public function getHiddenAdditional(): ?array {
     return $this->hiddenAdditional;
   }
-  public function getHiddenId(): string|NULL {
+  public function getHiddenId(): ?string {
     return $this->hiddenId;
   }
-  public function getHideColumnIndexes(): array|NULL {
+  public function getHideColumnIndexes(): ?array {
     return $this->hideColumnIndexes;
   }
-  public function getLink(): array|NULL {
+  public function getLink(): ?array {
     return $this->link;
   }
   public function getPdoStatement(): PDOStatement|NULL {
@@ -374,13 +374,13 @@ class HtmlTable extends HtmlBase {
   public function getQuery(): string {
     return $this->query;
   }
-  public function getSelectedRow(): string|NULL {
+  public function getSelectedRow(): ?string {
     return $this->selectedRow;
   }
-  public function getSuffix(): string|NULL {
+  public function getSuffix(): ?string {
     return $this->suffix;
   }
-  public function getWidth(): string|NULL {
+  public function getWidth(): ?string {
     return $this->width;
   }
   public function isHeader(): bool {

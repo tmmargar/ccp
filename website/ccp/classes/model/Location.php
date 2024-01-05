@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Location extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected Player $player, protected int $count, protected int $active, protected $map,
-    protected string|NULL $mapName, protected int $tournamentCount) {
+  public function __construct(protected bool $debug, protected string|int $id, protected string $name, protected Player $player, protected int $count, protected int $active, protected $map,
+    protected ?string $mapName, protected int $tournamentCount) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function buildMapUrl(): string {

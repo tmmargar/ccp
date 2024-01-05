@@ -5,9 +5,9 @@ class Player extends Base {
   private string $firstName;
   private string $lastName;
   private int $idPrevious;
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected string|NULL $username, protected string|NULL $password,
-    protected string|NULL $email, protected Phone|NULL $phone, protected int $administrator, protected string|NULL $registrationDate, protected string|NULL $approvalDate,
-    protected int|NULL $approvalUserid, protected string|NULL $approvalName, protected string|NULL $rejectionDate, protected int|NULL $rejectionUserid, protected string|NULL $rejectionName,
+  public function __construct(protected bool $debug, protected string|int $id, protected string $name, protected ?string $username, protected ?string $password,
+    protected ?string $email, protected Phone|NULL $phone, protected int $administrator, protected ?string $registrationDate, protected ?string $approvalDate,
+    protected ?int $approvalUserid, protected ?string $approvalName, protected ?string $rejectionDate, protected ?int $rejectionUserid, protected ?string $rejectionName,
     protected int $active, protected Address|NULL $address, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken,
     protected $rememberExpires) {
     parent::__construct(debug: $debug, id: $id);
@@ -22,40 +22,40 @@ class Player extends Base {
   public function getLastName(): string {
     return $this->lastName;
   }
-  public function getEmail(): string|NULL {
+  public function getEmail(): ?string {
     return $this->email;
   }
   public function getPhone(): Phone|NULL {
     return $this->phone;
   }
-  public function getUsername(): string|NULL {
+  public function getUsername(): ?string {
     return $this->username;
   }
-  public function getPassword(): string|NULL {
+  public function getPassword(): ?string {
     return $this->password;
   }
   public function getAdministrator(): int {
     return $this->administrator;
   }
-  public function getRegistrationDate(): string|NULL {
+  public function getRegistrationDate(): ?string {
     return $this->registrationDate;
   }
-  public function getApprovalDate(): string|NULL {
+  public function getApprovalDate(): ?string {
     return $this->approvalDate;
   }
-  public function getApprovalUserid(): int|NULL {
+  public function getApprovalUserid(): ?int {
     return $this->approvalUserid;
   }
-  public function getApprovalName(): string|NULL {
+  public function getApprovalName(): ?string {
     return $this->approvalName;
   }
-  public function getRejectionDate(): string|NULL {
+  public function getRejectionDate(): ?string {
     return $this->rejectionDate;
   }
-  public function getRejectionUserid(): int|NULL {
+  public function getRejectionUserid(): ?int {
     return $this->rejectionUserid;
   }
-  public function getRejectionName(): string|NULL {
+  public function getRejectionName(): ?string {
     return $this->rejectionName;
   }
   public function getActive(): int {

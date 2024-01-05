@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class HtmlLink extends HtmlBase {
-  public function __construct(protected string|NULL $accessKey, protected array|NULL $class, protected bool $debug, protected string $href, protected string|int|NULL $id,
-    protected array|NULL $paramName, protected array|NULL $paramValue, protected int $tabIndex, protected string $text, protected string|NULL $title) {
+  public function __construct(protected ?string $accessKey, protected ?array $class, protected bool $debug, protected string $href, protected string|int $id,
+    protected ?array $paramName, protected ?array $paramValue, protected int $tabIndex, protected string $text, protected ?string $title) {
     parent::__construct(accessKey: $accessKey, class: $class, debug: $debug, id: $id, tabIndex: $tabIndex, title: $title);
   }
   private function getParamString(): string {
@@ -25,10 +25,10 @@ class HtmlLink extends HtmlBase {
   public function getHref(): string {
     return $this->href;
   }
-  public function getParamName(): array|NULL {
+  public function getParamName(): ?array {
     return $this->paramName;
   }
-  public function getParamValue(): array|NULL {
+  public function getParamValue(): ?array {
     return $this->paramValue;
   }
   public function getText(): string {

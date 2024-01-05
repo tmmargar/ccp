@@ -4,7 +4,7 @@ namespace ccp\classes\model;
 use Exception;
 class Status extends Base {
   private const codeList = array("P" => "Paid","R" => "Registered","F" => "Finished");
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $code, protected string $name) {
+  public function __construct(protected bool $debug, protected string|int $id, protected string $code, protected string $name) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getCode(): string {

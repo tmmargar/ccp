@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class FormSelect extends FormBase {
-  public function __construct(protected bool $debug, protected string $accessKey, protected array|NULL $class, protected bool $disabled, protected int|string|NULL $id, protected bool $multiple,
-    protected string|NULL $name, protected string|NULL $onClick, protected bool $readOnly, protected int $size, protected string|NULL $suffix, protected array|string|int|NULL $value) {
+  public function __construct(protected bool $debug, protected string $accessKey, protected ?array $class, protected bool $disabled, protected int|string $id, protected bool $multiple,
+    protected ?string $name, protected ?string $onClick, protected bool $readOnly, protected int $size, protected ?string $suffix, protected array|string|int $value) {
     parent::__construct(debug: $debug, class: $class, disabled: $disabled, id: $id, name: $name, suffix: $suffix, value: $value);
   }
   public function getAccessKey(): string {
@@ -15,7 +15,7 @@ class FormSelect extends FormBase {
       (NULL !== $this->isReadOnly() && $this->isReadOnly() ? " readonly" : "") . " size=\"" . $this->getSize() . "\"" . ("" != $this->getOnClick() ? " onclick=\"" . $this->getOnClick() . "\"" : "") .
       ">\n";
   }
-  public function getOnClick(): string|NULL {
+  public function getOnClick(): ?string {
     return $this->onClick;
   }
   public function getSize(): int {

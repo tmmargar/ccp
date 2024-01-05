@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 class Season extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate,
+  public function __construct(protected bool $debug, protected string|int $id, protected string $description, protected DateTime $startDate, protected DateTime $endDate,
     protected int $championshipQualify, protected int $finalTablePlayers, protected int $finalTableBonusPoints, protected int $fee, protected int $active) {
     parent::__construct(debug: $debug, id: $id);
   }

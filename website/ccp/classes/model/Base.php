@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp\classes\model;
 abstract class Base extends Root {
-  public function __construct(protected bool $debug, private string|int|NULL $id) {
+  public function __construct(protected bool $debug, private string|int $id) {
     $this->id = Base::build(value: $id, suffix: NULL);
   }
   public function getId(): string {
@@ -17,7 +17,7 @@ abstract class Base extends Root {
     $output .= $this->id;
     return $output;
   }
-  public static function build(string|int|NULL $value, string|NULL $suffix): string {
+  public static function build(string|int $value, ?string $suffix): string {
     $idTemp = "";
     if (isset($value)) {
       $temp = explode(separator: " ", string: (string) $value);

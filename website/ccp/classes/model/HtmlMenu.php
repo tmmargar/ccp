@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp\classes\model;
 use ccp\classes\utility\SessionUtility;
 class HtmlMenu extends HtmlBase {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected array|NULL $items, protected string|NULL $text) {
+  public function __construct(protected bool $debug, protected string|int $id, protected ?array $items, protected ?string $text) {
     parent::__construct(accessKey: NULL, class: NULL, debug: $debug, id: $id, tabIndex: 0, title: NULL);
   }
   public function getHtmlRoot(): string {
@@ -75,10 +75,10 @@ class HtmlMenu extends HtmlBase {
     }
     return $output;
   }
-  public function getItems(): array|NULL {
+  public function getItems(): ?array {
     return $this->items;
   }
-  public function getText(): string|NULL {
+  public function getText(): ?string {
     return $this->text;
   }
   public function setItems(array $items) {

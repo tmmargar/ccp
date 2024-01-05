@@ -179,7 +179,7 @@ class DatabaseResult extends Root {
   public function getRegistrationWaitList(array $params): array|string {
     return $this->getData(dataName: "registrationWaitList", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
-  public function getResultIdMax(array|NULL $params): array|string {
+  public function getResultIdMax(?array $params): array|string {
     return $this->getData(dataName: "resultIdMax", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
   public function getResult(): array|string {
@@ -292,7 +292,7 @@ class DatabaseResult extends Root {
   public function getStructurePayout(array $params): array|string {
     return $this->getData(dataName: "structurePayout", params: $params, orderBy: NULL, returnQuery: false, limitCount: NULL, rank: false);
   }
-  public function getTournament(array $params, array $paramsNested, string|null $mode): array|string {
+  public function getTournament(array $params, array $paramsNested, ?string $mode): array|string {
     $paramsLocal = isset($params[2]) ? array($params[2]) : NULL;
     return $this->getData(dataName: "tournamentSelectAll", params: $paramsLocal, paramsNested: $paramsNested, orderBy: $params[0], returnQuery: $params[1], limitCount: NULL, rank: false, mode: $mode);
   }
@@ -595,7 +595,7 @@ class DatabaseResult extends Root {
   // $returnQuery is boolean (true returns query instead of results, false returns results)
   // $limitCount is number to limit the results by
   // $rank is boolean (true means ranking, false means no ranking)
-  private function getData(string $dataName, array|NULL $params, array|NULL $paramsNested = NULL, array|string|NULL $orderBy = NULL, bool $returnQuery = false, int|NULL $limitCount = NULL, bool $rank = false, string|null $mode = NULL): array|string {
+  private function getData(string $dataName, ?array $params, ?array $paramsNested = NULL, array|string $orderBy = NULL, bool $returnQuery = false, ?int $limitCount = NULL, bool $rank = false, ?string $mode = NULL): array|string {
     $resultList = array();
     $pdoStatement = NULL;
     switch ($dataName) {
@@ -1484,10 +1484,10 @@ class DatabaseResult extends Root {
           "                                           FROM poker_tournaments " .
           "                                           WHERE tournament_date = :tournamentDate) t2 " .
           "      ON t1.tournament_date = t2.tournament_date " .
-          "      AND t1.tournament_start_time = t2.tournament_start_time" . ($params[1] ? "Max" : "Min") . ") t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id " .
+          "      AND t1.tournament_start_time = startTime" . ($params[1] ? "Max" : "Min") . ") t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id " .
           "INNER JOIN poker_players p ON r.player_id = p.player_id " .
           "INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date " .
-          "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS amount FROM poker_fees GROUP BY season_id, player_id) f ON s.season_id = f.season_id AND p.player_id = f.player_id " .
+          "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON s.season_id = f.season_id AND p.player_id = f.player_id " .
           "ORDER BY r.result_registration_order";
         if (isset($limitCount)) {
           $query .= " LIMIT :limitCount";
@@ -3061,8 +3061,7 @@ class DatabaseResult extends Root {
                 array_push($resultList, $row["total"]);
                 break;
               case "registrationList":
-                $values = array($row["first_name"], $row["last_name"], $row["result_registration_food"], $row["fee status"]);
-                ;
+                $values = array($row["player_first_name"], $row["player_last_name"], $row["result_registration_food"], $row["fee status"]);
                 array_push($resultList, $values);
                 break;
               case "registrationWaitList":
@@ -3263,6 +3262,7 @@ class DatabaseResult extends Root {
               case "tournamentSelectAllForChampionship":
               case "tournamentSelectAllOrdered":
               case "tournamentsWonByPlayerId":
+              case "tournamentsSelectForEmailNotifications":
                 $limitType = new LimitType(debug: $this->isDebug(), id: $row["limit_type_id"], name: $row["limit"]);
                 $gameType = new GameType(debug: $this->isDebug(), id: $row["game_type_id"], name: $row["type"]);
                 $specialType = new SpecialType(debug: $this->isDebug(), id: $row["special_type_id"], description: $row["std"], multiplier: $row["special_type_multiplier"]);
@@ -3326,8 +3326,6 @@ class DatabaseResult extends Root {
                 break;
               case "tournamentSelectAllYearsPlayed":
                 array_push($resultList, (int) $row["year"]);
-                break;
-              case "tournamentsSelectForEmailNotifications":
                 break;
               case "tournamentsPlayedByPlayerIdAndDateRange":
                 array_push($resultList, (int) $row["numPlayed"]);
@@ -3420,7 +3418,7 @@ class DatabaseResult extends Root {
   // $groupId is group id
   // $payoutId is payout id
   // $structureFlag is boolean true for structures
-  private function getPayouts(int|NULL $groupId, int|NULL $payoutId, bool $structureFlag): array {
+  private function getPayouts(?int $groupId, ?int $payoutId, bool $structureFlag): array {
     $payouts = array();
     $queryNested =
       "SELECT p.payout_id AS id, p.payout_name AS name, p.payout_min_players AS 'min players', p.payout_max_players AS 'max players' " .
@@ -4333,7 +4331,7 @@ class DatabaseResult extends Root {
     return $numRecords;
   }
   // $prefix is table alias
-  private function buildOrderByName(string|NULL $prefix): string {
+  private function buildOrderByName(?string $prefix): string {
     $alias = isset($prefix) ? $prefix . "." : "";
     return $alias . "player_last_name, " . $alias . "player_first_name";
   }
@@ -4383,7 +4381,7 @@ class DatabaseResult extends Root {
     return array($query, $bindParams);
   }
   // $alias is table alias
-  private function buildPlayerActive(string|NULL $alias = NULL): string {
+  private function buildPlayerActive(?string $alias = NULL): string {
     return (isset($alias) ? $alias . "." : "") . "player_active_flag = " . Constant::FLAG_YES_DATABASE;
   }
   // $query is query to modify

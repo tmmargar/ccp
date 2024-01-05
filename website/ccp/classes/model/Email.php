@@ -6,8 +6,8 @@ class Email extends Base {
   private const EMAIL_ADDRESS_LOCAL = "me@localhost.com";
   private bool $local;
   private array $localEmail;
-  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected array|NULL $ccName,
-    protected array|NULL $ccEmail, protected array|NULL $bccName, protected array|NULL $bccEmail, protected string|NULL $subject, protected string|NULL $body) {
+  public function __construct(protected bool $debug, protected array $fromName, protected array $fromEmail, protected array $toName, protected array $toEmail, protected ?array $ccName,
+    protected ?array $ccEmail, protected ?array $bccName, protected ?array $bccEmail, protected ?string $subject, protected ?string $body) {
     parent::__construct(debug: $debug, id: NULL);
     $this->local = Constant::FLAG_LOCAL();
   }
@@ -33,22 +33,22 @@ class Email extends Base {
     }
     return $toEmail;
   }
-  public function getCcName(): array|NULL {
+  public function getCcName(): ?array {
     return $this->ccName;
   }
-  public function getCcEmail(): array|NULL {
+  public function getCcEmail(): ?array {
     return $this->ccEmail;
   }
-  public function getBccName(): array|NULL {
+  public function getBccName(): ?array {
     return $this->bccName;
   }
-  public function getBccEmail(): array|NULL {
+  public function getBccEmail(): ?array {
     return $this->bccEmail;
   }
-  public function getSubject(): string|NULL {
+  public function getSubject(): ?string {
     return $this->subject;
   }
-  public function getBody(): string|NULL {
+  public function getBody(): ?string {
     return $this->body;
   }
   public function isLocal(): bool {
@@ -94,7 +94,7 @@ class Email extends Base {
   public function setLocal(bool $local) {
     $this->local = $local;
   }
-  public function setLocalEmail(array|NULL $localEmail) {
+  public function setLocalEmail(?array $localEmail) {
     $this->localEmail = $localEmail;
   }
   public function __toString(): string {

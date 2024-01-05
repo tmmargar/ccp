@@ -5,7 +5,7 @@ use Exception;
 class Address extends Base {
   // AA and XX are temporary placeholders
   private const stateList = array("AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WY","AA","XX");
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $address, protected string $city, protected string $state, protected int $zip) {
+  public function __construct(protected bool $debug, protected string|int $id, protected string $address, protected string $city, protected string $state, protected int $zip) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getAddress(): string {
